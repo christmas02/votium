@@ -28,6 +28,7 @@ Route::controller(AuthController::class)->group(function () {
     Route::get('/confirm/{id}/{token}','confirm')->name('confirm');
 });
 
+
 Route::controller(ConsoleController::class)->group(function () {
     Route::get('back_office_console', 'index')->name('back_office_console');
     Route::get('list_customer', 'listCustomer')->name('list_customer');

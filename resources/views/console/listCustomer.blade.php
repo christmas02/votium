@@ -8,7 +8,7 @@
     <!-- Page Header -->
     <div class="d-flex align-items-center justify-content-between gap-2 mb-4 flex-wrap">
         <div>
-            <h4 class="mb-0">Liste Customer</h4>
+            <h4 class="mb-0">List Customer</h4>
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb mb-0 p-0">
                     <li class="breadcrumb-item"><a href="{{ $link_back }}">{{ $title_back }}</a></li>

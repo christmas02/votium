@@ -44,7 +44,7 @@
                             <a href=""><i class="ti ti-brand-campaignmonitor"></i><span>Campagnes</span></a>
                         </li>
                         <li>
-                            <a href=""><i class="ti ti-user-up"></i><span>Candidats</span></a>
+                            <a href=""><i class="ti ti-user-up"></i><span>Candidatures</span></a>
                         </li>
                         <li>
                             <a href="deals.html"><i class="ti ti-medal"></i><span>Votes</span></a>

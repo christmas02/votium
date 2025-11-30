@@ -15,7 +15,7 @@ class ConsoleController  extends Controller
     public function listCustomer(){
         $title_back = "Tableau de bord";
         $link_back = "list_customer";
-        $title = "List Customer";
+        $title = "Liste Customer";
         return view('console.listCustomer', compact('title','title_back','link_back'));
     }
 

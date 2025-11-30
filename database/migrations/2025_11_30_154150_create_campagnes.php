@@ -22,8 +22,8 @@ class CreateCampagnes extends Migration
             $table->string('customer_id');
             $table->boolean('text_cover')->default(false);
             $table->boolean('inscription')->default(false);
-            $table->dateTime('inscription_date_debut');
-            $table->dateTime('inscription_date_fin');
+            $table->dateTime('inscription_date_debut')->nullable();
+            $table->dateTime('inscription_date_fin')->nullable();
             $table->string('afficher_montant_pourcentage')->default('clair'); //clair,
             $table->string('ordonner_candidats_votes_decroissants');
             $table->string('quantite_vote');

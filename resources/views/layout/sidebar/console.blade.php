@@ -45,6 +45,9 @@
                                 <i class="ti ti-user-star"></i><span>Customer</span>
                             </a>
                         </li>
+                        <li>
+                            <a href=""><i class="ti ti-brand-campaignmonitor"></i><span>Campagnes</span></a>
+                        </li>
                     </ul>
                 </li>
             </ul>
