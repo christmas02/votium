@@ -48,9 +48,10 @@
                 <div class="row">
 
                     <div class="col-md-10 mx-auto">
-                        <form action="https://crms.dreamstechnologies.com/html/template/index.html" class=" vh-100 d-flex justify-content-between flex-column p-4 pb-0">
+                        <form method="post" action="login" class=" vh-100 d-flex justify-content-between flex-column p-4 pb-0">
+                            @csrf
                             <div class="text-center mb-4 auth-logo">
-                                <img src="assets/img/logo.svg" class="img-fluid" alt="Logo">
+                                <img src="assets/img/logos/votium.png" class="img-fluid" alt="Logo">
                             </div>
                             <div>
                                 <div class="mb-3">
@@ -60,14 +61,14 @@
                                 <div class="mb-3">
                                     <label class="form-label">Adresse email</label>
                                     <div class="input-group input-group-flat">
-                                        <input type="email" class="form-control" style="padding: 3%">
+                                        <input type="email" name="email" class="form-control" style="padding: 3%">
                                         <span class="input-group-text"><i class="ti ti-mail"></i></span>
                                     </div>
                                 </div>
                                 <div class="mb-3">
                                     <label class="form-label">Mot de passe</label>
                                     <div class="input-group input-group-flat pass-group">
-                                        <input type="password" class="form-control pass-input" style="padding: 3%">
+                                        <input type="password" name="password" class="form-control pass-input" style="padding: 3%">
                                         <span class="input-group-text toggle-password "><i class="ti ti-eye-off"></i></span>
                                     </div>
                                 </div>
@@ -83,7 +84,7 @@
                                     </div>
                                 </div>
                                 <div class="mb-3">
-                                    <button type="submit" class="btn btn-primary w-100">Sign In</button>
+                                    <button type="submit" class="btn btn-primary w-100">Connexion</button>
                                 </div>
                                 <div class="mb-3">
                                     <p class="mb-0">Pas encore inscrit ? <a href="register.html" class="link-indigo fw-bold link-hover"> Cliquez ici</a></p>

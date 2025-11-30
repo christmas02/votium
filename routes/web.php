@@ -1,8 +1,10 @@
 <?php
 
+use App\Http\Controllers\Business\BusinessController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Console\ConsoleController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -22,10 +24,16 @@ Route::get('/', function () {
 Route::controller(AuthController::class)->group(function () {
     Route::get('/', 'screenLogin')->name('screenLogin');
     Route::post('registered', 'register');
+    Route::post('login', 'login');
     Route::get('/confirm/{id}/{token}','confirm')->name('confirm');
 });
 
 Route::controller(ConsoleController::class)->group(function () {
-    Route::get('back_office_console', 'index')->name('index');
+    Route::get('back_office_console', 'index')->name('back_office_console');
+    Route::get('list_customer', 'listCustomer')->name('list_customer');
 
+});
+
+Route::controller(BusinessController::class)->group(function () {
+    Route::get('back_office_business', 'index')->name('back_office_business');
 });
