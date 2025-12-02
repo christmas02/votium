@@ -45,13 +45,13 @@
                         <li>
                             
                             <a href="{{ route('list_customer') }}"
-                                class="{{ request()->routeIs('list_customer*') ? 'active' : '' }}">
+                                class="{{ request()->routeIs('*_customer') ? 'active' : '' }}">
                                 <i class="ti ti-user-star"></i><span>Customer</span>
                             </a>
                         </li>
                         <li>
                             <a href="{{ route('list_campagne') }}"
-                                class="{{ request()->routeIs('list_campagne*') ? 'active' : '' }}">
+                                class="{{ request()->routeIs('*_campagne') ? 'active' : '' }}">
                                 <i class="ti ti-brand-campaignmonitor"></i><span>Campagnes</span>
                             </a>
                         </li>

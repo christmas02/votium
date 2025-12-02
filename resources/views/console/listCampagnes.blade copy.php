@@ -41,24 +41,24 @@
                         <table class="table table-nowrap datatable">
                             <thead class="table-light">
                                 <tr>
-                                    <th>NOM DE SESSION</th>
-                                    <th>NBRE D'ETAPES</th>
-                                    <th>NBRE DE CANDIDATS</th>
-                                    <th>CRÉÉE LE</th>
-                                    <th>INSCRIPTION</th>
+                                    <th>Nom campagne</th>
+                                    <th>Clients</th>
+                                    <th>Debut</th>
+                                    <th>Fin</th>
+                                    <th>Inscription</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td>Campagne N°001</td>
-                                    <td>1 étape</td>
-                                    <td>1 Candidats</td>
-                                    <td>23/11/2025</td>
-                                    <td>Autorisées</td>
+                                    <td>Tiger Nixon</td>
+                                    <td>System Architect</td>
+                                    <td>Edinburgh</td>
+                                    <td>61</td>
+                                    <td>2011 Apr 25</td>
                                     <td>
                                         <div class="d-inline-flex gap-2">
-                                            <a href="{{ route('detail_campagne') }}" class="btn btn-icon btn-sm btn-success"><i class="ti ti-location"></i></a>
+                                            <a href="#" class="btn btn-icon btn-sm btn-success"><i class="ti ti-location"></i></a>
                                             <a class="btn btn-icon btn-sm btn-info" data-bs-toggle="offcanvas" data-bs-target="#offcanvas_edit"><i class="ti ti-edit"></i></a>
                                             <a href="#;" class="btn btn-icon btn-sm btn-light"><i class="ti ti-menu-2"></i></a>
                                             <a class="btn btn-icon btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#delete_contact"><i class="ti ti-trash"></i></a>
@@ -66,14 +66,14 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td>Campagne N°050</td>
-                                    <td>3 étape</td>
-                                    <td>25 Candidats</td>
-                                    <td>23/11/2025</td>
-                                    <td>Non-autorisées</td>
+                                    <td>Garrett Winters</td>
+                                    <td>Accountant</td>
+                                    <td>Tokyo</td>
+                                    <td>63</td>
+                                    <td>2011 Jul 25</td>
                                     <td>
                                         <div class="d-inline-flex gap-2">
-                                            <a href="{{ route('detail_campagne') }}" class="btn btn-icon btn-sm btn-success"><i class="ti ti-location"></i></a>
+                                            <a href="#" class="btn btn-icon btn-sm btn-success"><i class="ti ti-location"></i></a>
                                             <a class="btn btn-icon btn-sm btn-info" data-bs-toggle="offcanvas" data-bs-target="#offcanvas_edit"><i class="ti ti-edit"></i></a>
                                             <a href="#;" class="btn btn-icon btn-sm btn-light"><i class="ti ti-menu-2"></i></a>
                                             <a class="btn btn-icon btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#delete_contact"><i class="ti ti-trash"></i></a>
@@ -164,6 +164,15 @@
                                     </div>
                                 </div>
 
+                                <!-- Campagne ID -->
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label class="form-label">ID Campagne <span class="text-danger">*</span></label>
+                                        <!-- Mapping: campagne_id -->
+                                        <input type="text" class="form-control" name="campagne_id" placeholder="ex: CAMP-2024-01" required>
+                                    </div>
+                                </div>
+
                                 <!-- Nom de la campagne -->
                                 <div class="col-md-6">
                                     <div class="mb-3">
@@ -174,7 +183,7 @@
                                 </div>
 
                                 <!-- Customer ID (Select) -->
-                                <div class="col-md-6">
+                                <div class="col-md-12">
                                     <div class="mb-3">
                                         <label class="form-label">Client associé (Customer ID) <span class="text-danger">*</span></label>
                                         <!-- Mapping: customer_id -->
@@ -192,7 +201,7 @@
                                     <div class="mb-0">
                                         <label class="form-label">Description courte <span class="text-danger">*</span></label>
                                         <!-- Mapping: description -->
-                                        <textarea class="form-control" rows="4" name="description" required></textarea>
+                                        <textarea class="form-control" rows="2" name="description" required></textarea>
                                     </div>
                                 </div>
                             </div>
@@ -356,7 +365,7 @@
     </div>
     <div class="offcanvas-body">
         <form action="#" method="POST" enctype="multipart/form-data">
-
+            
             <div class="accordion accordion-bordered" id="campagne_accordion_edit">
 
                 <!-- 1. Informations Générales -->
@@ -375,12 +384,12 @@
                                 <!-- Image Couverture (Simulation: Image déjà présente) -->
                                 <div class="col-md-12">
                                     <label class="form-label">Image de couverture</label>
-
+                                    
                                     <!-- Zone de l'image (Bordure pleine car image présente) -->
-                                    <div class="position-relative w-100 rounded border border-primary bg-light d-flex align-items-center justify-content-center overflow-hidden"
-                                        style="height: 300px; border-width: 2px !important; transition: all 0.3s ease;"
-                                        id="drop-zone-edit">
-
+                                    <div class="position-relative w-100 rounded border border-primary bg-light d-flex align-items-center justify-content-center overflow-hidden" 
+                                         style="height: 300px; border-width: 2px !important; transition: all 0.3s ease;" 
+                                         id="drop-zone-edit">
+                                        
                                         <!-- Placeholder (Caché car image présente) -->
                                         <div class="text-center p-4 d-none" id="upload-placeholder-edit">
                                             <div class="avatar avatar-xl bg-white border rounded-circle mb-3 mx-auto">
@@ -392,33 +401,38 @@
 
                                         <!-- Image de prévisualisation (Affichée) -->
                                         <!-- J'ai mis une image placeholder pour l'exemple -->
-                                        <img id="image-preview-edit"
-                                            src="https://placehold.co/600x400/563d7c/ffffff?text=Cover+Image"
-                                            alt="Aperçu"
-                                            class="position-absolute top-0 start-0 w-100 h-100 object-fit-cover">
+                                        <img id="image-preview-edit" 
+                                             src="https://placehold.co/600x400/563d7c/ffffff?text=Cover+Image" 
+                                             alt="Aperçu" 
+                                             class="position-absolute top-0 start-0 w-100 h-100 object-fit-cover">
 
                                         <!-- Input file -->
-                                        <input type="file"
-                                            name="image_couverture"
-                                            id="input-image-edit"
-                                            class="position-absolute top-0 start-0 w-100 h-100 opacity-0 cursor-pointer"
-                                            accept="image/png, image/jpeg, image/jpg"
-                                            onchange="previewImageEdit(this)">
+                                        <input type="file" 
+                                               name="image_couverture" 
+                                               id="input-image-edit" 
+                                               class="position-absolute top-0 start-0 w-100 h-100 opacity-0 cursor-pointer" 
+                                               accept="image/png, image/jpeg, image/jpg"
+                                               onchange="previewImageEdit(this)">
                                     </div>
 
                                     <!-- Bouton Supprimer (Affiché) -->
                                     <div class="d-flex justify-content-end mt-2">
-                                        <button type="button"
-                                            id="remove-btn-edit"
-                                            class="btn btn-sm btn-outline-danger"
-                                            onclick="removeImageEdit()">
+                                        <button type="button" 
+                                                id="remove-btn-edit" 
+                                                class="btn btn-sm btn-outline-danger" 
+                                                onclick="removeImageEdit()">
                                             <i class="ti ti-trash me-1"></i> Retirer l'image
                                         </button>
                                     </div>
                                 </div>
 
                                 <!-- Campagne ID -->
-                                <input type="hidden" class="form-control" name="campagne_id" value="CAMP-2024-001" required>
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label class="form-label">ID Campagne <span class="text-danger">*</span></label>
+                                        <input type="text" class="form-control" name="campagne_id" value="CAMP-2024-001" required>
+                                    </div>
+                                </div>
 
                                 <!-- Nom -->
                                 <div class="col-md-6">
@@ -429,7 +443,7 @@
                                 </div>
 
                                 <!-- Customer Select -->
-                                <div class="col-md-6">
+                                <div class="col-md-12">
                                     <div class="mb-3">
                                         <label class="form-label">Client associé <span class="text-danger">*</span></label>
                                         <select class="select form-control" name="customer_id" required>
@@ -444,7 +458,7 @@
                                 <div class="col-md-12">
                                     <div class="mb-0">
                                         <label class="form-label">Description courte <span class="text-danger">*</span></label>
-                                        <textarea class="form-control" rows="4" name="description" required>Campagne promotionnelle pour la saison estivale avec voting système.</textarea>
+                                        <textarea class="form-control" rows="2" name="description" required>Campagne promotionnelle pour la saison estivale avec voting système.</textarea>
                                     </div>
                                 </div>
                             </div>

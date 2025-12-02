@@ -20,6 +20,13 @@ class ConsoleController  extends Controller
         return view('console.listCustomer', compact('title','title_back','link_back'));
     }
 
+    public function detailCustomer(){
+        $title_back = "Tableau de bord";
+        $link_back = "Detail_customer";
+        $title = "Detail Customer";
+        return view('console.detailCustomer', compact('title','title_back','link_back'));
+    }
+
     public function newCustomer(Request $request)
     {
         try {
@@ -33,5 +40,12 @@ class ConsoleController  extends Controller
         $link_back = "list_campagne";
         $title = "Liste campagnes";
         return view('console.listCampagnes', compact('title','title_back','link_back'));
+    }
+
+    public function detailCampagne(){
+        $title_back = "Tableau de bord";
+        $link_back = "Detail_campagne";
+        $title = "Detail Campagne";
+        return view('console.detailCampagne', compact('title','title_back','link_back'));
     }
 }

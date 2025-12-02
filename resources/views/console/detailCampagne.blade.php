@@ -9,7 +9,7 @@
     <div class="d-flex align-items-center justify-content-between gap-2 mb-4 flex-wrap">
         <div class="row col-12">
             <div class="col-sm-6">
-                <h4 class="mb-0">Liste Campagnes</h4>
+                <h4 class="mb-0">{{ $title }}</h4>
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb mb-0 p-0">
                         <li class="breadcrumb-item"><a href="{{ $link_back }}">{{ $title_back }}</a></li>
@@ -24,69 +24,208 @@
 
     <!-- start row -->
     <div class="row">
-        <div class="col-sm-12">
-            <div class="card">
+        <div class="col-md-12">
 
-                <div class="card-header d-flex align-items-center justify-content-between gap-2 flex-wrap">
-                    <div class="table-search" style="margin-bottom:0 !important;">
-                        <div class="search-input">
-                            <a href="javascript:void(0);" class="btn-searchset"><i class="isax isax-search-normal fs-12"></i></a>
+            <!-- <div class="card">
+                <div class="card-body pb-2">
+                    <div class="d-flex align-items-center justify-content-between flex-wrap">
+                        <div class="d-flex align-items-center mb-2">
+                            <div class="avatar avatar-xxl avatar-rounded me-3 flex-shrink-0">
+                                <img src="assets/img/profiles/avatar-14.jpg" alt="img">
+                                <span class="status online"></span>
+                            </div>
+                            <div>
+                                <h5 class="mb-1">Jackson Daniel</h5>
+                                <p class="mb-2">Facility Manager, Global INC</p>
+                                <div class="d-flex align-items-center">
+                                    <span class="badge badge-soft-danger border-0 me-2"><i class="ti ti-lock me-1"></i>Actif</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="d-flex align-items-center flex-wrap gap-2">
+                            <a href="#" class="btn btn-dark" data-bs-toggle="offcanvas" data-bs-target="#offcanvas_add_campagne">
+                                <i class="ti ti-plus me-1"></i>Créer campagne
+                            </a>
+                            <a href="#" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#add_compose">
+                                <i class="ti ti-mail me-1"></i>Envoyer Email
+                            </a>
+                            <a href="#" class="btn btn-icon btn-sm btn-outline-light shadow" data-bs-toggle="offcanvas" data-bs-target="#offcanvas_edit"><i class="ti ti-edit-circle"></i></a>
+                            <div class="act-dropdown">
+                                <a href="#" data-bs-toggle="dropdown" class="action-icon btn btn-icon btn-sm btn-outline-light shadow" aria-expanded="false">
+                                    <i class="ti ti-dots-vertical"></i>
+                                </a>
+                                <div class="dropdown-menu dropdown-menu-right">
+                                    <a class="dropdown-item" href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#delete_contact"><i class="ti ti-trash me-1"></i>Supprimer</a>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    <a href="javascript:void(0);" class="btn btn-primary d-flex align-items-center" data-bs-toggle="offcanvas" data-bs-target="#offcanvas_add"><i class="ti ti-square-rounded-plus-filled me-1"></i>Créer</a>
                 </div>
-                <!-- end card header -->
-                <div class="card-body">
-                    <div class="table-responsive">
-                        <table class="table table-nowrap datatable">
-                            <thead class="table-light">
-                                <tr>
-                                    <th>NOM DE SESSION</th>
-                                    <th>NBRE D'ETAPES</th>
-                                    <th>NBRE DE CANDIDATS</th>
-                                    <th>CRÉÉE LE</th>
-                                    <th>INSCRIPTION</th>
-                                    <th>Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>Campagne N°001</td>
-                                    <td>1 étape</td>
-                                    <td>1 Candidats</td>
-                                    <td>23/11/2025</td>
-                                    <td>Autorisées</td>
-                                    <td>
-                                        <div class="d-inline-flex gap-2">
-                                            <a href="{{ route('detail_campagne') }}" class="btn btn-icon btn-sm btn-success"><i class="ti ti-location"></i></a>
-                                            <a class="btn btn-icon btn-sm btn-info" data-bs-toggle="offcanvas" data-bs-target="#offcanvas_edit"><i class="ti ti-edit"></i></a>
-                                            <a href="#;" class="btn btn-icon btn-sm btn-light"><i class="ti ti-menu-2"></i></a>
-                                            <a class="btn btn-icon btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#delete_contact"><i class="ti ti-trash"></i></a>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>Campagne N°050</td>
-                                    <td>3 étape</td>
-                                    <td>25 Candidats</td>
-                                    <td>23/11/2025</td>
-                                    <td>Non-autorisées</td>
-                                    <td>
-                                        <div class="d-inline-flex gap-2">
-                                            <a href="{{ route('detail_campagne') }}" class="btn btn-icon btn-sm btn-success"><i class="ti ti-location"></i></a>
-                                            <a class="btn btn-icon btn-sm btn-info" data-bs-toggle="offcanvas" data-bs-target="#offcanvas_edit"><i class="ti ti-edit"></i></a>
-                                            <a href="#;" class="btn btn-icon btn-sm btn-light"><i class="ti ti-menu-2"></i></a>
-                                            <a class="btn btn-icon btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#delete_contact"><i class="ti ti-trash"></i></a>
-                                        </div>
-                                    </td>
-                                </tr>
+            </div> -->
+            <!-- /Contact User -->
 
-                            </tbody>
-                        </table>
+        </div>
+
+        <!-- Contact Sidebar -->
+        <div class="col-xl-3">
+            <div class="card">
+                <div class="card-body p-3">
+                    <h6 class="mb-3 fw-semibold">Autres informations</h6>
+                    <div class="border-bottom mb-3 pb-3">
+                        <div class="d-flex align-items-center mb-2">
+                            <span class="avatar avatar-xs bg-light p-0 flex-shrink-0 rounded-circle text-dark me-2">
+                                <i class="ti ti-mail fs-14"></i>
+                            </span>
+                            <p class="mb-0"> email@gmail.com</p>
+                        </div>
+                        <div class="d-flex align-items-center mb-2">
+                            <span class="avatar avatar-xs bg-light p-0 flex-shrink-0 rounded-circle text-dark me-2">
+                                <i class="ti ti-phone fs-14"></i>
+                            </span>
+                            <p class="mb-0">+1 12445-47878</p>
+                        </div>
+                        <div class="d-flex align-items-center mb-3">
+                            <span class="avatar avatar-xs bg-light p-0 flex-shrink-0 rounded-circle text-dark me-2">
+                                <i class="ti ti-map-pin fs-14"></i>
+                            </span>
+                            <p class="mb-0">22, Ave Street, Newyork, USA</p>
+                        </div>
+                        <div class="d-flex align-items-center">
+                            <span
+                                class="avatar avatar-xs bg-light p-0 flex-shrink-0 rounded-circle text-dark me-2">
+                                <i class="ti ti-calendar-exclamation fs-14"></i>
+                            </span>
+                            <p class="mb-0">Created on 27 Sep 2025, 11:45 PM</p>
+                        </div>
                     </div>
-                </div><!-- end card body -->
-            </div><!-- end card -->
-        </div><!-- end col -->
+                    <h6 class="mb-3 fw-semibold">Other Information</h6>
+                    <ul class="border-bottom mb-3 pb-3">
+                        <li class="row mb-2"><span class="col-6">Pays</span><span class="col-6 text-dark">Côte d'ivoire</span></li>
+                        <li class="row mb-2"><span class="col-6">Devise</span><span class="col-6 text-dark">Franc cfa</span></li>
+                        <li class="row mb-2"><span class="col-6">Dernière modification</span><span class="col-6 text-dark">27 Sep 2023, 11:45 pm</span></li>
+                        <li class="row"><span class="col-6">Source</span><span class="col-6 text-dark">Paid Campaign</span></li>
+                    </ul>
+
+                    <div class="d-flex align-items-center justify-content-between flex-wrap">
+                        <h6 class="mb-3 fw-semibold">Entreprise</h6>
+                        <!-- <a href="javascript:void(0);" class="link-primary mb-3" data-bs-toggle="offcanvas" data-bs-target="#offcanvas_add"><i class="ti ti-circle-plus me-1"></i>Add New</a> -->
+                    </div>
+                    <div class="mb-3">
+                        <div class="d-flex align-items-center">
+                            <span class="avatar avatar-lg rounded me-2 border">
+                                <img src="assets/img/icons/google-icon.svg" alt="Img" class="img-fluid w-auto h-auto">
+                            </span>
+                            <div>
+                                <h6 class="fw-medium mb-1">Google. Inc <i class="ti ti-circle-check-filled text-success fs-16"></i></h6>
+                                <p class="mb-0">www.google.com</p>
+                            </div>
+                        </div>
+                    </div>
+                    <hr>
+                    <h6 class="mb-3 fw-semibold">Profil social</h6>
+                    <ul class="d-flex align-items-center">
+                        <li>
+                            <a href="javascript:void(0);" class="avatar avatar-sm rounded-circle fs-14 text-dark"><i class="ti ti-brand-youtube"></i></a>
+                        </li>
+                        <li>
+                            <a href="javascript:void(0);" class="avatar avatar-sm rounded-circle fs-14 text-dark"><i class="ti ti-brand-facebook"></i></a>
+                        </li>
+                        <li>
+                            <a href="javascript:void(0);" class="avatar avatar-sm rounded-circle fs-14 text-dark"><i class="ti ti-brand-instagram"></i></a>
+                        </li>
+                        <li>
+                            <a href="javascript:void(0);" class="avatar avatar-sm rounded-circle fs-14 text-dark"><i class="ti ti-brand-whatsapp"></i></a>
+                        </li>
+                        <li>
+                            <a href="javascript:void(0);" class="avatar avatar-sm rounded-circle fs-14 text-dark"><i class="ti ti-brand-pinterest"></i></a>
+                        </li>
+                        <li>
+                            <a href="javascript:void(0);" class="avatar avatar-sm rounded-circle fs-14 text-dark"><i class="ti ti-brand-linkedin"></i></a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <!-- /Contact Sidebar -->
+
+        <!-- Contact Details -->
+        <div class="col-xl-9">
+            
+
+            <!-- Tab Content -->
+            <div class="tab-content pt-0">
+
+                <!-- Activities -->
+                <div class="tab-pane active show">
+                    <div class="card">
+                        <div
+                            class="card-header d-flex align-items-center justify-content-between flex-wrap row-gap-3">
+                            <h5 class="fw-semibold mb-0">Liste Campagnes</h5>
+                            <div class="table-search" style="margin-bottom:0 !important;">
+                                <div class="search-input">
+                                    <a href="javascript:void(0);" class="btn-searchset"><i class="isax isax-search-normal fs-12"></i></a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-nowrap datatable">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th>NOM DE SESSION</th>
+                                            <th>NBRE D'ETAPES</th>
+                                            <th>NBRE DE CANDIDATS</th>
+                                            <th>CRÉÉE LE</th>
+                                            <th>INSCRIPTION</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>Campagne N°001</td>
+                                            <td>1 étape</td>
+                                            <td>1 Candidats</td>
+                                            <td>23/11/2025</td>
+                                            <td>Autorisées</td>
+                                            <td>
+                                                <div class="d-inline-flex gap-2">
+                                                    <a href="#" class="btn btn-icon btn-sm btn-success"><i class="ti ti-location"></i></a>
+                                                    <a class="btn btn-icon btn-sm btn-info" data-bs-toggle="offcanvas" data-bs-target="#offcanvas_edit"><i class="ti ti-edit"></i></a>
+                                                    <a href="#;" class="btn btn-icon btn-sm btn-light"><i class="ti ti-menu-2"></i></a>
+                                                    <a class="btn btn-icon btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#delete_contact"><i class="ti ti-trash"></i></a>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Campagne N°050</td>
+                                            <td>3 étape</td>
+                                            <td>25 Candidats</td>
+                                            <td>23/11/2025</td>
+                                            <td>Non-autorisées</td>
+                                            <td>
+                                                <div class="d-inline-flex gap-2">
+                                                    <a href="#" class="btn btn-icon btn-sm btn-success"><i class="ti ti-location"></i></a>
+                                                    <a class="btn btn-icon btn-sm btn-info" data-bs-toggle="offcanvas" data-bs-target="#offcanvas_edit"><i class="ti ti-edit"></i></a>
+                                                    <a href="#;" class="btn btn-icon btn-sm btn-light"><i class="ti ti-menu-2"></i></a>
+                                                    <a class="btn btn-icon btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#delete_contact"><i class="ti ti-trash"></i></a>
+                                                </div>
+                                            </td>
+                                        </tr>
+
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div><!-- end card body -->
+                    </div>
+                </div>
+                <!-- /Activities -->
+
+            </div>
+            <!-- /Tab Content -->
+
+        </div>
+        <!-- /Contact Details -->
+
     </div>
     <!-- end row -->
 
@@ -94,7 +233,7 @@
 <!-- End Content -->
 
 <!-- Add offcanvas -->
-<div class="offcanvas offcanvas-end offcanvas-large" tabindex="-1" id="offcanvas_add">
+<div class="offcanvas offcanvas-end offcanvas-large" tabindex="-1" id="offcanvas_add_campagne">
     <div class="offcanvas-header border-bottom">
         <h5 class="mb-0">Ajouter une nouvelle campagne</h5>
         <button type="button"
@@ -165,25 +304,11 @@
                                 </div>
 
                                 <!-- Nom de la campagne -->
-                                <div class="col-md-6">
+                                <div class="col-md-12">
                                     <div class="mb-3">
                                         <label class="form-label">Nom de la campagne <span class="text-danger">*</span></label>
                                         <!-- Mapping: name -->
                                         <input type="text" class="form-control" name="name" required>
-                                    </div>
-                                </div>
-
-                                <!-- Customer ID (Select) -->
-                                <div class="col-md-6">
-                                    <div class="mb-3">
-                                        <label class="form-label">Client associé (Customer ID) <span class="text-danger">*</span></label>
-                                        <!-- Mapping: customer_id -->
-                                        <select class="select form-control" name="customer_id" required>
-                                            <option value="">Sélectionner un client</option>
-                                            <!-- Bouclez sur vos clients ici -->
-                                            <option value="1">Client A</option>
-                                            <option value="2">Client B</option>
-                                        </select>
                                     </div>
                                 </div>
 

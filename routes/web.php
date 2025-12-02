@@ -33,7 +33,9 @@ Route::group(['middleware' => 'auth'], function () {
     Route::controller(ConsoleController::class)->group(function () {
         Route::get('back_office_console', 'index')->name('back_office_console');
         Route::get('list_customer', 'listCustomer')->name('list_customer');
+        Route::get('detail_customer', 'detailCustomer')->name('detail_customer');
         Route::get('list_campagne', 'listCampagne')->name('list_campagne');
+        Route::get('detail_campagne', 'detailCampagne')->name('detail_campagne');
     });
 
     Route::controller(BusinessController::class)->group(function () {

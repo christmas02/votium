@@ -60,9 +60,9 @@
                                     <td>2011 Apr 25</td>
                                     <td>
                                         <div class="d-inline-flex gap-2">
-                                            <a href="#" class="btn btn-icon btn-sm btn-success"><i class="ti ti-location"></i></a>
+                                            <a href="{{ route('detail_customer') }}" class="btn btn-icon btn-sm btn-success"><i class="ti ti-eye"></i></a>
                                             <a class="btn btn-icon btn-sm btn-info" data-bs-toggle="offcanvas" data-bs-target="#offcanvas_edit"><i class="ti ti-edit"></i></a>
-                                            <a href="#;" class="btn btn-icon btn-sm btn-light"><i class="ti ti-menu-2"></i></a>
+                                            <!-- <a href="#;" class="btn btn-icon btn-sm btn-light"><i class="ti ti-menu-2"></i></a> -->
                                             <a class="btn btn-icon btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#delete_contact"><i class="ti ti-trash"></i></a>
                                         </div>
                                     </td>
@@ -77,9 +77,9 @@
                                     <td>2011 Jul 25</td>
                                     <td>
                                         <div class="d-inline-flex gap-2">
-                                            <a href="#" class="btn btn-icon btn-sm btn-success"><i class="ti ti-location"></i></a>
+                                            <a href="{{ route('detail_customer') }}" class="btn btn-icon btn-sm btn-success"><i class="ti ti-eye"></i></a>
                                             <a class="btn btn-icon btn-sm btn-info" data-bs-toggle="offcanvas" data-bs-target="#offcanvas_edit"><i class="ti ti-edit"></i></a>
-                                            <a href="#;" class="btn btn-icon btn-sm btn-light"><i class="ti ti-menu-2"></i></a>
+                                            <!-- <a href="#;" class="btn btn-icon btn-sm btn-light"><i class="ti ti-menu-2"></i></a> -->
                                             <a class="btn btn-icon btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#delete_contact"><i class="ti ti-trash"></i></a>
                                         </div>
                                     </td>
@@ -145,32 +145,17 @@
                                             <span>JPG, GIF ou PNG. Max 800K</span>
                                         </div>
                                     </div>
-                                    <!-- <div class="profile-upload d-flex align-items-center">
-                                        <div class="profile-upload-img avatar avatar-xxl border border-dashed rounded position-relative flex-shrink-0">
-                                            <span><i class="ti ti-photo"></i></span>
-                                            <img id="ImgPreview" src="assets/img/profiles/avatar-02.jpg" alt="img" class="preview1">
-                                            <a href="javascript:void(0);" id="removeImage1" class="profile-remove">
-                                                <i class="ti ti-x"></i>
-                                            </a>
-                                        </div>
-                                        <div class="profile-upload-content ms-3">
-                                            <label class="d-inline-flex align-items-center position-relative btn btn-primary btn-sm mb-2">
-                                                <i class="ti ti-file-broken me-1"></i>Upload File
-                                                <input type="file" id="imag" class="input-img position-absolute w-100 h-100 opacity-0 top-0 end-0">
-                                            </label>
-                                            <p class="mb-0">JPG, GIF or PNG. Max size of 800K</p>
-                                        </div>
-                                    </div> -->
+                                    
                                 </div>
 
                                 <!-- Customer ID -->
-                                <div class="col-md-6">
+                                <!-- <div class="col-md-6">
                                     <div class="mb-3">
                                         <label class="form-label">ID Client <span class="text-danger">*</span></label>
-                                        <!-- Mapping: customer_id -->
+                                        Mapping: customer_id
                                         <input type="text" class="form-control" name="customer_id" placeholder="ex: CUST-001" required>
                                     </div>
-                                </div>
+                                </div> -->
 
                                 <!-- Entreprise -->
                                 <div class="col-md-6">
@@ -182,7 +167,7 @@
                                 </div>
 
                                 <!-- Email & Is Active -->
-                                <div class="col-md-12">
+                                <div class="col-md-6">
                                     <div class="mb-3">
                                         <div class="d-flex justify-content-between align-items-center">
                                             <label class="form-label">Email <span class="text-danger ms-1">*</span></label>
