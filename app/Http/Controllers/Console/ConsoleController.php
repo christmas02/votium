@@ -12,6 +12,7 @@ class ConsoleController  extends Controller
         return view('console.index');
     }
 
+    #CUSTOMERS
     public function listCustomer(){
         $title_back = "Tableau de bord";
         $link_back = "list_customer";
@@ -24,5 +25,13 @@ class ConsoleController  extends Controller
         try {
 
         } catch (\Exception $e) {}
+    }
+
+    #CAMPAGNES
+    public function listCampagne(){
+        $title_back = "Tableau de bord";
+        $link_back = "list_campagne";
+        $title = "Liste campagnes";
+        return view('console.listCampagnes', compact('title','title_back','link_back'));
     }
 }

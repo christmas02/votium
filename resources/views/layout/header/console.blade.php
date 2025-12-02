@@ -13,27 +13,29 @@
     <meta name="robots" content="">
 
     <!-- Favicon -->
-    <link rel="shortcut icon" href="assets/img/favicon.png">
+    <link rel="shortcut icon" href="{{ asset('assets/img/favicon.png') }}">
     <!-- Apple Icon -->
-    <link rel="apple-touch-icon" href="assets/img/apple-icon.png">
+    <link rel="apple-touch-icon" href="{{ asset('assets/img/apple-icon.png') }}">
     <!-- Theme Config Js -->
-    <script src="assets/js/theme-script.js" type="5f364b4429f0479adce4c427-text/javascript"></script>
+    <script src="{{ asset('assets/js/theme-script.js') }}"></script>
     <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{{ asset('assets/css/bootstrap.min.css') }}">
     <!-- Tabler Icon CSS -->
-    <link rel="stylesheet" href="assets/plugins/tabler-icons/tabler-icons.min.css">
+    <link rel="stylesheet" href="{{ asset('assets/plugins/tabler-icons/tabler-icons.min.css') }}">
+
+    <!-- Select2 CSS -->
+	<link rel="stylesheet" href="{{ asset('assets/plugins/select2/css/select2.min.css') }}">
 
     <!-- Simplebar CSS -->
-    <link rel="stylesheet" href="assets/plugins/simplebar/simplebar.min.css">
+    <link rel="stylesheet" href="{{ asset('assets/plugins/simplebar/simplebar.min.css') }}">
 
     <!-- Datatable CSS -->
-    <link rel="stylesheet" href="assets/plugins/datatables/css/dataTables.bootstrap5.min.css">
-
+    <link rel="stylesheet" href="{{ asset('assets/plugins/datatables/css/dataTables.bootstrap5.min.css') }}">
     <!-- Daterangepicker CSS -->
-    <link rel="stylesheet" href="assets/plugins/daterangepicker/daterangepicker.css">
+    <link rel="stylesheet" href="{{ asset('assets/plugins/daterangepicker/daterangepicker.css') }}">
 
     <!-- Main CSS -->
-    <link rel="stylesheet" href="assets/css/style.css" id="app-style">
+    <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}" id="app-style">
 
 </head>
 
@@ -50,13 +52,13 @@
                     <!-- Logo -->
                     <a href="index.html" class="logo">
                         <!-- Logo Normal -->
-                        <span class="logo-light">
-                            <span class="logo-lg"><img src="assets/img/logo.svg" alt="logo"></span>
-                            <span class="logo-sm"><img src="assets/img/logo-small.svg" alt="small logo"></span>
+                            <span class="logo-light">
+                            <span class="logo-lg"><img src="{{ asset('assets/img/logo.svg') }}" alt="logo"></span>
+                            <span class="logo-sm"><img src="{{ asset('assets/img/logo-small.svg') }}" alt="small logo"></span>
                         </span>
                         <!-- Logo Dark -->
                         <span class="logo-dark">
-                            <span class="logo-lg"><img src="assets/img/logo-white.svg" alt="dark logo"></span>
+                            <span class="logo-lg"><img src="{{ asset('assets/img/logo-white.svg') }}" alt="dark logo"></span>
                         </span>
                     </a>
 
@@ -132,13 +134,13 @@
                     <!-- User Dropdown -->
                     <div class="dropdown profile-dropdown d-flex align-items-center justify-content-center">
                         <a href="javascript:void(0);" class="topbar-link dropdown-toggle drop-arrow-none position-relative" data-bs-toggle="dropdown" data-bs-offset="0,22" aria-haspopup="false" aria-expanded="false">
-                            <img src="assets/img/users/user-40.jpg" width="38" class="rounded-1 d-flex" alt="user-image">
+                            <img src="{{ asset('assets/img/users/user-40.jpg') }}" width="38" class="rounded-1 d-flex" alt="user-image">
                             <span class="online text-success"><i class="ti ti-circle-filled d-flex bg-white rounded-circle border border-1 border-white"></i></span>
                         </a>
                         <div class="dropdown-menu dropdown-menu-end dropdown-menu-md p-2">
 
                             <div class="d-flex align-items-center bg-light rounded-3 p-2 mb-2">
-                                <img src="assets/img/users/user-40.jpg" class="rounded-circle" width="42" height="42" alt="Img">
+                                <img src="{{ asset('assets/img/users/user-40.jpg') }}" class="rounded-circle" width="42" height="42" alt="Img">
                                 <div class="ms-2">
                                     <p class="fw-medium text-dark mb-0">Katherine Brooks</p>
                                     <span class="d-block fs-13">Installer</span>
@@ -215,39 +217,38 @@
 
 
     <!-- jQuery -->
-    <script src="assets/js/jquery-3.7.1.min.js" type="5f364b4429f0479adce4c427-text/javascript"></script>
+    <script src="{{ asset('assets/js/jquery-3.7.1.min.js') }}"></script>
 
     <!-- Bootstrap Core JS -->
-    <script src="assets/js/bootstrap.bundle.min.js" type="5f364b4429f0479adce4c427-text/javascript"></script>
+    <script src="{{ asset('assets/js/bootstrap.bundle.min.js') }}"></script>
 
     <!-- Simplebar JS -->
-    <script src="assets/plugins/simplebar/simplebar.min.js" type="5f364b4429f0479adce4c427-text/javascript"></script>
+    <script src="{{ asset('assets/plugins/simplebar/simplebar.min.js') }}"></script>
 
     <!-- Datatable JS -->
-    <script src="assets/plugins/datatables/js/jquery.dataTables.min.js" type="5f364b4429f0479adce4c427-text/javascript"></script>
-    <script src="assets/plugins/datatables/js/dataTables.bootstrap5.min.js" type="5f364b4429f0479adce4c427-text/javascript"></script>
+    <script src="{{ asset('assets/plugins/datatables/js/jquery.dataTables.min.js') }}"></script>
+    <script src="{{ asset('assets/plugins/datatables/js/dataTables.bootstrap5.min.js') }}"></script>
 
     <!-- Daterangepicker JS -->
-    <script src="assets/js/moment.min.js" type="5f364b4429f0479adce4c427-text/javascript"></script>
-    <script src="assets/plugins/daterangepicker/daterangepicker.js" type="5f364b4429f0479adce4c427-text/javascript"></script>
+    <script src="{{ asset('assets/js/moment.min.js') }}"></script>
+    <script src="{{ asset('assets/plugins/daterangepicker/daterangepicker.js') }}"></script>
 
+    <!-- Select2 JS -->
+	<script src="{{ asset('assets/plugins/select2/js/select2.min.js') }}"></script>
+
+    <!-- Profile Upload JS -->
+	<script src="{{ asset('assets/js/profile-upload.js') }}" type="d22fd2b98b9057776904f99d-text/javascript"></script>
+ 
     <!-- Apexchart JS -->
-    <script src="assets/plugins/apexchart/apexcharts.min.js" type="5f364b4429f0479adce4c427-text/javascript"></script>
-    <script src="assets/plugins/apexchart/chart-data.js" type="5f364b4429f0479adce4c427-text/javascript"></script>
+    <script src="{{ asset('assets/plugins/apexchart/apexcharts.min.js') }}"></script>
+    <script src="{{ asset('assets/plugins/apexchart/chart-data.js') }}"></script>
 
     <!-- Custom Json Js -->
-    <script src="assets/json/deals-project.js" type="5f364b4429f0479adce4c427-text/javascript"></script>
+    <script src="{{ asset('assets/json/deals-project.js') }}"></script>
 
     <!-- Main JS -->
-    <script src="assets/js/script.js" type="5f364b4429f0479adce4c427-text/javascript"></script>
+    <script src="{{ asset('assets/js/script.js') }}"></script>
 
-    <script src="https://crms.dreamstechnologies.com/cdn-cgi/scripts/7d0fa10a/cloudflare-static/rocket-loader.min.js"
-        data-cf-settings="5f364b4429f0479adce4c427-|49" defer></script>
-
-    <script defer src="https://static.cloudflareinsights.com/beacon.min.js/vcd15cbe7772f49c399c6a5babf22c1241717689176015"
-        integrity="sha512-ZpsOmlRQV6y907TI0dKBHq9Md29nnaEIPlkf84rnaERnq6zvWvPUqr2ft8M1aS28oN72PdrCzSjY4U6VaAw1EQ=="
-        data-cf-beacon='{"version":"2024.11.0","token":"3ca157e612a14eccbb30cf6db6691c29","server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}'
-        crossorigin="anonymous"></script>
 </body>
 
 

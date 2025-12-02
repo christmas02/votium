@@ -401,6 +401,10 @@ Template Name: CRMS - Bootstrap Admin Template
         });
     }
 
+	jQuery(function () {
+    // ton code select2 ici
+});
+
 	// Popover
 	const popoverTriggerList = document.querySelectorAll('[data-bs-toggle="popover"]')
 	const popoverList = [...popoverTriggerList].map(popoverTriggerEl => new bootstrap.Popover(popoverTriggerEl))
