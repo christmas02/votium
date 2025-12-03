@@ -33,7 +33,11 @@
                             <a href="javascript:void(0);" class="btn-searchset"><i class="isax isax-search-normal fs-12"></i></a>
                         </div>
                     </div>
-                    <a href="javascript:void(0);" class="btn btn-primary d-flex align-items-center" data-bs-toggle="offcanvas" data-bs-target="#offcanvas_add"><i class="ti ti-square-rounded-plus-filled me-1"></i>Créer</a>
+                    <!-- Bouton déclencheur de la modale -->
+                    <a href="javascript:void(0);" class="btn btn-primary d-flex align-items-center" data-bs-toggle="modal" data-bs-target="#modal_add_client">
+                        <i class="ti ti-square-rounded-plus-filled me-1"></i>Créer
+                    </a>
+                    <!-- <a href="javascript:void(0);" class="btn btn-primary d-flex align-items-center" data-bs-toggle="offcanvas" data-bs-target="#offcanvas_add"><i class="ti ti-square-rounded-plus-filled me-1"></i>Créer</a> -->
                 </div>
                 <!-- end card header -->
                 <div class="card-body">
@@ -61,9 +65,12 @@
                                     <td>
                                         <div class="d-inline-flex gap-2">
                                             <a href="{{ route('detail_customer') }}" class="btn btn-icon btn-sm btn-success"><i class="ti ti-eye"></i></a>
-                                            <a class="btn btn-icon btn-sm btn-info" data-bs-toggle="offcanvas" data-bs-target="#offcanvas_edit"><i class="ti ti-edit"></i></a>
-                                            <!-- <a href="#;" class="btn btn-icon btn-sm btn-light"><i class="ti ti-menu-2"></i></a> -->
+                                            <a class="btn btn-icon btn-sm btn-info" data-bs-toggle="modal" data-bs-target="#modal_edit_client"><i class="ti ti-edit"></i></a>
+
                                             <a class="btn btn-icon btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#delete_contact"><i class="ti ti-trash"></i></a>
+                                            <a href="#" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#modal_add_campaign">
+                                                <i class="ti ti-plus me-1"></i>Créer campagne
+                                            </a>
                                         </div>
                                     </td>
                                 </tr>
@@ -78,9 +85,12 @@
                                     <td>
                                         <div class="d-inline-flex gap-2">
                                             <a href="{{ route('detail_customer') }}" class="btn btn-icon btn-sm btn-success"><i class="ti ti-eye"></i></a>
-                                            <a class="btn btn-icon btn-sm btn-info" data-bs-toggle="offcanvas" data-bs-target="#offcanvas_edit"><i class="ti ti-edit"></i></a>
-                                            <!-- <a href="#;" class="btn btn-icon btn-sm btn-light"><i class="ti ti-menu-2"></i></a> -->
+                                            <a class="btn btn-icon btn-sm btn-info" data-bs-toggle="modal" data-bs-target="#modal_edit_client"><i class="ti ti-edit"></i></a>
+
                                             <a class="btn btn-icon btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#delete_contact"><i class="ti ti-trash"></i></a>
+                                            <a href="#" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#modal_add_campaign">
+                                                <i class="ti ti-plus me-1"></i>Créer campagne
+                                            </a>
                                         </div>
                                     </td>
                                 </tr>
@@ -98,467 +108,407 @@
 <!-- End Content -->
 
 <!-- Add offcanvas -->
-<div class="offcanvas offcanvas-end offcanvas-large" tabindex="-1" id="offcanvas_add">
-    <div class="offcanvas-header border-bottom">
-        <h5 class="mb-0">Ajouter un nouveau client</h5>
-        <button type="button"
-            class="btn-close custom-btn-close border p-1 me-0 d-flex align-items-center justify-content-center rounded-circle"
-            data-bs-dismiss="offcanvas" aria-label="Close">
-        </button>
-    </div>
-    <div class="offcanvas-body">
-        <!-- Ajoutez method="POST" et enctype pour le logo -->
-        <form action="#" method="POST" enctype="multipart/form-data">
-            <!-- CSRF Token si vous utilisez Laravel Blade -->
-            <!-- @csrf -->
+<!-- Structure de la Modale -->
+<div class="modal fade" id="modal_add_client" tabindex="-1" aria-labelledby="modalAddClientLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered"> <!-- modal-lg pour plus de largeur -->
+        <div class="modal-content">
+            <div class="modal-header border-bottom">
+                <h5 class="modal-title" id="modalAddClientLabel">Ajouter un nouveau client</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
 
-            <div class="accordion accordion-bordered" id="main_accordion">
+            <div class="modal-body">
+                <form action="#" method="POST" enctype="multipart/form-data">
+                    <!-- @csrf -->
 
-                <!-- Basic Info -->
-                <div class="accordion-item rounded mb-3">
-                    <div class="accordion-header">
-                        <a href="#"
-                            class="accordion-button accordion-custom-button rounded"
-                            data-bs-toggle="collapse" data-bs-target="#basic">
-                            <span class="avatar avatar-md rounded me-1"><i class="ti ti-user-plus"></i></span>
-                            Informations de base
-                        </a>
+                    <!-- SECTION 1 : INFORMATIONS UTILISATEUR (Compte de connexion) -->
+                    <div class="bg-light p-3 rounded mb-4">
+                        <h6 class="mb-3 d-flex align-items-center text-primary">
+                            <i class="ti ti-user-shield fs-5 me-2"></i> Informations Utilisateur (Customer)
+                        </h6>
+                        <div class="row">
+                            <!-- Mapping: name (Schema users) -->
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Nom complet <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" name="name" placeholder="Ex: Jean Dupont" required>
+                            </div>
+
+                            <!-- Mapping: email (Schema users) -->
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Email (Identifiant) <span class="text-danger">*</span></label>
+                                <input type="email" class="form-control" name="email" placeholder="jean@entreprise.com" required>
+                            </div>
+
+                            <!-- Mapping: password (Schema users) -->
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Mot de passe <span class="text-danger">*</span></label>
+                                <input type="password" class="form-control" name="password" required>
+                            </div>
+
+                            <!-- Confirmation Mot de passe -->
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Confirmer le mot de passe <span class="text-danger">*</span></label>
+                                <input type="password" class="form-control" name="password_confirmation" required>
+                            </div>
+
+                            <!-- Statut Actif -->
+                            <div class="col-md-6 mb-3">
+                                <div class="form-check form-switch p-2 border rounded bg-light d-flex align-items-center">
+                                    <input type="hidden" name="is_active" value="0">
+                                    <input class="form-check-input ms-0 me-2" name="is_active" value="1" type="checkbox" role="switch" id="activeSwitch" checked>
+                                    <label class="form-check-label cursor-pointer mb-0" for="activeSwitch">Compte Entreprise Actif</label>
+                                </div>
+                            </div>
+                            <!-- Rôle par défaut (Hidden) -->
+                            <input type="hidden" name="role" value="customer">
+                        </div>
                     </div>
-                    <div class="accordion-collapse collapse show" id="basic" data-bs-parent="#main_accordion">
-                        <div class="accordion-body border-top">
-                            <div class="row">
-                                <!-- Logo Upload -->
-                                <div class="col-md-12">
-                                    <div class="d-flex align-items-center mb-3">
-                                       <div class="avatar avatar-xxl border border-dashed me-3 flex-shrink-0">
-                                            <div class="position-relative d-flex align-items-center">
-                                                 <i class="ti ti-photo text-dark fs-16"></i>
-                                            </div>
-                                        </div>
 
-                                        <div class="d-inline-flex flex-column align-items-start">
-                                            <div class="drag-upload-btn btn btn-sm btn-primary position-relative mb-2">
-                                                <i class="ti ti-file-broken me-1"></i>Télécharger le logo
-                                                <!-- Mapping: logo -->
-                                                <input type="file" class="form-control image-sign" name="logo" accept="image/png, image/gif, image/jpeg">
-                                            </div>
-                                            <span>JPG, GIF ou PNG. Max 800K</span>
-                                        </div>
+                    <!-- HR Divider -->
+                    <div class="d-flex align-items-center mb-4">
+                        <hr class="flex-grow-1">
+                        <span class="mx-3 text-muted fw-bold">DÉTAILS ENTREPRISE</span>
+                        <hr class="flex-grow-1">
+                    </div>
+
+                    <!-- SECTION 2 : INFORMATIONS ENTREPRISE -->
+                    <div>
+                        <h6 class="mb-3 d-flex align-items-center text-dark">
+                            <i class="ti ti-building-skyscraper fs-5 me-2"></i> Informations de l'Entreprise
+                        </h6>
+
+                        <div class="row">
+                            <!-- Logo Upload avec Prévisualisation -->
+                            <div class="col-md-12 mb-3">
+                                <div class="d-flex align-items-center">
+                                    <!-- Zone de l'image -->
+                                    <div class="avatar avatar-xl border border-dashed me-3 flex-shrink-0 d-flex justify-content-center align-items-center bg-light position-relative overflow-hidden">
+                                        <!-- Icône par défaut (sera cachée au chargement) -->
+                                        <i class="ti ti-photo text-muted fs-4" id="logo_placeholder"></i>
+
+                                        <!-- Image de prévisualisation (cachée par défaut) -->
+                                        <img src="#" alt="Aperçu" id="logo_preview" class="d-none w-100 h-100 object-fit-cover">
                                     </div>
-                                    
-                                </div>
 
-                                <!-- Customer ID -->
-                                <!-- <div class="col-md-6">
-                                    <div class="mb-3">
-                                        <label class="form-label">ID Client <span class="text-danger">*</span></label>
-                                        Mapping: customer_id
-                                        <input type="text" class="form-control" name="customer_id" placeholder="ex: CUST-001" required>
-                                    </div>
-                                </div> -->
-
-                                <!-- Entreprise -->
-                                <div class="col-md-6">
-                                    <div class="mb-3">
-                                        <label class="form-label">Entreprise <span class="text-danger">*</span></label>
-                                        <!-- Mapping: entreprise -->
-                                        <input type="text" class="form-control" name="entreprise" required>
-                                    </div>
-                                </div>
-
-                                <!-- Email & Is Active -->
-                                <div class="col-md-6">
-                                    <div class="mb-3">
-                                        <div class="d-flex justify-content-between align-items-center">
-                                            <label class="form-label">Email <span class="text-danger ms-1">*</span></label>
-                                            <div class="form-check form-switch mb-1">
-                                                <label class="form-check-label d-flex align-items-center gap-2">
-                                                    <span>Compte Actif</span>
-                                                    <!-- Mapping: is_active -->
-                                                    <!-- Astuce Laravel: input hidden pour envoyer 0 si non coché -->
-                                                    <input type="hidden" name="is_active" value="0">
-                                                    <input class="form-check-input form-check-input-sm switchCheckDefault ms-auto" name="is_active" value="1" type="checkbox" role="switch" checked>
-                                                </label>
-                                            </div>
-                                        </div>
-                                        <!-- Mapping: email -->
-                                        <input type="email" class="form-control" name="email" required>
-                                    </div>
-                                </div>
-
-                                <!-- Phone Number -->
-                                <div class="col-md-6">
-                                    <div class="mb-3">
-                                        <label class="form-label">Téléphone <span class="text-danger">*</span></label>
-                                        <!-- Mapping: phonenumber -->
-                                        <input type="text" class="form-control phone" name="phonenumber" required>
-                                    </div>
-                                </div>
-
-                                <!-- Website -->
-                                <div class="col-md-6">
-                                    <div class="mb-3">
-                                        <label class="form-label">Site Web</label>
-                                        <!-- Mapping: link_website -->
-                                        <input type="url" class="form-control" name="link_website" placeholder="https://...">
-                                    </div>
-                                </div>
-
-                                <!-- Data (Description/Notes) -->
-                                <div class="col-md-12">
-                                    <div class="mb-0">
-                                        <label class="form-label">Données supplémentaires (Data) <span class="text-danger">*</span></label>
-                                        <!-- Mapping: data -->
-                                        <textarea class="form-control" rows="3" name="data" required></textarea>
+                                    <div class="d-flex flex-column">
+                                        <label class="form-label mb-1">Logo de l'entreprise</label>
+                                        <!-- Ajout de l'événement onchange -->
+                                        <input type="file"
+                                            class="form-control form-control-sm"
+                                            name="logo"
+                                            id="logo_input"
+                                            accept="image/png, image/gif, image/jpeg"
+                                            onchange="previewLogo(this)">
+                                        <small class="text-muted">JPG, GIF ou PNG. Max 800K</small>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- /Basic Info -->
 
-                <!-- Address Info -->
-                <div class="accordion-item border-top rounded mb-3">
-                    <div class="accordion-header">
-                        <a href="#"
-                            class="accordion-button accordion-custom-button rounded"
-                            data-bs-toggle="collapse" data-bs-target="#address">
-                            <span class="avatar avatar-md rounded me-1"><i class="ti ti-map-pin-cog"></i></span>
-                            Adresse & Localisation
-                        </a>
-                    </div>
-                    <div class="accordion-collapse collapse" id="address" data-bs-parent="#main_accordion">
-                        <div class="accordion-body border-top">
-                            <div class="row">
-                                <!-- Adresse -->
-                                <div class="col-md-12">
-                                    <div class="mb-3">
-                                        <label class="form-label">Adresse Complète <span class="text-danger">*</span></label>
-                                        <!-- Mapping: adresse -->
-                                        <input type="text" class="form-control" name="adresse" required>
-                                    </div>
-                                </div>
-                                <!-- Pays Siege -->
-                                <div class="col-md-12">
-                                    <div class="mb-3">
-                                        <label class="form-label">Pays du siège <span class="text-danger">*</span></label>
-                                        <!-- Mapping: pays_siege -->
-                                        <select class="select form-control" name="pays_siege">
-                                            <option value="">Sélectionner</option>
-                                            <option value="France">France</option>
-                                            <option value="USA">USA</option>
-                                            <option value="Canada">Canada</option>
-                                            <option value="Côte d'Ivoire">Côte d'Ivoire</option>
-                                            <!-- Ajoutez vos pays ici -->
-                                        </select>
-                                    </div>
-                                </div>
+                            <!-- Nom Entreprise -->
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Nom de l'entreprise <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" name="entreprise" required>
+                            </div>
+
+                            <!-- NOUVEAU : Email de l'entreprise -->
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Email de contact (Entreprise)</label>
+                                <!-- Nommé 'company_email' pour ne pas écraser l'email du User -->
+                                <input type="email" class="form-control" name="company_email" placeholder="contact@entreprise.com">
+                            </div>
+
+                            <!-- Téléphone -->
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Téléphone <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control phone" name="phonenumber" required>
+                            </div>
+
+                            <!-- Site Web -->
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Site Web</label>
+                                <input type="url" class="form-control" name="link_website" placeholder="https://...">
+                            </div>
+
+                            <!-- Adresse -->
+                            <div class="col-md-8 mb-3">
+                                <label class="form-label">Adresse Complète <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" name="adresse" required>
+                            </div>
+
+                            <!-- Pays -->
+                            <div class="col-md-4 mb-4">
+                                <label class="form-label">Pays du siège <span class="text-danger">*</span></label>
+                                <select class="select form-control form-select" name="pays_siege">
+                                    <option value="">Sélectionner</option>
+                                    <option value="France">France</option>
+                                    <option value="Côte d'Ivoire">Côte d'Ivoire</option>
+                                    <option value="Senegal">Sénégal</option>
+                                    <option value="USA">USA</option>
+                                    <option value="Canada">Canada</option>
+                                </select>
+                            </div>
+
+                            <!-- Description / Data -->
+                            <div class="col-md-12 mb-3">
+                                <label class="form-label">Notes / Données supplémentaires <span class="text-danger">*</span></label>
+                                <textarea class="form-control" rows="2" name="data" required></textarea>
                             </div>
                         </div>
-                    </div>
-                </div>
-                <!-- /Address Info -->
 
-                <!-- Social Profile -->
-                <div class="accordion-item border-top rounded mb-3">
-                    <div class="accordion-header">
-                        <a href="#"
-                            class="accordion-button accordion-custom-button rounded"
-                            data-bs-toggle="collapse" data-bs-target="#social">
-                            <span class="avatar avatar-md rounded me-1"><i class="ti ti-social"></i></span>
-                            Réseaux Sociaux
-                        </a>
-                    </div>
-                    <div class="accordion-collapse collapse" id="social" data-bs-parent="#main_accordion">
-                        <div class="accordion-body border-top">
+                        <!-- SECTION : RÉSEAUX SOCIAUX -->
+                        <div class="mt-3">
+                            <h6 class="mb-3 d-flex align-items-center text-dark">
+                                <i class="ti ti-social fs-5 me-2"></i> Réseaux Sociaux
+                            </h6>
+
                             <div class="row">
                                 <!-- Facebook -->
-                                <div class="col-md-6">
-                                    <div class="mb-3">
-                                        <label class="form-label">Facebook</label>
-                                        <!-- Mapping: link_facebook -->
-                                        <input type="url" class="form-control" name="link_facebook" placeholder="https://facebook.com/...">
+                                <div class="col-md-6 mb-3">
+                                    <div class="input-group">
+                                        <span class="input-group-text bg-light"><i class="ti ti-brand-facebook"></i></span>
+                                        <input type="url" class="form-control" name="link_facebook" placeholder="Facebook URL">
                                     </div>
                                 </div>
+
                                 <!-- Instagram -->
-                                <div class="col-md-6">
-                                    <div class="mb-3">
-                                        <label class="form-label">Instagram</label>
-                                        <!-- Mapping: link_instagram -->
-                                        <input type="url" class="form-control" name="link_instagram" placeholder="https://instagram.com/...">
+                                <div class="col-md-6 mb-3">
+                                    <div class="input-group">
+                                        <span class="input-group-text bg-light"><i class="ti ti-brand-instagram"></i></span>
+                                        <input type="url" class="form-control" name="link_instagram" placeholder="Instagram URL">
                                     </div>
                                 </div>
-                                <!-- Twitter -->
-                                <div class="col-md-6">
-                                    <div class="mb-3">
-                                        <label class="form-label">Twitter (X)</label>
-                                        <!-- Mapping: link_twitter -->
-                                        <input type="url" class="form-control" name="link_twitter" placeholder="https://twitter.com/...">
-                                    </div>
-                                </div>
+
                                 <!-- LinkedIn -->
-                                <div class="col-md-6">
-                                    <div class="mb-3">
-                                        <label class="form-label">LinkedIn</label>
-                                        <!-- Mapping: link_linkedin -->
-                                        <input type="url" class="form-control" name="link_linkedin" placeholder="https://linkedin.com/in/...">
+                                <div class="col-md-6 mb-3">
+                                    <div class="input-group">
+                                        <span class="input-group-text bg-light"><i class="ti ti-brand-linkedin"></i></span>
+                                        <input type="url" class="form-control" name="link_linkedin" placeholder="LinkedIn URL">
                                     </div>
                                 </div>
-                                <!-- YouTube -->
-                                <div class="col-md-12">
-                                    <div class="mb-0">
-                                        <label class="form-label">YouTube</label>
-                                        <!-- Mapping: link_youtube -->
-                                        <input type="url" class="form-control" name="link_youtube" placeholder="https://youtube.com/...">
+
+                                <!-- Twitter / X -->
+                                <div class="col-md-6 mb-3">
+                                    <div class="input-group">
+                                        <span class="input-group-text bg-light"><i class="ti ti-brand-x"></i></span>
+                                        <input type="url" class="form-control" name="link_twitter" placeholder="Twitter/X URL">
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
-                <!-- /Social Profile -->
-
+                    <!-- ... -->
             </div>
 
-            <!-- Actions -->
-            <div class="d-flex align-items-center justify-content-end">
-                <button type="button" data-bs-dismiss="offcanvas" class="btn btn-light me-2">Annuler</button>
-                <button type="submit" class="btn btn-primary">Créer le client</button>
+            <!-- Modal Footer (Actions) -->
+            <div class="modal-footer border-top mt-4 pb-0 px-0">
+                <button type="button" class="btn btn-light" data-bs-dismiss="modal">Annuler</button>
+                <button type="submit" class="btn btn-primary"><i class="ti ti-device-floppy me-1"></i> Enregistrer</button>
             </div>
-        </form>
+            </form>
+        </div>
     </div>
+</div>
 </div>
 <!-- /Add offcanvas -->
 
 <!-- edit offcanvas -->
-<div class="offcanvas offcanvas-end offcanvas-large" tabindex="-1" id="offcanvas_edit">
-    <div class="offcanvas-header border-bottom">
-        <h5 class="mb-0">Modifier le client</h5>
-        <button type="button"
-            class="btn-close custom-btn-close border p-1 me-0 d-flex align-items-center justify-content-center rounded-circle"
-            data-bs-dismiss="offcanvas" aria-label="Close">
-        </button>
-    </div>
-    <div class="offcanvas-body">
-        <!-- Ajoutez method="POST" et enctype pour le logo -->
-        <form action="#" method="POST" enctype="multipart/form-data">
-            <!-- CSRF Token si vous utilisez Laravel Blade -->
-            <!-- @csrf -->
+<div class="modal fade" id="modal_edit_client" tabindex="-1" aria-labelledby="modalEditClientLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered"> <!-- modal-lg pour plus de largeur -->
+        <div class="modal-content">
+            <div class="modal-header border-bottom">
+                <h5 class="modal-title" id="modalEditClientLabel">Modification un nouveau client</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
 
-            <div class="accordion accordion-bordered" id="main_accordion_edit">
+            <div class="modal-body">
+                <form action="#" method="POST" enctype="multipart/form-data">
+                    <!-- @csrf -->
 
-                <!-- Basic Info -->
-                <div class="accordion-item rounded mb-3">
-                    <div class="accordion-header">
-                        <a href="#"
-                            class="accordion-button accordion-custom-button rounded"
-                            data-bs-toggle="collapse" data-bs-target="#basic_edit">
-                            <span class="avatar avatar-md rounded me-1"><i class="ti ti-user-plus"></i></span>
-                            Informations de base
-                        </a>
+                    <!-- SECTION 1 : INFORMATIONS UTILISATEUR (Compte de connexion) -->
+                    <div class="bg-light p-3 rounded mb-4">
+                        <h6 class="mb-3 d-flex align-items-center text-primary">
+                            <i class="ti ti-user-shield fs-5 me-2"></i> Informations Utilisateur (Customer)
+                        </h6>
+                        <div class="row">
+                            <!-- Mapping: name (Schema users) -->
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Nom complet <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" name="name" placeholder="Ex: Jean Dupont" required>
+                            </div>
+
+                            <!-- Mapping: email (Schema users) -->
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Email (Identifiant) <span class="text-danger">*</span></label>
+                                <input type="email" class="form-control" name="email" placeholder="jean@entreprise.com" required>
+                            </div>
+
+                            <!-- Mapping: password (Schema users) -->
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Mot de passe <span class="text-danger">*</span></label>
+                                <input type="password" class="form-control" name="password" required>
+                            </div>
+
+                            <!-- Confirmation Mot de passe -->
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Confirmer le mot de passe <span class="text-danger">*</span></label>
+                                <input type="password" class="form-control" name="password_confirmation" required>
+                            </div>
+
+                            <!-- Statut Actif -->
+                            <div class="col-md-6 mb-3">
+                                <div class="form-check form-switch p-2 border rounded bg-light d-flex align-items-center">
+                                    <input type="hidden" name="is_active" value="0">
+                                    <input class="form-check-input ms-0 me-2" name="is_active" value="1" type="checkbox" role="switch" id="activeSwitch" checked>
+                                    <label class="form-check-label cursor-pointer mb-0" for="activeSwitch">Compte Entreprise Actif</label>
+                                </div>
+                            </div>
+                            <!-- Rôle par défaut (Hidden) -->
+                            <input type="hidden" name="role" value="customer">
+                        </div>
                     </div>
-                    <div class="accordion-collapse collapse show" id="basic_edit" data-bs-parent="#main_accordion_edit">
-                        <div class="accordion-body border-top">
-                            <div class="row">
-                                <!-- Logo Upload -->
-                                <div class="col-md-12">
-                                    <div class="d-flex align-items-center mb-3">
-                                        <div class="avatar avatar-xxl border border-dashed me-3 flex-shrink-0">
-                                            <div class="position-relative d-flex align-items-center">
-                                                <i class="ti ti-photo text-dark fs-16"></i>
-                                            </div>
-                                        </div>
-                                        <div class="d-inline-flex flex-column align-items-start">
-                                            <div class="drag-upload-btn btn btn-sm btn-primary position-relative mb-2">
-                                                <i class="ti ti-file-broken me-1"></i>Télécharger le logo
-                                                <!-- Mapping: logo -->
-                                                <input type="file" class="form-control image-sign" name="logo" accept="image/png, image/gif, image/jpeg">
-                                            </div>
-                                            <span>JPG, GIF ou PNG. Max 800K</span>
-                                        </div>
-                                    </div>
-                                </div>
 
-                                <!-- Customer ID -->
-                                <div class="col-md-6">
-                                    <div class="mb-3">
-                                        <label class="form-label">ID Client <span class="text-danger">*</span></label>
-                                        <!-- Mapping: customer_id -->
-                                        <input type="text" class="form-control" name="customer_id" placeholder="ex: CUST-001" required>
-                                    </div>
-                                </div>
+                    <!-- HR Divider -->
+                    <div class="d-flex align-items-center mb-4">
+                        <hr class="flex-grow-1">
+                        <span class="mx-3 text-muted fw-bold">DÉTAILS ENTREPRISE</span>
+                        <hr class="flex-grow-1">
+                    </div>
 
-                                <!-- Entreprise -->
-                                <div class="col-md-6">
-                                    <div class="mb-3">
-                                        <label class="form-label">Entreprise <span class="text-danger">*</span></label>
-                                        <!-- Mapping: entreprise -->
-                                        <input type="text" class="form-control" name="entreprise" required>
-                                    </div>
-                                </div>
+                    <!-- SECTION 2 : INFORMATIONS ENTREPRISE -->
+                    <div>
+                        <h6 class="mb-3 d-flex align-items-center text-dark">
+                            <i class="ti ti-building-skyscraper fs-5 me-2"></i> Informations de l'Entreprise
+                        </h6>
 
-                                <!-- Email & Is Active -->
-                                <div class="col-md-12">
-                                    <div class="mb-3">
-                                        <div class="d-flex justify-content-between align-items-center">
-                                            <label class="form-label">Email <span class="text-danger ms-1">*</span></label>
-                                            <div class="form-check form-switch mb-1">
-                                                <label class="form-check-label d-flex align-items-center gap-2">
-                                                    <span>Compte Actif</span>
-                                                    <!-- Mapping: is_active -->
-                                                    <!-- Astuce Laravel: input hidden pour envoyer 0 si non coché -->
-                                                    <input type="hidden" name="is_active" value="0">
-                                                    <input class="form-check-input form-check-input-sm switchCheckDefault ms-auto" name="is_active" value="1" type="checkbox" role="switch" checked>
-                                                </label>
-                                            </div>
-                                        </div>
-                                        <!-- Mapping: email -->
-                                        <input type="email" class="form-control" name="email" required>
-                                    </div>
-                                </div>
+                        <div class="row">
+                            <!-- Logo Upload avec Prévisualisation -->
+                            <div class="col-md-12 mb-3">
+                                <div class="d-flex align-items-center">
+                                    <!-- Zone de l'image -->
+                                    <div class="avatar avatar-xl border border-dashed me-3 flex-shrink-0 d-flex justify-content-center align-items-center bg-light position-relative overflow-hidden">
+                                        <!-- Icône par défaut (sera cachée au chargement) -->
+                                        <i class="ti ti-photo text-muted fs-4" id="logo_placeholder"></i>
 
-                                <!-- Phone Number -->
-                                <div class="col-md-6">
-                                    <div class="mb-3">
-                                        <label class="form-label">Téléphone <span class="text-danger">*</span></label>
-                                        <!-- Mapping: phonenumber -->
-                                        <input type="text" class="form-control phone" name="phonenumber" required>
+                                        <!-- Image de prévisualisation (cachée par défaut) -->
+                                        <img src="#" alt="Aperçu" id="logo_preview" class="d-none w-100 h-100 object-fit-cover">
                                     </div>
-                                </div>
 
-                                <!-- Website -->
-                                <div class="col-md-6">
-                                    <div class="mb-3">
-                                        <label class="form-label">Site Web</label>
-                                        <!-- Mapping: link_website -->
-                                        <input type="url" class="form-control" name="link_website" placeholder="https://...">
-                                    </div>
-                                </div>
-
-                                <!-- Data (Description/Notes) -->
-                                <div class="col-md-12">
-                                    <div class="mb-0">
-                                        <label class="form-label">Données supplémentaires (Data) <span class="text-danger">*</span></label>
-                                        <!-- Mapping: data -->
-                                        <textarea class="form-control" rows="3" name="data" required></textarea>
+                                    <div class="d-flex flex-column">
+                                        <label class="form-label mb-1">Logo de l'entreprise</label>
+                                        <!-- Ajout de l'événement onchange -->
+                                        <input type="file"
+                                            class="form-control form-control-sm"
+                                            name="logo"
+                                            id="logo_input"
+                                            accept="image/png, image/gif, image/jpeg"
+                                            onchange="previewLogo(this)">
+                                        <small class="text-muted">JPG, GIF ou PNG. Max 800K</small>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- /Basic Info -->
 
-                <!-- Address Info -->
-                <div class="accordion-item border-top rounded mb-3">
-                    <div class="accordion-header">
-                        <a href="#"
-                            class="accordion-button accordion-custom-button rounded"
-                            data-bs-toggle="collapse" data-bs-target="#address_edit">
-                            <span class="avatar avatar-md rounded me-1"><i class="ti ti-map-pin-cog"></i></span>
-                            Adresse & Localisation
-                        </a>
-                    </div>
-                    <div class="accordion-collapse collapse" id="address_edit" data-bs-parent="#main_accordion_edit">
-                        <div class="accordion-body border-top">
-                            <div class="row">
-                                <!-- Adresse -->
-                                <div class="col-md-12">
-                                    <div class="mb-3">
-                                        <label class="form-label">Adresse Complète <span class="text-danger">*</span></label>
-                                        <!-- Mapping: adresse -->
-                                        <input type="text" class="form-control" name="adresse" required>
-                                    </div>
-                                </div>
-                                <!-- Pays Siege -->
-                                <div class="col-md-12">
-                                    <div class="mb-3">
-                                        <label class="form-label">Pays du siège <span class="text-danger">*</span></label>
-                                        <!-- Mapping: pays_siege -->
-                                        <select class="select form-control" name="pays_siege">
-                                            <option value="">Sélectionner</option>
-                                            <option value="France">France</option>
-                                            <option value="USA">USA</option>
-                                            <option value="Canada">Canada</option>
-                                            <option value="Côte d'Ivoire">Côte d'Ivoire</option>
-                                            <!-- Ajoutez vos pays ici -->
-                                        </select>
-                                    </div>
-                                </div>
+                            <!-- Nom Entreprise -->
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Nom de l'entreprise <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" name="entreprise" required>
+                            </div>
+
+                            <!-- NOUVEAU : Email de l'entreprise -->
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Email de contact (Entreprise)</label>
+                                <!-- Nommé 'company_email' pour ne pas écraser l'email du User -->
+                                <input type="email" class="form-control" name="company_email" placeholder="contact@entreprise.com">
+                            </div>
+
+                            <!-- Téléphone -->
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Téléphone <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control phone" name="phonenumber" required>
+                            </div>
+
+                            <!-- Site Web -->
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Site Web</label>
+                                <input type="url" class="form-control" name="link_website" placeholder="https://...">
+                            </div>
+
+                            <!-- Adresse -->
+                            <div class="col-md-8 mb-3">
+                                <label class="form-label">Adresse Complète <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" name="adresse" required>
+                            </div>
+
+                            <!-- Pays -->
+                            <div class="col-md-4 mb-4">
+                                <label class="form-label">Pays du siège <span class="text-danger">*</span></label>
+                                <select class="select form-control form-select" name="pays_siege">
+                                    <option value="">Sélectionner</option>
+                                    <option value="France">France</option>
+                                    <option value="Côte d'Ivoire">Côte d'Ivoire</option>
+                                    <option value="Senegal">Sénégal</option>
+                                    <option value="USA">USA</option>
+                                    <option value="Canada">Canada</option>
+                                </select>
+                            </div>
+
+                            <!-- Description / Data -->
+                            <div class="col-md-12 mb-3">
+                                <label class="form-label">Notes / Données supplémentaires <span class="text-danger">*</span></label>
+                                <textarea class="form-control" rows="2" name="data" required></textarea>
                             </div>
                         </div>
-                    </div>
-                </div>
-                <!-- /Address Info -->
 
-                <!-- Social Profile -->
-                <div class="accordion-item border-top rounded mb-3">
-                    <div class="accordion-header">
-                        <a href="#"
-                            class="accordion-button accordion-custom-button rounded"
-                            data-bs-toggle="collapse" data-bs-target="#social_edit">
-                            <span class="avatar avatar-md rounded me-1"><i class="ti ti-social"></i></span>
-                            Réseaux Sociaux
-                        </a>
-                    </div>
-                    <div class="accordion-collapse collapse" id="social_edit" data-bs-parent="#main_accordion_edit">
-                        <div class="accordion-body border-top">
+                        <!-- SECTION : RÉSEAUX SOCIAUX -->
+                        <div class="mt-3">
+                            <h6 class="mb-3 d-flex align-items-center text-dark">
+                                <i class="ti ti-social fs-5 me-2"></i> Réseaux Sociaux
+                            </h6>
+
                             <div class="row">
                                 <!-- Facebook -->
-                                <div class="col-md-6">
-                                    <div class="mb-3">
-                                        <label class="form-label">Facebook</label>
-                                        <!-- Mapping: link_facebook -->
-                                        <input type="url" class="form-control" name="link_facebook" placeholder="https://facebook.com/...">
+                                <div class="col-md-6 mb-3">
+                                    <div class="input-group">
+                                        <span class="input-group-text bg-light"><i class="ti ti-brand-facebook"></i></span>
+                                        <input type="url" class="form-control" name="link_facebook" placeholder="Facebook URL">
                                     </div>
                                 </div>
+
                                 <!-- Instagram -->
-                                <div class="col-md-6">
-                                    <div class="mb-3">
-                                        <label class="form-label">Instagram</label>
-                                        <!-- Mapping: link_instagram -->
-                                        <input type="url" class="form-control" name="link_instagram" placeholder="https://instagram.com/...">
+                                <div class="col-md-6 mb-3">
+                                    <div class="input-group">
+                                        <span class="input-group-text bg-light"><i class="ti ti-brand-instagram"></i></span>
+                                        <input type="url" class="form-control" name="link_instagram" placeholder="Instagram URL">
                                     </div>
                                 </div>
-                                <!-- Twitter -->
-                                <div class="col-md-6">
-                                    <div class="mb-3">
-                                        <label class="form-label">Twitter (X)</label>
-                                        <!-- Mapping: link_twitter -->
-                                        <input type="url" class="form-control" name="link_twitter" placeholder="https://twitter.com/...">
-                                    </div>
-                                </div>
+
                                 <!-- LinkedIn -->
-                                <div class="col-md-6">
-                                    <div class="mb-3">
-                                        <label class="form-label">LinkedIn</label>
-                                        <!-- Mapping: link_linkedin -->
-                                        <input type="url" class="form-control" name="link_linkedin" placeholder="https://linkedin.com/in/...">
+                                <div class="col-md-6 mb-3">
+                                    <div class="input-group">
+                                        <span class="input-group-text bg-light"><i class="ti ti-brand-linkedin"></i></span>
+                                        <input type="url" class="form-control" name="link_linkedin" placeholder="LinkedIn URL">
                                     </div>
                                 </div>
-                                <!-- YouTube -->
-                                <div class="col-md-12">
-                                    <div class="mb-0">
-                                        <label class="form-label">YouTube</label>
-                                        <!-- Mapping: link_youtube -->
-                                        <input type="url" class="form-control" name="link_youtube" placeholder="https://youtube.com/...">
+
+                                <!-- Twitter / X -->
+                                <div class="col-md-6 mb-3">
+                                    <div class="input-group">
+                                        <span class="input-group-text bg-light"><i class="ti ti-brand-x"></i></span>
+                                        <input type="url" class="form-control" name="link_twitter" placeholder="Twitter/X URL">
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
-                <!-- /Social Profile -->
-
+                    <!-- ... -->
             </div>
 
-            <!-- Actions -->
-            <div class="d-flex align-items-center justify-content-end">
-                <button type="button" data-bs-dismiss="offcanvas" class="btn btn-light me-2">Annuler</button>
-                <button type="submit" class="btn btn-primary">Modifier le client</button>
+            <!-- Modal Footer (Actions) -->
+            <div class="modal-footer border-top mt-4 pb-0 px-0">
+                <button type="button" class="btn btn-light" data-bs-dismiss="modal">Annuler</button>
+                <button type="submit" class="btn btn-primary"><i class="ti ti-device-floppy me-1"></i> Enregistrer</button>
             </div>
-        </form>
+            </form>
+        </div>
     </div>
 </div>
 <!-- /edit offcanvas -->
@@ -582,6 +532,178 @@
     </div>
 </div>
 <!-- delete modal -->
+
+<!-- Structure de la Modale -->
+<div class="modal fade" id="modal_add_campaign" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header border-bottom">
+                <h5 class="modal-title">Ajouter une nouvelle campagne</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body">
+                <form action="#" method="POST" enctype="multipart/form-data">
+                    <!-- @csrf -->
+
+                    <!-- 1. IMAGE DE COUVERTURE (Mise en avant) -->
+                    <div class="mb-4">
+                        <label class="form-label fw-bold">Image de couverture <span class="text-danger">*</span></label>
+
+                        <div class="position-relative w-100 rounded border border-dashed bg-light d-flex align-items-center justify-content-center overflow-hidden"
+                            style="height: 250px; border-width: 2px !important; transition: all 0.3s ease;"
+                            id="drop-zone">
+
+                            <!-- Contenu par défaut -->
+                            <div class="text-center p-4" id="upload-placeholder">
+                                <div class="avatar avatar-lg bg-white border rounded-circle mb-2 mx-auto">
+                                    <i class="ti ti-cloud-upload text-primary fs-3"></i>
+                                </div>
+                                <h6 class="mb-1 fw-bold">Glissez une image ou cliquez</h6>
+                                <p class="text-muted mb-0 fs-12">JPG, PNG. Max 5MB</p>
+                            </div>
+
+                            <!-- Image Preview -->
+                            <img id="image-preview" src="#" alt="Aperçu" class="position-absolute top-0 start-0 w-100 h-100 object-fit-cover d-none">
+
+                            <!-- Input File Invisible -->
+                            <input type="file" name="image_couverture" id="input-image"
+                                class="position-absolute top-0 start-0 w-100 h-100 opacity-0 cursor-pointer"
+                                accept="image/png, image/jpeg, image/jpg"
+                                onchange="previewImage(this)">
+                        </div>
+
+                        <!-- Bouton Supprimer -->
+                        <div class="d-flex justify-content-end mt-1">
+                            <button type="button" id="remove-btn" class="btn btn-sm btn-link text-danger text-decoration-none d-none" onclick="removeImage()">
+                                <i class="ti ti-trash me-1"></i> Supprimer l'image
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- 2. INFORMATIONS PRINCIPALES -->
+                    <div class="row mb-4">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Nom de la campagne <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" name="name" required placeholder="Ex: Élection Miss 2024">
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Client associé <span class="text-danger">*</span></label>
+                            <select class="select form-control form-select" name="customer_id" required>
+                                <option value="">Sélectionner un client</option>
+                                <option value="1">Client A</option>
+                                <option value="2">Client B</option>
+                            </select>
+                        </div>
+
+                        <div class="col-md-12">
+                            <label class="form-label">Description courte <span class="text-danger">*</span></label>
+                            <textarea class="form-control" rows="3" name="description" required></textarea>
+                        </div>
+                    </div>
+
+                    <hr class="my-4 border-secondary opacity-10">
+
+                    <!-- 3. CONFIGURATION & RÈGLES (Groupés sur fond gris) -->
+                    <div class="bg-light p-3 rounded mb-4">
+                        <h6 class="mb-3 d-flex align-items-center text-primary">
+                            <i class="ti ti-settings-cog fs-5 me-2"></i> Configuration & Dates
+                        </h6>
+
+                        <div class="row">
+                            <!-- Toggle Inscription -->
+                            <div class="col-md-12 mb-3">
+                                <div class="form-check form-switch">
+                                    <input type="hidden" name="inscription" value="0">
+                                    <input class="form-check-input" type="checkbox" role="switch" id="inscriptionSwitch" name="inscription" value="1">
+                                    <label class="form-check-label fw-medium" for="inscriptionSwitch">Activer les inscriptions publiques</label>
+                                </div>
+                            </div>
+
+                            <!-- Dates -->
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Date de début</label>
+                                <input type="datetime-local" class="form-control" name="inscription_date_debut">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Date de fin</label>
+                                <input type="datetime-local" class="form-control" name="inscription_date_fin">
+                            </div>
+
+                            <!-- Conditions -->
+                            <div class="col-md-12 mb-3">
+                                <label class="form-label">Règles & Conditions</label>
+                                <textarea class="form-control" rows="3" name="condition_participation" required placeholder="Les règles du jeu..."></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 4. APPARENCE & OPTIONS -->
+                    <div>
+                        <h6 class="mb-3 d-flex align-items-center text-dark">
+                            <i class="ti ti-palette fs-5 me-2"></i> Apparence & Options
+                        </h6>
+                        <div class="row">
+                            <!-- Couleurs -->
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Couleur Primaire</label>
+                                <div class="input-group">
+                                    <input type="color" class="form-control form-control-color" name="color_primaire" value="#563d7c" title="Choisir">
+                                    <input type="text" class="form-control" value="#563d7c" readonly>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Couleur Secondaire</label>
+                                <div class="input-group">
+                                    <input type="color" class="form-control form-control-color" name="color_secondaire" value="#cccccc" title="Choisir">
+                                    <input type="text" class="form-control" value="#cccccc" readonly>
+                                </div>
+                            </div>
+
+                            <!-- Options Selects -->
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Ordre des candidats</label>
+                                <select class="form-select" name="ordonner_candidats_votes_decroissants">
+                                    <option value="non">Par défaut (Aléatoire/ID)</option>
+                                    <option value="oui">Votes décroissants (Top 1er)</option>
+                                </select>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Affichage Résultats</label>
+                                <select class="form-select" name="afficher_montant_pourcentage">
+                                    <option value="clair" selected>Clair (Tout afficher)</option>
+                                    <option value="masque">Masqué</option>
+                                    <option value="pourcentage_seul">Pourcentage seul</option>
+                                </select>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Limite de votes</label>
+                                <input type="text" class="form-control" name="quantite_vote" placeholder="Ex: Illimité">
+                            </div>
+
+                            <div class="col-md-6 mb-3 d-flex align-items-end">
+                                <div class="form-check form-switch mb-2">
+                                    <input type="hidden" name="text_cover" value="0">
+                                    <input class="form-check-input" type="checkbox" role="switch" id="textCoverSwitch" name="text_cover" value="1">
+                                    <label class="form-check-label" for="textCoverSwitch">Afficher texte sur couverture</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Footer Actions -->
+                    <div class="modal-footer border-top px-0 pb-0 mt-3">
+                        <button type="button" class="btn btn-light" data-bs-dismiss="modal">Annuler</button>
+                        <button type="submit" class="btn btn-primary"><i class="ti ti-check me-1"></i> Créer la campagne</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 
 @endsection
 <!-- section js -->

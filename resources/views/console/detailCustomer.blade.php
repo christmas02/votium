@@ -24,155 +24,40 @@
 
     <!-- start row -->
     <div class="row">
-        <div class="col-md-12">
-
-            <div class="card">
-                <div class="card-body pb-2">
-                    <div class="d-flex align-items-center justify-content-between flex-wrap">
-                        <div class="d-flex align-items-center mb-2">
-                            <div class="avatar avatar-xxl avatar-rounded me-3 flex-shrink-0">
-                                <img src="assets/img/profiles/avatar-14.jpg" alt="img">
-                                <span class="status online"></span>
-                            </div>
-                            <div>
-                                <h5 class="mb-1">Jackson Daniel</h5>
-                                <p class="mb-2">Facility Manager, Global INC</p>
-                                <div class="d-flex align-items-center">
-                                    <span class="badge badge-soft-danger border-0 me-2"><i class="ti ti-lock me-1"></i>Actif</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="d-flex align-items-center flex-wrap gap-2">
-                            <a href="#" class="btn btn-dark" data-bs-toggle="offcanvas" data-bs-target="#offcanvas_add_campagne">
-                                <i class="ti ti-plus me-1"></i>Créer campagne
-                            </a>
-                            <a href="#" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#add_compose">
-                                <i class="ti ti-mail me-1"></i>Envoyer Email
-                            </a>
-                            <a href="#" class="btn btn-icon btn-sm btn-outline-light shadow" data-bs-toggle="offcanvas" data-bs-target="#offcanvas_edit"><i class="ti ti-edit-circle"></i></a>
-                            <div class="act-dropdown">
-                                <a href="#" data-bs-toggle="dropdown" class="action-icon btn btn-icon btn-sm btn-outline-light shadow" aria-expanded="false">
-                                    <i class="ti ti-dots-vertical"></i>
-                                </a>
-                                <div class="dropdown-menu dropdown-menu-right">
-                                    <a class="dropdown-item" href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#delete_contact"><i class="ti ti-trash me-1"></i>Supprimer</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- /Contact User -->
-
-        </div>
 
         <!-- Contact Sidebar -->
         <div class="col-xl-3">
-            <div class="card">
-                <div class="card-body p-3">
-                    <h6 class="mb-3 fw-semibold">Autres informations</h6>
-                    <div class="border-bottom mb-3 pb-3">
-                        <div class="d-flex align-items-center mb-2">
-                            <span class="avatar avatar-xs bg-light p-0 flex-shrink-0 rounded-circle text-dark me-2">
-                                <i class="ti ti-mail fs-14"></i>
-                            </span>
-                            <p class="mb-0"> email@gmail.com</p>
-                        </div>
-                        <div class="d-flex align-items-center mb-2">
-                            <span class="avatar avatar-xs bg-light p-0 flex-shrink-0 rounded-circle text-dark me-2">
-                                <i class="ti ti-phone fs-14"></i>
-                            </span>
-                            <p class="mb-0">+1 12445-47878</p>
-                        </div>
-                        <div class="d-flex align-items-center mb-3">
-                            <span class="avatar avatar-xs bg-light p-0 flex-shrink-0 rounded-circle text-dark me-2">
-                                <i class="ti ti-map-pin fs-14"></i>
-                            </span>
-                            <p class="mb-0">22, Ave Street, Newyork, USA</p>
-                        </div>
-                        <div class="d-flex align-items-center">
-                            <span
-                                class="avatar avatar-xs bg-light p-0 flex-shrink-0 rounded-circle text-dark me-2">
-                                <i class="ti ti-calendar-exclamation fs-14"></i>
-                            </span>
-                            <p class="mb-0">Created on 27 Sep 2025, 11:45 PM</p>
-                        </div>
-                    </div>
-                    <h6 class="mb-3 fw-semibold">Other Information</h6>
-                    <ul class="border-bottom mb-3 pb-3">
-                        <li class="row mb-2"><span class="col-6">Pays</span><span class="col-6 text-dark">Côte d'ivoire</span></li>
-                        <li class="row mb-2"><span class="col-6">Devise</span><span class="col-6 text-dark">Franc cfa</span></li>
-                        <li class="row mb-2"><span class="col-6">Dernière modification</span><span class="col-6 text-dark">27 Sep 2023, 11:45 pm</span></li>
-                        <li class="row"><span class="col-6">Source</span><span class="col-6 text-dark">Paid Campaign</span></li>
-                    </ul>
 
-                    <div class="d-flex align-items-center justify-content-between flex-wrap">
-                        <h6 class="mb-3 fw-semibold">Entreprise</h6>
-                        <!-- <a href="javascript:void(0);" class="link-primary mb-3" data-bs-toggle="offcanvas" data-bs-target="#offcanvas_add"><i class="ti ti-circle-plus me-1"></i>Add New</a> -->
-                    </div>
-                    <div class="mb-3">
-                        <div class="d-flex align-items-center">
-                            <span class="avatar avatar-lg rounded me-2 border">
-                                <img src="assets/img/icons/google-icon.svg" alt="Img" class="img-fluid w-auto h-auto">
-                            </span>
-                            <div>
-                                <h6 class="fw-medium mb-1">Google. Inc <i class="ti ti-circle-check-filled text-success fs-16"></i></h6>
-                                <p class="mb-0">www.google.com</p>
-                            </div>
-                        </div>
-                    </div>
-                    <hr>
-                    <h6 class="mb-3 fw-semibold">Profil social</h6>
-                    <ul class="d-flex align-items-center">
-                        <li>
-                            <a href="javascript:void(0);" class="avatar avatar-sm rounded-circle fs-14 text-dark"><i class="ti ti-brand-youtube"></i></a>
+            <div class="card">
+                <div class="card-body pb-0 pt-2">
+                    <ul class="nav nav-tabs nav-bordered flex-column m-0" role="tablist" aria-orientation="vertical">
+                        <li class="nav-item" role="presentation">
+                            <a href="#tab_1" data-bs-toggle="tab" aria-expanded="false" class="nav-link active border-3" aria-selected="true" role="tab">
+                                <span class="d-md-inline-block"><i class="ti ti-alarm-minus me-1"></i>Entreprise</span>
+                            </a>
                         </li>
-                        <li>
-                            <a href="javascript:void(0);" class="avatar avatar-sm rounded-circle fs-14 text-dark"><i class="ti ti-brand-facebook"></i></a>
+
+                        <li class="nav-item" role="presentation">
+                            <a href="#tab_5" data-bs-toggle="tab" aria-expanded="false" class="nav-link border-3" aria-selected="false" tabindex="-1" role="tab">
+                                <span class="d-md-inline-block"><i class="ti ti-wallet me-1"></i>Compte de retrait</span>
+                            </a>
                         </li>
-                        <li>
-                            <a href="javascript:void(0);" class="avatar avatar-sm rounded-circle fs-14 text-dark"><i class="ti ti-brand-instagram"></i></a>
-                        </li>
-                        <li>
-                            <a href="javascript:void(0);" class="avatar avatar-sm rounded-circle fs-14 text-dark"><i class="ti ti-brand-whatsapp"></i></a>
-                        </li>
-                        <li>
-                            <a href="javascript:void(0);" class="avatar avatar-sm rounded-circle fs-14 text-dark"><i class="ti ti-brand-pinterest"></i></a>
-                        </li>
-                        <li>
-                            <a href="javascript:void(0);" class="avatar avatar-sm rounded-circle fs-14 text-dark"><i class="ti ti-brand-linkedin"></i></a>
+
+                        <li class="nav-item" role="presentation">
+                            <a href="#tab_2" data-bs-toggle="tab" aria-expanded="true" class="nav-link border-3" aria-selected="false" role="tab" tabindex="-1">
+                                <span class="d-md-inline-block"><i class="ti ti-user me-1"></i>Profil</span>
+                            </a>
                         </li>
                     </ul>
                 </div>
+
             </div>
         </div>
         <!-- /Contact Sidebar -->
 
         <!-- Contact Details -->
         <div class="col-xl-9">
-            <div class="card mb-3">
-                <div class="card-body pb-0 pt-2">
-                    <ul class="nav nav-tabs nav-bordered mb-3" role="tablist">
-                        <li class="nav-item" role="presentation">
-                            <a href="#tab_1" data-bs-toggle="tab" aria-expanded="false" class="nav-link active border-3" aria-selected="true" role="tab">
-                                <span class="d-md-inline-block"><i class="ti ti-alarm-minus me-1"></i>Campagnes</span>
-                            </a>
-                        </li>
 
-                        <li class="nav-item" role="presentation">
-                            <a href="#tab_5" data-bs-toggle="tab" aria-expanded="false" class="nav-link border-3" aria-selected="false" tabindex="-1" role="tab">
-                                <span class="d-md-inline-block"><i class="ti ti-mail-check me-1"></i>Email</span>
-                            </a>
-                        </li>
-
-                        <li class="nav-item" role="presentation">
-                            <a href="#tab_2" data-bs-toggle="tab" aria-expanded="true" class="nav-link border-3" aria-selected="false" role="tab" tabindex="-1">
-                                <span class="d-md-inline-block"><i class="ti ti-notes me-1"></i>Profil</span>
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
 
             <!-- Tab Content -->
             <div class="tab-content pt-0">
@@ -182,7 +67,7 @@
                     <div class="card">
                         <div
                             class="card-header d-flex align-items-center justify-content-between flex-wrap row-gap-3">
-                            <h5 class="fw-semibold mb-0">Liste Campagnes</h5>
+                            <h5 class="fw-semibold mb-0">Entreprise</h5>
                             <div class="table-search" style="margin-bottom:0 !important;">
                                 <div class="search-input">
                                     <a href="javascript:void(0);" class="btn-searchset"><i class="isax isax-search-normal fs-12"></i></a>
@@ -190,53 +75,137 @@
                             </div>
                         </div>
                         <div class="card-body">
-                            <div class="table-responsive">
-                                <table class="table table-nowrap datatable">
-                                    <thead class="table-light">
-                                        <tr>
-                                            <th>NOM DE SESSION</th>
-                                            <th>NBRE D'ETAPES</th>
-                                            <th>NBRE DE CANDIDATS</th>
-                                            <th>CRÉÉE LE</th>
-                                            <th>INSCRIPTION</th>
-                                            <th>Action</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td>Campagne N°001</td>
-                                            <td>1 étape</td>
-                                            <td>1 Candidats</td>
-                                            <td>23/11/2025</td>
-                                            <td>Autorisées</td>
-                                            <td>
-                                                <div class="d-inline-flex gap-2">
-                                                    <a href="#" class="btn btn-icon btn-sm btn-success"><i class="ti ti-location"></i></a>
-                                                    <a class="btn btn-icon btn-sm btn-info" data-bs-toggle="offcanvas" data-bs-target="#offcanvas_edit"><i class="ti ti-edit"></i></a>
-                                                    <a href="#;" class="btn btn-icon btn-sm btn-light"><i class="ti ti-menu-2"></i></a>
-                                                    <a class="btn btn-icon btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#delete_contact"><i class="ti ti-trash"></i></a>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>Campagne N°050</td>
-                                            <td>3 étape</td>
-                                            <td>25 Candidats</td>
-                                            <td>23/11/2025</td>
-                                            <td>Non-autorisées</td>
-                                            <td>
-                                                <div class="d-inline-flex gap-2">
-                                                    <a href="#" class="btn btn-icon btn-sm btn-success"><i class="ti ti-location"></i></a>
-                                                    <a class="btn btn-icon btn-sm btn-info" data-bs-toggle="offcanvas" data-bs-target="#offcanvas_edit"><i class="ti ti-edit"></i></a>
-                                                    <a href="#;" class="btn btn-icon btn-sm btn-light"><i class="ti ti-menu-2"></i></a>
-                                                    <a class="btn btn-icon btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#delete_contact"><i class="ti ti-trash"></i></a>
-                                                </div>
-                                            </td>
-                                        </tr>
 
-                                    </tbody>
-                                </table>
-                            </div>
+                            <form action="#" method="POST" enctype="multipart/form-data">
+                                <!-- @csrf -->
+
+                                <!-- SECTION 2 : INFORMATIONS ENTREPRISE -->
+                                <div>
+                                    <h6 class="mb-3 d-flex align-items-center text-dark">
+                                        <i class="ti ti-building-skyscraper fs-5 me-2"></i> Informations de l'Entreprise
+                                    </h6>
+
+                                    <div class="row">
+                                        <!-- Logo Upload avec Prévisualisation -->
+                                        <div class="col-md-12 mb-3">
+                                            <div class="d-flex align-items-center">
+                                                <!-- Zone de l'image -->
+                                                <div class="avatar avatar-xl border border-dashed me-3 flex-shrink-0 d-flex justify-content-center align-items-center bg-light position-relative overflow-hidden">
+                                                    <!-- Icône par défaut (sera cachée au chargement) -->
+                                                    <i class="ti ti-photo text-muted fs-4" id="logo_placeholder"></i>
+
+                                                    <!-- Image de prévisualisation (cachée par défaut) -->
+                                                    <img src="#" alt="Aperçu" id="logo_preview" class="d-none w-100 h-100 object-fit-cover">
+                                                </div>
+
+                                                <div class="d-flex flex-column">
+                                                    <label class="form-label mb-1">Logo de l'entreprise</label>
+                                                    <!-- Ajout de l'événement onchange -->
+                                                    <input type="file"
+                                                        class="form-control form-control-sm"
+                                                        name="logo"
+                                                        id="logo_input"
+                                                        accept="image/png, image/gif, image/jpeg"
+                                                        onchange="previewLogo(this)">
+                                                    <small class="text-muted">JPG, GIF ou PNG. Max 800K</small>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Nom Entreprise -->
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label">Nom de l'entreprise <span class="text-danger">*</span></label>
+                                            <input type="text" class="form-control" name="entreprise" required>
+                                        </div>
+
+                                        <!-- NOUVEAU : Email de l'entreprise -->
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label">Email de contact (Entreprise)</label>
+                                            <!-- Nommé 'company_email' pour ne pas écraser l'email du User -->
+                                            <input type="email" class="form-control" name="company_email" placeholder="contact@entreprise.com">
+                                        </div>
+
+                                        <!-- Téléphone -->
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label">Téléphone <span class="text-danger">*</span></label>
+                                            <input type="text" class="form-control phone" name="phonenumber" required>
+                                        </div>
+
+                                        <!-- Site Web -->
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label">Site Web</label>
+                                            <input type="url" class="form-control" name="link_website" placeholder="https://...">
+                                        </div>
+
+                                        <!-- Adresse -->
+                                        <div class="col-md-8 mb-3">
+                                            <label class="form-label">Adresse Complète <span class="text-danger">*</span></label>
+                                            <input type="text" class="form-control" name="adresse" required>
+                                        </div>
+
+                                        <!-- Pays -->
+                                        <div class="col-md-4 mb-4">
+                                            <label class="form-label">Pays du siège <span class="text-danger">*</span></label>
+                                            <select class="select form-control form-select" name="pays_siege">
+                                                <option value="">Sélectionner</option>
+                                                <option value="France">France</option>
+                                                <option value="Côte d'Ivoire">Côte d'Ivoire</option>
+                                                <option value="Senegal">Sénégal</option>
+                                                <option value="USA">USA</option>
+                                                <option value="Canada">Canada</option>
+                                            </select>
+                                        </div>
+
+                                        <!-- Description / Data -->
+                                        <div class="col-md-12 mb-3">
+                                            <label class="form-label">Notes / Données supplémentaires <span class="text-danger">*</span></label>
+                                            <textarea class="form-control" rows="2" name="data" required></textarea>
+                                        </div>
+                                    </div>
+
+                                    <!-- SECTION : RÉSEAUX SOCIAUX -->
+                                    <div class="mt-3">
+                                        <h6 class="mb-3 d-flex align-items-center text-dark">
+                                            <i class="ti ti-social fs-5 me-2"></i> Réseaux Sociaux
+                                        </h6>
+
+                                        <div class="row">
+                                            <!-- Facebook -->
+                                            <div class="col-md-6 mb-3">
+                                                <div class="input-group">
+                                                    <span class="input-group-text bg-light"><i class="ti ti-brand-facebook"></i></span>
+                                                    <input type="url" class="form-control" name="link_facebook" placeholder="Facebook URL">
+                                                </div>
+                                            </div>
+
+                                            <!-- Instagram -->
+                                            <div class="col-md-6 mb-3">
+                                                <div class="input-group">
+                                                    <span class="input-group-text bg-light"><i class="ti ti-brand-instagram"></i></span>
+                                                    <input type="url" class="form-control" name="link_instagram" placeholder="Instagram URL">
+                                                </div>
+                                            </div>
+
+                                            <!-- LinkedIn -->
+                                            <div class="col-md-6 mb-3">
+                                                <div class="input-group">
+                                                    <span class="input-group-text bg-light"><i class="ti ti-brand-linkedin"></i></span>
+                                                    <input type="url" class="form-control" name="link_linkedin" placeholder="LinkedIn URL">
+                                                </div>
+                                            </div>
+
+                                            <!-- Twitter / X -->
+                                            <div class="col-md-6 mb-3">
+                                                <div class="input-group">
+                                                    <span class="input-group-text bg-light"><i class="ti ti-brand-x"></i></span>
+                                                    <input type="url" class="form-control" name="link_twitter" placeholder="Twitter/X URL">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- ... -->
+                            </form>
                         </div><!-- end card body -->
                     </div>
                 </div>
@@ -244,216 +213,240 @@
 
                 <!-- Email -->
                 <div class="tab-pane fade" id="tab_5">
-                    <div class="card">
-                        <div
-                            class="card-header d-flex align-items-center justify-content-between flex-wrap row-gap-3">
-                            <h5 class="mb-1">Email</h5>
-                            <div class="d-inline-flex align-items-center">
-                                <a href="javascript:void(0);" class="link-primary fw-medium" data-bs-toggle="tooltip" data-bs-placement="left" data-bs-custom-class="tooltip-dark" data-bs-original-title="There are no email accounts configured, Please configured your email account in order to Send/ Create EMails"><i class="ti ti-circle-plus me-1"></i>Create Email</a>
-                            </div>
-                        </div>
+                    <!-- Settings Info -->
+
+                    <div class="card mb-0">
                         <div class="card-body">
-                            <div class="card border mb-0">
-                                <div class="card-body pb-0">
-                                    <div class="row align-items-center">
-                                        <div class="col-md-8">
-                                            <div class="mb-3">
-                                                <h6 class="mb-1">Manage Emails</h6>
-                                                <p>You can send and reply to emails directly via this section.</p>
+
+                            <div class="border-bottom mb-3 pb-3 d-flex align-items-center justify-content-between flex-wrap gap-2">
+                                <h4 class="fs-17 mb-0">Compte de retrait</h4>
+                                <a href="javascript:void(0)" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#add_bank"><i class="ti ti-square-rounded-plus-filled me-1"></i>Créer Compte</a>
+                            </div>
+
+                            <div class="row">
+
+                                <!-- Email Wrap -->
+                                <div class="col-md-12">
+                                    <!-- Payment -->
+                                    <div class="border rounded shadow p-3 mb-3">
+                                        <div class="row gy-3">
+                                            <div class="col-sm-5">
+                                                <div class="d-flex align-items-center">
+                                                    <span>
+                                                        <img src="assets/img/payments/payment-1.svg" alt="Img">
+                                                    </span>
+                                                    <div class="ms-2">
+                                                        <a href="javascript:void(0);"
+                                                            class="badge badge-tag badge-soft-success ms-2">Connected
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-7">
+                                                <div
+                                                    class="d-flex align-items-center justify-content-between flex-wrap gap-2">
+                                                    <div class="d-flex align-items-center">
+                                                        <a href="javascript:void(0);"
+                                                            data-bs-toggle="collapse"
+                                                            data-bs-target="#php-mail"
+                                                            class="text-default me-1 me-lg-3 me-md-3 me-sm-3 border-end pe-1 pe-lg-3 pe-md-3 pe-sm-3 fs-16"><i
+                                                                class="ti ti-info-circle-filled"></i></a>
+                                                        <a href="#" class="btn btn-light"
+                                                            data-bs-toggle="modal"
+                                                            data-bs-target="#add_paypal"><i
+                                                                class="ti ti-tool me-1"></i>Modifer</a>
+                                                    </div>
+                                                    <div class="form-check form-switch p-0">
+                                                        <label class="form-check-label d-flex align-items-center gap-2 w-100">
+                                                            <input class="form-check-input switchCheckDefault ms-auto" type="checkbox" role="switch" checked>
+                                                        </label>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
-                                        <div class="col-md-4 text-md-end">
-                                            <div class="mb-3">
-                                                <a href="#" class="btn btn-primary" data-bs-toggle="modal"
-                                                    data-bs-target="#create_email">Connect Account</a>
+                                        <div class="collapse pt-3 mt-3 border-top" id="php-mail">
+                                            <div>
+                                                <p class="mb-0">PayPal Holdings, Inc. is an American multinational
+                                                    financial technology company operating an online
+                                                    payments system in the majority of countries that
+                                                    support online money transfers, and serves as an
+                                                    electronic alternative to traditional paper methods such
+                                                    as checks and money orders. </p>
                                             </div>
                                         </div>
                                     </div>
+                                    <!-- /Payment -->
+
+                                    <!-- Payment-2 -->
+                                    <div class="border rounded shadow p-3 mb-3">
+                                        <div class="row gy-3">
+                                            <div class="col-sm-5">
+                                                <div class="d-flex align-items-center">
+                                                    <span>
+                                                        <img src="assets/img/payments/payment-2.svg" alt="Img">
+                                                    </span>
+                                                    <div class="ms-2">
+                                                        <a href="javascript:void(0);"
+                                                            class="badge badge-tag badge-soft-success ms-2">Connected
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-7">
+                                                <div
+                                                    class="d-flex align-items-center justify-content-between flex-wrap gap-2">
+                                                    <div class="d-flex align-items-center">
+                                                        <a href="javascript:void(0);"
+                                                            data-bs-toggle="collapse"
+                                                            data-bs-target="#stripe-pay"
+                                                            class="text-default me-1 me-lg-3 me-md-3 me-sm-3 border-end pe-1 pe-lg-3 pe-md-3 pe-sm-3 fs-16"><i
+                                                                class="ti ti-info-circle-filled"></i></a>
+                                                        <a href="#" class="btn btn-light"
+                                                            data-bs-toggle="modal"
+                                                            data-bs-target="#add_stripe"><i
+                                                                class="ti ti-tool me-1"></i>Modifer</a>
+                                                    </div>
+                                                    <div class="form-check form-switch p-0">
+                                                        <label class="form-check-label d-flex align-items-center gap-2 w-100">
+                                                            <input class="form-check-input switchCheckDefault ms-auto" type="checkbox" role="switch" checked>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="collapse pt-3 mt-3 border-top" id="stripe-pay">
+                                            <div>
+                                                <p class="mb-0">Stripe Holdings, Inc. is an American multinational
+                                                    financial technology company operating an online
+                                                    payments system in the majority of countries that
+                                                    support online money transfers, and serves as an
+                                                    electronic alternative to traditional paper methods such
+                                                    as checks and money orders. </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- /Payment-2 -->
+
+                                    <!-- Payment-3 -->
+                                    <div class="border rounded shadow p-3 mb-3">
+                                        <div class="row gy-3">
+                                            <div class="col-sm-5">
+                                                <div class="d-flex align-items-center">
+                                                    <span>
+                                                        <img src="assets/img/payments/payment-3.svg" alt="Img">
+                                                    </span>
+                                                    <div class="ms-2">
+                                                        <a href="javascript:void(0);"
+                                                            class="badge badge-tag badge-soft-success ms-2">Connected
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-7">
+                                                <div
+                                                    class="d-flex align-items-center justify-content-between flex-wrap gap-2">
+                                                    <div class="d-flex align-items-center">
+                                                        <a href="javascript:void(0);"
+                                                            data-bs-toggle="collapse"
+                                                            data-bs-target="#brain-pay"
+                                                            class="text-default me-1 me-lg-3 me-md-3 me-sm-3 border-end pe-1 pe-lg-3 pe-md-3 pe-sm-3 fs-16"><i
+                                                                class="ti ti-info-circle-filled"></i></a>
+                                                        <a href="#" class="btn btn-light"
+                                                            data-bs-toggle="modal"
+                                                            data-bs-target="#add_brain"><i
+                                                                class="ti ti-tool me-1"></i>Modifer</a>
+                                                    </div>
+                                                    <div class="form-check form-switch p-0">
+                                                        <label class="form-check-label d-flex align-items-center gap-2 w-100">
+                                                            <input class="form-check-input switchCheckDefault ms-auto" type="checkbox" role="switch" checked>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="collapse pt-3 mt-3 border-top" id="brain-pay">
+                                            <div>
+                                                <p class="mb-0">Braintree Holdings, Inc. is an American multinational
+                                                    financial technology company operating an online
+                                                    payments system in the majority of countries that
+                                                    support online money transfers, and serves as an
+                                                    electronic alternative to traditional paper methods such
+                                                    as checks and money orders. </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- /Payment-3 -->
+
+
                                 </div>
+                                <!-- /Email Wrap -->
+
                             </div>
                         </div>
                     </div>
+                    <!-- /Settings Info -->
                 </div>
                 <!-- /Email -->
 
                 <!-- Notes -->
                 <div class="tab-pane fade" id="tab_2">
                     <div class="card">
-                        <div
-                            class="card-header d-flex align-items-center justify-content-between flex-wrap row-gap-3">
-                            <div class="mb-3">
-                                <h6 class="mb-1">Information de l’employé</h6>
-                                <p class="mb-0">Veuillez fournir les informations ci-dessous</p>
+                        <div class="card-header d-flex align-items-center justify-content-between flex-wrap row-gap-3">
+                            <div class="mb-0">
+                                <h6 class="d-flex align-items-center text-primary">
+                                    <i class="ti ti-user-shield fs-5 me-2"></i> Informations Utilisateur (Customer)
+                                </h6>
                             </div>
-                            <div class="d-inline-flex align-items-center">
-                                <div class="dropdown me-2">
-                                    <!-- <a href="javascript:void(0);" class="dropdown-toggle btn btn-outline-light px-2 shadow" data-bs-toggle="dropdown"><i class="ti ti-sort-ascending-2 me-2"></i>Sort By</a>
-                                    <div class="dropdown-menu">
-                                        <ul>
-                                            <li>
-                                                <a href="javascript:void(0);" class="dropdown-item">Newest</a>
-                                            </li>
-                                            <li>
-                                                <a href="javascript:void(0);" class="dropdown-item">Oldest</a>
-                                            </li>
-                                        </ul>
-                                    </div> -->
-                                </div>
-                                <!-- <a href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#add_notes" class="link-primary fw-medium"><i class="ti ti-circle-plus me-1"></i>Add New</a> -->
-                            </div>
+
                         </div>
                         <div class="card-body">
 
-                            <form action="#">
+                            <form action="#" method="POST" enctype="multipart/form-data">
+                                <!-- @csrf -->
 
-                                <div class="mb-3">
-                                    <div class="profile-upload d-flex align-items-center">
-                                        <div class="profile-upload-img avatar avatar-xxl border border-dashed rounded position-relative flex-shrink-0">
-                                            <span><i class="ti ti-photo"></i></span>
-                                            <img id="ImgPreview" src="assets/img/profiles/avatar-02.jpg" alt="img" class="preview1">
-                                            <a href="javascript:void(0);" id="removeImage1" class="profile-remove">
-                                                <i class="ti ti-x"></i>
-                                            </a>
-                                        </div>
-                                        <div class="profile-upload-content ms-3">
-                                            <label class="d-inline-flex align-items-center position-relative btn btn-primary btn-sm mb-2">
-                                                <i class="ti ti-file-broken me-1"></i>Importer un fichier
-                                                <input type="file" id="imag" class="input-img position-absolute w-100 h-100 opacity-0 top-0 end-0">
-                                            </label>
-                                            <p class="mb-0">JPG, GIF ou PNG. Taille maximale : 800K</p>
-                                        </div>
-                                    </div>
-                                </div>
+                                <!-- SECTION 1 : INFORMATIONS UTILISATEUR (Compte de connexion) -->
+                                <div class="bg-light p-3 rounded mb-4">
 
-                                <div class="border-bottom mb-3">
-                                    <!-- start row -->
                                     <div class="row">
-
-                                        <!-- <div class="col-md-4">
-                                            <div class="mb-3">
-                                                <label class="form-label">
-                                                    Prénom <span class="text-danger">*</span>
-                                                </label>
-                                                <input type="text" class="form-control">
-                                            </div>
-                                        </div> -->
-
-                                        <div class="col-md-6">
-                                            <div class="mb-3">
-                                                <label class="form-label">
-                                                    Nom <span class="text-danger">*</span>
-                                                </label>
-                                                <input type="text" class="form-control">
-                                            </div>
+                                        <!-- Mapping: name (Schema users) -->
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label">Nom complet <span class="text-danger">*</span></label>
+                                            <input type="text" class="form-control" name="name" placeholder="Ex: Jean Dupont" required>
                                         </div>
 
-                                        <div class="col-md-6">
-                                            <div class="mb-3">
-                                                <label class="form-label">
-                                                    Nom d’utilisateur <span class="text-danger">*</span>
-                                                </label>
-                                                <input type="text" class="form-control">
-                                            </div>
+                                        <!-- Mapping: email (Schema users) -->
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label">Email (Identifiant) <span class="text-danger">*</span></label>
+                                            <input type="email" class="form-control" name="email" placeholder="jean@entreprise.com" required>
                                         </div>
 
-                                        <div class="col-md-4">
-                                            <div class="mb-3">
-                                                <label class="form-label">
-                                                    Mot de passe <span class="text-danger">*</span>
-                                                </label>
-                                                <input type="text" class="form-control">
-                                            </div>
+                                        <!-- Mapping: password (Schema users) -->
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label">Mot de passe <span class="text-danger">*</span></label>
+                                            <input type="password" class="form-control" name="password" required>
                                         </div>
 
-                                        <div class="col-md-4">
-                                            <div class="mb-3">
-                                                <label class="form-label">
-                                                    Email <span class="text-danger">*</span>
-                                                </label>
-                                                <input type="text" class="form-control">
-                                            </div>
+                                        <!-- Confirmation Mot de passe -->
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label">Confirmer le mot de passe <span class="text-danger">*</span></label>
+                                            <input type="password" class="form-control" name="password_confirmation" required>
                                         </div>
 
+                                        <!-- Statut Actif -->
+                                        <div class="col-md-6 mb-3">
+                                            <div class="form-check form-switch p-2 border rounded bg-light d-flex align-items-center">
+                                                <input type="hidden" name="is_active" value="0">
+                                                <input class="form-check-input ms-0 me-2" name="is_active" value="1" type="checkbox" role="switch" id="activeSwitch" checked>
+                                                <label class="form-check-label cursor-pointer mb-0" for="activeSwitch">Compte Entreprise Actif</label>
+                                            </div>
+                                        </div>
+                                        <!-- Rôle par défaut (Hidden) -->
+                                        <input type="hidden" name="role" value="customer">
                                     </div>
-                                    <!-- end row -->
                                 </div>
 
-                                <!-- <div class="border-bottom mb-3"> -->
-                                    <!-- <div class="mb-3">
-                                        <h6 class="mb-1">Adresse</h6>
-                                        <p class="mb-0">Veuillez renseigner les détails de l'adresse</p>
-                                    </div> -->
 
-                                    <!-- start row -->
-                                    <!-- <div class="row">
-
-                                        <div class="col-md-12">
-                                            <div class="mb-3">
-                                                <label class="form-label">
-                                                    Adresse
-                                                </label>
-                                                <input type="text" class="form-control">
-                                            </div>
-                                        </div>
-
-                                        <div class="col-lg-6 col-md-6">
-                                            <div class="mb-3">
-                                                <label class="form-label">
-                                                    Pays
-                                                </label>
-                                                <select class="select">
-                                                    <option>États-Unis</option>
-                                                    <option>Canada</option>
-                                                    <option>Allemagne</option>
-                                                    <option>France</option>
-                                                </select>
-                                            </div>
-                                        </div>
-
-                                        <div class="col-lg-6 col-md-6">
-                                            <div class="mb-3">
-                                                <label class="form-label">
-                                                    État / Province
-                                                </label>
-                                                <select class="select">
-                                                    <option>Californie</option>
-                                                    <option>New York</option>
-                                                    <option>Texas</option>
-                                                    <option>Floride</option>
-                                                </select>
-                                            </div>
-                                        </div>
-
-                                        <div class="col-lg-6 col-md-6">
-                                            <div class="mb-3">
-                                                <label class="form-label">
-                                                    Ville
-                                                </label>
-                                                <select class="select">
-                                                    <option>Los Angeles</option>
-                                                    <option>San Diego</option>
-                                                    <option>Fresno</option>
-                                                    <option>San Francisco</option>
-                                                </select>
-                                            </div>
-                                        </div>
-
-                                        <div class="col-lg-6 col-md-6">
-                                            <div class="mb-3">
-                                                <label class="form-label">
-                                                    Code postal
-                                                </label>
-                                                <input type="text" class="form-control">
-                                            </div>
-                                        </div>
-
-                                    </div> -->
-                                    <!-- end row -->
-                                <!-- </div> -->
-
-                                <div class="d-flex align-items-center justify-content-end flex-wrap gap-2">
-                                    <button type="submit" class="btn btn-sm btn-primary">Enregistrer les modifications</button>
-                                </div>
+                                <!-- ... -->
                             </form>
 
                         </div> <!-- end card body -->
@@ -972,6 +965,96 @@
     </div>
 </div>
 <!-- delete modal -->
+
+<!-- Paypal -->
+<div class="modal fade" id="add_paypal" role="dialog">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Modifier compte</h5>
+                <button type="button"
+                    class="btn-close custom-btn-close border p-1 me-0 d-flex align-items-center justify-content-center rounded-circle"
+                    data-bs-dismiss="modal" aria-label="Close">
+                    <i class="ti ti-x"></i>
+                </button>
+            </div>
+            <form action="#">
+                <div class="modal-body">
+                    <div class="mb-3 ">
+                        <label class="form-label">Type de compte <span class="text-danger">*</span></label>
+                        <select class="select">
+                            <option>Select</option>
+                            <option>MTN</option>
+                            <option>WAVE</option>
+                            <option>ORANGE</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Nom du compte <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Numéro du compte <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="d-flex align-items-center justify-content-end m-0">
+                        <a href="#" class="btn btn-sm btn-light me-2" data-bs-dismiss="modal">Cancel</a>
+                        <button type="submit" class="btn btn-sm btn-primary">Enregistrer</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<!-- /Paypal -->
+
+<!-- Add Bank Account -->
+<div class="modal fade" id="add_bank" role="dialog">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Ajouter un compte</h5>
+                <button type="button"
+                    class="btn-close custom-btn-close border p-1 me-0 d-flex align-items-center justify-content-center rounded-circle"
+                    data-bs-dismiss="modal" aria-label="Close">
+                    <i class="ti ti-x"></i>
+                </button>
+            </div>
+            <form action="#">
+                <div class="modal-body">
+                    <div class="mb-3 ">
+                        <label class="form-label">Type de compte <span class="text-danger">*</span></label>
+                        <select class="select">
+                            <option>Select</option>
+                            <option>MTN</option>
+                            <option>WAVE</option>
+                            <option>ORANGE</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Nom du compte <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Numéro du compte <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control">
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <div class="d-flex align-items-center justify-content-end m-0">
+                        <a href="#" class="btn btn-sm btn-light me-2" data-bs-dismiss="modal">Annuler</a>
+                        <button type="submit" class="btn btn-sm btn-primary">Enregistrer</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<!-- /Add Bank Account -->
+
 
 <script>
     function previewImage(input) {

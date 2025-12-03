@@ -42,10 +42,5 @@ class ConsoleController  extends Controller
         return view('console.listCampagnes', compact('title','title_back','link_back'));
     }
 
-    public function detailCampagne(){
-        $title_back = "Tableau de bord";
-        $link_back = "Detail_campagne";
-        $title = "Detail Campagne";
-        return view('console.detailCampagne', compact('title','title_back','link_back'));
-    }
+    
 }
