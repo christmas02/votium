@@ -14085,3 +14085,29 @@ th.fc-day-header {
 }
 
 /*# sourceMappingURL=style.css.map */
+
+/* Style pour les boutons inactifs (Gris clair / Texte foncé) */
+.btn-outline-custom {
+    color: #555;
+    /* Texte gris foncé */
+    background-color: #f8f9fa;
+    /* Fond gris très clair */
+    border-color: #dee2e6;
+    /* Bordure grise discrète */
+}
+
+/* Style au survol */
+.btn-outline-custom:hover {
+    background-color: #e2e6ea;
+    color: #333;
+}
+
+/* Style quand le bouton est SÉLECTIONNÉ (Coché) */
+.btn-check:checked+.btn-outline-custom {
+    background-color: #0d8a9c;
+    /* Le bleu/vert de votre image */
+    border-color: #0d8a9c;
+    color: white;
+    box-shadow: none;
+    /* Enlève l'effet de focus par défaut */
+}

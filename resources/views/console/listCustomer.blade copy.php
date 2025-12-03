@@ -587,7 +587,7 @@
 
 <!-- Structure de la Modale -->
 <div class="modal fade" id="modal_add_campaign" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-sm modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header border-bottom">
                 <h5 class="modal-title">Ajouter une nouvelle campagne</h5>
@@ -600,12 +600,12 @@
 
                     <!-- 2. INFORMATIONS PRINCIPALES -->
                     <div class="row mb-4">
-                        <div class="col-md-12 mb-3">
+                        <div class="col-md-6 mb-3">
                             <label class="form-label">Nom de la campagne <span class="text-danger">*</span></label>
                             <input type="text" class="form-control" name="name" required placeholder="Ex: Élection Miss 2024">
                         </div>
 
-                        <div class="col-md-12 mb-3">
+                        <div class="col-md-6 mb-3">
                             <label class="form-label">Promoteur <span class="text-danger">*</span></label>
                             <select class="select form-control form-select" name="customer_id" required>
                                 <option value="">Sélectionner un Promoteur</option>
@@ -656,25 +656,6 @@
                     </div>
 
                     <hr class="my-4 border-secondary opacity-10">
-                    <div class="bg-light p-3 rounded mb-3">
-                        <div class="col-md-12 d-flex align-items-end">
-                            <div class="form-check form-switch mb-2">
-                                <input type="hidden" name="text_cover" value="0">
-                                <input class="form-check-input" type="checkbox" role="switch" id="textCoverSwitch" name="text_cover" value="1">
-                                <label class="form-check-label" for="textCoverSwitch">Texte sur le cover</label>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="bg-light p-3 rounded mb-3">
-                        <div class="col-md-12 d-flex align-items-end">
-                            <div class="form-check form-switch mb-2">
-                                <input type="hidden" name="text_cover" value="0">
-                                <input class="form-check-input" type="checkbox" role="switch" id="textCoverSwitch" name="text_cover" value="1">
-                                <label class="form-check-label" for="textCoverSwitch">Identifiants candidats personnalisés</label>
-                            </div>
-                        </div>
-                    </div>
 
                     <!-- 3. CONFIGURATION & RÈGLES (Groupés sur fond gris) -->
                     <div class="bg-light p-3 rounded mb-4">
@@ -692,144 +673,74 @@
                                 </div>
                             </div>
 
-                            <!-- Bloc Conteneur (Masqué par défaut) -->
-                            <div id="blocDates" style="display: none;">
+                            <!-- Dates -->
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Date de début</label>
+                                <input type="datetime-local" class="form-control" name="inscription_date_debut">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Date de fin</label>
+                                <input type="datetime-local" class="form-control" name="inscription_date_fin">
+                            </div>
 
-                                <!-- Ligne Début -->
-                                <div class="row">
-
-                                    <div class="col-md-12 mb-3">
-                                        <label class="form-label">Date de début</label>
-                                        <input type="date" class="form-control" name="inscription_date_debut">
-                                    </div>
-                                    <div class="col-md-12 mb-3">
-                                        <label class="form-label">Date de fin</label>
-                                        <input type="date" class="form-control" name="inscription_date_fin">
-                                    </div>
-
-
-                                </div>
-
-                                <!-- Ligne Fin -->
-                                <div class="row">
-                                    <div class="col-md-12 mb-3">
-                                        <label class="form-label">Heure de début</label>
-                                        <input type="time" class="form-control" name="inscription_heure_debut">
-                                    </div>
-
-                                    <div class="col-md-12 mb-3">
-                                        <label class="form-label">Heure de fin</label>
-                                        <input type="time" class="form-control" name="inscription_heure_fin">
-                                    </div>
-                                </div>
-
+                            <!-- Conditions -->
+                            <div class="col-md-12 mb-3">
+                                <label class="form-label">Règles & Conditions</label>
+                                <textarea class="form-control" rows="3" name="condition_participation" required placeholder="Les règles du jeu..."></textarea>
                             </div>
                         </div>
                     </div>
 
                     <!-- 4. APPARENCE & OPTIONS -->
                     <div>
-                        <!-- <h6 class="mb-3 d-flex align-items-center text-dark">
+                        <h6 class="mb-3 d-flex align-items-center text-dark">
                             <i class="ti ti-palette fs-5 me-2"></i> Apparence & Options
-                        </h6> -->
+                        </h6>
                         <div class="row">
+                            <!-- Couleurs -->
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Couleur Primaire</label>
+                                <div class="input-group">
+                                    <input type="color" class="form-control form-control-color" name="color_primaire" value="#563d7c" title="Choisir">
+                                    <input type="text" class="form-control" value="#563d7c" readonly>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Couleur Secondaire</label>
+                                <div class="input-group">
+                                    <input type="color" class="form-control form-control-color" name="color_secondaire" value="#cccccc" title="Choisir">
+                                    <input type="text" class="form-control" value="#cccccc" readonly>
+                                </div>
+                            </div>
 
-                            <!-- <div class="col-md-6 mb-3">
+                            <!-- Options Selects -->
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Ordre des candidats</label>
+                                <select class="form-select" name="ordonner_candidats_votes_decroissants">
+                                    <option value="non">Par défaut (Aléatoire/ID)</option>
+                                    <option value="oui">Votes décroissants (Top 1er)</option>
+                                </select>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
                                 <label class="form-label">Affichage Résultats</label>
                                 <select class="form-select" name="afficher_montant_pourcentage">
                                     <option value="clair" selected>Clair (Tout afficher)</option>
                                     <option value="masque">Masqué</option>
                                     <option value="pourcentage_seul">Pourcentage seul</option>
                                 </select>
-                            </div> -->
-
-                            <div class="col-md-12 mb-3">
-                                <label class="form-label">Afficher les montants en pourcentage (%)</label>
-
-                                <!-- Conteneur du groupe de boutons -->
-                                <div class="btn-group w-100" role="group" aria-label="Affichage montant">
-
-                                    <!-- Option 1 : Clair -->
-                                    <input type="radio" class="btn-check" name="afficher_montant_pourcentage" id="option1" value="clair" checked>
-                                    <label class="btn btn-outline-custom" for="option1">Clair</label>
-
-                                    <!-- Option 2 : Pourcentage -->
-                                    <input type="radio" class="btn-check" name="afficher_montant_pourcentage" id="option2" value="pourcentage">
-                                    <label class="btn btn-outline-custom" for="option2">Pourcentage</label>
-
-                                    <!-- Option 3 : Les deux -->
-                                    <input type="radio" class="btn-check" name="afficher_montant_pourcentage" id="option3" value="les_deux">
-                                    <label class="btn btn-outline-custom" for="option3">Les deux</label>
-                                </div>
                             </div>
 
-                            <!-- Options Selects -->
-                            <div class="bg-light p-3 rounded mb-3">
-                                <div class="col-md-12 d-flex align-items-end">
-                                    <div class="form-check form-switch mb-2">
-                                        <input type="hidden" name="vote_decroissant" value="0">
-                                        <input class="form-check-input" type="checkbox" role="switch" id="textCoverSwitch" name="vote_decroissant" value="1">
-                                        <label class="form-check-label" for="textCoverSwitch">Ordonner les candidats par votes décroissants</label>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- 1. Quantité de votes (Tout en haut, pleine largeur) -->
-                            <div class="col-12 mb-3">
-                                <label class="form-label fw-medium">Quantité de votes visibles</label>
-                                <input type="text" class="form-control" name="quantite_vote" placeholder="Ex: 10,20,50,100">
-                                <!-- Texte d'aide en gris -->
-                                <div class="form-text text-muted mt-2">
-                                    Ce sont les quantités de votes que vos clients pourront choisir pour le paiement.
-                                    <span class="fw-bold">Les packs dont le montant est inferieur à 200f seront ignorés.</span>
-                                </div>
-                            </div>
-
-                            <!-- Couleurs -->
                             <div class="col-md-6 mb-3">
-                                <label class="form-label">Couleur Primaire</label>
-                                <div class="input-group">
-                                    <input type="color" class="form-control form-control-color" name="color_primaire" value="#000" title="Choisir">
-                                </div>
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <label class="form-label">Couleur Secondaire</label>
-                                <div class="input-group">
-                                    <input type="color" class="form-control form-control-color" name="color_secondaire" value="#000" title="Choisir">
-                                </div>
+                                <label class="form-label">Limite de votes</label>
+                                <input type="text" class="form-control" name="quantite_vote" placeholder="Ex: Illimité">
                             </div>
 
-                            <!-- 1. IMAGE DE COUVERTURE (Mise en avant) -->
-                            <div class="mb-4">
-                                <label class="form-label fw-bold">Condition de participation (Document)<span class="text-danger">*</span></label>
-
-                                <div class="position-relative w-100 rounded border border-dashed bg-light d-flex align-items-center justify-content-center overflow-hidden"
-                                    style="height: 250px; border-width: 2px !important; transition: all 0.3s ease;"
-                                    id="drop-zone">
-
-                                    <!-- Contenu par défaut -->
-                                    <div class="text-center p-4" id="upload-placeholder">
-                                        <div class="avatar avatar-lg bg-white border rounded-circle mb-2 mx-auto">
-                                            <i class="ti ti-cloud-upload text-primary fs-3"></i>
-                                        </div>
-                                        <h6 class="mb-1 fw-bold">Glissez un PDF ou cliquez</h6>
-                                        <p class="text-muted mb-0 fs-12">PDF. Max 5MB</p>
-                                    </div>
-
-                                    <!-- Image Preview -->
-                                    <img id="pdf-preview" src="#" alt="Aperçu" class="position-absolute top-0 start-0 w-100 h-100 object-fit-cover d-none">
-
-                                    <!-- Input File Invisible -->
-                                    <input type="file" name="pdf" id="input-image"
-                                        class="position-absolute top-0 start-0 w-100 h-100 opacity-0 cursor-pointer"
-                                        accept=".pdf">
-                                </div>
-
-                                <!-- Bouton Supprimer -->
-                                <div class="d-flex justify-content-end mt-1">
-                                    <button type="button" id="remove-btn" class="btn btn-sm btn-link text-danger text-decoration-none d-none" onclick="removeImage()">
-                                        <i class="ti ti-trash me-1"></i> Supprimer l'image
-                                    </button>
+                            <div class="col-md-6 mb-3 d-flex align-items-end">
+                                <div class="form-check form-switch mb-2">
+                                    <input type="hidden" name="text_cover" value="0">
+                                    <input class="form-check-input" type="checkbox" role="switch" id="textCoverSwitch" name="text_cover" value="1">
+                                    <label class="form-check-label" for="textCoverSwitch">Afficher texte sur couverture</label>
                                 </div>
                             </div>
                         </div>
@@ -846,30 +757,6 @@
     </div>
 </div>
 
-<!-- Script JavaScript pour gérer l'affichage -->
-<script>
-    document.addEventListener("DOMContentLoaded", function() {
-        const switchBtn = document.getElementById('inscriptionSwitch');
-        const blocDates = document.getElementById('blocDates');
-
-        // Fonction pour afficher/masquer
-        function toggleDates() {
-            if (switchBtn.checked) {
-                blocDates.style.display = 'flex'; // 'flex' car c'est une row bootstrap
-            } else {
-                blocDates.style.display = 'none';
-                // Optionnel : Réinitialiser les dates si on décoche
-                // blocDates.querySelectorAll('input').forEach(input => input.value = '');
-            }
-        }
-
-        // Écouter le changement (clic)
-        switchBtn.addEventListener('change', toggleDates);
-
-        // Vérifier l'état au chargement de la page (utile en cas d'erreur de formulaire ou d'édition)
-        toggleDates();
-    });
-</script>
 @endsection
 <!-- section js -->
 @section('extra-js')
