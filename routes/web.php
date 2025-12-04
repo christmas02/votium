@@ -35,6 +35,8 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('list_customer', 'listCustomer')->name('list_customer');
         Route::get('detail_customer', 'detailCustomer')->name('detail_customer');
         Route::get('list_campagne', 'listCampagne')->name('list_campagne');
+        Route::get('list_candidat', 'listCandidat')->name('list_candidat');
+        Route::get('list_vote', 'listVote')->name('list_vote');
     });
 
     Route::controller(BusinessController::class)->group(function () {

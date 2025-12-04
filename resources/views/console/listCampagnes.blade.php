@@ -9,7 +9,7 @@
     <div class="d-flex align-items-center justify-content-between gap-2 mb-4 flex-wrap">
         <div class="row col-12">
             <div class="col-sm-6">
-                <h4 class="mb-0">Liste Campagnes</h4>
+                <h4 class="mb-0">{{ $title }}</h4>
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb mb-0 p-0">
                         <li class="breadcrumb-item"><a href="{{ $link_back }}">{{ $title_back }}</a></li>
