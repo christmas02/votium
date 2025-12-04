@@ -36,14 +36,14 @@
                 <li>
                     <ul>
                         <li class="">
-                            
+
                             <a href="{{ route('back_office_console') }}"
                                 class="{{ request()->routeIs('back_office_console') ? 'active' : '' }}">
                                 <i class="ti ti-dashboard"></i><span>Tableau de bord</span>
                             </a>
                         </li>
                         <li>
-                            
+
                             <a href="{{ route('list_customer') }}"
                                 class="{{ request()->routeIs('*_customer') ? 'active' : '' }}">
                                 <i class="ti ti-user-star"></i><span>Customer</span>
@@ -53,6 +53,18 @@
                             <a href="{{ route('list_campagne') }}"
                                 class="{{ request()->routeIs('*_campagne') ? 'active' : '' }}">
                                 <i class="ti ti-brand-campaignmonitor"></i><span>Campagnes</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ route('list_candidat') }}"
+                                class="{{ request()->routeIs('*_candidat') ? 'active' : '' }}">
+                                <i class="ti ti-user-up"></i><span>Candidats</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ route('list_vote') }}"
+                                class="{{ request()->routeIs('*_vote') ? 'active' : '' }}">
+                                <i class="ti ti-ticket"></i><span>Votes</span>
                             </a>
                         </li>
                     </ul>
