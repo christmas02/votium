@@ -20,7 +20,7 @@ class CreateCampagnes extends Migration
             $table->string('description');
             $table->string('image_couverture');
             $table->string('customer_id');
-            $table->boolean('text_cover')->default(false);
+            $table->boolean('text_cover_isActive')->default(false);
             $table->boolean('inscription')->default(false);
             $table->dateTime('inscription_date_debut')->nullable();
             $table->dateTime('inscription_date_fin')->nullable();

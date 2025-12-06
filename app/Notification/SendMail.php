@@ -1,0 +1,22 @@
+<?php
+
+namespace App\Notification;
+
+
+use App\Mail\Inscriptioncustomer;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
+
+class SendMail
+{
+    public function sendMailAfterSaveCustomer($email, $user, $data)
+    {
+        try{
+            Log::info('methode SendMail - Enter in send mail service');
+            SendMail::to($email)->send(new Inscriptioncustomer($user, $data));
+            return true;
+        }catch(\Throwable $th){
+            Log::error($th->getMessage());
+        }
+    }
+}

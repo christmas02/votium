@@ -16,6 +16,7 @@ class CreateNomTable extends Migration
         Schema::create('customers', function (Blueprint $table) {
             $table->id();
             $table->string('customer_id');
+            $table->string('user_id');
             $table->string('entreprise');
             $table->string('pays_siege');
             $table->string('email')->unique();
@@ -28,8 +29,7 @@ class CreateNomTable extends Migration
             $table->string('logo')->default('logo.png');
             $table->string('link_linkedin')->nullable();
             $table->string('link_website')->nullable();
-            $table->string('data');
-            $table->boolean('is_active');
+            $table->boolean('is_active')->default(true);
             $table->timestamps();
         });
     }
