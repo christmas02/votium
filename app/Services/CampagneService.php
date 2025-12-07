@@ -12,11 +12,18 @@ class CampagneService
         $this->campagneRepository = $campagneRepository;
     }
 
-    public function saveNewCampagne($dataCampagne)
-    {
+    public function saveNewCampagne($dataCampagne){
        $campagne = $this->campagneRepository->saveCampagne($dataCampagne);
        return $campagne;
     }
 
-    public function getCampagnes(){}
+    public function listCampagnes(){
+        $campagnes = $this->campagneRepository->getListCampagnes();
+        return $campagnes;
+    }
+
+    public function saveNewEtape($dataEtape){
+        $etape = $this->campagneRepository->saveEtape($dataEtape);
+        return $etape;
+    }
 }
