@@ -65,7 +65,7 @@
                                     <td>
                                         <div class="d-inline-flex gap-2">
                                             <a href="{{ route('detail_customer') }}" class="btn btn-icon btn-sm btn-success"><i class="ti ti-eye"></i></a>
-                                            <a class="btn btn-icon btn-sm btn-info" data-bs-toggle="modal" data-bs-target="#modal_edit_client"><i class="ti ti-edit"></i></a>
+                                            <!-- <a class="btn btn-icon btn-sm btn-info" data-bs-toggle="modal" data-bs-target="#modal_edit_client"><i class="ti ti-edit"></i></a> -->
 
                                             <a class="btn btn-icon btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#delete_contact"><i class="ti ti-trash"></i></a>
                                             <a href="#" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#modal_add_campaign">
@@ -85,7 +85,7 @@
                                     <td>
                                         <div class="d-inline-flex gap-2">
                                             <a href="{{ route('detail_customer') }}" class="btn btn-icon btn-sm btn-success"><i class="ti ti-eye"></i></a>
-                                            <a class="btn btn-icon btn-sm btn-info" data-bs-toggle="modal" data-bs-target="#modal_edit_client"><i class="ti ti-edit"></i></a>
+                                            <!-- <a class="btn btn-icon btn-sm btn-info" data-bs-toggle="modal" data-bs-target="#modal_edit_client"><i class="ti ti-edit"></i></a> -->
 
                                             <a class="btn btn-icon btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#delete_contact"><i class="ti ti-trash"></i></a>
                                             <a href="#" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#modal_add_campaign">

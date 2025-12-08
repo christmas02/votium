@@ -963,6 +963,13 @@ Author URL: https://themeforest.net/user/dreamstechnologies
   height: 14px;
   border-radius: 50%;
   background: var(--danger);
+
+/* Ensure anchors inside li.submenu remain clickable and above potential overlays */
+.sidebar .sidebar-menu > ul > li.submenu > a {
+  pointer-events: auto;
+  position: relative;
+  z-index: 2;
+}
   font-size: 10px;
   display: flex;
   align-items: center;

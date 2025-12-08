@@ -1,4 +1,4 @@
-@extends('layout.header.console')
+@extends('layout.header.business')
 
 @section('content')
 
@@ -35,6 +35,7 @@
         <div class="d-flex align-items-center gap-2 flex-wrap">
 
             <a href="javascript:void(0);" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal_add_candidat"><i class="ti ti-square-rounded-plus-filled me-1"></i>Créer</a>
+            <a href="javascript:void(0);" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal_add_categorie"><i class="ti ti-square-rounded-plus-filled me-1"></i>Ajouter catégorie</a>
             <div class="gap-2 d-flex align-items-center flex-wrap">
                 <div class="dropdown">
                     <a href="javascript:void(0);" class="dropdown-toggle btn btn-outline-light px-2 shadow" data-bs-toggle="dropdown"><i class="ti ti-package-import me-2"></i>Importer</a>
@@ -57,36 +58,59 @@
     <!-- Contact Grid -->
     <div class="row">
         <div class="col-xl-3 ">
-            <form action="">
-                <div class="row mb-4 card card-body">
-                    <div class="col-md-12 mb-3">
-                        <label class="form-label">Choisir la campagne <span class="text-danger">*</span></label>
-                        <select class="select form-control form-select" name="customer_id" required>
-                            <option value="">Sélectionner une campagne</option>
-                            <option value="1">Campagne A</option>
-                            <option value="2">Campagne B</option>
-                        </select>
-                    </div>
-                    <div class="col-md-12 mb-3">
-                        <label class="form-label">Choisir la catégorie <span class="text-danger">*</span></label>
-                        <select class="select form-control form-select" name="customer_id" required>
-                            <option value="">Sélectionner la catégorie</option>
-                            <option value="1">Catégorie A</option>
-                            <option value="2">Catégorie B</option>
-                        </select>
-                    </div>
-                    <div class="col-md-12 mb-3">
-                        <label class="form-label">Choisir l'étape <span class="text-danger">*</span></label>
-                        <select class="select form-control form-select" name="customer_id" required>
-                            <option value="">Sélectionner l'étape</option>
-                            <option value="1">Etape A</option>
-                            <option value="2">Etape B</option>
-                        </select>
-                    </div>
-                </div>
+            <div class="row mb-1">
+                <div class="col-xl-12">
+                    <form action="">
+                        <div class="row mb-4 card card-body">
+                            <div class="col-md-12 mb-3">
+                                <label class="form-label">Choisir la campagne <span class="text-danger">*</span></label>
+                                <select class="select form-control form-select" name="customer_id" required>
+                                    <option value="">Sélectionner une campagne</option>
+                                    <option value="1">Campagne A</option>
+                                    <option value="2">Campagne B</option>
+                                </select>
+                            </div>
+                            <div class="col-md-12 mb-3">
+                                <label class="form-label">Choisir la catégorie <span class="text-danger">*</span></label>
+                                <select class="select form-control form-select" name="customer_id" required>
+                                    <option value="">Sélectionner la catégorie</option>
+                                    <option value="1">Catégorie A</option>
+                                    <option value="2">Catégorie B</option>
+                                </select>
+                            </div>
+                            <div class="col-md-12 mb-3">
+                                <label class="form-label">Choisir l'étape <span class="text-danger">*</span></label>
+                                <select class="select form-control form-select" name="customer_id" required>
+                                    <option value="">Sélectionner l'étape</option>
+                                    <option value="1">Etape A</option>
+                                    <option value="2">Etape B</option>
+                                </select>
+                            </div>
+                        </div>
 
-            </form>
+                    </form>
+                </div>
+                <div class="col-xl-12">
+                    <form action="">
+                        <div class="row mb-4 card card-body">
+                            <h5 class="mb-3 fs-17">Catégories</h5>
+                            <div class="col-md-12 mb-3">
+                                <label class="form-control">COIFFURE HOMME <i class="ti ti-edit text-blue"></i></label>
+                            </div>
+                            <div class="col-md-12 mb-3">
+                                <label class="form-control">COIFFURE FEMME <i class="ti ti-edit text-blue"></i></label>
+                                
+                            </div>
+                            
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+            
         </div>
+
+
         <div class="col-xl-9">
             <div class="row">
                 <div class="col-xxl-3 col-xl-4 col-md-6">
@@ -297,6 +321,60 @@
                                     <option value="2">Catégorie B</option>
                                 </select>
                             </div>
+                            <div class="col-md-12 mb-3">
+                                <label class="form-label">Choisir l'étape <span class="text-danger">*</span></label>
+                                <select class="select form-control form-select" name="customer_id" required>
+                                    <option value="">Sélectionner l'étape</option>
+                                    <option value="1">Etape A</option>
+                                    <option value="2">Etape B</option>
+                                </select>
+                            </div>
+                        </div>
+
+                    </div>
+                    <!-- Modal Footer (Actions) -->
+                    <div class="modal-footer border-top mt-4 pb-0 px-0">
+                        <button type="button" class="btn btn-light" data-bs-dismiss="modal">Annuler</button>
+                        <button type="submit" class="btn btn-primary"><i class="ti ti-device-floppy me-1"></i> Enregistrer</button>
+                    </div>
+                    <!-- ... -->
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- /Add offcanvas -->
+
+<!-- Structure de la Modale -->
+<div class="modal fade" id="modal_add_categorie" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-sm modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header border-bottom">
+                <h5 class="modal-title">Ajouter catégorie</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body">
+                <form action="#" method="POST" enctype="multipart/form-data">
+                    <!-- @csrf -->
+                    <div>
+                        <div class="row">
+
+                            <!-- Nom Entreprise -->
+                            <div class="col-md-12 mb-3">
+                                <label class="form-label">Nom catégorie <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" name="entreprise" required>
+                            </div>
+
+                            <div class="col-md-12 mb-3">
+                                <label class="form-label">Choisir la campagne <span class="text-danger">*</span></label>
+                                <select class="select form-control form-select" name="customer_id" required>
+                                    <option value="">Sélectionner une campagne</option>
+                                    <option value="1">Campagne A</option>
+                                    <option value="2">Campagne B</option>
+                                </select>
+                            </div>
+
                             <div class="col-md-12 mb-3">
                                 <label class="form-label">Choisir l'étape <span class="text-danger">*</span></label>
                                 <select class="select form-control form-select" name="customer_id" required>

@@ -1,4 +1,4 @@
-@extends('layout.header.console')
+@extends('layout.header.business')
 
 @section('content')
 

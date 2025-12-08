@@ -55,7 +55,7 @@
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td>Campagne N°001</td>
+                                    <td class="text-uppercase fw-bold">Campagne N°001</td>
                                     <td>1 étape</td>
                                     <td>1 Candidats</td>
                                     <td>23/11/2025</td>
@@ -70,7 +70,7 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td>Campagne N°050</td>
+                                    <td class="text-uppercase fw-bold">Campagne N°001</td>
                                     <td>3 étape</td>
                                     <td>25 Candidats</td>
                                     <td>23/11/2025</td>

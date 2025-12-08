@@ -22,8 +22,8 @@ class ConsoleController  extends Controller
 
     public function detailCustomer(){
         $title_back = "Tableau de bord";
-        $link_back = "Detail_customer";
-        $title = "Detail Customer";
+        $link_back = "parameter_compte";
+        $title = "Paramètres du compte";
         return view('console.detailCustomer', compact('title','title_back','link_back'));
     }
 
@@ -40,22 +40,6 @@ class ConsoleController  extends Controller
         $link_back = "list_campagne";
         $title = "Liste campagnes";
         return view('console.listCampagnes', compact('title','title_back','link_back'));
-    }
-
-    #CANDIDATS
-    public function listCandidat(){
-        $title_back = "Tableau de bord";
-        $link_back = "list_candidat";
-        $title = "Liste candidats";
-        return view('console.listCandidats', compact('title','title_back','link_back'));
-    }
-
-    #VOTES
-    public function listVote(){
-        $title_back = "Tableau de bord";
-        $link_back = "list_vote";
-        $title = "Liste votes";
-        return view('console.listVotes', compact('title','title_back','link_back'));
     }
 
     
