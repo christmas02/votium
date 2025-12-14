@@ -31,8 +31,8 @@ class CustomerService
             // TO BO SAVE INFO PROFIL CUSTOMER
             $this->customerRepository->save($dataNewCustomer);
             // SEND EMAIL CUSTOMER
-            $email = "";
-            $user = "";
+            $email = $dataNewCustomer['email'];
+            $user = $dataNewCustomer['name'];
             $data = "";
             $this->sendMail->sendMailAfterSaveCustomer($email, $user, $data);
             DB::commit();
