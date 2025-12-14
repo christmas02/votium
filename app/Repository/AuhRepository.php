@@ -3,11 +3,32 @@
 namespace App\Repository;
 
 use Illuminate\Support\Facades\Auth;
+use App\Models\User;
 
 class  AuhRepository
 {
     public function login($user_email, $password)
     {
         return Auth::attempt(['email'=> $user_email, 'password'=>$password]);
+    }
+
+
+
+    public function saveUser($dataUser){
+        try{
+        $user = new User();
+        $user->user_id = $dataUser['user_id'];
+        $user->name = $dataUser['name'];
+        $user->phonenumber = $dataUser['phonenumber'];
+        $user->email = $dataUser['email'];
+        $user->role = $dataUser['role'];
+        $user->password = $dataUser['password'];
+
+        $user->save();
+
+        }  catch (\Exception $e) {
+          \Log::error('Erreur lors de la sauvegarde du client : '.$e->getMessage());
+          return false;
+        }
     }
 }

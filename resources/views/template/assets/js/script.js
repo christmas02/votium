@@ -401,6 +401,24 @@ Template Name: CRMS - Bootstrap Admin Template
         });
     }
 
+	// Fallback initialization: target elements with class "select2" (covers templates using class="select2"
+	// or with malformed data-toggle attributes). Adds a marker class after successful init to avoid double init.
+	if ($('.select2').length > 0) {
+		$('.select2').each(function () {
+			const $el = $(this);
+			if ($el.hasClass('select2-initialized')) return;
+			try {
+				$el.select2({
+					minimumResultsForSearch: -1,
+					width: '100%'
+				});
+				$el.addClass('select2-initialized');
+			} catch (err) {
+				// If select2 isn't available yet or throws, ignore to avoid breaking the page
+			}
+		});
+	}
+
 	// Popover
 	const popoverTriggerList = document.querySelectorAll('[data-bs-toggle="popover"]')
 	const popoverList = [...popoverTriggerList].map(popoverTriggerEl => new bootstrap.Popover(popoverTriggerEl))
