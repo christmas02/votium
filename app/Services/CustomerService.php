@@ -32,9 +32,8 @@ class CustomerService
             $this->customerRepository->save($dataNewCustomer);
             // SEND EMAIL CUSTOMER
             $email = $dataNewCustomer['email'];
-            $user = $dataNewCustomer['name'];
-            $data = "";
-            $this->sendMail->sendMailAfterSaveCustomer($email, $user, $data);
+            $data = $dataNewCustomer;
+            $this->sendMail->sendMailAfterSaveCustomer($email, $data);
             DB::commit();
             return true;
         } catch (Exception $e){

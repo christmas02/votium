@@ -22,6 +22,21 @@ class CampagneService
         return $campagnes;
     }
 
+    public function updateExistingCampagne($dataCampagne){
+        $campagne = $this->campagneRepository->updateCampagne($dataCampagne);
+        return $campagne;
+    }
+
+    public function getCampagneDetailsById($campagne_id){
+        $campagne = $this->campagneRepository->getCampagneById($campagne_id);
+        return $campagne;
+    }
+
+    public function getCampagnesByCustomerId($customerId){
+        $campagnes = $this->campagneRepository->getCampagneByCustomerId($customerId);
+        return $campagnes;
+    }
+
     public function saveNewEtape($dataEtape){
         $etape = $this->campagneRepository->saveEtape($dataEtape);
         return $etape;
