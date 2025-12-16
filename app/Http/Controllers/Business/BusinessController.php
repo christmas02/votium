@@ -32,4 +32,12 @@ class BusinessController extends Controller
         $title = "Liste votes";
         return view('business.listVotes', compact('title','title_back','link_back'));
     }
+
+    #RETRAITS
+    public function listRetrait(){
+        $title_back = "Tableau de bord";
+        $link_back = "list_retrait";
+        $title = "Liste retraits";
+        return view('business.listRetraits', compact('title','title_back','link_back'));
+    }
 }

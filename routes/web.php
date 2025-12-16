@@ -42,5 +42,6 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('parametre_compte', 'parametreCompte')->name('parametre_compte');
         Route::get('list_candidat', 'listCandidat')->name('list_candidat');
         Route::get('list_vote', 'listVote')->name('list_vote');
+        Route::get('list_retrait', 'listRetrait')->name('list_retrait');
     });
 });

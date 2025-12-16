@@ -54,9 +54,12 @@
                                 <i class="ti ti-ticket"></i><span>Votes</span>
                             </a>
                         </li>
-                        <li>
-                            <a href="payments.html"><i class="ti ti-report-money"></i><span>Retraits</span></a>
+                        <li class="{{ request()->routeIs('*_retrait') ? 'active' : '' }}">
+                            <a href="{{ route('list_retrait') }}">
+                                <i class="ti ti-report-money"></i><span>Retraits</span>
+                            </a>
                         </li>
+                        
                         <li><a href="tickets.html"><i class="ti ti-ticket"></i><span>Billeterie</span></a></li>
 
                     </ul>
