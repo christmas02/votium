@@ -62,136 +62,132 @@
                         </div>
                         <div class="card-body">
 
-                            <form action="#" method="POST" enctype="multipart/form-data">
-                                <!-- @csrf -->
+                            <div>
 
-                                <!-- SECTION 2 : INFORMATIONS ENTREPRISE -->
-                                <div>
-                                    <h6 class="mb-3 d-flex align-items-center text-dark">
-                                        <i class="ti ti-building-skyscraper fs-5 me-2"></i> Informations de l'Entreprise
-                                    </h6>
+                                <div class="row">
+                                    <!-- Logo Upload avec Prévisualisation -->
+                                    <div class="col-md-12 mb-3">
+                                        <div class="d-flex align-items-center bg-light p-2 rounded">
+                                            <!-- Zone de l'image -->
+                                            <div class="avatar avatar-xl border border-dashed me-3 flex-shrink-0 d-flex justify-content-center align-items-center bg-light position-relative overflow-hidden">
+                                                <!-- Icône par défaut (sera cachée au chargement) -->
+                                                <i class="ti ti-photo text-muted fs-4" id="logo_placeholder"></i>
+
+                                                <!-- Image de prévisualisation (cachée par défaut) -->
+                                                <img src="#" alt="Aperçu" id="logo_preview" class="d-none w-100 h-100 object-fit-cover">
+                                            </div>
+                                            <!-- Rôle par défaut (Hidden) -->
+                                            <input type="hidden" name="user_id" value="{{auth()->user()->user_id}}">
+                                            <div class="d-flex flex-column">
+                                                <label class="form-label mb-1">Logo de l'entreprise</label>
+                                                <!-- Ajout de l'événement onchange -->
+                                                <input type="file"
+                                                    class="form-control form-control-sm"
+                                                    name="logo"
+                                                    id="logo_input"
+                                                    accept="image/png, image/gif, image/jpeg"
+                                                    onchange="previewLogo(this)">
+                                                <small class="text-muted">JPG, GIF ou PNG. Max 800K</small>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Nom Entreprise -->
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">Nom de l'organisation <span class="text-danger">*</span></label>
+                                        <input type="text" class="form-control" name="entreprise" required>
+                                    </div>
+
+                                    <!-- Pays -->
+                                    <div class="col-md-6 mb-4">
+                                        <label class="form-label">Pays siège <span class="text-danger">*</span></label>
+                                        <select class="select form-control form-select" name="pays_siege" required roundly>
+                                            <option value="France">France</option>
+                                        </select>
+                                    </div>
+
+                                    <!-- NOUVEAU : Email de l'entreprise -->
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">Email de l'organisation</label>
+                                        <!-- Nommé 'company_email' pour ne pas écraser l'email du User -->
+                                        <input type="email" class="form-control" name="email" value="" roundly>
+                                    </div>
+
+                                    <!-- Téléphone -->
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">Téléphone <span class="text-danger">*</span></label>
+                                        <input type="text" class="form-control phone" name="phonenumber" value="" required roundly>
+                                    </div>
+
+                                    <!-- Adresse -->
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">Adresse <span class="text-danger">*</span></label>
+                                        <input type="text" class="form-control" name="adresse" value="" required roundly>
+                                    </div>
+
+                                    <!-- Site Web -->
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">Site internet</label>
+                                        <input type="url" class="form-control" name="link_website" value="" roundly>
+                                    </div>
+
+                                </div>
+
+                                <!-- SECTION : RÉSEAUX SOCIAUX -->
+                                <div class="mt-3">
 
                                     <div class="row">
-                                        <!-- Logo Upload avec Prévisualisation -->
-                                        <div class="col-md-12 mb-3">
-                                            <div class="d-flex align-items-center">
-                                                <!-- Zone de l'image -->
-                                                <div class="avatar avatar-xl border border-dashed me-3 flex-shrink-0 d-flex justify-content-center align-items-center bg-light position-relative overflow-hidden">
-                                                    <!-- Icône par défaut (sera cachée au chargement) -->
-                                                    <i class="ti ti-photo text-muted fs-4" id="logo_placeholder"></i>
-
-                                                    <!-- Image de prévisualisation (cachée par défaut) -->
-                                                    <img src="#" alt="Aperçu" id="logo_preview" class="d-none w-100 h-100 object-fit-cover">
-                                                </div>
-
-                                                <div class="d-flex flex-column">
-                                                    <label class="form-label mb-1">Logo de l'entreprise</label>
-                                                    <!-- Ajout de l'événement onchange -->
-                                                    <input type="file"
-                                                        class="form-control form-control-sm"
-                                                        name="logo"
-                                                        id="logo_input"
-                                                        accept="image/png, image/gif, image/jpeg"
-                                                        onchange="previewLogo(this)">
-                                                    <small class="text-muted">JPG, GIF ou PNG. Max 800K</small>
-                                                </div>
+                                        <!-- Facebook -->
+                                        <div class="col-md-6 mb-3">
+                                            <div class="input-group">
+                                                <span class="input-group-text bg-light"><i class="ti ti-brand-facebook"></i></span>
+                                                <input type="url" class="form-control" name="link_facebook" value="" roundly>
                                             </div>
                                         </div>
 
-                                        <!-- Nom Entreprise -->
+                                        <!-- Instagram -->
                                         <div class="col-md-6 mb-3">
-                                            <label class="form-label">Nom de l'entreprise <span class="text-danger">*</span></label>
-                                            <input type="text" class="form-control" name="entreprise" required>
-                                        </div>
-
-                                        <!-- NOUVEAU : Email de l'entreprise -->
-                                        <div class="col-md-6 mb-3">
-                                            <label class="form-label">Email de contact (Entreprise)</label>
-                                            <!-- Nommé 'company_email' pour ne pas écraser l'email du User -->
-                                            <input type="email" class="form-control" name="company_email" placeholder="contact@entreprise.com">
-                                        </div>
-
-                                        <!-- Téléphone -->
-                                        <div class="col-md-6 mb-3">
-                                            <label class="form-label">Téléphone <span class="text-danger">*</span></label>
-                                            <input type="text" class="form-control phone" name="phonenumber" required>
-                                        </div>
-
-                                        <!-- Site Web -->
-                                        <div class="col-md-6 mb-3">
-                                            <label class="form-label">Site Web</label>
-                                            <input type="url" class="form-control" name="link_website" placeholder="https://...">
-                                        </div>
-
-                                        <!-- Adresse -->
-                                        <div class="col-md-6 mb-3">
-                                            <label class="form-label">Adresse Complète <span class="text-danger">*</span></label>
-                                            <input type="text" class="form-control" name="adresse" required>
-                                        </div>
-
-                                        <!-- Pays -->
-                                        <div class="col-md-6 mb-4">
-                                            <label class="form-label">Pays du siège <span class="text-danger">*</span></label>
-                                            <select class="select form-control form-select" name="pays_siege">
-                                                <option value="">Sélectionner</option>
-                                                <option value="France">France</option>
-                                                <option value="Côte d'Ivoire">Côte d'Ivoire</option>
-                                                <option value="Senegal">Sénégal</option>
-                                                <option value="USA">USA</option>
-                                                <option value="Canada">Canada</option>
-                                            </select>
-                                        </div>
-
-                                        <!-- Description / Data -->
-                                        <div class="col-md-12 mb-3">
-                                            <label class="form-label">Notes / Données supplémentaires <span class="text-danger">*</span></label>
-                                            <textarea class="form-control" rows="2" name="data" required></textarea>
-                                        </div>
-                                    </div>
-
-                                    <!-- SECTION : RÉSEAUX SOCIAUX -->
-                                    <div class="mt-3">
-                                        <h6 class="mb-3 d-flex align-items-center text-dark">
-                                            <i class="ti ti-social fs-5 me-2"></i> Réseaux Sociaux
-                                        </h6>
-
-                                        <div class="row">
-                                            <!-- Facebook -->
-                                            <div class="col-md-6 mb-3">
-                                                <div class="input-group">
-                                                    <span class="input-group-text bg-light"><i class="ti ti-brand-facebook"></i></span>
-                                                    <input type="url" class="form-control" name="link_facebook" placeholder="Facebook URL">
-                                                </div>
-                                            </div>
-
-                                            <!-- Instagram -->
-                                            <div class="col-md-6 mb-3">
-                                                <div class="input-group">
-                                                    <span class="input-group-text bg-light"><i class="ti ti-brand-instagram"></i></span>
-                                                    <input type="url" class="form-control" name="link_instagram" placeholder="Instagram URL">
-                                                </div>
-                                            </div>
-
-                                            <!-- LinkedIn -->
-                                            <div class="col-md-6 mb-3">
-                                                <div class="input-group">
-                                                    <span class="input-group-text bg-light"><i class="ti ti-brand-linkedin"></i></span>
-                                                    <input type="url" class="form-control" name="link_linkedin" placeholder="LinkedIn URL">
-                                                </div>
-                                            </div>
-
-                                            <!-- Twitter / X -->
-                                            <div class="col-md-6 mb-3">
-                                                <div class="input-group">
-                                                    <span class="input-group-text bg-light"><i class="ti ti-brand-x"></i></span>
-                                                    <input type="url" class="form-control" name="link_twitter" placeholder="Twitter/X URL">
-                                                </div>
+                                            <div class="input-group">
+                                                <span class="input-group-text bg-light"><i class="ti ti-brand-instagram"></i></span>
+                                                <input type="url" class="form-control" name="link_instagram" value="" roundly>
                                             </div>
                                         </div>
+
+                                        <!-- LinkedIn -->
+                                        <div class="col-md-6 mb-3">
+                                            <div class="input-group">
+                                                <span class="input-group-text bg-light"><i class="ti ti-brand-linkedin"></i></span>
+                                                <input type="url" class="form-control" name="link_linkedin" value="" roundly>
+                                            </div>
+                                        </div>
+
+                                        <!-- Twitter / X -->
+                                        <div class="col-md-6 mb-3">
+                                            <div class="input-group">
+                                                <span class="input-group-text bg-light"><i class="ti ti-brand-x"></i></span>
+                                                <input type="url" class="form-control" name="link_twitter" value="" roundly>
+                                            </div>
+                                        </div>
+
+                                        <!-- Lien youtube / X -->
+                                        <div class="col-md-6 mb-3">
+                                            <div class="input-group">
+                                                <span class="input-group-text bg-light"><i class="ti ti-brand-youtube"></i></span>
+                                                <input type="url" class="form-control" name="link_youtube" value="" roundly>
+                                            </div>
+                                        </div>
+
+                                        <!-- Lien Tiktok -->
+                                        <div class="col-md-6 mb-3">
+                                            <div class="input-group">
+                                                <span class="input-group-text bg-light"><i class="ti ti-brand-tiktok"></i></span>
+                                                <input type="url" class="form-control" name="link_tiktok" value="" roundly>
+                                            </div>
+                                        </div>
+
                                     </div>
                                 </div>
-                                <!-- ... -->
-                            </form>
+                            </div>
                         </div><!-- end card body -->
                     </div>
                 </div>
@@ -204,10 +200,10 @@
                     <div class="card mb-0">
                         <div class="card-body">
 
-                            <div class="border-bottom mb-3 pb-3 d-flex align-items-center justify-content-between flex-wrap gap-2">
+                            <!-- <div class="border-bottom mb-3 pb-3 d-flex align-items-center justify-content-between flex-wrap gap-2">
                                 <h4 class="fs-17 mb-0">Compte de retrait</h4>
                                 <a href="javascript:void(0)" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#add_bank"><i class="ti ti-square-rounded-plus-filled me-1"></i>Créer Compte</a>
-                            </div>
+                            </div> -->
 
                             <div class="row">
 
@@ -397,37 +393,20 @@
                                         <!-- Mapping: name (Schema users) -->
                                         <div class="col-md-6 mb-3">
                                             <label class="form-label">Nom complet <span class="text-danger">*</span></label>
-                                            <input type="text" class="form-control" name="name" placeholder="Ex: Jean Dupont" required>
-                                        </div>
-
-                                        <!-- Mapping: email (Schema users) -->
-                                        <div class="col-md-6 mb-3">
-                                            <label class="form-label">Email (Identifiant) <span class="text-danger">*</span></label>
-                                            <input type="email" class="form-control" name="email" placeholder="jean@entreprise.com" required>
+                                            <input type="text" class="form-control" name="name" value="" required roundly>
                                         </div>
 
                                         <!-- Mapping: password (Schema users) -->
                                         <div class="col-md-6 mb-3">
-                                            <label class="form-label">Mot de passe <span class="text-danger">*</span></label>
-                                            <input type="password" class="form-control" name="password" required>
+                                            <label class="form-label">Numéro de téléphone <span class="text-danger">*</span></label>
+                                            <input type="text" class="form-control" name="phonenumber" value="" required roundly>
                                         </div>
 
-                                        <!-- Confirmation Mot de passe -->
-                                        <div class="col-md-6 mb-3">
-                                            <label class="form-label">Confirmer le mot de passe <span class="text-danger">*</span></label>
-                                            <input type="password" class="form-control" name="password_confirmation" required>
+                                        <!-- Mapping: email (Schema users) -->
+                                        <div class="col-md-12 mb-3">
+                                            <label class="form-label">Email (Identifiant) <span class="text-danger">*</span></label>
+                                            <input type="email" class="form-control" name="email_customer" value="" roundly required>
                                         </div>
-
-                                        <!-- Statut Actif -->
-                                        <div class="col-md-6 mb-3">
-                                            <div class="form-check form-switch p-2 border rounded bg-light d-flex align-items-center">
-                                                <input type="hidden" name="is_active" value="0">
-                                                <input class="form-check-input ms-0 me-2" name="is_active" value="1" type="checkbox" role="switch" id="activeSwitch" checked>
-                                                <label class="form-check-label cursor-pointer mb-0" for="activeSwitch">Compte Entreprise Actif</label>
-                                            </div>
-                                        </div>
-                                        <!-- Rôle par défaut (Hidden) -->
-                                        <input type="hidden" name="role" value="customer">
                                     </div>
                                 </div>
 

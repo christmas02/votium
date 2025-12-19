@@ -62,7 +62,7 @@
                                     <td>Autorisées</td>
                                     <td>
                                         <div class="d-inline-flex gap-2">
-                                            <a href="#" class="btn btn-icon btn-sm btn-success"><i class="ti ti-location"></i></a>
+                                            <a href="{{ route('vue_campagne') }}" class="btn btn-icon btn-sm btn-success"><i class="ti ti-location"></i></a>
                                             <a class="btn btn-icon btn-sm btn-info" data-bs-toggle="modal" data-bs-target="#modal_edit_campaign"><i class="ti ti-edit"></i></a>
                                             <a href="#;" class="btn btn-icon btn-sm btn-light"><i class="ti ti-menu-2"></i></a>
                                             <a class="btn btn-icon btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#delete_contact"><i class="ti ti-trash"></i></a>
@@ -77,7 +77,7 @@
                                     <td>Non-autorisées</td>
                                     <td>
                                         <div class="d-inline-flex gap-2">
-                                            <a href="#" class="btn btn-icon btn-sm btn-success"><i class="ti ti-location"></i></a>
+                                            <a href="{{ route('vue_campagne') }}" class="btn btn-icon btn-sm btn-success"><i class="ti ti-location"></i></a>
                                             <a class="btn btn-icon btn-sm btn-info" data-bs-toggle="modal" data-bs-target="#modal_edit_campaign"><i class="ti ti-edit"></i></a>
                                             <a href="#;" class="btn btn-icon btn-sm btn-light"><i class="ti ti-menu-2"></i></a>
                                             <a class="btn btn-icon btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#delete_contact"><i class="ti ti-trash"></i></a>
@@ -110,10 +110,11 @@
             </div>
 
             <div class="modal-body">
-                <form action="#" method="POST" enctype="multipart/form-data">
-                    <!-- @csrf -->
+                <form action="{{ route('save_campagne') }}" method="POST" enctype="multipart/form-data">
+                    @csrf
 
                     <!-- 2. INFORMATIONS PRINCIPALES -->
+                    <input type="hidden" name="customer_id" value="0">
                     <div class="row mb-4">
                         <div class="col-md-12 mb-3">
                             <label class="form-label">Nom de la campagne <span class="text-danger">*</span></label>
@@ -174,8 +175,7 @@
                     <div class="bg-light p-3 rounded mb-3">
                         <div class="col-md-12 d-flex align-items-end">
                             <div class="form-check form-switch mb-2">
-                                <input type="hidden" name="text_cover" value="0">
-                                <input class="form-check-input" type="checkbox" role="switch" id="textCoverSwitch" name="text_cover" value="1">
+                                <input class="form-check-input" type="checkbox" role="switch" id="textCoverSwitch" name="text_cover_isActive" value="0">
                                 <label class="form-check-label" for="textCoverSwitch">Texte sur le cover</label>
                             </div>
                         </div>
@@ -184,8 +184,7 @@
                     <div class="bg-light p-3 rounded mb-3">
                         <div class="col-md-12 d-flex align-items-end">
                             <div class="form-check form-switch mb-2">
-                                <input type="hidden" name="text_cover" value="0">
-                                <input class="form-check-input" type="checkbox" role="switch" id="textCoverSwitch" name="text_cover" value="1">
+                                <input class="form-check-input" type="checkbox" role="switch" id="textCoverSwitch" name="identifiants_personnalises_isActive" value="0">
                                 <label class="form-check-label" for="textCoverSwitch">Identifiants candidats personnalisés</label>
                             </div>
                         </div>
@@ -198,8 +197,7 @@
                             <!-- Toggle Inscription -->
                             <div class="col-md-12 mb-3">
                                 <div class="form-check form-switch">
-                                    <input type="hidden" name="inscription" value="0">
-                                    <input class="form-check-input" type="checkbox" role="switch" id="inscriptionSwitch" name="inscription" value="1">
+                                    <input class="form-check-input" type="checkbox" role="switch" id="inscriptionSwitch" name="inscription_isActive" value="0">
                                     <label class="form-check-label fw-medium" for="inscriptionSwitch">Autoriser les inscriptions</label>
                                 </div>
                             </div>
@@ -226,12 +224,12 @@
                                 <div class="row">
                                     <div class="col-md-12 mb-3">
                                         <label class="form-label">Heure de début</label>
-                                        <input type="time" class="form-control" name="inscription_heure_debut">
+                                        <input type="time" class="form-control" name="heure_debut_inscription">
                                     </div>
 
                                     <div class="col-md-12 mb-3">
                                         <label class="form-label">Heure de fin</label>
-                                        <input type="time" class="form-control" name="inscription_heure_fin">
+                                        <input type="time" class="form-control" name="heure_fin_inscription">
                                     </div>
                                 </div>
 
@@ -267,8 +265,7 @@
                             <div class="bg-light p-3 rounded mb-3">
                                 <div class="col-md-12 d-flex align-items-end">
                                     <div class="form-check form-switch mb-2">
-                                        <input type="hidden" name="vote_decroissant" value="0">
-                                        <input class="form-check-input" type="checkbox" role="switch" id="textCoverSwitch" name="vote_decroissant" value="1">
+                                        <input class="form-check-input" type="checkbox" role="switch" id="textCoverSwitch" name="ordonner_candidats_votes_decroissants" value="0">
                                         <label class="form-check-label" for="textCoverSwitch">Ordonner les candidats par votes décroissants</label>
                                     </div>
                                 </div>
@@ -320,7 +317,7 @@
                                     <img id="pdf-preview" src="#" alt="Aperçu" class="position-absolute top-0 start-0 w-100 h-100 object-fit-cover d-none">
 
                                     <!-- Input File Invisible -->
-                                    <input type="file" name="pdf" id="input-image"
+                                    <input type="file" name="condition_participation" id="input-image"
                                         class="position-absolute top-0 start-0 w-100 h-100 opacity-0 cursor-pointer"
                                         accept=".pdf">
                                 </div>
@@ -358,8 +355,8 @@
             </div>
 
             <div class="modal-body">
-                <form action="#" method="POST" enctype="multipart/form-data">
-                    <!-- @csrf -->
+                <form action="{{ route('save_campagne') }}" method="POST" enctype="multipart/form-data">
+                    @csrf
 
                     <!-- 2. INFORMATIONS PRINCIPALES -->
                     <div class="row mb-4">
@@ -422,8 +419,7 @@
                     <div class="bg-light p-3 rounded mb-3">
                         <div class="col-md-12 d-flex align-items-end">
                             <div class="form-check form-switch mb-2">
-                                <input type="hidden" name="text_cover" value="0">
-                                <input class="form-check-input" type="checkbox" role="switch" id="textCoverSwitch" name="text_cover" value="1">
+                                <input class="form-check-input" type="checkbox" role="switch" id="textCoverSwitch" name="text_cover_isActive" value="0">
                                 <label class="form-check-label" for="textCoverSwitch">Texte sur le cover</label>
                             </div>
                         </div>
@@ -432,8 +428,7 @@
                     <div class="bg-light p-3 rounded mb-3">
                         <div class="col-md-12 d-flex align-items-end">
                             <div class="form-check form-switch mb-2">
-                                <input type="hidden" name="text_cover" value="0">
-                                <input class="form-check-input" type="checkbox" role="switch" id="textCoverSwitch" name="text_cover" value="1">
+                                <input class="form-check-input" type="checkbox" role="switch" id="textCoverSwitch" name="identifiants_personnalises_isActive" value="0">
                                 <label class="form-check-label" for="textCoverSwitch">Identifiants candidats personnalisés</label>
                             </div>
                         </div>
@@ -446,14 +441,13 @@
                             <!-- Toggle Inscription -->
                             <div class="col-md-12 mb-3">
                                 <div class="form-check form-switch">
-                                    <input type="hidden" name="inscription" value="0">
-                                    <input class="form-check-input" type="checkbox" role="switch" id="inscriptionSwitchs" name="inscription" value="1">
-                                    <label class="form-check-label fw-medium" for="inscriptionSwitchs">Autoriser les inscriptions</label>
+                                    <input class="form-check-input" type="checkbox" role="switch" id="inscriptionSwitch" name="inscription_isActive" value="0">
+                                    <label class="form-check-label fw-medium" for="inscriptionSwitch">Autoriser les inscriptions</label>
                                 </div>
                             </div>
 
                             <!-- Bloc Conteneur (Masqué par défaut) -->
-                            <div id="blocDatess" style="display: none;">
+                            <div id="blocDates" style="display: none;">
 
                                 <!-- Ligne Début -->
                                 <div class="row">
@@ -474,12 +468,12 @@
                                 <div class="row">
                                     <div class="col-md-12 mb-3">
                                         <label class="form-label">Heure de début</label>
-                                        <input type="time" class="form-control" name="inscription_heure_debut">
+                                        <input type="time" class="form-control" name="heure_debut_inscription">
                                     </div>
 
                                     <div class="col-md-12 mb-3">
                                         <label class="form-label">Heure de fin</label>
-                                        <input type="time" class="form-control" name="inscription_heure_fin">
+                                        <input type="time" class="form-control" name="heure_fin_inscription">
                                     </div>
                                 </div>
 
@@ -515,8 +509,7 @@
                             <div class="bg-light p-3 rounded mb-3">
                                 <div class="col-md-12 d-flex align-items-end">
                                     <div class="form-check form-switch mb-2">
-                                        <input type="hidden" name="vote_decroissant" value="0">
-                                        <input class="form-check-input" type="checkbox" role="switch" id="textCoverSwitch" name="vote_decroissant" value="1">
+                                        <input class="form-check-input" type="checkbox" role="switch" id="textCoverSwitch" name="ordonner_candidats_votes_decroissants" value="0">
                                         <label class="form-check-label" for="textCoverSwitch">Ordonner les candidats par votes décroissants</label>
                                     </div>
                                 </div>
@@ -568,7 +561,7 @@
                                     <img id="pdf-preview" src="#" alt="Aperçu" class="position-absolute top-0 start-0 w-100 h-100 object-fit-cover d-none">
 
                                     <!-- Input File Invisible -->
-                                    <input type="file" name="pdf" id="input-image"
+                                    <input type="file" name="condition_participation" id="input-image"
                                         class="position-absolute top-0 start-0 w-100 h-100 opacity-0 cursor-pointer"
                                         accept=".pdf">
                                 </div>
@@ -586,7 +579,7 @@
                     <!-- Footer Actions -->
                     <div class="modal-footer border-top px-0 pb-0 mt-3">
                         <button type="button" class="btn btn-light" data-bs-dismiss="modal">Annuler</button>
-                        <button type="submit" class="btn btn-primary"><i class="ti ti-check me-1"></i> Modifier la campagne</button>
+                        <button type="submit" class="btn btn-primary"><i class="ti ti-check me-1"></i> Créer la campagne</button>
                     </div>
                 </form>
             </div>
@@ -605,10 +598,16 @@
                 </div>
                 <h5 class="mb-1">Confirmer la suppression</h5>
                 <p class="mb-3">Êtes-vous sûr de vouloir supprimer l'entreprise sélectionnée ?</p>
-                <div class="d-flex justify-content-center">
-                    <a href="#" class="btn btn-light position-relative z-1 me-2 w-100" data-bs-dismiss="modal">Annuler</a>
-                    <a href="#" class="btn btn-primary position-relative z-1 w-100" data-bs-dismiss="modal">Oui, supprimer</a>
-                </div>
+                <!-- Formulaire de suppression -->
+                <form  method="POST" action="{{ route('delete_campagne') }}">
+                    @csrf
+                    @method('DELETE')
+                    <div class="d-flex justify-content-center">
+                        <input type="hidden" name="campagne_id" value="">
+                        <button type="button" class="btn btn-light position-relative z-1 me-2 w-100" data-bs-dismiss="modal">Annuler</button>
+                        <button type="submit" class="btn btn-primary position-relative z-1 w-100">Oui, supprimer</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>

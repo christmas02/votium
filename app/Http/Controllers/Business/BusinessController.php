@@ -40,4 +40,5 @@ class BusinessController extends Controller
         $title = "Liste retraits";
         return view('business.listRetraits', compact('title','title_back','link_back'));
     }
+    
 }

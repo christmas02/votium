@@ -32,9 +32,18 @@ Route::controller(AuthController::class)->group(function () {
 Route::group(['middleware' => 'auth'], function () {
     Route::controller(ConsoleController::class)->group(function () {
         Route::get('back_office_console', 'index')->name('back_office_console');
+        
+        // ROUTES CUSTOMERS
         Route::get('list_customer', 'listCustomer')->name('list_customer');
-        Route::get('parametre_compte', 'parametreCompte')->name('parametre_compte');
+        Route::get('detail_customer', 'detailCustomer')->name('detail_customer');
+        Route::post('save_customer', 'saveCustomer')->name('save_customer');
+        Route::delete('delete_customer', 'deleteCustomer')->name('delete_customer');
+
+        //ROUTES CAMPAGNES
         Route::get('list_campagne', 'listCampagne')->name('list_campagne');
+        Route::get('vue_campagne', 'vueCampagne')->name('vue_campagne');
+        Route::post('save_campagne', 'saveCampagne')->name('save_campagne');
+        Route::delete('delete_campagne', 'deleteCampagne')->name('delete_campagne');
     });
 
     Route::controller(BusinessController::class)->group(function () {
@@ -43,5 +52,6 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('list_candidat', 'listCandidat')->name('list_candidat');
         Route::get('list_vote', 'listVote')->name('list_vote');
         Route::get('list_retrait', 'listRetrait')->name('list_retrait');
+        
     });
 });

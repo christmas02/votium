@@ -23,6 +23,7 @@ class UsersSeeder extends Seeder
             'email' => 'john@exemple.com',
             'role' => 'admin',
             'password' => Hash::make('password123'),
+            'phonenumber' => '0747190450',
         ]);
 
         User::create([
@@ -31,6 +32,7 @@ class UsersSeeder extends Seeder
             'email' => 'customer@exemple.com',
             'role' => 'customer',
             'password' => Hash::make('password123'),
+            'phonenumber' => '0747190450', 
         ]);
         dd('called');
     }
