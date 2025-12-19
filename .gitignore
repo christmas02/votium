@@ -1,5 +1,15 @@
 vendor/
 .env
 .idea/
-uploads/
+node_modules/
+.DS_Store
+*.log
+coverage/
+storage/debugbar/
+storage/*.key
+storage/app/public/
+storage/framework/cache/data/
+storage/framework/sessions/
+storage/framework/views/
 storage/logs/
+uploads/ 

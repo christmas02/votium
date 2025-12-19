@@ -11,7 +11,6 @@ class Inscriptioncustomer extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public $user;
     public $data;
 
     /**
@@ -19,9 +18,8 @@ class Inscriptioncustomer extends Mailable
      *
      *
      */
-    public function __construct($user, $data)
+    public function __construct($data)
     {
-        $this->user = $user;
         $this->data = $data;
     }
 

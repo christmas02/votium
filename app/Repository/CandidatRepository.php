@@ -17,7 +17,15 @@ class CandidatRepository
             $candidat->email = $dataCandidat['email'];
             $candidat->telephone = $dataCandidat['telephone'];
             $candidat->sexe = $dataCandidat['sexe'];
-            $candidat->save();
+            $candidat->date_naissance = $dataCandidat['date_naissance'];
+            $candidat->ville = $dataCandidat['ville'];
+            $candidat->pays = $dataCandidat['pays'];
+            $candidat->profession = $dataCandidat['profession'];
+            $candidat->photo = $dataCandidat['photo'];
+            $candidat->description = $dataCandidat['description'];
+            $candidat->campagne_id = $dataCandidat['campagne_id'];
+            $candidat->data = $dataCandidat['data'];
+            return $candidat->save();
 
         } catch (\Throwable $th) {
             \Log::error('Erreur save candidats - CandidatRepository  : ' . $e->getMessage());
