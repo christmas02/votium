@@ -103,7 +103,7 @@ class CampagneRepository {
     public function updateEtape($dataEtape)
     {
         try {
-            $etape = Etape::where('etape_id', $etape_id)->first();
+            $etape = Etape::where('etape_id', $dataEtape['etape_id'])->first();
             $etape->name = $dataEtape['name'];
             $etape->date_debut = $dataEtape['date_debut'];
             $etape->date_fin = $dataEtape['date_fin'];
