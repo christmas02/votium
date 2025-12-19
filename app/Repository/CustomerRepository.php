@@ -21,8 +21,8 @@ class CustomerRepository
             $customer->user_id = $dataCustomer['user_id'];
             $customer->entreprise = $dataCustomer['entreprise'];
             $customer->pays_siege = $dataCustomer['pays_siege'];
-            $customer->email = $dataCustomer['email'];
-            $customer->phonenumber = $dataCustomer['phonenumber'];
+            $customer->email = $dataCustomer['email_customer'];
+            $customer->phonenumber = $dataCustomer['phonenumber_customer'];
             $customer->adresse = $dataCustomer['adresse'];
             $customer->link_facebook = $dataCustomer['link_facebook'];
             $customer->link_instagram = $dataCustomer['link_instagram'];

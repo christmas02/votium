@@ -103,7 +103,6 @@ class CustomerService
     {
         try {
             return $this->customerRepository->listWithdrawalAccountByCustomer($idCustomer);
-
         } catch (Exception $e){
             \Log::error('Erreur lors de la recuperation des comptes de retrait: ' . $e->getMessage());
             return false;

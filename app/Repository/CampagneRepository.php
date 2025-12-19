@@ -44,7 +44,7 @@ class CampagneRepository {
             $campagne->condition_participation = $dataCampagne['condition_participation'];
             $campagne->save();
             return $campagne;
-        } catch (\Throwable $th) {
+        } catch (\Throwable $e) {
             \Log::error('Erreur save campagne - file:CampagneRepository : ' . $e->getMessage());
             return false;
         }
@@ -68,7 +68,7 @@ class CampagneRepository {
             $campagne->condition_participation = $dataCampagne['condition_participation'];
             $campagne->save();
             return $campagne;
-        } catch (\Throwable $th) {
+        } catch (\Throwable $e) {
             \Log::error('Erreur update campagne - file:CampagneRepository : ' . $e->getMessage());
             return false;  
         }
@@ -94,7 +94,7 @@ class CampagneRepository {
             $etape->save();
             return $etape;
 
-        } catch (\Throwable $th) {
+        } catch (\Throwable $e) {
             \Log::error('Erreur save etape - file:CampagneRepository : ' . $e->getMessage());
             return false;
         }
@@ -103,7 +103,7 @@ class CampagneRepository {
     public function updateEtape($dataEtape)
     {
         try {
-            $etape = Etape::where('etape_id', $dataEtape['etape_id'])->first();
+            $etape = Etape::where('etape_id', $dataEtape)->first();
             $etape->name = $dataEtape['name'];
             $etape->date_debut = $dataEtape['date_debut'];
             $etape->date_fin = $dataEtape['date_fin'];
@@ -117,7 +117,7 @@ class CampagneRepository {
             $etape->save();
             return $etape;
 
-        } catch (\Throwable $th) {
+        } catch (\Throwable $e) {
             \Log::error('Erreur update etape - file:CampagneRepository : ' . $e->getMessage());
             return false;
         }
@@ -125,8 +125,8 @@ class CampagneRepository {
 
     public function getEtapeById($etapeId){
         try {
-            return Etape::where('etape_id', $etape_id)->first();
-        } catch (\Throwable $th) {
+            return Etape::where('etape_id', $etapeId)->first();
+        } catch (\Throwable $e) {
             \Log::error('Erreur get etape by id - file:CampagneRepository : ' . $e->getMessage());
             return false;
         }
@@ -135,7 +135,7 @@ class CampagneRepository {
     public function getEtapeByCampagneId($campagneId){
         try {
             return Etape::where('campagne_id', $campagneId)->get();
-        } catch (\Throwable $th) {
+        } catch (\Throwable $e) {
             \Log::error('Erreur get etape by campagne id - file:CampagneRepository : ' . $e->getMessage());
             return false;
         }
