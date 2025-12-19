@@ -27,7 +27,7 @@ class CandidatRepository
             $candidat->data = $dataCandidat['data'];
             return $candidat->save();
 
-        } catch (\Throwable $th) {
+        } catch (\Throwable $e) {
             \Log::error('Erreur save candidats - CandidatRepository  : ' . $e->getMessage());
             return false;
         }
