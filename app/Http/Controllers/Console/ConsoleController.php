@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Console;
 
 use App\Http\Controllers\Controller;
 use http\Client\Request;
+use App\Services\CustomerService;
 
 class ConsoleController  extends Controller
 {
