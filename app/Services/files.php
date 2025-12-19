@@ -2,15 +2,8 @@
 
 namespace App\Services;
 
-class Upload
+class Files
 {
-    // public static function uploadFile($file): string
-    // {
-    //     $fichier_name = time() . '.' . $file->getClientOriginalName();
-    //     $file->move(public_path('uploads'), $fichier_name);
-    //     return $fichier_name;
-    // }
-
     public static function uploadFile($file): string
     {
         // Récupérer le nom original sans l'extension

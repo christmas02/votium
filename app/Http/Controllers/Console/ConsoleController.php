@@ -6,7 +6,8 @@ namespace App\Http\Controllers\Console;
 use App\Http\Controllers\Controller;
 use App\Models\Campagne;
 use App\Services\SendMail;
-use App\Services\Upload;
+use App\Services\Setting;
+use App\Services\Files;
 use App\Services\CustomerService;
 use App\Services\CampagneService;
 use Illuminate\Support\Facades\Storage;
@@ -17,8 +18,28 @@ use Illuminate\Support\Facades\Hash;
 use App\Models\User;
 use App\Models\Customer;
 
+
 class ConsoleController  extends Controller
 {
+    protected CustomerService $CustomerService;
+    protected CampagneService $CampagneService;
+    protected Setting $setting;
+    protected Files $files;
+
+    public function __construct(
+        CustomerService $CustomerService,
+        CampagneService $CampagneService,
+        Setting $setting,
+        Files $files
+        )
+    {
+        $this->CustomerService = $CustomerService;
+        $this->CampagneService = $CampagneService;
+        $this->setting = $setting;
+        $this->files = $files;
+    }
+
+
     public function index()
     {
         return view('console.index');
@@ -40,17 +61,17 @@ class ConsoleController  extends Controller
 
             #Transfert et upload du fichier logo
             $name_file = ($request->hasFile('logo'))
-                ? Upload::uploadFile($request->logo)
+                ? Files::uploadFile($request->logo)
                 : "default_logo.png";
 
             // Formatage des données
             $dateCustomer = [
-                'customer_id' => Str::uuid(),
+                'customer_id' => $this->setting->generateUuid(),
                 'name_customer' => $request->name,
                 'phonenumber_customer' => $request->phonenumber,
                 'email_customer' => $request->email_customer,
                 'role' => 'customer',
-                'password' => Hash::make('defaultpassword123'),
+                'password' => $this->setting->hashPassword("password123"),
                 'entreprise' => $request->entreprise,
                 'user_id' => $request->user_id,
                 'email_entreprise' => $request->email,
@@ -69,7 +90,7 @@ class ConsoleController  extends Controller
             ];
 
             // Sauvegarde des données via le service
-            CustomerService::createNewCustomer($dateCustomer);
+            $this->CustomerService->createNewCustomer($dateCustomer);
 
             return redirect()->route('list_customer')->with('success', 'Client et entreprise créés avec succès !');
         } catch (\Exception $th) {
@@ -134,11 +155,11 @@ class ConsoleController  extends Controller
         try {
             #Transfert et upload du fichier logo
             $image_couverture = ($request->hasFile('image_couverture'))
-                ? Upload::uploadFile($request->image_couverture)
+                ? Files::uploadFile($request->image_couverture)
                 : "";
 
             $condition_participation = ($request->hasFile('condition_participation'))
-                ? Upload::uploadFile($request->condition_participation)
+                ? Files::uploadFile($request->condition_participation)
                 : "";
 
             // Formatage des données
@@ -163,9 +184,9 @@ class ConsoleController  extends Controller
                 'condition_participation' => $condition_participation,
                 'is_active' => true,
             ];
-            dd($dateCampagne, $request->all());
+            
             // Sauvegarde des données via le service
-            CustomerService::createNewCampagne($dateCampagne);
+            $this->CampagneService->saveNewCampagne($dateCampagne);
 
             return redirect()->route('list_campagne')->with('success', 'Campagne créée avec succès !');
         } catch (\Exception $th) {
