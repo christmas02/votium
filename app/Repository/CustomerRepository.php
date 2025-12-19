@@ -23,6 +23,8 @@ class CustomerRepository
             $customer->logo = $dataCustomer['logo'];
             $customer->link_linkedin = $dataCustomer['link_linkedin'];
             $customer->link_website = $dataCustomer['link_website'];
+            $customer->link_tiktok = $dataCustomer['link_tiktok'];
+            $customer->link_youtube = $dataCustomer['link_youtube'];
             return $customer->save();
 
         } catch (\Exception $e) {

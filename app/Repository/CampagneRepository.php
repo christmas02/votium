@@ -37,6 +37,10 @@ class CampagneRepository {
             $campagne->quantite_vote = $dataCampagne['quantite_vote'];
             $campagne->color_primaire = $dataCampagne['color_primaire'];
             $campagne->color_secondaire = $dataCampagne['color_secondaire'];
+            $campagne->heure_debut_inscription = $dataCampagne['heure_debut_inscription'];
+            $campagne->heure_fin_inscription = $dataCampagne['heure_fin_inscription'];
+            $campagne->identifiants_personnalises_isActive = $dataCampagne['identifiants_personnalises_isActive'];
+            $campagne->is_active = $dataCampagne['is_active'];
             $campagne->condition_participation = $dataCampagne['condition_participation'];
             $campagne->save();
             return $campagne;
