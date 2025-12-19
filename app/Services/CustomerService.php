@@ -23,6 +23,11 @@ class CustomerService
         $this->sendMail = $sendMail;
     }
 
+    public function Customer($idCustomer)
+    {
+        return $this->customerRepository->getCustomerById($idCustomer);
+    }
+
     public function createNewCustomer($dataNewCustomer){
         try {
             DB::beginTransaction();
@@ -37,9 +42,72 @@ class CustomerService
             DB::commit();
             return true;
         } catch (Exception $e){
+            DB::rollBack();
             \Log::error('Erreur lors de la sauvegarde du client : ' . $e->getMessage());
             return false;
-            DB::rollBack();
         }
+    }
+
+    public function UpdateProfileCustomer($customer)
+    {
+        try {
+            DB::beginTransaction();
+            // TO DO SAVE INFO USER ROLE CUSTOMER
+            $this->customerRepository->update($customer);
+
+            DB::commit();
+            return true;
+
+        } catch (Exception $e){
+            DB::rollBack();
+            \Log::error('Erreur lors de la mise a jour du customer : ' . $e->getMessage());
+            return false;
+        }
+    }
+
+    public function UpdateAccountCustomer($Customer)
+    {
+        try {
+            DB::beginTransaction();
+            // TO DO SAVE INFO USER ROLE CUSTOMER
+            $this->authRepository->updateUser($Customer);
+
+            DB::commit();
+            return true;
+
+        } catch (Exception $e){
+            DB::rollBack();
+            \Log::error('Erreur lors de la mise a jour du customer : ' . $e->getMessage());
+            return false;
+        }
+    }
+
+    public function CreateWithdrawalAccount($dataWithdrawalAccount)
+    {
+        try {
+            DB::beginTransaction();
+            // TO DO SAVE INFO USER ROLE CUSTOMER
+            $this->customerRepository->saveWithdrawalAccount($dataWithdrawalAccount);
+
+            DB::commit();
+            return true;
+
+        } catch (Exception $e){
+            DB::rollBack();
+            \Log::error('Erreur lors de la creation du compte de retrait: ' . $e->getMessage());
+            return false;
+        }
+    }
+
+    public function listWithdrawalAccountByCustomer($idCustomer)
+    {
+        try {
+            return $this->customerRepository->listWithdrawalAccountByCustomer($idCustomer);
+
+        } catch (Exception $e){
+            \Log::error('Erreur lors de la recuperation des comptes de retrait: ' . $e->getMessage());
+            return false;
+        }
+
     }
 }

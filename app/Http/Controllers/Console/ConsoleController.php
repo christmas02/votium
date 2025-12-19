@@ -31,8 +31,7 @@ class ConsoleController  extends Controller
         CampagneService $CampagneService,
         Setting $setting,
         Files $files
-        )
-    {
+    ) {
         $this->CustomerService = $CustomerService;
         $this->CampagneService = $CampagneService;
         $this->setting = $setting;
@@ -79,7 +78,7 @@ class ConsoleController  extends Controller
                 'pays_siege' => $request->pays_siege,
                 'adresse' => $request->adresse,
                 'logo' => $name_file,
-                'site_web' => $request->link_website,
+                'link_website' => $request->link_website,
                 'link_facebook' => $request->link_facebook,
                 'link_instagram' => $request->link_instagram,
                 'link_linkedin' => $request->link_linkedin,
@@ -88,7 +87,7 @@ class ConsoleController  extends Controller
                 'link_tiktok' => $request->link_tiktok,
                 'is_active' => false,
             ];
-
+            dd($dateCustomer);
             // Sauvegarde des données via le service
             $this->CustomerService->createNewCustomer($dateCustomer);
 
@@ -164,7 +163,7 @@ class ConsoleController  extends Controller
 
             // Formatage des données
             $dateCampagne = [
-                'campagne_id' => Str::uuid(),
+                'campagne_id' => $this->setting->generateUuid(),
                 'customer_id' => $request->customer_id,
                 'name' => $request->name,
                 'description' => $request->description,
@@ -184,7 +183,7 @@ class ConsoleController  extends Controller
                 'condition_participation' => $condition_participation,
                 'is_active' => true,
             ];
-            
+
             // Sauvegarde des données via le service
             $this->CampagneService->saveNewCampagne($dateCampagne);
 

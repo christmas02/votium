@@ -12,8 +12,6 @@ class  AuhRepository
         return Auth::attempt(['email'=> $user_email, 'password'=>$password]);
     }
 
-
-
     public function saveUser($dataUser){
         try{
         $user = new User();
@@ -29,6 +27,24 @@ class  AuhRepository
         }  catch (\Exception $e) {
           \Log::error('Erreur lors de la sauvegarde du client : '.$e->getMessage());
           return false;
+        }
+    }
+
+    public function updateUser($dataUser)
+    {
+        try {
+            $user = User::where('user_id', $dataUser['user_id'])->first();
+            // TO DO UPDATE USER INFO
+            $user->name = $dataUser['name'];
+            $user->phonenumber = $dataUser['phonenumber'];
+            $user->email = $dataUser['email'];
+            if (isset($dataUser['password']) && !empty($dataUser['password'])) {
+                $user->password = $dataUser['password'];
+            }
+            return $user->save();
+        } catch (\Exception $e) {
+            \Log::error('Erreur lors de la mise à jour de l\'utilisateur : ' . $e->getMessage());
+            return false;
         }
     }
 }
