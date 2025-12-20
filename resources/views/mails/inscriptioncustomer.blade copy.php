@@ -42,18 +42,18 @@
                                         <h4 class="mb-2">Vérifiez votre e-mail</h4>
                                         <p class="mb-3">
                                             Nous avons envoyé un lien à votre adresse e-mail : 
-                                            <strong>Teste mail</strong>.<br>
+                                            <strong>{{ $user->email }}</strong>.<br>
                                             Veuillez cliquer sur le lien pour continuer.
                                         </p>
                                         <p class="mb-3">
                                             Si vous n'avez pas reçu d'e-mail, cliquez sur le lien ci-dessous pour le renvoyer :
                                         </p>
                                         <p class="mb-3">
-                                            <a href="" class="link-indigo fw-bold link-hover">Renvoyer le lien</a>
+                                            <a href="{{ route('verification.resend') }}" class="link-indigo fw-bold link-hover">Renvoyer le lien</a>
                                         </p>
                                         <hr>
                                         <p class="mb-2">Vous souhaitez réinitialiser votre mot de passe ?</p>
-                                        <a href="#" 
+                                        <a href="{{ route('password.reset', ['token' => $token]) }}" 
                                            class="btn btn-warning w-100 mb-3">
                                            Réinitialiser le mot de passe
                                         </a>

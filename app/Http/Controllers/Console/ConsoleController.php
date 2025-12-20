@@ -13,11 +13,12 @@ use App\Services\CampagneService;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
 use App\Models\Customer;
-
+use PhpParser\Node\Stmt\TryCatch;
 
 class ConsoleController  extends Controller
 {
@@ -57,7 +58,7 @@ class ConsoleController  extends Controller
     public function saveCustomer(Request $request)
     {
         try {
-
+            // dd($request->all());
             #Transfert et upload du fichier logo
             $name_file = ($request->hasFile('logo'))
                 ? Files::uploadFile($request->logo)
@@ -66,15 +67,15 @@ class ConsoleController  extends Controller
             // Formatage des données
             $dateCustomer = [
                 'customer_id' => $this->setting->generateUuid(),
-                'name_customer' => $request->name,
-                'phonenumber_customer' => $request->phonenumber,
-                'email_customer' => $request->email_customer,
+                'name' => $request->name,
+                'phonenumber' => $request->phonenumber,
+                'email' => $request->email_customer,
                 'role' => 'customer',
                 'password' => $this->setting->hashPassword("password123"),
                 'entreprise' => $request->entreprise,
                 'user_id' => $request->user_id,
-                'email_entreprise' => $request->email,
-                'phonenumber_entreprise' => $request->phonenumber,
+                'email_customer' => $request->email,
+                'phonenumber_customer' => $request->phonenumber_entreprise,
                 'pays_siege' => $request->pays_siege,
                 'adresse' => $request->adresse,
                 'logo' => $name_file,
@@ -82,12 +83,11 @@ class ConsoleController  extends Controller
                 'link_facebook' => $request->link_facebook,
                 'link_instagram' => $request->link_instagram,
                 'link_linkedin' => $request->link_linkedin,
-                'link_twitter' => $request->link_twitter,
                 'link_youtube' => $request->link_youtube,
                 'link_tiktok' => $request->link_tiktok,
                 'is_active' => false,
             ];
-            dd($dateCustomer);
+            // dd($dateCustomer);
             // Sauvegarde des données via le service
             $this->CustomerService->createNewCustomer($dateCustomer);
 
@@ -138,36 +138,54 @@ class ConsoleController  extends Controller
         return view('console.detailCustomer', compact('title', 'title_back', 'link_back'));
     }
 
+    #VERIFICATION CUSTOMER
+    public function verificationCustomer()
+    {
+        $title_back = "Tableau de bord";
+        $link_back = "verification_customer";
+        $title = "Verification customer";
+        return view('mails.inscriptioncustomer', compact('title', 'title_back', 'link_back'));
+    }
+
     #CAMPAGNES
     public function listCampagne()
     {
-        $title_back = "Tableau de bord";
-        $link_back = "list_campagne";
-        $title = "Liste campagnes";
-        return view('console.listCampagnes', compact('title', 'title_back', 'link_back'));
+        try {
+            $campagnes = $this->CampagneService->listCampagnes();
+            $title_back = "Tableau de bord";
+            $link_back = "list_campagne";
+            $title = "Liste Campagnes";
+            return view('console.listCampagnes', compact('title', 'title_back', 'link_back', 'campagnes'));
+        } catch (\Exception $th) {
+            Log::error("Erreur lors de la récupération des campagnes : " . $th->getMessage(), [
+                'stack_trace' => $th->getTraceAsString(),
+            ]);
+            return redirect()->back()->with('error', 'Erreur lors de la récupération des campagnes : ' . $th->getMessage());
+        }
     }
 
     #SAVE CAMPAGNE
     public function saveCampagne(Request $request)
     {
-        // dd($request->all());
+        #Pour garder trace des fichiers uploadés
+        $uploadedFiles = [];
         try {
             #Transfert et upload du fichier logo
-            $image_couverture = ($request->hasFile('image_couverture'))
+            $uploadedFiles['image_couverture'] = ($request->hasFile('image_couverture'))
                 ? Files::uploadFile($request->image_couverture)
-                : "";
+                : "default_logo.png";
 
-            $condition_participation = ($request->hasFile('condition_participation'))
+            $uploadedFiles['condition_participation'] = ($request->hasFile('condition_participation'))
                 ? Files::uploadFile($request->condition_participation)
-                : "";
+                : "default_condition.pdf";
 
-            // Formatage des données
+            #Formatage des données
             $dateCampagne = [
                 'campagne_id' => $this->setting->generateUuid(),
                 'customer_id' => $request->customer_id,
                 'name' => $request->name,
                 'description' => $request->description,
-                'image_couverture' => $image_couverture,
+                'image_couverture' => $uploadedFiles['image_couverture'],
                 'text_cover_isActive' => $request->text_cover_isActive,
                 'inscription_isActive' => $request->inscription_isActive,
                 'inscription_date_debut' => $request->inscription_date_debut,
@@ -177,18 +195,37 @@ class ConsoleController  extends Controller
                 'identifiants_personnalises_isActive' => $request->identifiants_personnalises_isActive,
                 'afficher_montant_pourcentage' => $request->afficher_montant_pourcentage,
                 'ordonner_candidats_votes_decroissants' => $request->ordonner_candidats_votes_decroissants,
-                'quantite_vote' => $request->adresse,
+                'quantite_vote' => $request->quantite_vote,
                 'color_primaire' => $request->color_primaire,
                 'color_secondaire' => $request->color_secondaire,
-                'condition_participation' => $condition_participation,
+                'condition_participation' => $uploadedFiles['condition_participation'],
                 'is_active' => true,
             ];
 
             // Sauvegarde des données via le service
-            $this->CampagneService->saveNewCampagne($dateCampagne);
+            $saved = $this->CampagneService->saveNewCampagne($dateCampagne);
 
-            return redirect()->route('list_campagne')->with('success', 'Campagne créée avec succès !');
+            //Vérification simple
+            if ($saved) {
+                return redirect()
+                    ->route('list_customer')
+                    ->with('success', 'Campagne créée avec succès !');
+            } else {
+                // Supprimer les fichiers si échec
+                foreach ($uploadedFiles as $filePath) {
+                    Files::deleteFile($filePath);
+                }
+                return redirect()
+                    ->back()
+                    ->withInput()
+                    ->with('error', 'Erreur lors de la création de la campagne.');
+            }
+
         } catch (\Exception $th) {
+            //Suppression des fichiers uploadés
+            foreach ($uploadedFiles as $filePath) {
+                Files::deleteFile($filePath);
+            }
             Log::error("Erreur lors de la création de la campagne : " . $th->getMessage(), [
                 'request_data' => $request->all(),
                 'stack_trace' => $th->getTraceAsString(),

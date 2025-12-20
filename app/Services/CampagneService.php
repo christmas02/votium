@@ -18,7 +18,7 @@ class CampagneService
     }
 
     public function listCampagnes(){
-        $campagnes = $this->campagneRepository->getListCampagnes();
+        $campagnes = $this->campagneRepository->getListCampagne();
         return $campagnes;
     }
 

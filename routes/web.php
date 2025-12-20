@@ -39,6 +39,8 @@ Route::group(['middleware' => 'auth'], function () {
         Route::post('save_customer', 'saveCustomer')->name('save_customer');
         Route::delete('delete_customer', 'deleteCustomer')->name('delete_customer');
 
+        Route::get('verification_customer', 'verificationCustomer')->name('verification_customer');
+
         //ROUTES CAMPAGNES
         Route::get('list_campagne', 'listCampagne')->name('list_campagne');
         Route::get('vue_campagne', 'vueCampagne')->name('vue_campagne');

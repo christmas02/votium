@@ -17,19 +17,23 @@ class CreateCampagnes extends Migration
             $table->id();
             $table->string('campagne_id');
             $table->string('name');
-            $table->string('description');
+            $table->longText('description');
             $table->string('image_couverture');
             $table->string('customer_id');
             $table->boolean('text_cover_isActive')->default(false);
-            $table->boolean('inscription')->default(false);
+            $table->boolean('inscription_isActive')->default(false);
             $table->dateTime('inscription_date_debut')->nullable();
             $table->dateTime('inscription_date_fin')->nullable();
+            $table->time('heure_debut_inscription')->nullable();
+            $table->time('heure_fin_inscription')->nullable();
+            $table->string('identifiants_personnalises_isActive');
             $table->string('afficher_montant_pourcentage')->default('clair'); //clair,
             $table->string('ordonner_candidats_votes_decroissants');
             $table->string('quantite_vote');
             $table->string('color_primaire');
             $table->string('color_secondaire');
-            $table->longText('condition_participation');
+            $table->string('condition_participation');
+            $table->boolean('is_active')->default(true);
             $table->timestamps();
         });
     }

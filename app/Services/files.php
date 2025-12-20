@@ -23,4 +23,13 @@ class Files
 
         return $filename;
     }
+
+    public static function deleteFile($filename): bool
+    {
+        $filePath = public_path('uploads/' . $filename);
+        if (file_exists($filePath)) {
+            return unlink($filePath);
+        }
+        return false;
+    }
 }

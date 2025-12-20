@@ -222,17 +222,10 @@
                             </div>
 
                             <!-- Adresse -->
-                            <div class="col-md-6 mb-3">
+                            <div class="col-md-12 mb-3">
                                 <label class="form-label">Adresse <span class="text-danger">*</span></label>
                                 <input type="text" class="form-control" name="adresse" placeholder="Siège social" required>
                             </div>
-
-                            <!-- Site Web -->
-                            <div class="col-md-6 mb-3">
-                                <label class="form-label">Site internet</label>
-                                <input type="url" class="form-control" name="link_website" placeholder="https://...">
-                            </div>
-
                         </div>
 
                         <!-- SECTION : RÉSEAUX SOCIAUX -->
@@ -263,14 +256,6 @@
                                     </div>
                                 </div>
 
-                                <!-- Twitter / X -->
-                                <div class="col-md-6 mb-3">
-                                    <div class="input-group">
-                                        <span class="input-group-text bg-light"><i class="ti ti-brand-x"></i></span>
-                                        <input type="url" class="form-control" name="link_twitter" placeholder="Twitter/X URL">
-                                    </div>
-                                </div>
-
                                 <!-- Lien youtube / X -->
                                 <div class="col-md-6 mb-3">
                                     <div class="input-group">
@@ -284,6 +269,14 @@
                                     <div class="input-group">
                                         <span class="input-group-text bg-light"><i class="ti ti-brand-tiktok"></i></span>
                                         <input type="url" class="form-control" name="link_tiktok" placeholder="Tiktok URL">
+                                    </div>
+                                </div>
+
+                                <!-- Site Web -->
+                                <div class="col-md-6 mb-3">
+                                    <div class="input-group">
+                                        <span class="input-group-text bg-light"><i class="ti ti-brand-telegram"></i></span>
+                                        <input type="url" class="form-control" name="link_website" placeholder="https://...">
                                     </div>
                                 </div>
 
@@ -412,8 +405,8 @@
                     <div class="bg-light p-3 rounded mb-3">
                         <div class="col-md-12 d-flex align-items-end">
                             <div class="form-check form-switch mb-2">
-                                <input class="form-check-input" type="checkbox" role="switch" id="textCoverSwitch" name="identifiants_personnalises_isActive" value="0">
-                                <label class="form-check-label" for="textCoverSwitch">Identifiants candidats personnalisés</label>
+                                <input class="form-check-input" type="checkbox" role="switch" id="identifiants_personnalises_isActive" name="identifiants_personnalises_isActive" value="0">
+                                <label class="form-check-label" for="identifiants_personnalises_isActive">Identifiants candidats personnalisés</label>
                             </div>
                         </div>
                     </div>
@@ -493,8 +486,8 @@
                             <div class="bg-light p-3 rounded mb-3">
                                 <div class="col-md-12 d-flex align-items-end">
                                     <div class="form-check form-switch mb-2">
-                                        <input class="form-check-input" type="checkbox" role="switch" id="textCoverSwitch" name="ordonner_candidats_votes_decroissants" value="0">
-                                        <label class="form-check-label" for="textCoverSwitch">Ordonner les candidats par votes décroissants</label>
+                                        <input class="form-check-input" type="checkbox" role="switch" id="ordonner_candidats_votes_decroissants" name="ordonner_candidats_votes_decroissants" value="0">
+                                        <label class="form-check-label" for="ordonner_candidats_votes_decroissants">Ordonner les candidats par votes décroissants</label>
                                     </div>
                                 </div>
                             </div>
@@ -527,35 +520,7 @@
                             <!-- 1. IMAGE DE COUVERTURE (Mise en avant) -->
                             <div class="mb-4">
                                 <label class="form-label fw-bold">Condition de participation (Document)<span class="text-danger">*</span></label>
-
-                                <div class="position-relative w-100 rounded border border-dashed bg-light d-flex align-items-center justify-content-center overflow-hidden"
-                                    style="height: 250px; border-width: 2px !important; transition: all 0.3s ease;"
-                                    id="drop-zone">
-
-                                    <!-- Contenu par défaut -->
-                                    <div class="text-center p-4" id="upload-placeholder">
-                                        <div class="avatar avatar-lg bg-white border rounded-circle mb-2 mx-auto">
-                                            <i class="ti ti-cloud-upload text-primary fs-3"></i>
-                                        </div>
-                                        <h6 class="mb-1 fw-bold">Glissez un PDF ou cliquez</h6>
-                                        <p class="text-muted mb-0 fs-12">PDF. Max 5MB</p>
-                                    </div>
-
-                                    <!-- Image Preview -->
-                                    <img id="pdf-preview" src="#" alt="Aperçu" class="position-absolute top-0 start-0 w-100 h-100 object-fit-cover d-none">
-
-                                    <!-- Input File Invisible -->
-                                    <input type="file" name="condition_participation" id="input-image"
-                                        class="position-absolute top-0 start-0 w-100 h-100 opacity-0 cursor-pointer"
-                                        accept=".pdf">
-                                </div>
-
-                                <!-- Bouton Supprimer -->
-                                <div class="d-flex justify-content-end mt-1">
-                                    <button type="button" id="remove-btn" class="btn btn-sm btn-link text-danger text-decoration-none d-none" onclick="removeImage()">
-                                        <i class="ti ti-trash me-1"></i> Supprimer l'image
-                                    </button>
-                                </div>
+                                <input type="file" name="condition_participation" class="form-control" accept=".pdf">
                             </div>
                         </div>
                     </div>
