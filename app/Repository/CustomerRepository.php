@@ -13,6 +13,11 @@ class CustomerRepository
         return Customer::where('customer_id', $idCustomer)->first();
     }
 
+    public function allCustomer()
+    {
+        return Customer::all();
+    }
+
     public function save($dataCustomer): bool
     {
         try {

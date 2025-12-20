@@ -12,6 +12,21 @@ class  AuhRepository
         return Auth::attempt(['email'=> $user_email, 'password'=>$password]);
     }
 
+    public function makeResetPassword($user_email, $password)
+    {
+        try {
+            $user = User::where('email', $user_email)->first();
+            if ($user) {
+                $user->password = $password;
+                return $user->save();
+            }
+            return false;
+        } catch (\Exception $e) {
+            \Log::error('Erreur lors de la reinitialisation du mot de passe : '.$e->getMessage());
+            return false;
+        }
+    }
+
     public function saveUser($dataUser){
         try{
         $user = new User();
