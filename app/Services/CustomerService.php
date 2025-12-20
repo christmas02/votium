@@ -82,7 +82,12 @@ class CustomerService
         }
     }
 
-    public function CreateWithdrawalAccount($dataWithdrawalAccount)
+    public function listCustmer()
+    {
+        return $this->customerRepository->listCustomer();
+    }
+
+    public function createWithdrawalAccount($dataWithdrawalAccount)
     {
         try {
             DB::beginTransaction();
