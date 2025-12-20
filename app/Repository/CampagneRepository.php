@@ -8,13 +8,13 @@ use Illuminate\Support\Facades\Auth;
 
 class CampagneRepository {
 
+    // CAMPAGNE METHODS
     public function getListCampagne(){
         return Campagne::all();
     }
     public function getCampagneById($campagne_id){
         return Campagne::where('campagne_id', $campagne_id)->first();
     }
-
     public function getCampagneByCustomerId($customerId){
         return Campagne::where('customer_id', $customerId)->get();
     }
@@ -74,7 +74,7 @@ class CampagneRepository {
         }
     }
 
-
+    // ETAPE METHODS
     public function saveEtape($dataEtape)
     {
         try {

@@ -13,7 +13,7 @@ class SendMail
     {
         try{
             Log::info('methode SendMail - Enter in send mail service');
-            SendMail::to($email)->send(new Inscriptioncustomer($data));
+            Mail::to($email)->send(new Inscriptioncustomer($data));
             return true;
         }catch(\Throwable $th){
             Log::error($th->getMessage());
