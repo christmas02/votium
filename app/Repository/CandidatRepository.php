@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Models\Candidat;
+use App\Models\CandidatEtapCategoryCampagne;
 use App\Models\Etape;
 use Illuminate\Support\Facades\Auth;
 
@@ -25,7 +26,7 @@ class CandidatRepository
             $candidat->description = $dataCandidat['description'];
             $candidat->campagne_id = $dataCandidat['campagne_id'];
             $candidat->data = $dataCandidat['data'];
-            $candidat->isActive = true;
+            $candidat->is_active = true;
             return $candidat->save();
 
         } catch (\Throwable $e) {
@@ -94,4 +95,59 @@ class CandidatRepository
             return false;
         }
     }
+
+    // enregistrer les candidats avec leur etape et categorie associer a une campagne
+    public function candidatWithEtapAndCategoriByCampagne($data)
+    {
+        try {
+            $result = new CandidatEtapCategoryCampagne;
+            $result->campagne_id = $data['campagne_id'];
+            $result->candidat_id  = $data['candidats'];
+            $result->etape_id = $data['etape_id']; // etape id obligatoire
+            $result->category_id = $data['category_id'];
+            $result->is_active = true;
+            $result->save();
+            return $result;
+
+        } catch (\Throwable $e) {
+            \Log::error('Erreur get candidats with etap and categori by campagne - CandidatRepository  : ' . $e->getMessage());
+            return false;
+        }
+    }
+
+    public function updateCandidatWithEtapAndCategoriByCampagne($data)
+    {
+        try {
+            $result = CandidatEtapCategoryCampagne::where('campagne_id', $data['campagne_id'])
+                ->where('candidat_id', $data['candidats_id'])
+                ->first();
+            $result->campagne_id = $data['campagne_id'];
+            $result->candidat_id  = $data['candidats_id'];
+            $result->etape_id = $data['etape_id']; // etape id obligatoire
+            $result->category_id = $data['category_id'];
+            $result->is_active = true;
+            $result->save();
+            return $result;
+
+        } catch (\Throwable $e) {
+            \Log::error('Erreur get candidats with etap and categori by campagne - CandidatRepository  : ' . $e->getMessage());
+            return false;
+        }
+    }
+
+    public function detailCandidatWithEtapAndCategoriByCampagne($data)
+    {
+        try {
+            $result = CandidatEtapCategoryCampagne::where('campagne_id', $data['campagne_id'])
+                ->where('candidat_id', $data['candidats_id'])
+                ->get();
+            return $result;
+
+        } catch (\Throwable $e) {
+            \Log::error('Erreur get candidats with etap and categori by campagne - CandidatRepository  : ' . $e->getMessage());
+            return false;
+        }
+    }
+
+
 }
