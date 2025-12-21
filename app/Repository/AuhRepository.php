@@ -12,6 +12,16 @@ class  AuhRepository
         return Auth::attempt(['email'=> $user_email, 'password'=>$password]);
     }
 
+    public function userExist($user_email)
+    {
+        try {
+            return User::where('email', $user_email)->first();
+        } catch (\Exception $e) {
+            \Log::error('Erreur lors de la verification de l\'existence de l\'utilisateur : '.$e->getMessage());
+            return false;
+        }
+    }
+
     public function makeResetPassword($user_email, $password)
     {
         try {
