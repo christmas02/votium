@@ -25,7 +25,7 @@ class CustomerService
 
     public function Customer($idCustomer)
     {
-        return $this->customerRepository->getCustomerById($idCustomer);
+        return $this->customerRepository->getCustomer($idCustomer);
     }
 
     public function createNewCustomer($dataNewCustomer){
@@ -84,8 +84,14 @@ class CustomerService
 
     public function listCustmer()
     {
-        return $this->customerRepository->listCustomer();
+        return $this->customerRepository->allCustomer();
     }
+
+    public function verifyUserExist($user_email)
+    {return $this->authRepository->userExist($user_email);}
+
+    public function saveNewPassword($user_email, $password)
+    {return $this->authRepository->makeResetPassword($user_email, $password);}
 
     public function createWithdrawalAccount($dataWithdrawalAccount)
     {
