@@ -39,7 +39,7 @@ class CampagneRepository {
             $campagne->color_secondaire = $dataCampagne['color_secondaire'];
             $campagne->heure_debut_inscription = $dataCampagne['heure_debut_inscription'];
             $campagne->heure_fin_inscription = $dataCampagne['heure_fin_inscription'];
-            $campagne->identifiants_personnalises_isActive = $dataCampagne['identifiants_personnalises_isActive'];
+            $campagne->identifiants_personnalises_isactive = $dataCampagne['identifiants_personnalises_isActive'];
             $campagne->is_active = $dataCampagne['is_active'];
             $campagne->condition_participation = $dataCampagne['condition_participation'];
             $campagne->save();
@@ -60,6 +60,8 @@ class CampagneRepository {
             $campagne->inscription_isActive = $dataCampagne['inscription_isActive'];
             $campagne->inscription_date_debut = $dataCampagne['inscription_date_debut'];
             $campagne->inscription_date_fin = $dataCampagne['inscription_date_fin'];
+            $campagne->heure_debut_inscription = $dataCampagne['heure_debut_inscription'];
+            $campagne->heure_fin_inscription = $dataCampagne['heure_fin_inscription'];
             $campagne->afficher_montant_pourcentage = $dataCampagne['afficher_montant_pourcentage'];
             $campagne->ordonner_candidats_votes_decroissants = $dataCampagne['ordonner_candidats_votes_decroissants'];
             $campagne->quantite_vote = $dataCampagne['quantite_vote'];
