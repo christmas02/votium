@@ -25,7 +25,7 @@ class CustomerService
 
     public function Customer($idCustomer)
     {
-        return $this->customerRepository->getCustomerById($idCustomer);
+        return $this->customerRepository->getCustomer($idCustomer);
     }
 
     public function createNewCustomer($dataNewCustomer){
