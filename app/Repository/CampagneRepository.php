@@ -8,13 +8,13 @@ use Illuminate\Support\Facades\Auth;
 
 class CampagneRepository {
 
+    // CAMPAGNE METHODS
     public function getListCampagne(){
         return Campagne::all();
     }
     public function getCampagneById($campagne_id){
         return Campagne::where('campagne_id', $campagne_id)->first();
     }
-
     public function getCampagneByCustomerId($customerId){
         return Campagne::where('customer_id', $customerId)->get();
     }
@@ -37,10 +37,14 @@ class CampagneRepository {
             $campagne->quantite_vote = $dataCampagne['quantite_vote'];
             $campagne->color_primaire = $dataCampagne['color_primaire'];
             $campagne->color_secondaire = $dataCampagne['color_secondaire'];
+            $campagne->heure_debut_inscription = $dataCampagne['heure_debut_inscription'];
+            $campagne->heure_fin_inscription = $dataCampagne['heure_fin_inscription'];
+            $campagne->identifiants_personnalises_isactive = $dataCampagne['identifiants_personnalises_isActive'];
+            $campagne->is_active = $dataCampagne['is_active'];
             $campagne->condition_participation = $dataCampagne['condition_participation'];
             $campagne->save();
             return $campagne;
-        } catch (\Throwable $th) {
+        } catch (\Throwable $e) {
             \Log::error('Erreur save campagne - file:CampagneRepository : ' . $e->getMessage());
             return false;
         }
@@ -56,6 +60,8 @@ class CampagneRepository {
             $campagne->inscription_isActive = $dataCampagne['inscription_isActive'];
             $campagne->inscription_date_debut = $dataCampagne['inscription_date_debut'];
             $campagne->inscription_date_fin = $dataCampagne['inscription_date_fin'];
+            $campagne->heure_debut_inscription = $dataCampagne['heure_debut_inscription'];
+            $campagne->heure_fin_inscription = $dataCampagne['heure_fin_inscription'];
             $campagne->afficher_montant_pourcentage = $dataCampagne['afficher_montant_pourcentage'];
             $campagne->ordonner_candidats_votes_decroissants = $dataCampagne['ordonner_candidats_votes_decroissants'];
             $campagne->quantite_vote = $dataCampagne['quantite_vote'];
@@ -64,13 +70,13 @@ class CampagneRepository {
             $campagne->condition_participation = $dataCampagne['condition_participation'];
             $campagne->save();
             return $campagne;
-        } catch (\Throwable $th) {
+        } catch (\Throwable $e) {
             \Log::error('Erreur update campagne - file:CampagneRepository : ' . $e->getMessage());
             return false;  
         }
     }
 
-
+    // ETAPE METHODS
     public function saveEtape($dataEtape)
     {
         try {
@@ -90,7 +96,7 @@ class CampagneRepository {
             $etape->save();
             return $etape;
 
-        } catch (\Throwable $th) {
+        } catch (\Throwable $e) {
             \Log::error('Erreur save etape - file:CampagneRepository : ' . $e->getMessage());
             return false;
         }
@@ -99,7 +105,7 @@ class CampagneRepository {
     public function updateEtape($dataEtape)
     {
         try {
-            $etape = Etape::where('etape_id', $etape_id)->first();
+            $etape = Etape::where('etape_id', $dataEtape)->first();
             $etape->name = $dataEtape['name'];
             $etape->date_debut = $dataEtape['date_debut'];
             $etape->date_fin = $dataEtape['date_fin'];
@@ -113,7 +119,7 @@ class CampagneRepository {
             $etape->save();
             return $etape;
 
-        } catch (\Throwable $th) {
+        } catch (\Throwable $e) {
             \Log::error('Erreur update etape - file:CampagneRepository : ' . $e->getMessage());
             return false;
         }
@@ -121,8 +127,8 @@ class CampagneRepository {
 
     public function getEtapeById($etapeId){
         try {
-            return Etape::where('etape_id', $etape_id)->first();
-        } catch (\Throwable $th) {
+            return Etape::where('etape_id', $etapeId)->first();
+        } catch (\Throwable $e) {
             \Log::error('Erreur get etape by id - file:CampagneRepository : ' . $e->getMessage());
             return false;
         }
@@ -131,7 +137,7 @@ class CampagneRepository {
     public function getEtapeByCampagneId($campagneId){
         try {
             return Etape::where('campagne_id', $campagneId)->get();
-        } catch (\Throwable $th) {
+        } catch (\Throwable $e) {
             \Log::error('Erreur get etape by campagne id - file:CampagneRepository : ' . $e->getMessage());
             return false;
         }
