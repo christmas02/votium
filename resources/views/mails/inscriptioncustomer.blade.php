@@ -39,9 +39,6 @@
                                         <h4 class="mb-2">Bonjour {{ $name }},</h4>
                                         <p class="mb-3">
                                             Votre compte a été créé avec succès sur notre plateforme.<br>
-                                            Votre mot de passe temporaire est : <br> 
-                                            <strong>Login: {{ $email }}</strong>. <br>
-                                            <strong>Mdp: {{ $defaultPassword }}</strong>.
                                         </p>
                                         <p class="mb-3">
                                             Pour votre sécurité, nous vous invitons à mettre à jour votre mot de passe dès votre première connexion.

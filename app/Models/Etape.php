@@ -8,4 +8,5 @@ use Illuminate\Database\Eloquent\Model;
 class Etape extends Model
 {
     use HasFactory;
+    protected $primaryKey = 'etape_id';
 }
