@@ -22,8 +22,8 @@ class CreateCampagnes extends Migration
             $table->string('customer_id');
             $table->boolean('text_cover_isActive')->default(false);
             $table->boolean('inscription_isActive')->default(false);
-            $table->dateTime('inscription_date_debut')->nullable();
-            $table->dateTime('inscription_date_fin')->nullable();
+            $table->string('inscription_date_debut')->nullable();
+            $table->string('inscription_date_fin')->nullable();
             $table->time('heure_debut_inscription')->nullable();
             $table->time('heure_fin_inscription')->nullable();
             $table->string('identifiants_personnalises_isActive');

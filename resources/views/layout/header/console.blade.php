@@ -79,10 +79,10 @@
                     <div class="header-item">
                         <div class="dropdown me-2">
 
-                            <button class="topbar-link btn topbar-link dropdown-toggle drop-arrow-none" data-bs-toggle="dropdown" data-bs-offset="0,24" type="button" aria-haspopup="false" aria-expanded="false">
+                            <!-- <button class="topbar-link btn topbar-link dropdown-toggle drop-arrow-none" data-bs-toggle="dropdown" data-bs-offset="0,24" type="button" aria-haspopup="false" aria-expanded="false">
                                 <i class="ti ti-bell-check fs-16 animate-ring"></i>
                                 <span class="badge rounded-pill">10</span>
-                            </button>
+                            </button> -->
 
                             <div class="dropdown-menu p-0 dropdown-menu-end dropdown-menu-lg" style="min-height: 300px;">
 
@@ -142,40 +142,40 @@
                             <div class="d-flex align-items-center bg-light rounded-3 p-2 mb-2">
                                 <img src="{{ asset('assets/img/users/user-40.jpg') }}" class="rounded-circle" width="42" height="42" alt="Img">
                                 <div class="ms-2">
-                                    <p class="fw-medium text-dark mb-0">Katherine Brooks</p>
-                                    <span class="d-block fs-13">Installer</span>
+                                    <p class="fw-medium text-dark mb-0">{{ Auth::user()->name }}</p>
+                                    <span class="d-block fs-13">{{ Auth::user()->role }}</span>
                                 </div>
                             </div>
 
                             <!-- Item-->
-                            <a href="profile-settings.html" class="dropdown-item">
+                            <a href="{{ route('profile') }}" class="dropdown-item">
                                 <i class="ti ti-user-circle me-1 align-middle"></i>
-                                <span class="align-middle">Profile Settings</span>
+                                <span class="align-middle">Profile</span>
                             </a>
 
                             <!-- item -->
-                            <div class="form-check form-switch form-check-reverse d-flex align-items-center justify-content-between dropdown-item mb-0">
+                            <!-- <div class="form-check form-switch form-check-reverse d-flex align-items-center justify-content-between dropdown-item mb-0">
                                 <label class="form-check-label" for="notify"><i class="ti ti-bell"></i>Notifications</label>
                                 <input class="form-check-input me-0" type="checkbox" role="switch" id="notify">
-                            </div>
+                            </div> -->
 
                             <!-- Item-->
-                            <a href="javascript:void(0);" class="dropdown-item">
+                            <!-- <a href="javascript:void(0);" class="dropdown-item">
                                 <i class="ti ti-help-circle me-1 align-middle"></i>
                                 <span class="align-middle">Help & Support</span>
-                            </a>
+                            </a> -->
 
                             <!-- Item-->
-                            <a href="profile-settings.html" class="dropdown-item">
+                            <!-- <a href="profile-settings.html" class="dropdown-item">
                                 <i class="ti ti-settings me-1 align-middle"></i>
                                 <span class="align-middle">Settings</span>
-                            </a>
+                            </a> -->
 
                             <!-- Item-->
                             <div class="pt-2 mt-2 border-top">
-                                <a href="login.html" class="dropdown-item text-danger">
+                                <a href="{{ route('logout') }}" class="dropdown-item text-danger">
                                     <i class="ti ti-logout me-1 fs-17 align-middle"></i>
-                                    <span class="align-middle">Sign Out</span>
+                                    <span class="align-middle">Se déconnecter</span>
                                 </a>
                             </div>
                         </div>

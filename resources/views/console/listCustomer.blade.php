@@ -54,46 +54,29 @@
                                 </tr>
                             </thead>
                             <tbody>
+
+                                @foreach($customers as $customer)
                                 <tr>
                                     <td>
-                                        <img src="{{ asset('assets/img/users/user-40.jpg') }}" width="38" class="rounded-1 d-flex" alt="user-image">
+                                        <img src="{{ env('IMAGES_PATH') }}/{{ $customer->logo }}" width="38" class="rounded-1 d-flex" alt="user-image">
                                     </td>
-                                    <td>System Architect</td>
-                                    <td>Edinburgh</td>
-                                    <td>61</td>
-                                    <td>2011 Apr 25</td>
+                                    <td>{{ $customer->entreprise }}</td>
+                                    <td>{{ $customer->email }}</td>
+                                    <td>{{ $customer->phonenumber }}</td>
+                                    <td>{{ $customer->adresse }}</td>
                                     <td>
                                         <div class="d-inline-flex gap-2">
-                                            <a href="{{ route('detail_customer') }}" class="btn btn-icon btn-sm btn-success"><i class="ti ti-eye"></i></a>
+                                            <a href="{{ route('detail_customer', $customer->customer_id) }}" class="btn btn-icon btn-sm btn-success"><i class="ti ti-eye"></i></a>
                                             <!-- <a class="btn btn-icon btn-sm btn-info" data-bs-toggle="modal" data-bs-target="#modal_edit_client"><i class="ti ti-edit"></i></a> -->
 
-                                            <a class="btn btn-icon btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#delete_contact"><i class="ti ti-trash"></i></a>
-                                            <a href="#" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#modal_add_campaign">
+                                            <a class="btn btn-icon btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#delete_contact_{{ $customer->customer_id }}"><i class="ti ti-trash"></i></a>
+                                            <a href="#" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#modal_add_campaign_{{ $customer->customer_id }}">
                                                 <i class="ti ti-plus me-1"></i>Créer campagne
                                             </a>
                                         </div>
                                     </td>
                                 </tr>
-                                <tr>
-                                    <td>
-                                        <img src="{{ asset('assets/img/users/user-40.jpg') }}" width="38" class="rounded-1 d-flex" alt="user-image">
-                                    </td>
-                                    <td>Accountant</td>
-                                    <td>Tokyo</td>
-                                    <td>63</td>
-                                    <td>2011 Jul 25</td>
-                                    <td>
-                                        <div class="d-inline-flex gap-2">
-                                            <a href="{{ route('detail_customer') }}" class="btn btn-icon btn-sm btn-success"><i class="ti ti-eye"></i></a>
-                                            <!-- <a class="btn btn-icon btn-sm btn-info" data-bs-toggle="modal" data-bs-target="#modal_edit_client"><i class="ti ti-edit"></i></a> -->
-
-                                            <a class="btn btn-icon btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#delete_contact"><i class="ti ti-trash"></i></a>
-                                            <a href="#" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#modal_add_campaign">
-                                                <i class="ti ti-plus me-1"></i>Créer campagne
-                                            </a>
-                                        </div>
-                                    </td>
-                                </tr>
+                                @endforeach
 
                             </tbody>
                         </table>
@@ -142,9 +125,9 @@
                                 <label class="form-label">Email (Identifiant) <span class="text-danger">*</span></label>
                                 <input type="email" class="form-control" name="email_customer" placeholder="jean@entreprise.com" required>
                             </div>
-
                             <!-- Rôle par défaut (Hidden) -->
                             <input type="hidden" name="role" value="customer">
+                            <input type="hidden" name="user_id" value="{{ auth()->user()->user_id }}">
                         </div>
                     </div>
 
@@ -163,28 +146,29 @@
 
                         <div class="row">
                             <!-- Logo Upload avec Prévisualisation -->
-                            <div class="col-md-12 mb-3">
+                            <div class="col-md-12 mb-3 image-upload-group">
                                 <div class="d-flex align-items-center bg-light p-2 rounded">
                                     <!-- Zone de l'image -->
                                     <div class="avatar avatar-xl border border-dashed me-3 flex-shrink-0 d-flex justify-content-center align-items-center bg-light position-relative overflow-hidden">
-                                        <!-- Icône par défaut (sera cachée au chargement) -->
-                                        <i class="ti ti-photo text-muted fs-4" id="logo_placeholder"></i>
-
-                                        <!-- Image de prévisualisation (cachée par défaut) -->
-                                        <img src="#" alt="Aperçu" id="logo_preview" class="d-none w-100 h-100 object-fit-cover">
+                                        <!-- Placeholder -->
+                                        <i class="ti ti-photo text-muted fs-4 placeholder-target"></i>
+                                        <!-- Preview -->
+                                        <img src="#" alt="Aperçu" class="preview-target d-none w-100 h-100 object-fit-cover">
                                     </div>
-                                    <!-- Rôle par défaut (Hidden) -->
-                                    <input type="hidden" name="user_id" value="{{auth()->user()->user_id}}">
+
                                     <div class="d-flex flex-column">
                                         <label class="form-label mb-1">Logo de l'entreprise</label>
-                                        <!-- Ajout de l'événement onchange -->
                                         <input type="file"
                                             class="form-control form-control-sm"
                                             name="logo"
-                                            id="logo_input"
-                                            accept="image/png, image/gif, image/jpeg"
-                                            onchange="previewLogo(this)">
+                                            accept="image/*"
+                                            onchange="handleImagePreview(this)">
                                         <small class="text-muted">JPG, GIF ou PNG. Max 800K</small>
+
+                                        <!-- Bouton supprimer pour le logo (optionnel) -->
+                                        <button type="button" class="btn btn-sm btn-link text-danger p-0 d-none remove-btn-target text-start" onclick="handleImageRemove(this)">
+                                            Supprimer
+                                        </button>
                                     </div>
                                 </div>
                             </div>
@@ -297,7 +281,8 @@
 <!-- /Add Customer -->
 
 <!-- delete modal -->
-<div class="modal fade" id="delete_contact">
+@foreach($customers as $customer)
+<div class="modal fade" id="delete_contact_{{ $customer->customer_id }}">
     <div class="modal-dialog modal-dialog-centered modal-sm rounded-0">
         <div class="modal-content rounded-0">
             <div class="modal-body p-4 text-center position-relative">
@@ -312,7 +297,7 @@
                     @csrf
                     @method('DELETE')
                     <div class="d-flex justify-content-center">
-                        <input type="hidden" name="customer_id" value="">
+                        <input type="hidden" name="customer_id" value="{{ $customer->customer_id }}">
                         <button type="button" class="btn btn-light position-relative z-1 me-2 w-100" data-bs-dismiss="modal">Annuler</button>
                         <button type="submit" class="btn btn-primary position-relative z-1 w-100">Oui, supprimer</button>
                     </div>
@@ -322,10 +307,12 @@
         </div>
     </div>
 </div>
+@endforeach
 <!-- delete modal -->
 
 <!-- Structure de la Modale -->
-<div class="modal fade" id="modal_add_campaign" tabindex="-1" aria-hidden="true">
+@foreach($customers as $customer)
+<div class="modal fade" id="modal_add_campaign_{{ $customer->customer_id }}" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-sm modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header border-bottom">
@@ -346,8 +333,8 @@
 
                         <div class="col-md-12 mb-3">
                             <label class="form-label">Promoteur <span class="text-danger">*</span></label>
-                            <select class="select form-control form-select" name="customer_id" required roundly>
-                                <option value="1">Promoteur A</option>
+                            <select class="select form-control form-select" name="customer_id" required readonly>
+                                <option value="{{ $customer->customer_id }}">{{ $customer->entreprise }}</option>
                             </select>
                         </div>
 
@@ -358,35 +345,33 @@
                     </div>
 
                     <!-- 1. IMAGE DE COUVERTURE (Mise en avant) -->
-                    <div class="mb-4">
+                    <div class="mb-4 image-upload-group">
                         <label class="form-label fw-bold">Image de couverture <span class="text-danger">*</span></label>
+                        <p class="text-muted small">Format recommandé : 1920x1080px | Max : 2 Mo</p>
+                        <div class="position-relative w-100 rounded border border-dashed bg-light d-flex align-items-center justify-content-center overflow-hidden drop-zone-target"
+                            style="height: 250px; border-width: 2px !important; transition: all 0.3s ease;">
 
-                        <div class="position-relative w-100 rounded border border-dashed bg-light d-flex align-items-center justify-content-center overflow-hidden"
-                            style="height: 250px; border-width: 2px !important; transition: all 0.3s ease;"
-                            id="drop-zone">
-
-                            <!-- Contenu par défaut -->
-                            <div class="text-center p-4" id="upload-placeholder">
+                            <!-- Placeholder -->
+                            <div class="text-center p-4 placeholder-target">
                                 <div class="avatar avatar-lg bg-white border rounded-circle mb-2 mx-auto">
                                     <i class="ti ti-cloud-upload text-primary fs-3"></i>
                                 </div>
                                 <h6 class="mb-1 fw-bold">Glissez une image ou cliquez</h6>
-                                <p class="text-muted mb-0 fs-12">JPG, PNG. Max 5MB</p>
                             </div>
 
                             <!-- Image Preview -->
-                            <img id="image-preview" src="#" alt="Aperçu" class="position-absolute top-0 start-0 w-100 h-100 object-fit-cover d-none">
+                            <img src="#" alt="Aperçu" class="preview-target position-absolute top-0 start-0 w-100 h-100 object-fit-cover d-none">
 
-                            <!-- Input File Invisible -->
-                            <input type="file" name="image_couverture" id="input-image"
+                            <!-- Input File -->
+                            <input type="file" name="image_couverture"
                                 class="position-absolute top-0 start-0 w-100 h-100 opacity-0 cursor-pointer"
-                                accept="image/png, image/jpeg, image/jpg"
-                                onchange="previewImage(this)">
+                                accept="image/*"
+                                onchange="handleImagePreview(this)">
                         </div>
 
                         <!-- Bouton Supprimer -->
                         <div class="d-flex justify-content-end mt-1">
-                            <button type="button" id="remove-btn" class="btn btn-sm btn-link text-danger text-decoration-none d-none" onclick="removeImage()">
+                            <button type="button" class="btn btn-sm btn-link text-danger text-decoration-none d-none remove-btn-target" onclick="handleImageRemove(this)">
                                 <i class="ti ti-trash me-1"></i> Supprimer l'image
                             </button>
                         </div>
@@ -396,7 +381,7 @@
                     <div class="bg-light p-3 rounded mb-3">
                         <div class="col-md-12 d-flex align-items-end">
                             <div class="form-check form-switch mb-2">
-                                <input class="form-check-input" type="checkbox" role="switch" id="textCoverSwitch" name="text_cover_isActive" value="0">
+                                <input class="form-check-input" type="checkbox" role="switch" id="textCoverSwitch" name="text_cover_isActive" value="1">
                                 <label class="form-check-label" for="textCoverSwitch">Texte sur le cover</label>
                             </div>
                         </div>
@@ -405,7 +390,7 @@
                     <div class="bg-light p-3 rounded mb-3">
                         <div class="col-md-12 d-flex align-items-end">
                             <div class="form-check form-switch mb-2">
-                                <input class="form-check-input" type="checkbox" role="switch" id="identifiants_personnalises_isActive" name="identifiants_personnalises_isActive" value="0">
+                                <input class="form-check-input" type="checkbox" role="switch" id="identifiants_personnalises_isActive" name="identifiants_personnalises_isActive" value="1">
                                 <label class="form-check-label" for="identifiants_personnalises_isActive">Identifiants candidats personnalisés</label>
                             </div>
                         </div>
@@ -418,13 +403,13 @@
                             <!-- Toggle Inscription -->
                             <div class="col-md-12 mb-3">
                                 <div class="form-check form-switch">
-                                    <input class="form-check-input" type="checkbox" role="switch" id="inscriptionSwitch" name="inscription_isActive" value="0">
+                                    <input class="form-check-input inscriptionSwitch" type="checkbox" role="switch" id="inscriptionSwitch" name="inscription_isActive" value="1">
                                     <label class="form-check-label fw-medium" for="inscriptionSwitch">Autoriser les inscriptions</label>
                                 </div>
                             </div>
 
                             <!-- Bloc Conteneur (Masqué par défaut) -->
-                            <div id="blocDates" style="display: none;">
+                            <div id="blocDates" class="blocDates d-none">
 
                                 <!-- Ligne Début -->
                                 <div class="row">
@@ -469,16 +454,16 @@
                                 <div class="btn-group w-100" role="group" aria-label="Affichage montant">
 
                                     <!-- Option 1 : Clair -->
-                                    <input type="radio" class="btn-check" name="afficher_montant_pourcentage" id="option1" value="clair" checked>
-                                    <label class="btn btn-outline-custom" for="option1">Clair</label>
+                                    <input type="radio" class="btn-check" name="afficher_montant_pourcentage" id="clair{{ $customer->customer_id }}" value="clair" checked>
+                                    <label class="btn btn-outline-custom" for="clair{{ $customer->customer_id }}">Clair</label>
 
                                     <!-- Option 2 : Pourcentage -->
-                                    <input type="radio" class="btn-check" name="afficher_montant_pourcentage" id="option2" value="pourcentage">
-                                    <label class="btn btn-outline-custom" for="option2">Pourcentage</label>
+                                    <input type="radio" class="btn-check" name="afficher_montant_pourcentage" id="pourcentage{{ $customer->customer_id }}" value="pourcentage">
+                                    <label class="btn btn-outline-custom" for="pourcentage{{ $customer->customer_id }}">Pourcentage</label>
 
                                     <!-- Option 3 : Les deux -->
-                                    <input type="radio" class="btn-check" name="afficher_montant_pourcentage" id="option3" value="les_deux">
-                                    <label class="btn btn-outline-custom" for="option3">Les deux</label>
+                                    <input type="radio" class="btn-check" name="afficher_montant_pourcentage" id="les_deux{{ $customer->customer_id }}" value="les_deux">
+                                    <label class="btn btn-outline-custom" for="les_deux{{ $customer->customer_id }}">Les deux</label>
                                 </div>
                             </div>
 
@@ -486,7 +471,7 @@
                             <div class="bg-light p-3 rounded mb-3">
                                 <div class="col-md-12 d-flex align-items-end">
                                     <div class="form-check form-switch mb-2">
-                                        <input class="form-check-input" type="checkbox" role="switch" id="ordonner_candidats_votes_decroissants" name="ordonner_candidats_votes_decroissants" value="0">
+                                        <input class="form-check-input" type="checkbox" role="switch" id="ordonner_candidats_votes_decroissants" name="ordonner_candidats_votes_decroissants" value="1">
                                         <label class="form-check-label" for="ordonner_candidats_votes_decroissants">Ordonner les candidats par votes décroissants</label>
                                     </div>
                                 </div>
@@ -535,31 +520,27 @@
         </div>
     </div>
 </div>
-
+@endforeach
 <!-- Script JavaScript pour gérer l'affichage -->
 <script>
-    document.addEventListener("DOMContentLoaded", function() {
-        const switchBtn = document.getElementById('inscriptionSwitch');
-        const blocDates = document.getElementById('blocDates');
+    document.addEventListener('change', function(e) {
 
-        // Fonction pour afficher/masquer
-        function toggleDates() {
-            if (switchBtn.checked) {
-                blocDates.style.display = 'flex'; // 'flex' car c'est une row bootstrap
-            } else {
-                blocDates.style.display = 'none';
-                // Optionnel : Réinitialiser les dates si on décoche
-                // blocDates.querySelectorAll('input').forEach(input => input.value = '');
-            }
-        }
+        // Vérifie si l'élément déclencheur est un toggle inscription
+        if (!e.target.classList.contains('inscriptionSwitch')) return;
 
-        // Écouter le changement (clic)
-        switchBtn.addEventListener('change', toggleDates);
+        // On travaille dans la modale courante
+        const modalBody = e.target.closest('.modal-body');
+        if (!modalBody) return;
 
-        // Vérifier l'état au chargement de la page (utile en cas d'erreur de formulaire ou d'édition)
-        toggleDates();
+        const blocDates = modalBody.querySelector('.blocDates');
+
+        if (!blocDates) return;
+
+        blocDates.classList.toggle('d-none', !e.target.checked);
+
     });
 </script>
+
 @endsection
 <!-- section js -->
 @section('extra-js')

@@ -53,11 +53,7 @@
                             </a>
                         </li>
                         
-                        <li class="{{ request()->routeIs('*_campagne') ? 'active' : '' }}">
-                            <a href="{{ route('verification_customer') }}">
-                                <i class="ti ti-brand-campaignmonitor"></i><span>Vérification inscription</span>
-                            </a>
-                        </li>
+                       
                         
                     </ul>
                 </li>
