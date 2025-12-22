@@ -16,14 +16,35 @@ class UsersSeeder extends Seeder
      */
     public function run()
     {
-        //
-        User::create([
-            'user_id' => Str::uuid(),
-            'name' => 'John Doe',
-            'email' => 'john@exemple.com',
-            'role' => 'admin',
-            'password' => Hash::make('password123'),
-        ]);
-        dd('called');
+        $faker = \Faker\Factory::create('fr_FR');
+
+        // 2 admins (emails fixes pour accès facile)
+        $admins = [
+            ['name' => 'Super Admin', 'email' => 'admin@exemple.com'],
+            ['name' => 'Second Admin', 'email' => 'admin2@exemple.com'],
+        ];
+
+        foreach ($admins as $admin) {
+            User::create([
+                'user_id' => (string) Str::uuid(),
+                'name' => $admin['name'],
+                'email' => $admin['email'],
+                'role' => 'admin',
+                'password' => Hash::make('password123'),
+                'phonenumber' => $faker->phoneNumber,
+            ]);
+        }
+
+        // 10 customers générés
+        for ($i = 1; $i <= 10; $i++) {
+            User::create([
+                'user_id' => (string) Str::uuid(),
+                'name' => $faker->name,
+                'email' => 'customer' . $i . '@exemple.com',
+                'role' => 'customer',
+                'password' => Hash::make('password123'),
+                'phonenumber' => $faker->phoneNumber,
+            ]);
+        }
     }
 }

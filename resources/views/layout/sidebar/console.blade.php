@@ -35,26 +35,26 @@
                 <li class="menu-title"><span>Navigations</span></li>
                 <li>
                     <ul>
-                        <li class="">
-                            
-                            <a href="{{ route('back_office_console') }}"
-                                class="{{ request()->routeIs('back_office_console') ? 'active' : '' }}">
+                        <li class="{{ request()->routeIs('back_office_console') ? 'active' : '' }}">
+
+                            <a href="{{ route('back_office_console') }}">
                                 <i class="ti ti-dashboard"></i><span>Tableau de bord</span>
                             </a>
                         </li>
-                        <li>
-                            
-                            <a href="{{ route('list_customer') }}"
-                                class="{{ request()->routeIs('*_customer') ? 'active' : '' }}">
+                        <li class="{{ request()->routeIs('*_customer') ? 'active' : '' }}">
+
+                            <a href="{{ route('list_customer') }}">
                                 <i class="ti ti-user-star"></i><span>Customer</span>
                             </a>
                         </li>
-                        <li>
-                            <a href="{{ route('list_campagne') }}"
-                                class="{{ request()->routeIs('*_campagne') ? 'active' : '' }}">
+                        <li class="{{ request()->routeIs('*_campagne') ? 'active' : '' }}">
+                            <a href="{{ route('list_campagne') }}">
                                 <i class="ti ti-brand-campaignmonitor"></i><span>Campagnes</span>
                             </a>
                         </li>
+                        
+                       
+                        
                     </ul>
                 </li>
             </ul>

@@ -868,73 +868,80 @@ Template Name: CRMS - Bootstrap Admin Template
 })();
 
 // MES SCRIPTES ICI //
-/**
-     * Fonction universelle de prévisualisation
-     * @param {HTMLInputElement} input - L'élément input file
-     */
-    function handleImagePreview(input) {
-        // On remonte au parent commun le plus proche pour isoler cette instance
-        const container = input.closest('.image-upload-group');
-        const preview = container.querySelector('.preview-target');
-        const placeholder = container.querySelector('.placeholder-target');
-        const removeBtn = container.querySelector('.remove-btn-target');
+
+// Image de couverture Preview Function
+ function previewImage(input) {
+        const preview = document.getElementById('image-preview');
+        const placeholder = document.getElementById('upload-placeholder');
+        const removeBtn = document.getElementById('remove-btn');
+        const dropZone = document.getElementById('drop-zone');
 
         if (input.files && input.files[0]) {
             const reader = new FileReader();
 
             reader.onload = function(e) {
-                // Affichage de l'image
-                if (preview) {
-                    preview.src = e.target.result;
-                    preview.classList.remove('d-none');
-                }
-                // Masquage du placeholder
-                if (placeholder) {
-                    placeholder.classList.add('d-none');
-                }
-                // Affichage du bouton supprimer (si il existe)
-                if (removeBtn) {
-                    removeBtn.classList.remove('d-none');
-                }
+                // Affiche l'image
+                preview.src = e.target.result;
+                preview.classList.remove('d-none');
 
-                // Optionnel : Changer le style du bord si c'est la zone "Cover"
-                const dropZone = container.querySelector('.drop-zone-target');
-                if (dropZone) {
-                    dropZone.classList.remove('border-dashed');
-                    dropZone.classList.add('border-primary');
-                }
+                // Masque le texte d'upload
+                placeholder.classList.add('d-none');
+
+                // Affiche le bouton supprimer
+                removeBtn.classList.remove('d-none');
+
+                // Change la bordure pour indiquer le succès
+                dropZone.classList.remove('border-dashed');
+                dropZone.classList.add('border-primary');
             }
+
             reader.readAsDataURL(input.files[0]);
         }
     }
 
-    /**
-     * Fonction universelle pour supprimer/reset l'image
-     * @param {HTMLButtonElement} button - Le bouton supprimer cliqué
-     */
-    function handleImageRemove(button) {
-        const container = button.closest('.image-upload-group');
-        const input = container.querySelector('input[type="file"]');
-        const preview = container.querySelector('.preview-target');
-        const placeholder = container.querySelector('.placeholder-target');
-        const dropZone = container.querySelector('.drop-zone-target');
+    function removeImage() {
+        const input = document.getElementById('input-image');
+        const preview = document.getElementById('image-preview');
+        const placeholder = document.getElementById('upload-placeholder');
+        const removeBtn = document.getElementById('remove-btn');
+        const dropZone = document.getElementById('drop-zone');
 
-        // Reset l'input
+        // Reset de l'input
         input.value = '';
 
-        // Reset l'affichage
-        if (preview) {
-            preview.src = '#';
-            preview.classList.add('d-none');
-        }
-        if (placeholder) {
-            placeholder.classList.remove('d-none');
-        }
-        if (dropZone) {
-            dropZone.classList.add('border-dashed');
-            dropZone.classList.remove('border-primary');
-        }
+        // Masque l'image et le bouton
+        preview.src = '#';
+        preview.classList.add('d-none');
+        removeBtn.classList.add('d-none');
 
-        // Masquer le bouton lui-même
-        button.classList.add('d-none');
+        // Réaffiche le placeholder
+        placeholder.classList.remove('d-none');
+
+        // Remet le style par défaut
+        dropZone.classList.add('border-dashed');
+        dropZone.classList.remove('border-primary');
+    }
+
+	// Logo Preview Function
+	function previewLogo(input) {
+        // Vérifie si un fichier a été sélectionné
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+
+            reader.onload = function(e) {
+                // Récupère les éléments par ID
+                var preview = document.getElementById('logo_preview');
+                var placeholder = document.getElementById('logo_placeholder');
+
+                // Assigne la source de l'image
+                preview.src = e.target.result;
+
+                // Affiche l'image et cache l'icône
+                preview.classList.remove('d-none');
+                placeholder.classList.add('d-none');
+            }
+
+            // Lit le fichier image
+            reader.readAsDataURL(input.files[0]);
+        }
     }

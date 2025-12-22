@@ -8,4 +8,5 @@ use Illuminate\Database\Eloquent\Model;
 class CandidatEtapCategoryCampagne extends Model
 {
     use HasFactory;
+    protected $primaryKey = 'candidat_etap_category_campagne_id';
 }

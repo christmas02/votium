@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <!-- Meta Tags -->
     <meta charset="utf-8">
@@ -12,241 +13,242 @@
     <meta name="robots" content="">
 
     <!-- Favicon -->
-    <link rel="shortcut icon" href="assets/img/favicon.png">
+    <link rel="shortcut icon" href="{{ asset('assets/img/favicon.png') }}">
     <!-- Apple Icon -->
-    <link rel="apple-touch-icon" href="assets/img/apple-icon.png">
+    <link rel="apple-touch-icon" href="{{ asset('assets/img/apple-icon.png') }}">
     <!-- Theme Config Js -->
-    <script src="assets/js/theme-script.js" type="5f364b4429f0479adce4c427-text/javascript"></script>
+    <script src="{{ asset('assets/js/theme-script.js') }}"></script>
     <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{{ asset('assets/css/bootstrap.min.css') }}">
     <!-- Tabler Icon CSS -->
-    <link rel="stylesheet" href="assets/plugins/tabler-icons/tabler-icons.min.css">
+    <link rel="stylesheet" href="{{ asset('assets/plugins/tabler-icons/tabler-icons.min.css') }}">
+
+    <!-- Select2 CSS -->
+	<link rel="stylesheet" href="{{ asset('assets/plugins/select2/css/select2.min.css') }}">
 
     <!-- Simplebar CSS -->
-    <link rel="stylesheet" href="assets/plugins/simplebar/simplebar.min.css">
+    <link rel="stylesheet" href="{{ asset('assets/plugins/simplebar/simplebar.min.css') }}">
 
     <!-- Datatable CSS -->
-    <link rel="stylesheet" href="assets/plugins/datatables/css/dataTables.bootstrap5.min.css">
-
+    <link rel="stylesheet" href="{{ asset('assets/plugins/datatables/css/dataTables.bootstrap5.min.css') }}">
     <!-- Daterangepicker CSS -->
-    <link rel="stylesheet" href="assets/plugins/daterangepicker/daterangepicker.css">
+    <link rel="stylesheet" href="{{ asset('assets/plugins/daterangepicker/daterangepicker.css') }}">
 
     <!-- Main CSS -->
-    <link rel="stylesheet" href="assets/css/style.css" id="app-style">
+    <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}" id="app-style">
 
 </head>
 
 <body>
 
-<!-- Begin Wrapper -->
-<div class="main-wrapper">
+    <!-- Begin Wrapper -->
+    <div class="main-wrapper">
 
-    <!-- Topbar Start -->
-    <header class="navbar-header">
-        <div class="page-container topbar-menu">
-            <div class="d-flex align-items-center gap-2">
+        <!-- Topbar Start -->
+        <header class="navbar-header">
+            <div class="page-container topbar-menu">
+                <div class="d-flex align-items-center gap-2">
 
-                <!-- Logo -->
-                <a href="index.html" class="logo">
-                    <!-- Logo Normal -->
-                    <span class="logo-light">
-                            <span class="logo-lg"><img src="assets/img/logo.svg" alt="logo"></span>
-                            <span class="logo-sm"><img src="assets/img/logo-small.svg" alt="small logo"></span>
-                    </span>
-                    <!-- Logo Dark -->
-                    <span class="logo-dark">
-                            <span class="logo-lg"><img src="assets/img/logo-white.svg" alt="dark logo"></span>
-                    </span>
-                </a>
+                    <!-- Logo -->
+                    <a href="index.html" class="logo">
+                        <!-- Logo Normal -->
+                            <span class="logo-light">
+                            <span class="logo-lg"><img src="{{ asset('assets/img/logo.svg') }}" alt="logo"></span>
+                            <span class="logo-sm"><img src="{{ asset('assets/img/logo-small.svg') }}" alt="small logo"></span>
+                        </span>
+                        <!-- Logo Dark -->
+                        <span class="logo-dark">
+                            <span class="logo-lg"><img src="{{ asset('assets/img/logo-white.svg') }}" alt="dark logo"></span>
+                        </span>
+                    </a>
 
-                <!-- Sidebar Mobile Button -->
-                <a id="mobile_btn" class="mobile-btn" href="#sidebar">
-                    <i class="ti ti-menu-deep fs-24"></i>
-                </a>
+                    <!-- Sidebar Mobile Button -->
+                    <a id="mobile_btn" class="mobile-btn" href="#sidebar">
+                        <i class="ti ti-menu-deep fs-24"></i>
+                    </a>
 
-                <button class="sidenav-toggle-btn btn border-0 p-0" id="toggle_btn2">
-                    <i class="ti ti-arrow-bar-to-right"></i>
-                </button>
+                    <button class="sidenav-toggle-btn btn border-0 p-0" id="toggle_btn2">
+                        <i class="ti ti-arrow-bar-to-right"></i>
+                    </button>
 
-            </div>
+                </div>
 
-            <div class="d-flex align-items-center">
-                <div class="header-line"></div>
-                <!-- Notification Dropdown -->
-                <div class="header-item">
-                    <div class="dropdown me-2">
+                <div class="d-flex align-items-center">
+                    <div class="header-line"></div>
+                    <!-- Notification Dropdown -->
+                    <div class="header-item">
+                        <div class="dropdown me-2">
 
-                        <button class="topbar-link btn topbar-link dropdown-toggle drop-arrow-none" data-bs-toggle="dropdown" data-bs-offset="0,24" type="button" aria-haspopup="false" aria-expanded="false">
-                            <i class="ti ti-bell-check fs-16 animate-ring"></i>
-                            <span class="badge rounded-pill">10</span>
-                        </button>
+                            <button class="topbar-link btn topbar-link dropdown-toggle drop-arrow-none" data-bs-toggle="dropdown" data-bs-offset="0,24" type="button" aria-haspopup="false" aria-expanded="false">
+                                <i class="ti ti-bell-check fs-16 animate-ring"></i>
+                                <span class="badge rounded-pill">10</span>
+                            </button>
 
-                        <div class="dropdown-menu p-0 dropdown-menu-end dropdown-menu-lg" style="min-height: 300px;">
+                            <div class="dropdown-menu p-0 dropdown-menu-end dropdown-menu-lg" style="min-height: 300px;">
 
-                            <div class="p-2 border-bottom">
-                                <div class="row align-items-center">
-                                    <div class="col">
-                                        <h6 class="m-0 fs-16 fw-semibold"> Notifications</h6>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Notification Body -->
-                            <div class="notification-body position-relative z-2 rounded-0" data-simplebar>
-
-                                <!-- Item-->
-                                <div class="dropdown-item notification-item py-3 text-wrap border-bottom" id="notification-2">
-                                    <div class="d-flex">
-                                        <div class="flex-grow-1">
-                                            <p class="mb-0 fw-medium text-dark">Thomas William</p>
-                                            <p class="mb-1 text-wrap">
-                                                “Oh, I finished de-bugging the phones, but the system's compiling for eighteen minutes, or twenty...”
-                                            </p>
-                                            <div class="d-flex justify-content-between align-items-center">
-                                                <span class="fs-12"><i class="ti ti-clock me-1"></i>8 min ago</span>
-                                                <div class="notification-action d-flex align-items-center float-end gap-2">
-                                                    <a href="javascript:void(0);" class="notification-read rounded-circle bg-danger" data-bs-toggle="tooltip" title="" data-bs-original-title="Make as Read" aria-label="Make as Read"></a>
-                                                    <button class="btn rounded-circle p-0" data-dismissible="#notification-2">
-                                                        <i class="ti ti-x"></i>
-                                                    </button>
-                                                </div>
-                                            </div>
+                                <div class="p-2 border-bottom">
+                                    <div class="row align-items-center">
+                                        <div class="col">
+                                            <h6 class="m-0 fs-16 fw-semibold"> Notifications</h6>
                                         </div>
                                     </div>
                                 </div>
 
+                                <!-- Notification Body -->
+                                <div class="notification-body position-relative z-2 rounded-0" data-simplebar>
+
+                                    <!-- Item-->
+                                    <div class="dropdown-item notification-item py-3 text-wrap border-bottom" id="notification-2">
+                                        <div class="d-flex">
+                                            <div class="flex-grow-1">
+                                                <p class="mb-0 fw-medium text-dark">Thomas William</p>
+                                                <p class="mb-1 text-wrap">
+                                                    “Oh, I finished de-bugging the phones, but the system's compiling for eighteen minutes, or twenty...”
+                                                </p>
+                                                <div class="d-flex justify-content-between align-items-center">
+                                                    <span class="fs-12"><i class="ti ti-clock me-1"></i>8 min ago</span>
+                                                    <div class="notification-action d-flex align-items-center float-end gap-2">
+                                                        <a href="javascript:void(0);" class="notification-read rounded-circle bg-danger" data-bs-toggle="tooltip" title="" data-bs-original-title="Make as Read" aria-label="Make as Read"></a>
+                                                        <button class="btn rounded-circle p-0" data-dismissible="#notification-2">
+                                                            <i class="ti ti-x"></i>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                                <!-- View All-->
+                                <div class="p-2 rounded-bottom border-top text-center">
+                                    <a href="" class="text-center text-decoration-underline fs-14 mb-0">
+                                        Voir les notifications
+                                    </a>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- User Dropdown -->
+                    <div class="dropdown profile-dropdown d-flex align-items-center justify-content-center">
+                        <a href="javascript:void(0);" class="topbar-link dropdown-toggle drop-arrow-none position-relative" data-bs-toggle="dropdown" data-bs-offset="0,22" aria-haspopup="false" aria-expanded="false">
+                            <img src="{{ asset('assets/img/users/user-40.jpg') }}" width="38" class="rounded-1 d-flex" alt="user-image">
+                            <span class="online text-success"><i class="ti ti-circle-filled d-flex bg-white rounded-circle border border-1 border-white"></i></span>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-end dropdown-menu-md p-2">
+
+                            <div class="d-flex align-items-center bg-light rounded-3 p-2 mb-2">
+                                <img src="{{ asset('assets/img/users/user-40.jpg') }}" class="rounded-circle" width="42" height="42" alt="Img">
+                                <div class="ms-2">
+                                    <p class="fw-medium text-dark mb-0">Katherine Brooks</p>
+                                    <span class="d-block fs-13">Installer</span>
+                                </div>
                             </div>
 
-                            <!-- View All-->
-                            <div class="p-2 rounded-bottom border-top text-center">
-                                <a href="" class="text-center text-decoration-underline fs-14 mb-0">
-                                    Voir les notifications
+                            <!-- Item-->
+                            <a href="{{ route('parametre_compte') }}" class="dropdown-item">
+                                <i class="ti ti-user-circle me-1 align-middle"></i>
+                                <span class="align-middle">Paramètres du profil</span>
+                            </a>
+
+                            <!-- item -->
+                            <div class="form-check form-switch form-check-reverse d-flex align-items-center justify-content-between dropdown-item mb-0">
+                                <label class="form-check-label" for="notify"><i class="ti ti-bell"></i>Notifications</label>
+                                <input class="form-check-input me-0" type="checkbox" role="switch" id="notify">
+                            </div>
+
+                            <!-- Item-->
+                            <a href="javascript:void(0);" class="dropdown-item">
+                                <i class="ti ti-help-circle me-1 align-middle"></i>
+                                <span class="align-middle">Help & Support</span>
+                            </a>
+
+                            <!-- Item-->
+                            <a href="profile-settings.html" class="dropdown-item">
+                                <i class="ti ti-settings me-1 align-middle"></i>
+                                <span class="align-middle">Settings</span>
+                            </a>
+
+                            <!-- Item-->
+                            <div class="pt-2 mt-2 border-top">
+                                <a href="login.html" class="dropdown-item text-danger">
+                                    <i class="ti ti-logout me-1 fs-17 align-middle"></i>
+                                    <span class="align-middle">Sign Out</span>
                                 </a>
                             </div>
-
                         </div>
                     </div>
+
                 </div>
-
-                <!-- User Dropdown -->
-                <div class="dropdown profile-dropdown d-flex align-items-center justify-content-center">
-                    <a href="javascript:void(0);" class="topbar-link dropdown-toggle drop-arrow-none position-relative" data-bs-toggle="dropdown" data-bs-offset="0,22" aria-haspopup="false" aria-expanded="false">
-                        <img src="assets/img/users/user-40.jpg" width="38" class="rounded-1 d-flex" alt="user-image">
-                        <span class="online text-success"><i class="ti ti-circle-filled d-flex bg-white rounded-circle border border-1 border-white"></i></span>
-                    </a>
-                    <div class="dropdown-menu dropdown-menu-end dropdown-menu-md p-2">
-
-                        <div class="d-flex align-items-center bg-light rounded-3 p-2 mb-2">
-                            <img src="assets/img/users/user-40.jpg" class="rounded-circle" width="42" height="42" alt="Img">
-                            <div class="ms-2">
-                                <p class="fw-medium text-dark mb-0">Katherine Brooks</p>
-                                <span class="d-block fs-13">Installer</span>
-                            </div>
-                        </div>
-
-                        <!-- Item-->
-                        <a href="profile-settings.html" class="dropdown-item">
-                            <i class="ti ti-user-circle me-1 align-middle"></i>
-                            <span class="align-middle">Profile Settings</span>
-                        </a>
-
-                        <!-- item -->
-                        <div class="form-check form-switch form-check-reverse d-flex align-items-center justify-content-between dropdown-item mb-0">
-                            <label class="form-check-label" for="notify"><i class="ti ti-bell"></i>Notifications</label>
-                            <input class="form-check-input me-0" type="checkbox" role="switch" id="notify">
-                        </div>
-
-                        <!-- Item-->
-                        <a href="javascript:void(0);" class="dropdown-item">
-                            <i class="ti ti-help-circle me-1 align-middle"></i>
-                            <span class="align-middle">Help & Support</span>
-                        </a>
-
-                        <!-- Item-->
-                        <a href="profile-settings.html" class="dropdown-item">
-                            <i class="ti ti-settings me-1 align-middle"></i>
-                            <span class="align-middle">Settings</span>
-                        </a>
-
-                        <!-- Item-->
-                        <div class="pt-2 mt-2 border-top">
-                            <a href="login.html" class="dropdown-item text-danger">
-                                <i class="ti ti-logout me-1 fs-17 align-middle"></i>
-                                <span class="align-middle">Sign Out</span>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-
             </div>
-        </div>
-    </header>
-    <!-- Topbar End -->
+        </header>
+        <!-- Topbar End -->
 
 
 
-    <!-- Sidenav Menu Start -->
-    @include('layout.sidebar.business');
-    <!-- Sidenav Menu End -->
+        <!-- Sidenav Menu Start -->
+        @include('layout.sidebar.business');
+        <!-- Sidenav Menu End -->
 
-    <!-- ========================
+        <!-- ========================
         Start Page Content
     ========================= -->
 
-    <div class="page-wrapper">
+        <div class="page-wrapper">
 
-        <!-- Start Content -->
-        @yield('content')
-        <!-- End Content -->
+            <!-- Start Content -->
+            @yield('content')
+            <!-- End Content -->
 
-        <!-- Start Footer -->
-        @include('layout.footer.business')
-        <!-- End Footer -->
+            <!-- Start Footer -->
+            @include('layout.footer.business')
+            <!-- End Footer -->
 
-    </div>
+        </div>
 
-    <!-- ========================
+        <!-- ========================
         End Page Content
     ========================= -->
 
-</div>
-<!-- End Wrapper -->
+    </div>
+    <!-- End Wrapper -->
 
 
-<!-- jQuery -->
-<script src="assets/js/jquery-3.7.1.min.js" type="5f364b4429f0479adce4c427-text/javascript"></script>
+    <!-- jQuery -->
+    <script src="{{ asset('assets/js/jquery-3.7.1.min.js') }}"></script>
 
-<!-- Bootstrap Core JS -->
-<script src="assets/js/bootstrap.bundle.min.js" type="5f364b4429f0479adce4c427-text/javascript"></script>
+    <!-- Bootstrap Core JS -->
+    <script src="{{ asset('assets/js/bootstrap.bundle.min.js') }}"></script>
 
-<!-- Simplebar JS -->
-<script src="assets/plugins/simplebar/simplebar.min.js" type="5f364b4429f0479adce4c427-text/javascript"></script>
+    <!-- Simplebar JS -->
+    <script src="{{ asset('assets/plugins/simplebar/simplebar.min.js') }}"></script>
 
-<!-- Datatable JS -->
-<script src="assets/plugins/datatables/js/jquery.dataTables.min.js" type="5f364b4429f0479adce4c427-text/javascript"></script>
-<script src="assets/plugins/datatables/js/dataTables.bootstrap5.min.js" type="5f364b4429f0479adce4c427-text/javascript"></script>
+    <!-- Datatable JS -->
+    <script src="{{ asset('assets/plugins/datatables/js/jquery.dataTables.min.js') }}"></script>
+    <script src="{{ asset('assets/plugins/datatables/js/dataTables.bootstrap5.min.js') }}"></script>
 
-<!-- Daterangepicker JS -->
-<script src="assets/js/moment.min.js" type="5f364b4429f0479adce4c427-text/javascript"></script>
-<script src="assets/plugins/daterangepicker/daterangepicker.js" type="5f364b4429f0479adce4c427-text/javascript"></script>
+    <!-- Daterangepicker JS -->
+    <script src="{{ asset('assets/js/moment.min.js') }}"></script>
+    <script src="{{ asset('assets/plugins/daterangepicker/daterangepicker.js') }}"></script>
 
-<!-- Apexchart JS -->
-<script src="assets/plugins/apexchart/apexcharts.min.js" type="5f364b4429f0479adce4c427-text/javascript"></script>
-<script src="assets/plugins/apexchart/chart-data.js" type="5f364b4429f0479adce4c427-text/javascript"></script>
+    <!-- Select2 JS -->
+	<script src="{{ asset('assets/plugins/select2/js/select2.min.js') }}"></script>
 
-<!-- Custom Json Js -->
-<script src="assets/json/deals-project.js" type="5f364b4429f0479adce4c427-text/javascript"></script>
+    <!-- Profile Upload JS -->
+	<script src="{{ asset('assets/js/profile-upload.js') }}" type="d22fd2b98b9057776904f99d-text/javascript"></script>
+ 
+    <!-- Apexchart JS -->
+    <script src="{{ asset('assets/plugins/apexchart/apexcharts.min.js') }}"></script>
+    <script src="{{ asset('assets/plugins/apexchart/chart-data.js') }}"></script>
 
-<!-- Main JS -->
-<script src="assets/js/script.js" type="5f364b4429f0479adce4c427-text/javascript"></script>
+    <!-- Custom Json Js -->
+    <script src="{{ asset('assets/json/deals-project.js') }}"></script>
 
-<script src="https://crms.dreamstechnologies.com/cdn-cgi/scripts/7d0fa10a/cloudflare-static/rocket-loader.min.js"
-        data-cf-settings="5f364b4429f0479adce4c427-|49" defer></script>
+    <!-- Main JS -->
+    <script src="{{ asset('assets/js/script.js') }}"></script>
 
-<script defer src="https://static.cloudflareinsights.com/beacon.min.js/vcd15cbe7772f49c399c6a5babf22c1241717689176015"
-        integrity="sha512-ZpsOmlRQV6y907TI0dKBHq9Md29nnaEIPlkf84rnaERnq6zvWvPUqr2ft8M1aS28oN72PdrCzSjY4U6VaAw1EQ=="
-        data-cf-beacon='{"version":"2024.11.0","token":"3ca157e612a14eccbb30cf6db6691c29","server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}'
-        crossorigin="anonymous"></script>
 </body>
 
 
