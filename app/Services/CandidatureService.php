@@ -69,8 +69,16 @@ class CandidatureService
     {
         try {
             DB::beginTransaction();
-            // TO DO ADD CANDIDAT IN ETAPE AND CATEGORY FOR CAMPAGNE
-            $this->candidatRepository->candidatWithEtapAndCategoriByCampagne($data);
+            // verifier si le candidat existe
+            $candidat = $this->candidatRepository->candidatExistForCampagne($data);
+            if ($candidat) {
+                \Log::info('Candidat trouvé pour cette campagne avec l\'ID : ' . $data['candidat_id']);
+                return false;
+            }else {
+                // TO DO ADD CANDIDAT IN ETAPE AND CATEGORY FOR CAMPAGNE
+                $this->candidatRepository->candidatWithEtapAndCategoriByCampagne($data);
+                \Log::info('Aucun candidat trouvé pour cette campagne avec l\'ID : ' . $data['candidat_id'] . '. Création d\'un nouveau candidat.');
+            }
             DB::commit();
             return true;
 

@@ -83,7 +83,20 @@ class CandidatRepository
             \Log::error('Erreur get candidat - CandidatRepository  : ' . $e->getMessage());
             return false;
         }
+    }
 
+    public function candidatExistForCampagne($dataCandidat)
+    {
+        try {
+            $result = CandidatEtapCategoryCampagne::where('campagne_id', $dataCandidat['campagne_id'])
+                ->where('candidat_id', $dataCandidat['candidats_id'])
+                ->first();
+            return $result;
+
+        } catch (\Throwable $e) {
+            \Log::error('Erreur get candidat exist for campagne - CandidatRepository  : ' . $e->getMessage());
+            return false;
+        }
     }
 
     public function candidatsByCampagne($campagneId)

@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Models\Campagne;
+use App\Models\CategoryCampagne;
 use App\Models\Etape;
 use Illuminate\Support\Facades\Auth;
 
@@ -105,7 +106,7 @@ class CampagneRepository {
     public function updateEtape($dataEtape)
     {
         try {
-            $etape = Etape::where('etape_id', $dataEtape)->first();
+            $etape = Etape::where('etape_id', $dataEtape['etape_id'])->first();
             $etape->name = $dataEtape['name'];
             $etape->date_debut = $dataEtape['date_debut'];
             $etape->date_fin = $dataEtape['date_fin'];
@@ -139,6 +140,78 @@ class CampagneRepository {
             return Etape::where('campagne_id', $campagneId)->get();
         } catch (\Throwable $e) {
             \Log::error('Erreur get etape by campagne id - file:CampagneRepository : ' . $e->getMessage());
+            return false;
+        }
+    }
+
+    // CATEGORY METHODS
+
+    public function saveCategory($dataCategory)
+    {
+        try {
+            // TO DO SAVE CATEGORY
+            $category = new CategoryCampagne();
+            $category->name = $dataCategory['name'];
+            $category->campagne_id = $dataCategory['campagne_id'];
+            $category->category_id = $dataCategory['category_id'];
+            $category->description = $dataCategory['description'];
+            $category->icon = $dataCategory['icon'];
+            $category->is_active = true;
+            $category->save();
+            return $category;
+
+        } catch (\Throwable $e) {
+            \Log::error('Erreur save category - file:CampagneRepository : ' . $e->getMessage());
+            return false;
+        }
+    }
+
+    public function updateCategory($dataCategory)
+    {
+        try {
+            $category = CategoryCampagne::where('category_id', $dataCategory['category_id'])->first();
+            // TO DO UPDATE CATEGORY
+            $category->name = $dataCategory['name'];
+            $category->description = $dataCategory['description'];
+            $category->icon = $dataCategory['icon'];
+            $category->save();
+            return $category;
+
+        } catch (\Throwable $e) {
+            \Log::error('Erreur update category - file:CampagneRepository : ' . $e->getMessage());
+            return false;
+        }
+    }
+
+    public function deleteCategory($categoryId)
+    {
+        try {
+            $category = CategoryCampagne::where('category_id', $categoryId)->first();
+            $category->is_active = false;
+            $category->save();
+            return $category;
+
+        } catch (\Throwable $e) {
+            \Log::error('Erreur delete category - file:CampagneRepository : ' . $e->getMessage());
+            return false;
+        }
+    }
+
+    public function getCategoryById($categoryId){
+        try {
+            return CategoryCampagne::where('category_id', $categoryId)->first();
+        } catch (\Throwable $e) {
+            \Log::error('Erreur get category by id - file:CampagneRepository : ' . $e->getMessage());
+            return false;
+        }
+    }
+
+    public function getCategoryByCampagneId($campagne_id)
+    {
+        try {
+            return CategoryCampagne::where('campagne_id', $campagne_id)->where('is_active', true)->get();
+        } catch (\Throwable $e) {
+            \Log::error('Erreur get category by campagne id - file:CampagneRepository : ' . $e->getMessage());
             return false;
         }
     }

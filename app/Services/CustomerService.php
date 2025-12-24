@@ -28,6 +28,7 @@ class CustomerService
         return $this->customerRepository->getCustomer($idCustomer);
     }
 
+    // create new customer
     public function createNewCustomer($dataNewCustomer){
         try {
             DB::beginTransaction();
