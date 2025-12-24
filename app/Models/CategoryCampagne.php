@@ -5,9 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class WithdrawalAccount extends Model
+class CategoryCampagne extends Model
 {
     use HasFactory;
-    protected $table = 'withdrawal_accounts';
-    protected $primaryKey = 'withdrawal_account_id';
+    protected $table = 'category_campagnes';
 }
