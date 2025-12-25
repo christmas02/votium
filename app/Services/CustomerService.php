@@ -28,6 +28,11 @@ class CustomerService
         return $this->customerRepository->getCustomer($idCustomer);
     }
 
+    public function customerByIdUser($user_id)
+    {
+        return $this->customerRepository->getCustomerByIdUser($user_id);
+    }
+
     // create new customer
     public function createNewCustomer($dataNewCustomer){
         try {
