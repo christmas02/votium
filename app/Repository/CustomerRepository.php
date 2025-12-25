@@ -13,6 +13,11 @@ class CustomerRepository
         return Customer::where('customer_id', $idCustomer)->first();
     }
 
+    public function getCustomerByIdUser($user_id)
+    {
+        return Customer::where('user_id', $user_id)->first();
+    }
+
     public function allCustomer()
     {
         return Customer::all();
