@@ -90,12 +90,15 @@ class CampagneRepository {
             $etape->heure_debut = $dataEtape['heure_debut'];
             $etape->heure_fin = $dataEtape['heure_fin'];
             $etape->description = $dataEtape['description'];
-            $etape->type_eligibility = $dataEtape['type_eligibility'];
-            $etape->seuil_selection = $dataEtape['seuil_selection'];
+            $etape->type_eligibility = false;
+            $etape->seuil_selection = false;
             $etape->prix_vote = $dataEtape['prix_vote'];
-            $etape->renitialisation = $dataEtape['renitialisation'];
+            $etape->renitialisation = false;
+            $etape->package = $dataEtape['package'];
             $etape->save();
             return $etape;
+
+
 
         } catch (\Throwable $e) {
             \Log::error('Erreur save etape - file:CampagneRepository : ' . $e->getMessage());
