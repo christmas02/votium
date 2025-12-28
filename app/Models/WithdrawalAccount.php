@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class WithdrawalAccount extends Model
 {
     use HasFactory;
-    protected $table = 'withdrawal_accounts';
     protected $primaryKey = 'withdrawal_account_id';
+    public $incrementing = false;
+    protected $keyType = 'string';
 }

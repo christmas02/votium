@@ -95,7 +95,7 @@ class ConsoleController  extends Controller
             if (!$saved) {
                 return redirect()->back()->withInput()->with('error', 'Erreur lors de la mise à jour du profil.');
             }
-            return redirect()->route('profile')->with('success', 'Profil mis à jour avec succès !');
+            return redirect()->route('console.profile')->with('success', 'Profil mis à jour avec succès !');
         } catch (\Exception $th) {
             Log::error("Erreur lors de la mise à jour du profil : " . $th->getMessage(), [
                 'stack_trace' => $th->getTraceAsString(),
@@ -167,7 +167,7 @@ class ConsoleController  extends Controller
                 return redirect()->back()->withInput()->with('error', 'Erreur lors de la création du client et de l entreprise.');
             }
 
-            return redirect()->route('list_customer')->with('success', 'Client et entreprise créés avec succès !');
+            return redirect()->route('console.list_customer')->with('success', 'Client et entreprise créés avec succès !');
         } catch (\Exception $th) {
             // Suppression du fichier uploadé en cas d'erreur
             if (isset($name_file) && $name_file !== "default_logo.png") {
@@ -199,7 +199,7 @@ class ConsoleController  extends Controller
             // Mettre is_active à false
             $customer->update(['is_active' => false]);
 
-            return redirect()->route('list_customer')->with('success', 'Client supprimé avec succès !');
+            return redirect()->route('console.list_customer')->with('success', 'Client supprimé avec succès !');
         } catch (\Exception $th) {
             Log::error("Erreur lors de la suppression du customer : " . $th->getMessage(), [
                 'request_data' => $request->all(),
@@ -273,7 +273,7 @@ class ConsoleController  extends Controller
                 return redirect()->back()->withInput()->with('error', 'Erreur lors de la mise à jour du mot de passe.');
             }
 
-            return redirect()->route('back_office_business')->with('success', 'Mot de passe mis à jour avec succès !');
+            return redirect()->route('business.espace')->with('success', 'Mot de passe mis à jour avec succès !');
         } catch (\Exception $th) {
             Log::error("Erreur lors de la mise à jour du mot de passe du customer : " . $th->getMessage(), [
                 'stack_trace' => $th->getTraceAsString(),
@@ -347,7 +347,7 @@ class ConsoleController  extends Controller
             //Vérification simple
             if ($saved) {
                 return redirect()
-                    ->route('list_campagne')
+                    ->route('console.list_campagne')
                     ->with('success', 'Campagne créée avec succès !');
             } else {
                 // Supprimer les fichiers si échec
@@ -428,7 +428,7 @@ class ConsoleController  extends Controller
             //Vérification simple
             if ($saved) {
                 return redirect()
-                    ->route('list_campagne')
+                    ->route('console.list_campagne')
                     ->with('success', 'Campagne mise à jour avec succès !');
             } else {
                 return redirect()
@@ -461,7 +461,7 @@ class ConsoleController  extends Controller
 
             // Mettre is_active à false
             $campagne->update(['is_active' => false]);
-            return redirect()->route('list_campagne')->with('success', 'Campagne supprimée avec succès !');
+            return redirect()->route('console.list_campagne')->with('success', 'Campagne supprimée avec succès !');
         } catch (\Exception $th) {
             Log::error("Erreur lors de la suppression du campagne : " . $th->getMessage(), [
                 'request_data' => $request->all(),

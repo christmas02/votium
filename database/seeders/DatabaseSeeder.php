@@ -18,6 +18,8 @@ class DatabaseSeeder extends Seeder
             UsersSeeder::class,
             CustomerSeeder::class,
             CampagnesSeeder::class,
+            EtapeSeeder::class,
+            CategoryCampagneSeeder::class,
         ]);
     }
 }

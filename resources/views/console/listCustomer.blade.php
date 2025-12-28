@@ -66,7 +66,7 @@
                                     <td>{{ $customer->adresse }}</td>
                                     <td>
                                         <div class="d-inline-flex gap-2">
-                                            <a href="{{ route('detail_customer', $customer->customer_id) }}" class="btn btn-icon btn-sm btn-success"><i class="ti ti-eye"></i></a>
+                                            <a href="{{ route('console.detail_customer', $customer->customer_id) }}" class="btn btn-icon btn-sm btn-success"><i class="ti ti-eye"></i></a>
                                             <!-- <a class="btn btn-icon btn-sm btn-info" data-bs-toggle="modal" data-bs-target="#modal_edit_client"><i class="ti ti-edit"></i></a> -->
 
                                             <a class="btn btn-icon btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#delete_contact_{{ $customer->customer_id }}"><i class="ti ti-trash"></i></a>
@@ -99,7 +99,7 @@
                 <h5 class="modal-title" id="modalAddClientLabel">Ajouter un nouveau client</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <form action="{{ route('save_customer') }}" method="POST" enctype="multipart/form-data">
+            <form action="{{ route('console.save_customer') }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 <div class="modal-body">
                     <!-- SECTION 1 : INFORMATIONS UTILISATEUR (Compte de connexion) -->
@@ -293,7 +293,7 @@
                 <p class="mb-3">Êtes-vous sûr de vouloir supprimer l'entreprise sélectionnée ?</p>
 
                 <!-- Formulaire de suppression -->
-                <form id="deleteCustomerForm" method="POST" action="{{ route('delete_customer') }}">
+                <form id="deleteCustomerForm" method="POST" action="{{ route('console.delete_customer') }}">
                     @csrf
                     @method('DELETE')
                     <div class="d-flex justify-content-center">
@@ -321,7 +321,7 @@
             </div>
 
             <div class="modal-body">
-                <form action="{{ route('save_campagne') }}" method="POST" enctype="multipart/form-data">
+                <form action="{{ route('console.save_campagne') }}" method="POST" enctype="multipart/form-data">
                     @csrf
 
                     <!-- 2. INFORMATIONS PRINCIPALES -->

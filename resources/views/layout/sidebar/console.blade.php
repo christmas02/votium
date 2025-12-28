@@ -35,20 +35,20 @@
                 <li class="menu-title"><span>Navigations</span></li>
                 <li>
                     <ul>
-                        <li class="{{ request()->routeIs('back_office_console') ? 'active' : '' }}">
+                        <li class="{{ request()->routeIs('espace') ? 'active' : '' }}">
 
-                            <a href="{{ route('back_office_console') }}">
+                            <a href="{{ route('console.espace') }}">
                                 <i class="ti ti-dashboard"></i><span>Tableau de bord</span>
                             </a>
                         </li>
                         <li class="{{ request()->routeIs('*_customer') ? 'active' : '' }}">
 
-                            <a href="{{ route('list_customer') }}">
+                            <a href="{{ route('console.list_customer') }}">
                                 <i class="ti ti-user-star"></i><span>Customer</span>
                             </a>
                         </li>
                         <li class="{{ request()->routeIs('*_campagne') ? 'active' : '' }}">
-                            <a href="{{ route('list_campagne') }}">
+                            <a href="{{ route('console.list_campagne') }}">
                                 <i class="ti ti-brand-campaignmonitor"></i><span>Campagnes</span>
                             </a>
                         </li>

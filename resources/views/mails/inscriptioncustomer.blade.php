@@ -44,7 +44,7 @@
                                             Pour votre sécurité, nous vous invitons à mettre à jour votre mot de passe dès votre première connexion.
                                         </p>
                                         <p class="mb-3">
-                                            <a href="{{ route('editpassword_customer', ['email' => $email]) }}" class="btn btn-primary">mettre à jour le mot de passe</a>
+                                            <a href="{{ route('console.editpassword_customer', ['email' => $email]) }}" class="btn btn-primary">mettre à jour le mot de passe</a>
                                         </p>
                                         <hr>
                                         <div class="alert alert-info" role="alert">
