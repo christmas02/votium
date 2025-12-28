@@ -9,11 +9,11 @@ use Illuminate\Support\Facades\Mail;
 
 class SendMail
 {
-    public function sendMailAfterSaveCustomer($email, $user, $data)
+    public function sendMailAfterSaveCustomer($email, $data)
     {
         try{
             Log::info('methode SendMail - Enter in send mail service');
-            SendMail::to($email)->send(new Inscriptioncustomer($user, $data));
+            Mail::to($email)->send(new Inscriptioncustomer($data));
             return true;
         }catch(\Throwable $th){
             Log::error($th->getMessage());

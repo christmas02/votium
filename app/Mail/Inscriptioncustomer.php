@@ -32,9 +32,13 @@ class Inscriptioncustomer extends Mailable
     {
         //var_dump($this->user);
         return $this->from('no_reply@votium.com', 'VOTIUM')
-            ->cc('christian.dev.alexis@gmail.com') // Remplacez par votre adresse email
-            ->subject('Validation d inscription')
-            ->markdown('mails.inscriptioncustomer');
+        ->subject('Votre compte a été créé')
+        ->markdown('mails.inscriptioncustomer')
+        ->with([
+            'name' => $this->data['name'],
+            'email' => $this->data['email'],
+            'defaultPassword' => '12345678Aa',
+        ]);
     }
 
 }

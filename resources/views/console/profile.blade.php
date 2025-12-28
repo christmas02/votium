@@ -32,9 +32,7 @@
                     <div class="settings-sidebar" role="tablist" aria-orientation="vertical">
                         <h5 class="mb-3 fs-17">Paramètres compte</h5>
                         <div class="list-group list-group-flush settings-sidebar">
-                            <a href="#tab_1" data-bs-toggle="tab" aria-expanded="false" aria-selected="true" role="tab" class="d-block p-2 fw-medium active"> <i class="ti ti-wallet me-1"></i>Entreprise</a>
-                            <a href="#tab_5" data-bs-toggle="tab" aria-expanded="false" aria-selected="false" tabindex="-1" role="tab" class="d-block p-2 fw-medium"><i class="ti ti-wallet me-1"></i>Compte de retrait</a>
-                            <a href="#tab_2" data-bs-toggle="tab" aria-expanded="true" aria-selected="false" role="tab" tabindex="-1" class="d-block p-2 fw-medium"><i class="ti ti-user me-1"></i>Profil</a>
+                            <a href="#tab_2" data-bs-toggle="tab" aria-expanded="true" aria-selected="true" role="tab" tabindex="-1" class="d-block p-2 fw-medium active"><i class="ti ti-user me-1"></i>Profil</a>
                         </div>
                     </div>
                 </div> <!-- end card body -->
@@ -48,308 +46,8 @@
             <!-- Tab Content -->
             <div class="tab-content pt-0">
 
-                <!-- Activities -->
-                <div class="tab-pane active show" id="tab_1">
-                    <div class="card">
-                        <div
-                            class="card-header d-flex align-items-center justify-content-between flex-wrap row-gap-3">
-                            <h5 class="fw-semibold mb-0">Entreprise</h5>
-                            <div class="table-search" style="margin-bottom:0 !important;">
-                                <div class="search-input">
-                                    <a href="javascript:void(0);" class="btn-searchset"><i class="isax isax-search-normal fs-12"></i></a>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="card-body">
-
-                            <div>
-
-                                <div class="row">
-                                    <!-- Logo Upload avec Prévisualisation -->
-                                    <div class="col-md-12 mb-3">
-                                        <div class="d-flex align-items-center bg-light p-2 rounded">
-                                            <!-- Zone de l'image -->
-                                            <div class="avatar avatar-xl border border-dashed me-3 flex-shrink-0 d-flex justify-content-center align-items-center bg-light position-relative overflow-hidden">
-                                                <!-- Image de prévisualisation -->
-                                                <img src="{{ env('IMAGES_PATH') }}/{{ $customer->logo }}" alt="Aperçu" class="w-100 h-100 object-fit-cover">
-                                            </div>
-                                            
-                                           
-                                        </div>
-                                    </div>
-
-                                    <!-- Nom Entreprise -->
-                                    <div class="col-md-6 mb-3">
-                                        <label class="form-label">Nom de l'organisation <span class="text-danger">*</span></label>
-                                        <input type="text" class="form-control" name="entreprise" value="{{ $customer->entreprise }}" readonly>
-                                    </div>
-
-                                    <!-- Pays -->
-                                    <div class="col-md-6 mb-4">
-                                        <label class="form-label">Pays siège <span class="text-danger">*</span></label>
-                                        <select class="select form-control form-select" name="pays_siege" required readonly>
-                                            <option value="{{ $customer->pays_siege }}">{{ $customer->pays_siege }}</option>
-                                        </select>
-                                    </div>
-
-                                    <!-- NOUVEAU : Email de l'entreprise -->
-                                    <div class="col-md-6 mb-3">
-                                        <label class="form-label">Email de l'organisation</label>
-                                        <input type="email" class="form-control" name="email" value="{{ $customer->email }}" readonly>
-                                    </div>
-
-                                    <!-- Téléphone -->
-                                    <div class="col-md-6 mb-3">
-                                        <label class="form-label">Téléphone <span class="text-danger">*</span></label>
-                                        <input type="text" class="form-control phone" name="phonenumber" value="{{ $customer->phonenumber }}" required readonly>
-                                    </div>
-
-                                    <!-- Adresse -->
-                                    <div class="col-md-12 mb-3">
-                                        <label class="form-label">Adresse <span class="text-danger">*</span></label>
-                                        <input type="text" class="form-control" name="adresse" value="{{ $customer->adresse }}" required readonly>
-                                    </div>
-
-
-                                </div>
-
-                                <!-- SECTION : RÉSEAUX SOCIAUX -->
-                                <div class="mt-3">
-
-                                    <div class="row">
-                                        <!-- Facebook -->
-                                        <div class="col-md-6 mb-3">
-                                            <div class="input-group">
-                                                <span class="input-group-text bg-light"><i class="ti ti-brand-facebook"></i></span>
-                                                <input type="url" class="form-control" name="link_facebook" value="{{ $customer->link_facebook }}" readonly>
-                                            </div>
-                                        </div>
-
-                                        <!-- Instagram -->
-                                        <div class="col-md-6 mb-3">
-                                            <div class="input-group">
-                                                <span class="input-group-text bg-light"><i class="ti ti-brand-instagram"></i></span>
-                                                <input type="url" class="form-control" name="link_instagram" value="{{ $customer->link_instagram }}" readonly>
-                                            </div>
-                                        </div>
-
-                                        <!-- LinkedIn -->
-                                        <div class="col-md-6 mb-3">
-                                            <div class="input-group">
-                                                <span class="input-group-text bg-light"><i class="ti ti-brand-linkedin"></i></span>
-                                                <input type="url" class="form-control" name="link_linkedin" value="{{ $customer->link_linkedin }}" readonly>
-                                            </div>
-                                        </div>
-                                        <!-- Lien youtube / X -->
-                                        <div class="col-md-6 mb-3">
-                                            <div class="input-group">
-                                                <span class="input-group-text bg-light"><i class="ti ti-brand-youtube"></i></span>
-                                                <input type="url" class="form-control" name="link_youtube" value="{{ $customer->link_youtube }}" readonly>
-                                            </div>
-                                        </div>
-
-                                        <!-- Lien Tiktok -->
-                                        <div class="col-md-6 mb-3">
-                                            <div class="input-group">
-                                                <span class="input-group-text bg-light"><i class="ti ti-brand-tiktok"></i></span>
-                                                <input type="url" class="form-control" name="link_tiktok" value="{{ $customer->link_tiktok }}" readonly>
-                                            </div>
-                                        </div>
-
-                                        <div class="col-md-6 mb-3">
-                                            <div class="input-group">
-                                                <span class="input-group-text bg-light"><i class="ti ti-brand-telegram"></i></span>
-                                                <input type="url" class="form-control" value="{{ $customer->link_website }}" name="link_website" readonly>
-                                            </div>
-                                        </div>
-
-                                    </div>
-                                </div>
-                            </div>
-                        </div><!-- end card body -->
-                    </div>
-                </div>
-                <!-- /Activities -->
-
-                <!-- Email -->
-                <div class="tab-pane fade" id="tab_5">
-                    <!-- Settings Info -->
-
-                    <div class="card mb-0">
-                        <div class="card-body">
-
-                            <!-- <div class="border-bottom mb-3 pb-3 d-flex align-items-center justify-content-between flex-wrap gap-2">
-                                <h4 class="fs-17 mb-0">Compte de retrait</h4>
-                                <a href="javascript:void(0)" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#add_bank"><i class="ti ti-square-rounded-plus-filled me-1"></i>Créer Compte</a>
-                            </div> -->
-
-                            <div class="row">
-
-                                <!-- Email Wrap -->
-                                <div class="col-md-12">
-                                    <!-- Payment -->
-                                    <div class="border rounded shadow p-3 mb-3">
-                                        <div class="row gy-3">
-                                            <div class="col-sm-5">
-                                                <div class="d-flex align-items-center">
-                                                    <span>
-                                                        <img src="assets/img/payments/payment-1.svg" alt="Img">
-                                                    </span>
-                                                    <div class="ms-2">
-                                                        <a href="javascript:void(0);"
-                                                            class="badge badge-tag badge-soft-success ms-2">Connected
-                                                        </a>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-sm-7">
-                                                <div
-                                                    class="d-flex align-items-center justify-content-between flex-wrap gap-2">
-                                                    <div class="d-flex align-items-center">
-                                                        <a href="javascript:void(0);"
-                                                            data-bs-toggle="collapse"
-                                                            data-bs-target="#php-mail"
-                                                            class="text-default me-1 me-lg-3 me-md-3 me-sm-3 border-end pe-1 pe-lg-3 pe-md-3 pe-sm-3 fs-16"><i
-                                                                class="ti ti-info-circle-filled"></i></a>
-                                                        <a href="#" class="btn btn-light"
-                                                            data-bs-toggle="modal"
-                                                            data-bs-target="#add_paypal"><i
-                                                                class="ti ti-tool me-1"></i>Modifer</a>
-                                                    </div>
-                                                    <div class="form-check form-switch p-0">
-                                                        <label class="form-check-label d-flex align-items-center gap-2 w-100">
-                                                            <input class="form-check-input switchCheckDefault ms-auto" type="checkbox" role="switch" checked>
-                                                        </label>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="collapse pt-3 mt-3 border-top" id="php-mail">
-                                            <div>
-                                                <p class="mb-0">PayPal Holdings, Inc. is an American multinational
-                                                    financial technology company operating an online
-                                                    payments system in the majority of countries that
-                                                    support online money transfers, and serves as an
-                                                    electronic alternative to traditional paper methods such
-                                                    as checks and money orders. </p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <!-- /Payment -->
-
-                                    <!-- Payment-2 -->
-                                    <div class="border rounded shadow p-3 mb-3">
-                                        <div class="row gy-3">
-                                            <div class="col-sm-5">
-                                                <div class="d-flex align-items-center">
-                                                    <span>
-                                                        <img src="assets/img/payments/payment-2.svg" alt="Img">
-                                                    </span>
-                                                    <div class="ms-2">
-                                                        <a href="javascript:void(0);"
-                                                            class="badge badge-tag badge-soft-success ms-2">Connected
-                                                        </a>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-sm-7">
-                                                <div
-                                                    class="d-flex align-items-center justify-content-between flex-wrap gap-2">
-                                                    <div class="d-flex align-items-center">
-                                                        <a href="javascript:void(0);"
-                                                            data-bs-toggle="collapse"
-                                                            data-bs-target="#stripe-pay"
-                                                            class="text-default me-1 me-lg-3 me-md-3 me-sm-3 border-end pe-1 pe-lg-3 pe-md-3 pe-sm-3 fs-16"><i
-                                                                class="ti ti-info-circle-filled"></i></a>
-                                                        <a href="#" class="btn btn-light"
-                                                            data-bs-toggle="modal"
-                                                            data-bs-target="#add_stripe"><i
-                                                                class="ti ti-tool me-1"></i>Modifer</a>
-                                                    </div>
-                                                    <div class="form-check form-switch p-0">
-                                                        <label class="form-check-label d-flex align-items-center gap-2 w-100">
-                                                            <input class="form-check-input switchCheckDefault ms-auto" type="checkbox" role="switch" checked>
-                                                        </label>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="collapse pt-3 mt-3 border-top" id="stripe-pay">
-                                            <div>
-                                                <p class="mb-0">Stripe Holdings, Inc. is an American multinational
-                                                    financial technology company operating an online
-                                                    payments system in the majority of countries that
-                                                    support online money transfers, and serves as an
-                                                    electronic alternative to traditional paper methods such
-                                                    as checks and money orders. </p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <!-- /Payment-2 -->
-
-                                    <!-- Payment-3 -->
-                                    <div class="border rounded shadow p-3 mb-3">
-                                        <div class="row gy-3">
-                                            <div class="col-sm-5">
-                                                <div class="d-flex align-items-center">
-                                                    <span>
-                                                        <img src="assets/img/payments/payment-3.svg" alt="Img">
-                                                    </span>
-                                                    <div class="ms-2">
-                                                        <a href="javascript:void(0);"
-                                                            class="badge badge-tag badge-soft-success ms-2">Connected
-                                                        </a>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-sm-7">
-                                                <div
-                                                    class="d-flex align-items-center justify-content-between flex-wrap gap-2">
-                                                    <div class="d-flex align-items-center">
-                                                        <a href="javascript:void(0);"
-                                                            data-bs-toggle="collapse"
-                                                            data-bs-target="#brain-pay"
-                                                            class="text-default me-1 me-lg-3 me-md-3 me-sm-3 border-end pe-1 pe-lg-3 pe-md-3 pe-sm-3 fs-16"><i
-                                                                class="ti ti-info-circle-filled"></i></a>
-                                                        <a href="#" class="btn btn-light"
-                                                            data-bs-toggle="modal"
-                                                            data-bs-target="#add_brain"><i
-                                                                class="ti ti-tool me-1"></i>Modifer</a>
-                                                    </div>
-                                                    <div class="form-check form-switch p-0">
-                                                        <label class="form-check-label d-flex align-items-center gap-2 w-100">
-                                                            <input class="form-check-input switchCheckDefault ms-auto" type="checkbox" role="switch" checked>
-                                                        </label>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="collapse pt-3 mt-3 border-top" id="brain-pay">
-                                            <div>
-                                                <p class="mb-0">Braintree Holdings, Inc. is an American multinational
-                                                    financial technology company operating an online
-                                                    payments system in the majority of countries that
-                                                    support online money transfers, and serves as an
-                                                    electronic alternative to traditional paper methods such
-                                                    as checks and money orders. </p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <!-- /Payment-3 -->
-
-
-                                </div>
-                                <!-- /Email Wrap -->
-
-                            </div>
-                        </div>
-                    </div>
-                    <!-- /Settings Info -->
-                </div>
-                <!-- /Email -->
-
                 <!-- Notes -->
-                <div class="tab-pane fade" id="tab_2">
+                <div class="tab-pane active show" id="tab_2">
                     <div class="card">
                         <div class="card-header d-flex align-items-center justify-content-between flex-wrap row-gap-3">
                             <div class="mb-0">
@@ -361,9 +59,9 @@
                         </div>
                         <div class="card-body">
 
-                            <form action="#" method="POST" enctype="multipart/form-data">
-                                <!-- @csrf -->
-
+                            <form action="{{ route('update_profile') }}" method="POST" enctype="multipart/form-data">
+                                @csrf
+                                <input type="hidden" name="user_id" value="{{ $user->user_id }}">
                                 <!-- SECTION 1 : INFORMATIONS UTILISATEUR (Compte de connexion) -->
                                 <div class="bg-light p-3 rounded mb-4">
 
@@ -371,25 +69,32 @@
                                         <!-- Mapping: name (Schema users) -->
                                         <div class="col-md-6 mb-3">
                                             <label class="form-label">Nom complet <span class="text-danger">*</span></label>
-                                            <input type="text" class="form-control" name="name" value="{{ $user->name }}" required readonly>
+                                            <input type="text" class="form-control" name="name" value="{{ $user->name }}" required>
                                         </div>
 
                                         <!-- Mapping: password (Schema users) -->
                                         <div class="col-md-6 mb-3">
                                             <label class="form-label">Numéro de téléphone <span class="text-danger">*</span></label>
-                                            <input type="text" class="form-control" name="phonenumber" value="{{ $user->phonenumber }}" required readonly>
+                                            <input type="text" class="form-control" name="phonenumber" value="{{ $user->phonenumber }}" required>
                                         </div>
 
                                         <!-- Mapping: email (Schema users) -->
-                                        <div class="col-md-12 mb-3">
+                                        <div class="col-md-6 mb-3">
                                             <label class="form-label">Email (Identifiant) <span class="text-danger">*</span></label>
-                                            <input type="email" class="form-control" name="email_customer" value="{{ $user->email }}" readonly required>
+                                            <input type="email" class="form-control" name="email" value="{{ $user->email }}" required>
+                                        </div>
+
+                                        <!-- Mapping: password (Schema users) -->
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label">Mot de passe <span class="text-danger">*</span></label>
+                                            <input type="password" class="form-control" name="password" required>
                                         </div>
                                     </div>
                                 </div>
-
-
-                                <!-- ... -->
+                                <!-- Bouton Soumettre -->
+                                <div class="d-flex align-items-center justify-content-end">
+                                    <button type="submit" class="btn btn-primary">Mettre à jour le profil</button>
+                                </div>
                             </form>
 
                         </div> <!-- end card body -->

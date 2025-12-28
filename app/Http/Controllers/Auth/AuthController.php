@@ -44,6 +44,10 @@ class AuthController  extends Controller
             return redirect('error')->with('error','Infromation invalide, veiller contacter notre service');
         }
     }
-
-
+    #SE DECONNECTER
+    public function logout()
+    {
+        auth()->logout();
+        return redirect()->route('screenLogin');
+    }
 }

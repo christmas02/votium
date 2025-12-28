@@ -26,18 +26,42 @@ Route::controller(AuthController::class)->group(function () {
     Route::post('registered', 'register');
     Route::post('login', 'login');
     Route::get('/confirm/{id}/{token}', 'confirm')->name('confirm');
+    Route::get('logout', 'logout')->name('logout');
 });
 
 
 Route::group(['middleware' => 'auth'], function () {
     Route::controller(ConsoleController::class)->group(function () {
         Route::get('back_office_console', 'index')->name('back_office_console');
+        
+        // ROUTES PROFILE
+        Route::get('profile', 'profile')->name('profile');
+        Route::post('update_profile', 'updateProfile')->name('update_profile');
+
+        // ROUTES CUSTOMERS
         Route::get('list_customer', 'listCustomer')->name('list_customer');
-        Route::get('detail_customer', 'detailCustomer')->name('detail_customer');
+        Route::post('save_customer', 'saveCustomer')->name('save_customer');
+        Route::delete('delete_customer', 'deleteCustomer')->name('delete_customer');
+        Route::get('detail_customer/{idcustomer}', 'detailCustomer')->name('detail_customer');
+        Route::get('editpassword_customer/{email}', 'editpasswordCustomer')->name('editpassword_customer');
+        Route::post('updatepassword_customer', 'updatePasswordCustomer')->name('updatepassword_customer');
+
+
+
+
+        //ROUTES CAMPAGNES
         Route::get('list_campagne', 'listCampagne')->name('list_campagne');
+        Route::get('detail_campagne/{idCampagne}', 'detailCampagne')->name('detail_campagne');
+        Route::post('save_campagne', 'saveCampagne')->name('save_campagne');
+        Route::post('update_campagne', 'updateCampagne')->name('update_campagne');
+        Route::delete('delete_campagne', 'deleteCampagne')->name('delete_campagne');
     });
 
     Route::controller(BusinessController::class)->group(function () {
         Route::get('back_office_business', 'index')->name('back_office_business');
+        Route::get('parametre_compte', 'parametreCompte')->name('parametre_compte');
+        Route::get('list_candidat', 'listCandidat')->name('list_candidat');
+        Route::get('list_vote', 'listVote')->name('list_vote');
+        Route::get('list_retrait', 'listRetrait')->name('list_retrait');
     });
 });

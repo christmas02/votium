@@ -14,8 +14,8 @@ class CreateEtapesTable extends Migration
     public function up()
     {
         Schema::create('etapes', function (Blueprint $table) {
-            $table->id();
-            $table->string('etape_id');
+            $table->bigIncrements('id');
+            $table->uuid('etape_id')->primary();
             $table->string('campagne_id');
             $table->string('name');
             $table->string('description');

@@ -11,4 +11,5 @@ storage/app/public/
 storage/framework/cache/data/
 storage/framework/sessions/
 storage/framework/views/
-storage/logs/  
+storage/logs/
+uploads/ 
