@@ -125,7 +125,7 @@ class CandidatureService
     public function searchCandidat(array $filters)
     {
         $query = DB::table('candidat_etap_category_campagnes as cecc')
-            ->join('candidats as c', 'c.id', '=', 'cecc.candidat_id')
+            ->join('candidats as c', 'c.candidat_id', '=', 'cecc.candidat_id')
             ->select('c.*')
             ->distinct();
 
