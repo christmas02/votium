@@ -82,7 +82,7 @@ class CustomerRepository
             $account->account_name = $dataWithdrawalAccount['account_name'];
             $account->payment_methode = $dataWithdrawalAccount['payment_methode'];
             $account->payment_methode_icon = $dataWithdrawalAccount['payment_methode_icon'];
-            $account->isActive = true;
+            $account->is_active = true;
             return $account->save();
 
         } catch (\Exception $e) {
