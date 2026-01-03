@@ -24,7 +24,6 @@ class CandidatRepository
             $candidat->profession = $dataCandidat['profession'];
             $candidat->photo = $dataCandidat['photo'];
             $candidat->description = $dataCandidat['description'];
-            $candidat->campagne_id = $dataCandidat['campagne_id'];
             $candidat->data = $dataCandidat['data'];
             $candidat->is_active = true;
             return $candidat->save();
@@ -110,15 +109,15 @@ class CandidatRepository
     }
 
     // enregistrer les candidats avec leur etape et categorie associer a une campagne
-    public function candidatWithEtapAndCategoriByCampagne($data)
+    public function candidatWithEtapAndCategoriByCampagne($data, $statut)
     {
         try {
             $result = new CandidatEtapCategoryCampagne;
             $result->campagne_id = $data['campagne_id'];
-            $result->candidat_id  = $data['candidats'];
+            $result->candidat_id  = $data['candidat_id'];
             $result->etape_id = $data['etape_id']; // etape id obligatoire
             $result->category_id = $data['category_id'];
-            $result->is_active = true;
+            $result->is_active = $statut;
             $result->save();
             return $result;
 

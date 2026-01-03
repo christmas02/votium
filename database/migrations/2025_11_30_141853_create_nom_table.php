@@ -14,7 +14,6 @@ class CreateNomTable extends Migration
     public function up()
     {
         Schema::create('customers', function (Blueprint $table) {
-            $table->bigIncrements('id');
             $table->uuid('customer_id')->primary();
             $table->string('user_id');
             $table->string('entreprise');

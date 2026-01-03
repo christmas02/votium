@@ -141,7 +141,7 @@ class ConsoleController  extends Controller
                 'role' => 'customer',
                 'password' => $this->setting->hashPassword("12345678Aa"),
                 'entreprise' => $request->entreprise,
-                'user_id' => $request->user_id,
+                'user_id' => $this->setting->generateUuid(),
                 'email_customer' => $request->email,
                 'phonenumber_customer' => $request->phonenumber_entreprise,
                 'pays_siege' => $request->pays_siege,

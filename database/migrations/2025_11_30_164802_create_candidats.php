@@ -14,7 +14,6 @@ class CreateCandidats extends Migration
     public function up()
     {
         Schema::create('candidats', function (Blueprint $table) {
-            $table->bigIncrements('id');
             $table->uuid('candidat_id')->primary();
             $table->string('name');
             $table->date('date_naissance');
