@@ -35,7 +35,6 @@
         <div class="d-flex align-items-center gap-2 flex-wrap">
 
             <a href="javascript:void(0);" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal_add_candidat"><i class="ti ti-square-rounded-plus-filled me-1"></i>Créer</a>
-            <a href="javascript:void(0);" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal_add_categorie"><i class="ti ti-square-rounded-plus-filled me-1"></i>Ajouter catégorie</a>
             <div class="gap-2 d-flex align-items-center flex-wrap">
                 <div class="dropdown">
                     <a href="javascript:void(0);" class="dropdown-toggle btn btn-outline-light px-2 shadow" data-bs-toggle="dropdown"><i class="ti ti-package-import me-2"></i>Importer</a>
@@ -71,8 +70,8 @@
                                 </select>
                             </div>
                             <div class="col-md-12 mb-3">
-                                <label class="form-label">Choisir la catégorie <span class="text-danger">*</span></label>
-                                <select class="select form-control form-select" name="customer_id" required>
+                                <label class="form-label">Choisir la catégorie <span class="text-danger"></span></label>
+                                <select class="select form-control form-select" name="customer_id">
                                     <option value="">Sélectionner la catégorie</option>
                                     <option value="1">Catégorie A</option>
                                     <option value="2">Catégorie B</option>
@@ -90,7 +89,7 @@
 
                     </form>
                 </div>
-                <div class="col-xl-12">
+                <!-- <div class="col-xl-12">
                     <form action="">
                         <div class="row mb-4 card card-body">
                             <h5 class="mb-3 fs-17">Catégories</h5>
@@ -105,7 +104,7 @@
                         </div>
 
                     </form>
-                </div>
+                </div> -->
             </div>
             
         </div>

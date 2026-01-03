@@ -1,4 +1,4 @@
-@extends('layout.header.console')
+@extends('layout.header.business')
 
 @section('content')
 
@@ -22,72 +22,172 @@
     </div>
     <!-- End Page Header -->
 
-    <!-- start row -->
-    <div class="row">
-        <div class="col-sm-12">
-            <div class="card">
+    <!-- Campaign Tab -->
+    <!-- <div class="campaign-tab">
+        <ul class="nav nav-tabs nav-bordered mb-4" role="tablist">
+            <li class="nav-item">
+                <a href="#tab_1" data-bs-toggle="tab" aria-expanded="false" aria-selected="true" role="tab" class="nav-link bg-transparent active">Liste Campagnes</a>
+            </li>
+            <li class="nav-item">
+                <a href="#tab_2" data-bs-toggle="tab" aria-expanded="false" aria-selected="false" tabindex="-1" role="tab" class="nav-link bg-transparent">Etapes</a>
+            </li>
+            <li class="nav-item">
+                <a href="#tab_3" data-bs-toggle="tab" aria-expanded="false" aria-selected="false" tabindex="-1" role="tab" class="nav-link bg-transparent">Catégories</a>
+            </li>
+        </ul>
+    </div> -->
+    <!-- Campaign Tab -->
 
-                <div class="card-header d-flex align-items-center justify-content-between gap-2 flex-wrap">
-                    <div class="table-search" style="margin-bottom:0 !important;">
-                        <div class="search-input">
-                            <a href="javascript:void(0);" class="btn-searchset"><i class="isax isax-search-normal fs-12"></i></a>
+    <div class="tab-content pt-0">
+        <div class="tab-pane active show" id="tab_1" role="tabpanel">
+            <!-- Content for Liste Campagnes tab -->
+            <!-- start row -->
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="card">
+
+                        <div class="card-header d-flex align-items-center justify-content-between gap-2 flex-wrap">
+                            <div class="table-search" style="margin-bottom:0 !important;">
+                                <div class="search-input">
+                                    <a href="javascript:void(0);" class="btn-searchset"><i class="isax isax-search-normal fs-12"></i></a>
+                                </div>
+                            </div>
+                            <!-- Bouton déclencheur -->
+
+                            <div class="d-flex align-items-center gap-2 flex-wrap">
+
+                                <a href="javascript:void(0);" class="btn btn-primary d-flex align-items-center" data-bs-toggle="modal" data-bs-target="#modal_add_campaign">
+                                    <i class="ti ti-square-rounded-plus-filled me-1"></i>Créer
+                                </a>
+
+                                <a href="javascript:void(0);" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal_add_categorie"><i class="ti ti-square-rounded-plus-filled me-1"></i>Ajouter catégorie</a>
+
+                            </div>
+                        </div>
+                        <!-- end card header -->
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-nowrap datatable">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th>NOM DE CAMPAGNE</th>
+                                            <th>NBRE D'ETAPES</th>
+                                            <th>NBRE DE CANDIDATS</th>
+                                            <th>CRÉÉE LE</th>
+                                            <th>INSCRIPTION</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach($campagnes as $campagne)
+                                        <tr>
+                                            <td class="text-uppercase fw-bold" class="text-uppercase fw-bold"> 
+                                                <a href="{{ route('business.list_etape', [$customer->customer_id]) }}"> 
+                                                    {{$campagne->name}}
+                                                </a> 
+                                            </td>
+                                            <td>1 étape</td>
+                                            <td>1 Candidats</td>
+                                            <td>{{ $campagne->created_at->format('d/m/Y') }}</td>
+                                            <td>@if($campagne->inscription_isActive) Autorisées @else Non-autorisées @endif</td>
+                                            <td>
+                                                <div class="d-inline-flex gap-2">
+                                                    <a href="{{ route('business.detail_campagne', [$campagne->campagne_id]) }}" class="btn btn-icon btn-sm btn-success"><i class="ti ti-location"></i></a>
+                                                    <a class="btn btn-icon btn-sm btn-info" data-bs-toggle="modal" data-bs-target="#modal_edit_campaign_{{$campagne->campagne_id}}"><i class="ti ti-edit"></i></a>
+                                                    @if($campagne->inscription_isActive)<a href="#;" class="btn btn-icon btn-sm btn-light"><i class="ti ti-menu-2"></i></a>@endif
+                                                    <a class="btn btn-icon btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#delete_contact_{{$campagne->campagne_id}}"><i class="ti ti-trash"></i></a>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        @endforeach
+
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div><!-- end card body -->
+                    </div><!-- end card -->
+                </div><!-- end col -->
+            </div>
+            <!-- end row -->
+        </div>
+
+        <!-- <div class="tab-pane fade active show" id="tab_2" role="tabpanel">
+            <div class="row">
+                Colonne Gauche : Choisir la session
+                <div class="col-xl-3">
+                    <div class="card border shadow-none">
+                        <div class="card-body">
+                            <label class="form-label text-muted fs-12">Choisir la session</label>
+                            <select class="form-select mb-4">
+                                <option selected>Zenitsu concours</option>
+                            </select>
+
+                            <p class="text-muted small mb-0">Session</p>
+                            <h3 class="fw-bold" style="color: #f3613c;">Zenitsu concours</h3>
                         </div>
                     </div>
-                    <!-- Bouton déclencheur -->
-                    <a href="javascript:void(0);" class="btn btn-primary d-flex align-items-center" data-bs-toggle="modal" data-bs-target="#modal_add_campaign">
-                        <i class="ti ti-square-rounded-plus-filled me-1"></i>Créer
-                    </a>
-                    <!-- <a href="javascript:void(0);" class="btn btn-primary d-flex align-items-center" data-bs-toggle="offcanvas" data-bs-target="#offcanvas_add"><i class="ti ti-square-rounded-plus-filled me-1"></i>Créer</a> -->
                 </div>
-                <!-- end card header -->
-                <div class="card-body">
-                    <div class="table-responsive">
-                        <table class="table table-nowrap datatable">
-                            <thead class="table-light">
-                                <tr>
-                                    <th>NOM DE CAMPAGNE</th>
-                                    <th>NBRE D'ETAPES</th>
-                                    <th>NBRE DE CANDIDATS</th>
-                                    <th>CRÉÉE LE</th>
-                                    <th>INSCRIPTION</th>
-                                    <th>Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach($campagnes as $campagne)
-                                <tr>
-                                    <td class="text-uppercase fw-bold">{{$campagne->name}}</td>
-                                    <td>1 étape</td>
-                                    <td>1 Candidats</td>
-                                    <td>{{ $campagne->created_at->format('d/m/Y') }}</td>
-                                    <td>@if($campagne->inscription_isActive) Autorisées @else Non-autorisées @endif</td>
-                                    <td>
-                                        <div class="d-inline-flex gap-2">
-                                            <a href="{{ route('console.detail_campagne', [$campagne->campagne_id]) }}" class="btn btn-icon btn-sm btn-success"><i class="ti ti-location"></i></a>
-                                            <a class="btn btn-icon btn-sm btn-info" data-bs-toggle="modal" data-bs-target="#modal_edit_campaign_{{$campagne->campagne_id}}"><i class="ti ti-edit"></i></a>
-                                            @if($campagne->inscription_isActive)<a href="#;" class="btn btn-icon btn-sm btn-light"><i class="ti ti-menu-2"></i></a>@endif
-                                            <a class="btn btn-icon btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#delete_contact_{{$campagne->campagne_id}}"><i class="ti ti-trash"></i></a>
-                                        </div>
-                                    </td>
-                                </tr>
-                                @endforeach
 
-                            </tbody>
-                        </table>
+                Colonne Droite : Liste des étapes
+                <div class="col-xl-9">
+                    <div class="card border shadow-none">
+                        <div class="card-header d-flex align-items-center justify-content-between bg-transparent border-0">
+                            <div class="search-input">
+                                <input type="text" class="form-control" placeholder="Rechercher ...">
+                            </div>
+                            <button class="btn btn-primary d-flex align-items-center" style="background-color: #f3613c; border:none;" data-bs-toggle="modal" data-bs-target="#modal_add_step">
+                                <i class="ti ti-circle-plus me-1"></i> Créer
+                            </button>
+                        </div>
+                        <div class="card-body pt-0">
+                            <div class="table-responsive">
+                                <table class="table table-nowrap align-middle">
+                                    <thead class="table-light">
+                                        <tr class="text-muted fs-11 text-uppercase">
+                                            <th>Nom de l'étape</th>
+                                            <th>Date de début</th>
+                                            <th>Date de fin</th>
+                                            <th>Prix du vote</th>
+                                            <th>Nbre de votes</th>
+                                            <th>Etat</th>
+                                            <th class="text-end">Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td class="fw-bold">ONE</td>
+                                            <td>23/11/2025 22:37:00</td>
+                                            <td>07/12/2025 22:37:00</td>
+                                            <td>500 Fcfa</td>
+                                            <td>0 votes</td>
+                                            <td><span class="text-muted">No</span></td>
+                                            <td class="text-end">
+                                                <div class="d-inline-flex gap-2">
+                                                    <button class="btn btn-sm btn-light border"><i class="ti ti-edit fs-16"></i></button>
+                                                    <button class="btn btn-sm btn-danger"><i class="ti ti-trash fs-16"></i></button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
                     </div>
-                </div><!-- end card body -->
-            </div><!-- end card -->
-        </div><!-- end col -->
+                </div>
+            </div>
+        </div> -->
+        <!-- <div class="tab-pane fade" id="tab_3" role="tabpanel">
+            Content for Liste Campagnes tab
+            <p>ok</p>
+        </div> -->
+
     </div>
-    <!-- end row -->
+
 
 </div>
 <!-- End Content -->
 
-<!-- Add offcanvas -->
-
-
-<!-- Structure de la Modale -->
+<!-- Structure de la Modale add new campagne -->
 <div class="modal fade" id="modal_add_campaign" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-sm modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content">
@@ -97,7 +197,7 @@
             </div>
 
             <div class="modal-body">
-                <form action="{{ route('console.save_campagne') }}" method="POST" enctype="multipart/form-data">
+                <form action="{{ route('business.save_campagne') }}" method="POST" enctype="multipart/form-data">
                     @csrf
 
                     <!-- 2. INFORMATIONS PRINCIPALES -->
@@ -108,13 +208,7 @@
                         </div>
 
                         <div class="col-md-12 mb-3">
-                            <label class="form-label">Promoteur <span class="text-danger">*</span></label>
-                            <select class="select form-control form-select" name="customer_id" required>
-                                <option value="" disabled selected>Choix promoteur</option>
-                                @foreach($customers as $customerId => $entreprise)
-                                <option value="{{ $customerId }}">{{ $entreprise }}</option>
-                                @endforeach
-                            </select>
+                            <input type="hidden" name="customer_id" value="{{ $customer->customer_id }}">
                         </div>
 
                         <div class="col-md-12">
@@ -301,7 +395,6 @@
 </div>
 <!-- /Add offcanvas -->
 
-<!-- edit offcanvas -->
 <!-- Modale de modification (ID statique pour test) -->
 @foreach($campagnes as $campagne)
 <div class="modal fade" id="modal_edit_campaign_{{$campagne->campagne_id}}" tabindex="-1" aria-hidden="true">
@@ -313,7 +406,7 @@
             </div>
 
             <div class="modal-body">
-                <form action="{{ route('console.update_campagne') }}" method="POST" enctype="multipart/form-data">
+                <form action="{{ route('business.update_campagne') }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     <input type="hidden" name="campagne_id" value="{{ $campagne->campagne_id }}">
                     <input type="hidden" name="old_image_couverture" value="{{ $campagne->image_couverture }}">
@@ -326,12 +419,7 @@
                         </div>
 
                         <div class="col-md-12 mb-3">
-                            <label class="form-label">Promoteur <span class="text-danger">*</span></label>
-                            <select class="select form-control form-select" name="customer_id" required>
-                                @foreach($customers as $customerId => $entreprise)
-                                <option value="{{ $customerId }}" {{ $campagne->customer_id == $customerId ? 'selected' : '' }}>{{ $entreprise }}</option>
-                                @endforeach
-                            </select>
+                            <input type="hidden" name="customer_id" value="{{ $customer->customer_id }}">
                         </div>
 
                         <div class="col-md-12">
@@ -544,7 +632,7 @@
                 <h5 class="mb-1">Confirmer la suppression</h5>
                 <p class="mb-3">Êtes-vous sûr de vouloir supprimer l'entreprise sélectionnée ?</p>
                 <!-- Formulaire de suppression -->
-                <form method="POST" action="{{ route('console.delete_campagne') }}">
+                <form method="POST" action="{{ route('business.delete_campagne') }}">
                     @csrf
                     @method('DELETE')
                     <div class="d-flex justify-content-center">
@@ -560,6 +648,180 @@
 @endforeach
 <!-- delete modal -->
 
+<!-- Modal Nouvelle Étape -->
+@foreach($campagnes as $campagne)
+<div class="modal fade" id="modal_add_step_{{$campagne->campagne_id}}" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-md modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg" style="border-radius: 15px;">
+            <div class="modal-header border-0">
+                <h4 class="modal-title fw-bold" style="color: #2d3748;">Nouvelle étape</h4>
+                <button type="button" class="btn-close bg-light rounded-circle p-2" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form action="{{ route('business.save_etape') }}" method="POST" enctype="multipart/form-data">
+                    @csrf
+                    <input type="hidden" name="campagne_id" value="{{$campagne->campagne_id}}">
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Nom de l'étape</label>
+                        <input type="text" class="form-control bg-light border-0" name="name" placeholder="Attribuez un nom à cette étape.">
+                    </div>
+
+                    <div class="row g-3 mb-3">
+                        <div class="col-6">
+                            <label class="form-label fw-semibold">Date de début</label>
+                            <input type="date" class="form-control bg-light border-0" name="date_debut">
+                        </div>
+                        <div class="col-6">
+                            <label class="form-label fw-semibold">Heure de début</label>
+                            <input type="time" class="form-control bg-light border-0" name="heure_debut">
+                        </div>
+                    </div>
+
+                    <div class="row g-3 mb-3">
+                        <div class="col-6">
+                            <label class="form-label fw-semibold">Date de fin</label>
+                            <input type="date" class="form-control bg-light border-0" name="date_fin">
+                        </div>
+                        <div class="col-6">
+                            <label class="form-label fw-semibold">Heure de fin</label>
+                            <input type="time" class="form-control bg-light border-0" name="heure_fin">
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Décrivez l'étape</label>
+                        <textarea class="form-control bg-light border-0" rows="4" name="description" placeholder="Décrivez l'étape ..."></textarea>
+                    </div>
+
+                    <!-- <div class="row g-3 mb-3">
+                        <div class="col-6">
+                            <label class="form-label fw-semibold">Type d'éligibilité</label>
+                            <select class="form-select bg-light border-0" name="type_eligibility">
+                                <option>Choisir</option>
+                            </select>
+                        </div>
+                        <div class="col-6">
+                            <label class="form-label fw-semibold">Seuil de sélection</label>
+                            <input type="number" class="form-control bg-light border-0" name="seuil_selection" placeholder="Ex: 1000">
+                        </div>
+                    </div>
+
+                    <div class="bg-light p-3 rounded mb-3">
+                        <div class="col-md-12 d-flex align-items-end">
+                            <div class="form-check form-switch mb-2">
+                                <input class="form-check-input" type="checkbox" role="switch" id="reinitialisation" name="reinitialisation" value="1">
+                                <label class="form-check-label" for="reinitialisation">Réinitialisation</label>
+                            </div>
+                        </div>
+                    </div> -->
+
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Prix d'un vote</label>
+                        <input type="text" class="form-control bg-light border-0" name="prix_vote" placeholder="Ex: 500">
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Packages de vote</label>
+
+                        <div class="packages-wrapper">
+                            <div class="packages-container" data-index="1" id="packages_container">
+
+                                <!-- Package par défaut -->
+                                <div class="row g-2 align-items-end package-item mb-2">
+                                    <div class="col-5">
+                                        <input type="number" name="packages[0][votes]" class="form-control bg-light border-0" placeholder="Nombre de votes" required>
+                                    </div>
+
+                                    <div class="col-5">
+                                        <input type="number" name="packages[0][montant]" class="form-control bg-light border-0" placeholder="Prix (FCFA)" readonly required>
+                                    </div>
+
+                                    <div class="col-2 text-end">
+                                        <button type="button" class="btn btn-danger btn-sm remove-package d-none">✕</button>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <button type="button" class="btn btn-outline-primary btn-sm mt-2 add-package" id="addPackage">
+                                + Ajouter un package
+                            </button>
+                        </div>
+                    </div>
+
+
+                    <!-- Le bouton de validation n'est pas visible sur votre capture, mais voici le style habituel -->
+                    <div class="mt-4">
+                        <button type="submit" class="btn btn-primary w-100 py-2 fw-bold" style="background-color: #f3613c; border:none;">Enregistrer l'étape</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+@endforeach
+
+<!-- Modale pour ajouter une nouvelle catégorie campagne -->
+<div class="modal fade" id="modal_add_categorie" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-sm modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header border-bottom">
+                <h5 class="modal-title">Ajouter catégorie</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body">
+                <form action="{{ route('business.save_categorie') }}" method="POST" enctype="multipart/form-data">
+                    @csrf
+                    <div>
+                        <div class="row">
+
+                            <!-- Nom catégorie -->
+                            <div class="col-md-12 mb-3">
+                                <label class="form-label">Nom catégorie <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" name="name" required>
+                            </div>
+
+                            <div class="col-md-12 mb-3">
+                                <label class="form-label">Choisir la campagne <span class="text-danger">*</span></label>
+                                <select class="select form-control form-select" name="campagne_id" required>
+                                    <option value="">Sélectionner une campagne</option>
+                                    @foreach($campagnes as $campagne)
+                                    <option value="{{ $campagne->campagne_id }}">{{ $campagne->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+
+                            <div class="col-md-12 mb-3">
+                                <label class="form-label">Décrivez la catégorie<span class="text-danger">*</span></label>
+                                <textarea class="form-control" rows="4" name="description" required></textarea>
+                            </div>
+
+                            <!-- icone catégorie -->
+                            <div class="col-md-12 mb-3">
+                                <label class="form-label">Choisir icone <span class="text-danger"></span></label>
+                                <select class="select form-control form-select" name="icon">
+                                    <option value="">Sélectionner</option>
+                                    <option value="homme">Homme</option>
+                                    <option value="femme">Femme</option>
+                                    <option value="enfant">Enfant</option>
+                                    <option value="jeune">Jeune</option>
+                                </select>
+                            </div>
+                        </div>
+
+                    </div>
+                    <!-- Modal Footer (Actions) -->
+                    <div class="modal-footer border-top mt-4 pb-0 px-0">
+                        <button type="button" class="btn btn-light" data-bs-dismiss="modal">Annuler</button>
+                        <button type="submit" class="btn btn-primary"><i class="ti ti-device-floppy me-1"></i> Enregistrer</button>
+                    </div>
+                    <!-- ... -->
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 
 <!-- Script JavaScript pour gérer l'affichage -->
 <script>
@@ -579,6 +841,65 @@
         blocDates.classList.toggle('d-none', !e.target.checked);
 
     });
+
+    // Fonction pour gérer le package des votes
+    document.addEventListener('click', function(e) {
+
+        // Ajouter un package
+        if (e.target.classList.contains('add-package')) {
+
+            const wrapper = e.target.closest('.packages-wrapper');
+            const container = wrapper.querySelector('.packages-container');
+
+            let index = parseInt(container.dataset.index);
+
+            const html = `
+        <div class="row g-2 align-items-end package-item mb-2">
+            <div class="col-5">
+                <input type="number" name="packages[${index}][votes]" class="form-control bg-light border-0" placeholder="Nombre de votes" required>
+            </div>
+            <div class="col-5">
+                <input type="number" name="packages[${index}][montant]" class="form-control bg-light border-0" placeholder="Prix (FCFA)" readonly required>
+            </div>
+            <div class="col-2 text-end">
+                <button type="button" class="btn btn-danger btn-sm remove-package">✕</button>
+            </div>
+        </div>
+        `;
+
+            container.insertAdjacentHTML('beforeend', html);
+            container.dataset.index = index + 1;
+        }
+
+        // Supprimer un package
+        if (e.target.classList.contains('remove-package')) {
+            e.target.closest('.package-item').remove();
+        }
+
+    });
+
+    // Quand on change le prix du vote
+    document.addEventListener('input', function(e) {
+        if (e.target.name === 'prix_vote' || e.target.name.includes('[votes]')) {
+            calculerMontants();
+        }
+    });
+
+    // Calculer les montants en fonction du prix par vote
+    function calculerMontants() {
+        const prixVote = parseFloat(document.querySelector('input[name="prix_vote"]').value) || 0;
+
+        document.querySelectorAll('.package-item').forEach(package => {
+            const votesInput = package.querySelector('input[name*="[votes]"]');
+            const montantInput = package.querySelector('input[name*="[montant]"]');
+
+            const votes = parseFloat(votesInput.value) || 0;
+
+            const montant = prixVote * votes;
+
+            montantInput.value = montant > 0 ? montant : '';
+        });
+    }
 </script>
 @endsection
 <!-- section js -->

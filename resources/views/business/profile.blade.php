@@ -62,135 +62,146 @@
                         </div>
                         <div class="card-body">
 
-                            <form action="#" method="POST" enctype="multipart/form-data">
-                                <!-- @csrf -->
-
-                                <!-- SECTION 2 : INFORMATIONS ENTREPRISE -->
-                                <div>
-                                    <h6 class="mb-3 d-flex align-items-center text-dark">
-                                        <i class="ti ti-building-skyscraper fs-5 me-2"></i> Informations de l'Entreprise
-                                    </h6>
-
-                                    <div class="row">
-                                        <!-- Logo Upload avec Prévisualisation -->
-                                        <div class="col-md-12 mb-3">
-                                            <div class="d-flex align-items-center">
-                                                <!-- Zone de l'image -->
-                                                <div class="avatar avatar-xl border border-dashed me-3 flex-shrink-0 d-flex justify-content-center align-items-center bg-light position-relative overflow-hidden">
-                                                    <!-- Icône par défaut (sera cachée au chargement) -->
-                                                    <i class="ti ti-photo text-muted fs-4" id="logo_placeholder"></i>
-
-                                                    <!-- Image de prévisualisation (cachée par défaut) -->
-                                                    <img src="#" alt="Aperçu" id="logo_preview" class="d-none w-100 h-100 object-fit-cover">
-                                                </div>
-
-                                                <div class="d-flex flex-column">
-                                                    <label class="form-label mb-1">Logo de l'entreprise</label>
-                                                    <!-- Ajout de l'événement onchange -->
-                                                    <input type="file"
-                                                        class="form-control form-control-sm"
-                                                        name="logo"
-                                                        id="logo_input"
-                                                        accept="image/png, image/gif, image/jpeg"
-                                                        onchange="previewLogo(this)">
-                                                    <small class="text-muted">JPG, GIF ou PNG. Max 800K</small>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <!-- Nom Entreprise -->
-                                        <div class="col-md-6 mb-3">
-                                            <label class="form-label">Nom de l'entreprise <span class="text-danger">*</span></label>
-                                            <input type="text" class="form-control" name="entreprise" required>
-                                        </div>
-
-                                        <!-- NOUVEAU : Email de l'entreprise -->
-                                        <div class="col-md-6 mb-3">
-                                            <label class="form-label">Email de contact (Entreprise)</label>
-                                            <!-- Nommé 'company_email' pour ne pas écraser l'email du User -->
-                                            <input type="email" class="form-control" name="company_email" placeholder="contact@entreprise.com">
-                                        </div>
-
-                                        <!-- Téléphone -->
-                                        <div class="col-md-6 mb-3">
-                                            <label class="form-label">Téléphone <span class="text-danger">*</span></label>
-                                            <input type="text" class="form-control phone" name="phonenumber" required>
-                                        </div>
-
-                                        <!-- Site Web -->
-                                        <div class="col-md-6 mb-3">
-                                            <label class="form-label">Site Web</label>
-                                            <input type="url" class="form-control" name="link_website" placeholder="https://...">
-                                        </div>
-
-                                        <!-- Adresse -->
-                                        <div class="col-md-6 mb-3">
-                                            <label class="form-label">Adresse Complète <span class="text-danger">*</span></label>
-                                            <input type="text" class="form-control" name="adresse" required>
-                                        </div>
-
-                                        <!-- Pays -->
-                                        <div class="col-md-6 mb-4">
-                                            <label class="form-label">Pays du siège <span class="text-danger">*</span></label>
-                                            <select class="select form-control form-select" name="pays_siege">
-                                                <option value="">Sélectionner</option>
-                                                <option value="France">France</option>
-                                                <option value="Côte d'Ivoire">Côte d'Ivoire</option>
-                                                <option value="Senegal">Sénégal</option>
-                                                <option value="USA">USA</option>
-                                                <option value="Canada">Canada</option>
-                                            </select>
-                                        </div>
-
-                                        <!-- Description / Data -->
-                                        <div class="col-md-12 mb-3">
-                                            <label class="form-label">Notes / Données supplémentaires <span class="text-danger">*</span></label>
-                                            <textarea class="form-control" rows="2" name="data" required></textarea>
-                                        </div>
-                                    </div>
-
-                                    <!-- SECTION : RÉSEAUX SOCIAUX -->
-                                    <div class="mt-3">
+                            <form action="{{ route('business.update_customer') }}" method="POST" enctype="multipart/form-data">
+                                @csrf
+                                <div class="modal-body">
+                                    <input type="hidden" name="user_id" value="{{ $user->user_id }}">
+                                    <!-- SECTION 2 : INFORMATIONS ENTREPRISE -->
+                                    <div>
                                         <h6 class="mb-3 d-flex align-items-center text-dark">
-                                            <i class="ti ti-social fs-5 me-2"></i> Réseaux Sociaux
+                                            <i class="ti ti-building-skyscraper fs-5 me-2"></i> Informations de l'Entreprise
                                         </h6>
 
                                         <div class="row">
-                                            <!-- Facebook -->
-                                            <div class="col-md-6 mb-3">
-                                                <div class="input-group">
-                                                    <span class="input-group-text bg-light"><i class="ti ti-brand-facebook"></i></span>
-                                                    <input type="url" class="form-control" name="link_facebook" placeholder="Facebook URL">
+                                            <!-- Logo Upload avec Prévisualisation -->
+                                            <div class="col-md-12 mb-3 image-upload-group">
+                                                <div class="d-flex align-items-center bg-light p-2 rounded">
+                                                    <!-- Zone de l'image -->
+                                                    <div class="avatar avatar-xl border border-dashed me-3 flex-shrink-0 d-flex justify-content-center align-items-center bg-light position-relative overflow-hidden">
+                                                        <!-- Placeholder -->
+                                                        <i class="ti ti-photo text-muted fs-4 placeholder-target"></i>
+                                                        <!-- Preview -->
+                                                        <img src="#" alt="Aperçu" class="preview-target d-none w-100 h-100 object-fit-cover">
+                                                    </div>
+
+                                                    <div class="d-flex flex-column">
+                                                        <label class="form-label mb-1">Logo de l'entreprise</label>
+                                                        <input type="file"
+                                                            class="form-control form-control-sm"
+                                                            name="logo"
+                                                            accept="image/*"
+                                                            onchange="handleImagePreview(this)">
+                                                        <small class="text-muted">JPG, GIF ou PNG. Max 800K</small>
+
+                                                        <!-- Bouton supprimer pour le logo (optionnel) -->
+                                                        <button type="button" class="btn btn-sm btn-link text-danger p-0 d-none remove-btn-target text-start" onclick="handleImageRemove(this)">
+                                                            Supprimer
+                                                        </button>
+                                                    </div>
                                                 </div>
                                             </div>
 
-                                            <!-- Instagram -->
+                                            <!-- Nom Entreprise -->
                                             <div class="col-md-6 mb-3">
-                                                <div class="input-group">
-                                                    <span class="input-group-text bg-light"><i class="ti ti-brand-instagram"></i></span>
-                                                    <input type="url" class="form-control" name="link_instagram" placeholder="Instagram URL">
-                                                </div>
+                                                <label class="form-label">Nom de l'organisation <span class="text-danger">*</span></label>
+                                                <input type="text" class="form-control" name="entreprise" required>
                                             </div>
 
-                                            <!-- LinkedIn -->
-                                            <div class="col-md-6 mb-3">
-                                                <div class="input-group">
-                                                    <span class="input-group-text bg-light"><i class="ti ti-brand-linkedin"></i></span>
-                                                    <input type="url" class="form-control" name="link_linkedin" placeholder="LinkedIn URL">
-                                                </div>
+                                            <!-- Pays -->
+                                            <div class="col-md-6 mb-4">
+                                                <label class="form-label">Pays siège <span class="text-danger">*</span></label>
+                                                <select class="select form-control form-select" name="pays_siege" required>
+                                                    <option value="">Sélectionner</option>
+                                                    <option value="France">France</option>
+                                                    <option value="Côte d'Ivoire">Côte d'Ivoire</option>
+                                                    <option value="Senegal">Sénégal</option>
+                                                    <option value="USA">USA</option>
+                                                    <option value="Canada">Canada</option>
+                                                </select>
                                             </div>
 
-                                            <!-- Twitter / X -->
+                                            <!-- NOUVEAU : Email de l'entreprise -->
                                             <div class="col-md-6 mb-3">
-                                                <div class="input-group">
-                                                    <span class="input-group-text bg-light"><i class="ti ti-brand-x"></i></span>
-                                                    <input type="url" class="form-control" name="link_twitter" placeholder="Twitter/X URL">
+                                                <label class="form-label">Email de l'organisation</label>
+                                                <!-- Nommé 'company_email' pour ne pas écraser l'email du User -->
+                                                <input type="email" class="form-control" name="email" placeholder="contact@entreprise.com">
+                                            </div>
+
+                                            <!-- Téléphone -->
+                                            <div class="col-md-6 mb-3">
+                                                <label class="form-label">Téléphone <span class="text-danger">*</span></label>
+                                                <input type="text" class="form-control phone" name="phonenumber" required>
+                                            </div>
+
+                                            <!-- Adresse -->
+                                            <div class="col-md-12 mb-3">
+                                                <label class="form-label">Adresse <span class="text-danger">*</span></label>
+                                                <input type="text" class="form-control" name="adresse" placeholder="Siège social" required>
+                                            </div>
+                                        </div>
+
+                                        <!-- SECTION : RÉSEAUX SOCIAUX -->
+                                        <div class="mt-3">
+
+                                            <div class="row">
+                                                <!-- Facebook -->
+                                                <div class="col-md-6 mb-3">
+                                                    <div class="input-group">
+                                                        <span class="input-group-text bg-light"><i class="ti ti-brand-facebook"></i></span>
+                                                        <input type="url" class="form-control" name="link_facebook" placeholder="Facebook URL">
+                                                    </div>
                                                 </div>
+
+                                                <!-- Instagram -->
+                                                <div class="col-md-6 mb-3">
+                                                    <div class="input-group">
+                                                        <span class="input-group-text bg-light"><i class="ti ti-brand-instagram"></i></span>
+                                                        <input type="url" class="form-control" name="link_instagram" placeholder="Instagram URL">
+                                                    </div>
+                                                </div>
+
+                                                <!-- LinkedIn -->
+                                                <div class="col-md-6 mb-3">
+                                                    <div class="input-group">
+                                                        <span class="input-group-text bg-light"><i class="ti ti-brand-linkedin"></i></span>
+                                                        <input type="url" class="form-control" name="link_linkedin" placeholder="LinkedIn URL">
+                                                    </div>
+                                                </div>
+
+                                                <!-- Lien youtube / X -->
+                                                <div class="col-md-6 mb-3">
+                                                    <div class="input-group">
+                                                        <span class="input-group-text bg-light"><i class="ti ti-brand-youtube"></i></span>
+                                                        <input type="url" class="form-control" name="link_youtube" placeholder="Youtube URL">
+                                                    </div>
+                                                </div>
+
+                                                <!-- Lien Tiktok -->
+                                                <div class="col-md-6 mb-3">
+                                                    <div class="input-group">
+                                                        <span class="input-group-text bg-light"><i class="ti ti-brand-tiktok"></i></span>
+                                                        <input type="url" class="form-control" name="link_tiktok" placeholder="Tiktok URL">
+                                                    </div>
+                                                </div>
+
+                                                <!-- Site Web -->
+                                                <div class="col-md-6 mb-3">
+                                                    <div class="input-group">
+                                                        <span class="input-group-text bg-light"><i class="ti ti-brand-telegram"></i></span>
+                                                        <input type="url" class="form-control" name="link_website" placeholder="https://...">
+                                                    </div>
+                                                </div>
+
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                                <!-- ... -->
+
+                                <!-- Modal Footer (Actions) -->
+                                <div class="modal-footer border-top mt-4 pb-0 px-0">
+                                    <button type="button" class="btn btn-light" data-bs-dismiss="modal">Annuler</button>
+                                    <button type="submit" class="btn btn-primary"><i class="ti ti-device-floppy me-1"></i> Enregistrer</button>
+                                </div>
                             </form>
                         </div><!-- end card body -->
                     </div>
@@ -387,9 +398,9 @@
                         </div>
                         <div class="card-body">
 
-                            <form action="#" method="POST" enctype="multipart/form-data">
-                                <!-- @csrf -->
-
+                            <form action="{{ route('business.update_profile') }}" method="POST" enctype="multipart/form-data">
+                                @csrf
+                                <input type="hidden" name="user_id" value="{{ $user->user_id }}">
                                 <!-- SECTION 1 : INFORMATIONS UTILISATEUR (Compte de connexion) -->
                                 <div class="bg-light p-3 rounded mb-4">
 
@@ -397,13 +408,19 @@
                                         <!-- Mapping: name (Schema users) -->
                                         <div class="col-md-6 mb-3">
                                             <label class="form-label">Nom complet <span class="text-danger">*</span></label>
-                                            <input type="text" class="form-control" name="name" placeholder="Ex: Jean Dupont" required>
+                                            <input type="text" class="form-control" name="name" value="{{ $user->name }}" required>
+                                        </div>
+
+                                        <!-- Mapping: password (Schema users) -->
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label">Numéro de téléphone <span class="text-danger">*</span></label>
+                                            <input type="text" class="form-control" name="phonenumber" value="{{ $user->phonenumber }}" required>
                                         </div>
 
                                         <!-- Mapping: email (Schema users) -->
                                         <div class="col-md-6 mb-3">
                                             <label class="form-label">Email (Identifiant) <span class="text-danger">*</span></label>
-                                            <input type="email" class="form-control" name="email" placeholder="jean@entreprise.com" required>
+                                            <input type="email" class="form-control" name="email" value="{{ $user->email }}" required>
                                         </div>
 
                                         <!-- Mapping: password (Schema users) -->
@@ -411,28 +428,12 @@
                                             <label class="form-label">Mot de passe <span class="text-danger">*</span></label>
                                             <input type="password" class="form-control" name="password" required>
                                         </div>
-
-                                        <!-- Confirmation Mot de passe -->
-                                        <div class="col-md-6 mb-3">
-                                            <label class="form-label">Confirmer le mot de passe <span class="text-danger">*</span></label>
-                                            <input type="password" class="form-control" name="password_confirmation" required>
-                                        </div>
-
-                                        <!-- Statut Actif -->
-                                        <div class="col-md-6 mb-3">
-                                            <div class="form-check form-switch p-2 border rounded bg-light d-flex align-items-center">
-                                                <input type="hidden" name="is_active" value="0">
-                                                <input class="form-check-input ms-0 me-2" name="is_active" value="1" type="checkbox" role="switch" id="activeSwitch" checked>
-                                                <label class="form-check-label cursor-pointer mb-0" for="activeSwitch">Compte Entreprise Actif</label>
-                                            </div>
-                                        </div>
-                                        <!-- Rôle par défaut (Hidden) -->
-                                        <input type="hidden" name="role" value="customer">
                                     </div>
                                 </div>
-
-
-                                <!-- ... -->
+                                <!-- Bouton Soumettre -->
+                                <div class="d-flex align-items-center justify-content-end">
+                                    <button type="submit" class="btn btn-primary">Mettre à jour le profil</button>
+                                </div>
                             </form>
 
                         </div> <!-- end card body -->
@@ -1041,60 +1042,26 @@
 </div>
 <!-- /Add Bank Account -->
 
-
+<!-- Script JavaScript pour gérer l'affichage -->
 <script>
-    function previewImage(input) {
-        const preview = document.getElementById('image-preview');
-        const placeholder = document.getElementById('upload-placeholder');
-        const removeBtn = document.getElementById('remove-btn');
-        const dropZone = document.getElementById('drop-zone');
+    document.addEventListener('change', function(e) {
 
-        if (input.files && input.files[0]) {
-            const reader = new FileReader();
+        // Vérifie si l'élément déclencheur est un toggle inscription
+        if (!e.target.classList.contains('inscriptionSwitch')) return;
 
-            reader.onload = function(e) {
-                // Affiche l'image
-                preview.src = e.target.result;
-                preview.classList.remove('d-none');
+        // On travaille dans la modale courante
+        const modalBody = e.target.closest('.modal-body');
+        if (!modalBody) return;
 
-                // Masque le texte d'upload
-                placeholder.classList.add('d-none');
+        const blocDates = modalBody.querySelector('.blocDates');
 
-                // Affiche le bouton supprimer
-                removeBtn.classList.remove('d-none');
+        if (!blocDates) return;
 
-                // Change la bordure pour indiquer le succès
-                dropZone.classList.remove('border-dashed');
-                dropZone.classList.add('border-primary');
-            }
+        blocDates.classList.toggle('d-none', !e.target.checked);
 
-            reader.readAsDataURL(input.files[0]);
-        }
-    }
-
-    function removeImage() {
-        const input = document.getElementById('input-image');
-        const preview = document.getElementById('image-preview');
-        const placeholder = document.getElementById('upload-placeholder');
-        const removeBtn = document.getElementById('remove-btn');
-        const dropZone = document.getElementById('drop-zone');
-
-        // Reset de l'input
-        input.value = '';
-
-        // Masque l'image et le bouton
-        preview.src = '#';
-        preview.classList.add('d-none');
-        removeBtn.classList.add('d-none');
-
-        // Réaffiche le placeholder
-        placeholder.classList.remove('d-none');
-
-        // Remet le style par défaut
-        dropZone.classList.add('border-dashed');
-        dropZone.classList.remove('border-primary');
-    }
+    });
 </script>
+
 @endsection
 <!-- section js -->
 @section('extra-js')

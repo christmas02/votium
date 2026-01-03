@@ -1,44 +1,705 @@
 <?php
 
 namespace App\Http\Controllers\Business;
+
 use App\Http\Controllers\Controller;
+use App\Models\Campagne;
+use App\Services\SendMail;
+use App\Services\Setting;
+use App\Services\Files;
+use App\Services\CustomerService;
+use App\Services\CampagneService;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
+use App\Models\User;
+use App\Models\Customer;
+use App\Models\Etape;
+use PhpParser\Node\Stmt\TryCatch;
 
 class BusinessController extends Controller
 {
-    public function index(){
-        return view('business.index');
+    protected CustomerService $CustomerService;
+    protected CampagneService $CampagneService;
+    protected Setting $setting;
+    protected Files $files;
+
+    public function __construct(
+        CustomerService $CustomerService,
+        CampagneService $CampagneService,
+        Setting $setting,
+        Files $files
+    ) {
+        $this->CustomerService = $CustomerService;
+        $this->CampagneService = $CampagneService;
+        $this->setting = $setting;
+        $this->files = $files;
     }
 
-    #Paramètres du profil
-    public function parametreCompte(){
-        $title_back = "Tableau de bord";
-        $link_back = "parametre_compte";
-        $title = "Paramètres du compte";
-        return view('business.detailCustomer', compact('title','title_back','link_back'));
+    #DASHBOARD
+    public function index()
+    {
+        try {
+            $title_back = "Tableau de bord";
+            $link_back = "back_office_business";
+            $title = "Espace Business";
+            return view('business.index', compact('title', 'title_back', 'link_back'));
+        } catch (\Exception $e) {
+            return redirect()->route('business.espace')->with('error', 'Une erreur est survenue, veuillez réessayer plus tard.');
+        }
     }
 
-     #CANDIDATS
-    public function listCandidat(){
+    #PARAMÈTRE COMPTE
+    public function profile()
+    {
+        try {
+            $title_back = "Tableau de bord";
+            $link_back = "back_office_business";
+            $title = "Paramètre du compte";
+            $user = auth()->user();
+
+            $customer = $this->CustomerService->Customer($user->user_id);
+            return view('business.profile', compact('title', 'title_back', 'link_back', 'user', 'customer'));
+        } catch (\Exception $e) {
+            return redirect()->route('back_office_business')->with('error', 'Une erreur est survenue, veuillez réessayer plus tard.');
+        }
+    }
+
+    #UPDATE PROFILE
+    public function updateProfile(Request $request)
+    {
+        try {
+            // dd($request->all());
+
+            // Mise à jour du mot de passe si fourni
+            if ($request->filled('password')) {
+                $password = $this->setting->hashPassword($request->password);
+            }
+            $data = [
+                'user_id' => $request->user_id,
+                'name' => $request->name,
+                'phonenumber' => $request->phonenumber,
+                'email' => $request->email,
+                'password' => $password,
+            ];
+
+            $saved = $this->CustomerService->UpdateAccountCustomer($data);
+
+            if (!$saved) {
+                return redirect()->back()->withInput()->with('error', 'Erreur lors de la mise à jour du profil.');
+            }
+            return redirect()->route('profile')->with('success', 'Profil mis à jour avec succès !');
+        } catch (\Exception $th) {
+            Log::error("Erreur lors de la mise à jour du profil : " . $th->getMessage(), [
+                'stack_trace' => $th->getTraceAsString(),
+            ]);
+            return redirect()->back()->with('error', 'Erreur lors de la mise à jour du profil : ' . $th->getMessage());
+        }
+    }
+
+    #UPDATE CUSTOMER
+    public function updateCustomer(Request $request)
+    {
+        try {
+            // dd($request->all());
+            #Transfert et upload du fichier logo
+            if ($request->hasFile('logo')) {
+                if ($request->old_logo && $request->old_logo !== "default_logo.png") {
+                    Files::deleteFile($request->old_logo);
+                }
+                $name_file = Files::uploadFile($request->logo);
+            } else {
+                $name_file = "default_logo.png";
+            }
+
+
+            // Formatage des données
+            $dateCustomer = [
+                'customer_id' => $request->customer_id,
+                'entreprise' => $request->entreprise,
+                'user_id' => $request->user_id,
+                'email_customer' => $request->email,
+                'phonenumber_customer' => $request->phonenumber,
+                'pays_siege' => $request->pays_siege,
+                'adresse' => $request->adresse,
+                'logo' => $name_file,
+                'link_website' => $request->link_website,
+                'link_facebook' => $request->link_facebook,
+                'link_instagram' => $request->link_instagram,
+                'link_linkedin' => $request->link_linkedin,
+                'link_youtube' => $request->link_youtube,
+                'link_tiktok' => $request->link_tiktok,
+                'is_active' => false,
+            ];
+
+            // Sauvegarde des données via le service
+            $saved = $this->CustomerService->createNewCustomer($dateCustomer);
+            //Vérification simple
+            if (!$saved) {
+                // Suppression du fichier uploadé en cas d'erreur
+                if (isset($name_file) && $name_file !== "default_logo.png") {
+                    Files::deleteFile($name_file);
+                };
+                return redirect()->back()->withInput()->with('error', 'Erreur lors de la mise à jour de l entreprise.');
+            }
+
+            return redirect()->route('list_customer')->with('success', 'Client et entreprise créés avec succès !');
+        } catch (\Exception $th) {
+            // Suppression du fichier uploadé en cas d'erreur
+            if (isset($name_file) && $name_file !== "default_logo.png") {
+                Files::deleteFile($name_file);
+            };
+            // Journaliser l'erreur
+            Log::error("Erreur lors de la mise à jour de l entreprise : " . $th->getMessage(), [
+                'request_data' => $request->except('password', 'logo'),
+                'stack_trace' => $th->getTraceAsString(),
+            ]);
+            return redirect()->back()->with('error', 'Erreur lors de la mise à jour de l entreprise : ' . $th->getMessage());
+        }
+    }
+
+    #CAMPAGNES
+    public function listCampagne()
+    {
+        try {
+            $title_back = "Tableau de bord";
+            $link_back = "list_campagne";
+            $title = "Liste des Campagnes";
+
+            $user = auth()->user();
+            $customer = $this->CustomerService->customerByIdUser($user->user_id);
+            $campagnes = $this->CampagneService->listCampagnesByCustomerId($customer->customer_id)->sortByDesc('created_at');
+
+            return view('business.listCampagnes', compact('title', 'title_back', 'link_back', 'campagnes', 'customer'));
+        } catch (\Exception $th) {
+            Log::error("Erreur lors de la récupération des campagnes : " . $th->getMessage(), [
+                'stack_trace' => $th->getTraceAsString(),
+            ]);
+            return redirect()->back()->with('error', 'Erreur lors de la récupération des campagnes : ' . $th->getMessage());
+        }
+    }
+
+    #SAVE CAMPAGNE
+    public function saveCampagne(Request $request)
+    {
+        #Pour garder trace des fichiers uploadés
+        $uploadedFiles = [];
+        try {
+            #Transfert et upload du fichier
+            $uploadedFiles['image_couverture'] = ($request->hasFile('image_couverture'))
+                ? Files::uploadFile($request->image_couverture)
+                : "default_image_couverture.jpg";
+
+            $uploadedFiles['condition_participation'] = ($request->hasFile('condition_participation'))
+                ? Files::uploadFile($request->condition_participation)
+                : "default_condition.pdf";
+
+            #Formatage des données
+            $dateCampagne = [
+                'campagne_id' => $this->setting->generateUuid(),
+                'customer_id' => $request->customer_id,
+                'name' => $request->name,
+                'description' => $request->description,
+                'image_couverture' => $uploadedFiles['image_couverture'],
+                'text_cover_isActive' => $request->text_cover_isActive ? 1 : 0,
+                'inscription_isActive' => $request->inscription_isActive ? 1 : 0,
+                'inscription_date_debut' => $request->inscription_date_debut,
+                'inscription_date_fin' => $request->inscription_date_fin,
+                'heure_debut_inscription' => $request->heure_debut_inscription,
+                'heure_fin_inscription' => $request->heure_fin_inscription,
+                'identifiants_personnalises_isActive' => $request->identifiants_personnalises_isActive ? 1 : 0,
+                'afficher_montant_pourcentage' => $request->afficher_montant_pourcentage,
+                'ordonner_candidats_votes_decroissants' => $request->ordonner_candidats_votes_decroissants ? 1 : 0,
+                'quantite_vote' => $request->quantite_vote,
+                'color_primaire' => $request->color_primaire,
+                'color_secondaire' => $request->color_secondaire,
+                'condition_participation' => $uploadedFiles['condition_participation'],
+                'is_active' => true,
+            ];
+
+            // Sauvegarde des données via le service
+            $saved = $this->CampagneService->saveNewCampagne($dateCampagne);
+
+            //Vérification simple
+            if ($saved) {
+                return redirect()
+                    ->back()
+                    ->with('success', 'Campagne créée avec succès !');
+            } else {
+                // Supprimer les fichiers si échec
+                foreach ($uploadedFiles as $filePath) {
+                    Files::deleteFile($filePath);
+                }
+                return redirect()
+                    ->back()
+                    ->withInput()
+                    ->with('error', 'Erreur lors de la création de la campagne.');
+            }
+        } catch (\Exception $th) {
+            //Suppression des fichiers uploadés
+            foreach ($uploadedFiles as $filePath) {
+                Files::deleteFile($filePath);
+            }
+            Log::error("Erreur lors de la création de la campagne : " . $th->getMessage(), [
+                'request_data' => $request->all(),
+                'stack_trace' => $th->getTraceAsString(),
+            ]);
+            return redirect()->back()->with('error', 'Erreur lors de la création de la campagne : ' . $th->getMessage());
+        }
+    }
+
+    #UPDATE CAMPAGNE
+    public function updateCampagne(Request $request)
+    {
+        #Pour garder trace des fichiers uploadés
+        $uploadedFiles = [];
+        try {
+            #Transfert et upload du fichier
+            if ($request->hasFile('image_couverture')) {
+                #Supprimer l'ancien fichier si différent du défaut
+                if ($request->old_image_couverture && $request->old_image_couverture !== "default_image_couverture.jpg") {
+                    Files::deleteFile($request->old_image_couverture);
+                }
+                $uploadedFiles['image_couverture'] = Files::uploadFile($request->image_couverture);
+            } else {
+                $uploadedFiles['image_couverture'] = $request->old_image_couverture;
+            }
+
+            if ($request->hasFile('condition_participation')) {
+                #Supprimer l'ancien fichier si différent du défaut
+                if ($request->old_condition_participation && $request->old_condition_participation !== "default_condition.pdf") {
+                    Files::deleteFile($request->old_condition_participation);
+                }
+                $uploadedFiles['condition_participation'] = Files::uploadFile($request->condition_participation);
+            } else {
+                $uploadedFiles['condition_participation'] = $request->old_condition_participation;
+            }
+
+            #Formatage des données
+            $dateCampagne = [
+                'campagne_id' => $request->campagne_id,
+                'customer_id' => $request->customer_id,
+                'name' => $request->name,
+                'description' => $request->description,
+                'image_couverture' => $uploadedFiles['image_couverture'],
+                'text_cover_isActive' => $request->text_cover_isActive ? 1 : 0,
+                'inscription_isActive' => $request->inscription_isActive ? 1 : 0,
+                'inscription_date_debut' => $request->inscription_date_debut,
+                'inscription_date_fin' => $request->inscription_date_fin,
+                'heure_debut_inscription' => $request->heure_debut_inscription,
+                'heure_fin_inscription' => $request->heure_fin_inscription,
+                'identifiants_personnalises_isActive' => $request->identifiants_personnalises_isActive ? 1 : 0,
+                'afficher_montant_pourcentage' => $request->afficher_montant_pourcentage,
+                'ordonner_candidats_votes_decroissants' => $request->ordonner_candidats_votes_decroissants ? 1 : 0,
+                'quantite_vote' => $request->quantite_vote,
+                'color_primaire' => $request->color_primaire,
+                'color_secondaire' => $request->color_secondaire,
+                'condition_participation' => $uploadedFiles['condition_participation'],
+                'is_active' => true,
+            ];
+            // dd($dateCampagne);
+            // Sauvegarde des données via le service
+            $saved = $this->CampagneService->updateExistingCampagne($dateCampagne);
+
+            //Vérification simple
+            if ($saved) {
+                return redirect()
+                    ->back()
+                    ->with('success', 'Campagne mise à jour avec succès !');
+            } else {
+                return redirect()
+                    ->back()
+                    ->withInput()
+                    ->with('error', 'Erreur lors de la mise à jour de la campagne.');
+            }
+        } catch (\Exception $th) {
+            Log::error("Erreur lors de la mise à jour de la campagne : " . $th->getMessage(), [
+                'request_data' => $request->all(),
+                'stack_trace' => $th->getTraceAsString(),
+            ]);
+            return redirect()->back()->with('error', 'Erreur lors de la mise à jour de la campagne : ' . $th->getMessage());
+        }
+    }
+
+    #DELETE CAMPAGNE
+    public function deleteCampagne(Request $request)
+    {
+        try {
+            dd($request->all());
+            $campagne_id = $request->input('campagne_id');
+
+            // Trouver le campagne
+            $campagne = Campagne::where('campagne_id', $campagne_id)->first();
+
+            if (!$campagne) {
+                return redirect()->back()->with('error', 'Campagne non trouvée.');
+            }
+
+            // Mettre is_active à false
+            $campagne->update(['is_active' => false]);
+            return redirect()->back()->with('success', 'Campagne supprimée avec succès !');
+        } catch (\Exception $th) {
+            Log::error("Erreur lors de la suppression du campagne : " . $th->getMessage(), [
+                'request_data' => $request->all(),
+                'stack_trace' => $th->getTraceAsString(),
+            ]);
+            return redirect()->back()->with('error', 'Erreur lors de la suppression de la campagne : ' . $th->getMessage());
+        }
+    }
+
+    #DETAIL CAMPAGNE
+    public function detailCampagne($idCampagne)
+    {
+        try {
+            $campagne = $this->CampagneService->detailCampagne($idCampagne);
+            $customer = $this->CustomerService->Customer($campagne->customer_id);
+            if (!$campagne) {
+                return redirect()->back()->with('error', 'Campagne non trouvée.');
+            }
+            $title_back = "Tableau de bord";
+            $link_back = "detail_campagne";
+            $title = $campagne->name;
+            return view('business.detailCampagne', compact('title', 'title_back', 'link_back', 'campagne', 'customer'));
+        } catch (\Exception $th) {
+            Log::error("Erreur lors de l'affichage de la detail page de la campagne : " . $th->getMessage(), [
+                'stack_trace' => $th->getTraceAsString(),
+            ]);
+            return redirect()->back()->with('error', 'Erreur lors de l\'affichage de la detail page de la campagne : ' . $th->getMessage());
+        }
+    }
+
+    #CATEGORIES CAMPAGNES
+    public function listCategorie($campagne_id)
+    {
+        try {
+            $title_back = "Tableau de bord";
+            $link_back = "list_categorie";
+            $title = "Liste des Catégories";
+
+            $categories = $this->CampagneService->listCategoriesByCampagneId($campagne_id);
+
+            return view('business.listCategoriesCampagne', compact('title', 'title_back', 'link_back', 'categories', 'campagne_id'));
+        } catch (\Exception $th) {
+            Log::error("Erreur lors de la récupération des catégories campagne : " . $th->getMessage(), [
+                'stack_trace' => $th->getTraceAsString(),
+            ]);
+            return redirect()->back()->with('error', 'Erreur lors de la récupération des catégories campagne : ' . $th->getMessage());
+        }
+    }
+    #SAVE CATEGORIE
+    public function saveCategorie(Request $request)
+    {
+        try {
+            // dd($request->all());
+
+            #Formatage des données
+            $dateCategorie = [
+                'category_id' => $this->setting->generateUuid(),
+                'campagne_id' => $request->campagne_id,
+                'name' => $request->name,
+                'description' => $request->description,
+                'icon' => $request->icon,
+                'is_active' => true,
+            ];
+
+            // Sauvegarde des données via le service
+            $saved = $this->CampagneService->saveNewCategory($dateCategorie);
+
+            //Vérification simple
+            if ($saved) {
+                return redirect()
+                    ->back()
+                    ->with('success', 'Catégorie créée avec succès !');
+            } else {
+                return redirect()
+                    ->back()
+                    ->withInput()
+                    ->with('error', 'Erreur lors de la création de la catégorie.');
+            }
+        } catch (\Exception $th) {
+            Log::error("Erreur lors de la création de la catégorie : " . $th->getMessage(), [
+                'request_data' => $request->all(),
+                'stack_trace' => $th->getTraceAsString(),
+            ]);
+            return redirect()->back()->with('error', 'Erreur lors de la création de la catégorie : ' . $th->getMessage());
+        }
+    }
+    #UPDATE CATEGORIE
+    public function updateCategorie(Request $request)
+    {
+        try {
+            // dd($request->all());
+
+            #Formatage des données
+            $dateCategorie = [
+                'category_id' => $request->category_id,
+                'campagne_id' => $request->campagne_id,
+                'name' => $request->name,
+                'description' => $request->description,
+                'icon' => $request->icon,
+                'is_active' => true,
+            ];
+
+            // Sauvegarde des données via le service
+            $saved = $this->CampagneService->updateCategory($dateCategorie);
+
+            //Vérification simple
+            if ($saved) {
+                return redirect()
+                    ->back()
+                    ->with('success', 'Catégorie mise à jour avec succès !');
+            } else {
+                return redirect()
+                    ->back()
+                    ->withInput()
+                    ->with('error', 'Erreur lors de la mise à jour de la catégorie.');
+            }
+        } catch (\Exception $th) {
+            Log::error("Erreur lors de la mise à jour de la catégorie : " . $th->getMessage(), [
+                'request_data' => $request->all(),
+                'stack_trace' => $th->getTraceAsString(),
+            ]);
+            return redirect()->back()->with('error', 'Erreur lors de la mise à jour de la catégorie : ' . $th->getMessage());
+        }
+    }
+
+    #DELETE CATEGORIE
+    public function deleteCategorie(Request $request)
+    {
+        try {
+            // dd($request->all());
+            $category_id = $request->input('category_id');
+
+            // Trouver le categorie
+            $categorie = $this->CampagneService->detailCategory($category_id);
+            if (!$categorie) {
+                return redirect()->back()->with('error', 'Catégorie non trouvée.');
+            }
+
+            return redirect()->back()->with('success', 'Catégorie supprimée avec succès !');
+        } catch (\Exception $th) {
+            Log::error("Erreur lors de la suppression de la catégorie : " . $th->getMessage(), [
+                'request_data' => $request->all(),
+                'stack_trace' => $th->getTraceAsString(),
+            ]);
+            return redirect()->back()->with('error', 'Erreur lors de la suppression de la catégorie : ' . $th->getMessage());
+        }
+    }
+
+    #ETAPES CAMPAGNES
+    public function listEtape($customer_id)
+    {
+        try {
+            // dd($customer_id);
+            $title_back = "Tableau de bord";
+            $link_back = "list_etape";
+            $title = "Liste des Étapes";
+
+            // $etapes = $this->CampagneService->listEtapesByCampagneId($campagne_id);
+            // dd($etapes);
+            $campagnes = $this->CampagneService->listCampagnesByCustomerId($customer_id);
+
+            return view('business.listEtapesCampagne', compact('title', 'title_back', 'link_back', 'campagnes', 'customer_id'));
+        } catch (\Exception $th) {
+            Log::error("Erreur lors de la récupération des étapes : " . $th->getMessage(), [
+                'stack_trace' => $th->getTraceAsString(),
+            ]);
+            return redirect()->back()->with('error', 'Erreur lors de la récupération des étapes : ' . $th->getMessage());
+        }
+    }
+
+    #RECHERCHE ETAPE CAMPAGNE
+    public function rechercheEtapeCampagne($campagne_id)
+    {
+        try {
+
+            $etapes = $this->CampagneService->listEtapesByCampagneId($campagne_id);
+            return response()->json($etapes);
+        } catch (\Exception $th) {
+            Log::error("Erreur lors de la recherche des étapes : " . $th->getMessage(), [
+                'stack_trace' => $th->getTraceAsString(),
+            ]);
+            return response()->json(['error' => 'Erreur lors de la recherche des étapes'], 500);
+        }
+    }
+
+    #SAVE ETAPE
+    public function saveEtape(Request $request)
+    {
+        try {
+            // dd($request->all());
+
+            $packages = collect($request->packages ?? [])
+                ->filter(fn($p) => isset($p['votes'], $p['montant']) && is_numeric($p['votes']) && is_numeric($p['montant']))
+                ->map(fn($p) => [
+                    'vote'    => (int) $p['votes'],
+                    'montant' => (int) $p['montant'],
+                ])
+                ->values()
+                ->toArray();
+
+            $packagesJson = json_encode($packages);
+
+            #Formatage des données
+            $dateEtape = [
+                'etape_id'     => $this->setting->generateUuid(),
+                'campagne_id'  => $request->campagne_id,
+                'name'         => $request->name,
+                'date_debut'   => $request->date_debut,
+                'heure_debut'  => $request->heure_debut,
+                'date_fin'     => $request->date_fin,
+                'heure_fin'    => $request->heure_fin,
+                'description' => $request->description,
+                'type_eligibility' => $request->type_eligibility ?? null,
+                'seuil_selection' => $request->seuil_selection ?? null,
+                'reinitialisation' => $request->reinitialisation ? 1 : 0,
+                'prix_vote'    => $request->prix_vote,
+                'package'     => $packagesJson,
+                'is_active'    => true,
+            ];
+
+            // Sauvegarde des données via le service
+            $saved = $this->CampagneService->saveNewEtape($dateEtape);
+
+            //Vérification simple
+            if ($saved) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Étape créée avec succès !'
+                ], 200);
+            } else {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Erreur lors de la création de l\'étape en base de données.'
+                ], 500);
+            }
+        } catch (\Exception $th) {
+            Log::error("Erreur lors de la création de l étape : " . $th->getMessage(), [
+                'request_data' => $request->all(),
+                'stack_trace' => $th->getTraceAsString(),
+            ]);
+            return response()->json([
+                'success' => false,
+                'message' => 'Erreur technique : ' . $th->getMessage()
+            ], 500);
+        }
+    }
+
+    #UPDATE ETAPE
+    public function updateEtape(Request $request)
+    {
+        try {
+            // dd($request->all());
+
+            $packages = collect($request->packages ?? [])
+                ->filter(fn($p) => isset($p['votes'], $p['montant']) && is_numeric($p['votes']) && is_numeric($p['montant']))
+                ->map(fn($p) => [
+                    'vote'    => (int) $p['votes'],
+                    'montant' => (int) $p['montant'],
+                ])
+                ->values()
+                ->toArray();
+
+            $packagesJson = json_encode($packages);
+
+            // Préparation des données pour l'update
+            $dataUpdate = [
+                'etape_id'     => $request->etape_id,
+                'campagne_id'  => $request->campagne_id,
+                'name'             => $request->name,
+                'date_debut'       => $request->date_debut,
+                'heure_debut'      => $request->heure_debut,
+                'date_fin'         => $request->date_fin,
+                'heure_fin'        => $request->heure_fin,
+                'description'      => $request->description,
+                'prix_vote'        => $request->prix_vote,
+                'package'          => $packagesJson,
+                'type_eligibility' => $request->type_eligibility ?? null,
+                'seuil_selection' => $request->seuil_selection ?? null,
+                'reinitialisation' => $request->reinitialisation ? 1 : 0,
+            ];
+            // dd($dataUpdate);
+
+            $updated = $this->CampagneService->updateEtape($dataUpdate);
+
+            if ($updated) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Étape mise à jour avec succès !'
+                ], 200);
+            }
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Aucune modification effectuée ou étape introuvable.'
+            ], 500);
+        } catch (\Exception $th) {
+            Log::error("Erreur lors de la mise à jour de l étape : " . $th->getMessage(), [
+                'request_data' => $request->all(),
+                'stack_trace' => $th->getTraceAsString(),
+            ]);
+            return response()->json([
+                'success' => false,
+                'message' => 'Erreur technique : ' . $th->getMessage()
+            ], 500);
+        }
+    }
+
+    #DELETE ETAPE
+    public function deleteEtape($etape_id)
+    {
+        try {
+            dd($etape_id);
+            // Suppression via votre service ou Eloquent
+            $deleted = $this->CampagneService->deleteEtape($etape_id);
+
+            if ($deleted) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'L\'étape a été supprimée avec succès.'
+                ], 200);
+            }
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Impossible de supprimer cette étape.'
+            ], 500);
+        } catch (\Exception $e) {
+            Log::error("Erreur Delete Etape : " . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'Erreur technique : ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    #CANDIDATS
+    public function listCandidat()
+    {
         $title_back = "Tableau de bord";
         $link_back = "list_candidat";
         $title = "Liste candidats";
-        return view('business.listCandidats', compact('title','title_back','link_back'));
+        return view('business.listCandidats', compact('title', 'title_back', 'link_back'));
     }
 
     #VOTES
-    public function listVote(){
+    public function listVote()
+    {
         $title_back = "Tableau de bord";
         $link_back = "list_vote";
         $title = "Liste votes";
-        return view('business.listVotes', compact('title','title_back','link_back'));
+        return view('business.listVotes', compact('title', 'title_back', 'link_back'));
     }
 
     #RETRAITS
-    public function listRetrait(){
+    public function listRetrait()
+    {
         $title_back = "Tableau de bord";
         $link_back = "list_retrait";
         $title = "Liste retraits";
-        return view('business.listRetraits', compact('title','title_back','link_back'));
+        return view('business.listRetraits', compact('title', 'title_back', 'link_back'));
     }
-    
 }
