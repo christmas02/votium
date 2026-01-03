@@ -13,10 +13,9 @@ class CandidatRepository
     {
         try {
             $candidat = new Candidat;
-            $candidat->nom = $dataCandidat['nom'];
-            $candidat->prenom = $dataCandidat['prenom'];
+            $candidat->name = $dataCandidat['name'];
             $candidat->email = $dataCandidat['email'];
-            $candidat->telephone = $dataCandidat['telephone'];
+            $candidat->phonenumber = $dataCandidat['telephone'];
             $candidat->sexe = $dataCandidat['sexe'];
             $candidat->date_naissance = $dataCandidat['date_naissance'];
             $candidat->ville = $dataCandidat['ville'];
