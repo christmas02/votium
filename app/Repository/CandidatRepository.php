@@ -13,6 +13,7 @@ class CandidatRepository
     {
         try {
             $candidat = new Candidat;
+            $candidat->campagne_id = $dataCandidat['campagne_id'];
             $candidat->name = $dataCandidat['name'];
             $candidat->email = $dataCandidat['email'];
             $candidat->phonenumber = $dataCandidat['telephone'];
@@ -38,8 +39,7 @@ class CandidatRepository
         try {
             $candidat = Candidat::where('candidat_id', $dataCandidat['candidat_id'])->first();
             // TO DO UPDATE CANDIDAT INFO
-            $candidat->nom = $dataCandidat['nom'];
-            $candidat->prenom = $dataCandidat['prenom'];
+            $candidat->name = $dataCandidat['name'];
             $candidat->email = $dataCandidat['email'];
             $candidat->telephone = $dataCandidat['telephone'];
             $candidat->sexe = $dataCandidat['sexe'];
