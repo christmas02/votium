@@ -31,37 +31,75 @@ Route::controller(AuthController::class)->group(function () {
 
 
 Route::group(['middleware' => 'auth'], function () {
-    Route::controller(ConsoleController::class)->group(function () {
-        Route::get('back_office_console', 'index')->name('back_office_console');
-        
-        // ROUTES PROFILE
-        Route::get('profile', 'profile')->name('profile');
-        Route::post('update_profile', 'updateProfile')->name('update_profile');
+   
+    Route::prefix('console')
+        ->name('console.')
+        ->controller(ConsoleController::class)
+        ->group(function () {
+            Route::get('espace', 'index')->name('espace');
 
-        // ROUTES CUSTOMERS
-        Route::get('list_customer', 'listCustomer')->name('list_customer');
-        Route::post('save_customer', 'saveCustomer')->name('save_customer');
-        Route::delete('delete_customer', 'deleteCustomer')->name('delete_customer');
-        Route::get('detail_customer/{idcustomer}', 'detailCustomer')->name('detail_customer');
-        Route::get('editpassword_customer/{email}', 'editpasswordCustomer')->name('editpassword_customer');
-        Route::post('updatepassword_customer', 'updatePasswordCustomer')->name('updatepassword_customer');
+            // ROUTES PROFILE
+            Route::get('profile', 'profile')->name('profile');
+            Route::post('update_profile', 'updateProfile')->name('update_profile');
+
+            // ROUTES CUSTOMERS
+            Route::get('list_customer', 'listCustomer')->name('list_customer');
+            Route::post('save_customer', 'saveCustomer')->name('save_customer');
+            Route::delete('delete_customer', 'deleteCustomer')->name('delete_customer');
+            Route::get('detail_customer/{idcustomer}', 'detailCustomer')->name('detail_customer');
+            Route::get('editpassword_customer/{email}', 'editpasswordCustomer')->name('editpassword_customer');
+            Route::post('updatepassword_customer', 'updatePasswordCustomer')->name('updatepassword_customer');
+
+            //ROUTES CAMPAGNES
+            Route::get('list_campagne', 'listCampagne')->name('list_campagne');
+            Route::get('detail_campagne/{idCampagne}', 'detailCampagne')->name('detail_campagne');
+            Route::post('save_campagne', 'saveCampagne')->name('save_campagne');
+            Route::post('update_campagne', 'updateCampagne')->name('update_campagne');
+            Route::delete('delete_campagne', 'deleteCampagne')->name('delete_campagne');
+        });
 
 
+    Route::prefix('business')
+        ->name('business.')
+        ->controller(BusinessController::class)
+        ->group(function () {
 
+            Route::get('espace', 'index')->name('espace');
 
-        //ROUTES CAMPAGNES
-        Route::get('list_campagne', 'listCampagne')->name('list_campagne');
-        Route::get('detail_campagne/{idCampagne}', 'detailCampagne')->name('detail_campagne');
-        Route::post('save_campagne', 'saveCampagne')->name('save_campagne');
-        Route::post('update_campagne', 'updateCampagne')->name('update_campagne');
-        Route::delete('delete_campagne', 'deleteCampagne')->name('delete_campagne');
-    });
+            # ROUTES PROFILE
+            Route::get('profile', 'profile')->name('profile');
+            Route::post('update_profile', 'updateProfile')->name('update_profile');
 
-    Route::controller(BusinessController::class)->group(function () {
-        Route::get('back_office_business', 'index')->name('back_office_business');
-        Route::get('parametre_compte', 'parametreCompte')->name('parametre_compte');
-        Route::get('list_candidat', 'listCandidat')->name('list_candidat');
-        Route::get('list_vote', 'listVote')->name('list_vote');
-        Route::get('list_retrait', 'listRetrait')->name('list_retrait');
-    });
+            # ROUTES CUSTOMERS
+            Route::post('update_customer', 'updateCustomer')->name('update_customer');
+
+            #ROUTES CAMPAGNES
+            Route::get('list_campagne', 'listCampagne')->name('list_campagne');
+            Route::get('detail_campagne/{idCampagne}', 'detailCampagne')->name('detail_campagne');
+            Route::post('save_campagne', 'saveCampagne')->name('save_campagne');
+            Route::post('update_campagne', 'updateCampagne')->name('update_campagne');
+            Route::delete('delete_campagne', 'deleteCampagne')->name('delete_campagne');
+
+            #ROUTES CATEGORIES CAMPAGNES
+            Route::get('list_categorie/{campagne_id}', 'listCategorie')->name('list_categorie');
+            Route::post('save_categorie', 'saveCategorie')->name('save_categorie');
+            Route::post('update_categorie', 'updateCategorie')->name('update_categorie');
+            Route::delete('delete_categorie', 'deleteCategorie')->name('delete_categorie');
+
+            #ROUTES ETAPES CAMPAGNES
+            Route::get('list_etape/{customer_id}', 'listEtape')->name('list_etape');
+            Route::get('recherche_etape_campagne/{etape_id}', 'rechercheEtapeCampagne')->name('recherche_etape_campagne');
+            Route::post('save_etape', 'saveEtape')->name('save_etape');
+            Route::post('update_etape', 'updateEtape')->name('update_etape');
+            Route::delete('delete_etape/{etape_id}', 'deleteEtape')->name('delete_etape');
+
+            #ROUTES CANDIDATS
+            Route::get('list_candidat', 'listCandidat')->name('list_candidat');
+
+            #ROUTES VOTES
+            Route::get('list_vote', 'listVote')->name('list_vote');
+
+            #ROUTES RETRAITS
+            Route::get('list_retrait', 'listRetrait')->name('list_retrait');
+        });
 });

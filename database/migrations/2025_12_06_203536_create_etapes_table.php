@@ -14,8 +14,8 @@ class CreateEtapesTable extends Migration
     public function up()
     {
         Schema::create('etapes', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->uuid('etape_id')->primary();
+            $table->id();
+            $table->string('etape_id')->unique();
             $table->string('campagne_id');
             $table->string('name');
             $table->string('description');
@@ -23,10 +23,12 @@ class CreateEtapesTable extends Migration
             $table->date('date_fin');
             $table->time('heure_debut');
             $table->time('heure_fin');
-            $table->string('type_eligibility');
-            $table->string('seuil_selection');
+            $table->string('type_eligibility')->nullable();
+            $table->string('seuil_selection')->nullable();
             $table->string('prix_vote');
-            $table->string('renitialisation');
+            $table->string('package');
+            $table->string('renitialisation')->nullable();
+            $table->boolean('is_active')->default(true);
             $table->timestamps();
         });
     }

@@ -17,7 +17,7 @@ class AuthController  extends Controller
     public function login(Request $request)
     {
         try {
-            //dd($request->all());
+            // dd($request->all());
             $inputVal = $request->all();
 
             $this->validate($request, [
@@ -27,9 +27,9 @@ class AuthController  extends Controller
 
             if (auth()->attempt(array('email' => $inputVal['email'], 'password' => $inputVal['password']))) {
                 if (auth()->user()->role == "admin") {
-                    return redirect()->route('back_office_console');
+                    return redirect()->route('console.espace');
                 }elseif(auth()->user()->role == "customer"){
-                    return redirect()->route('back_office_business');
+                    return redirect()->route('business.espace');
                 }else{
                     return redirect()->route('screenLogin');
                 }

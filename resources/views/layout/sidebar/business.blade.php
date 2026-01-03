@@ -35,27 +35,29 @@
                 <li class="menu-title"><span>Navigations</span></li>
                 <li>
                     <ul>
-                        <li class="{{ request()->routeIs('back_office_business') ? 'active' : '' }}">
+                        <li class="{{ request()->routeIs('espace') ? 'active' : '' }}">
 
-                            <a href="{{ route('back_office_business') }}">
+                            <a href="{{ route('business.espace') }}">
                                 <i class="ti ti-dashboard"></i><span>Tableau de bord</span>
                             </a>
                         </li>
-                        <!-- <li>
-                            <a href=""><i class="ti ti-brand-campaignmonitor"></i><span>Campagnes</span></a>
-                        </li> -->
+                        <li class="{{ request()->routeIs('*_campagne') ? 'active' : '' }}">
+                            <a href="{{ route('business.list_campagne') }}">
+                                <i class="ti ti-brand-campaignmonitor"></i><span>Campagnes</span>
+                            </a>
+                        </li>
                         <li class="{{ request()->routeIs('*_candidat') ? 'active' : '' }}">
-                            <a href="{{ route('list_candidat') }}">
+                            <a href="{{ route('business.list_candidat') }}">
                                 <i class="ti ti-user-up"></i><span>Candidats</span>
                             </a>
                         </li>
                         <li class="{{ request()->routeIs('*_vote') ? 'active' : '' }}">
-                            <a href="{{ route('list_vote') }}">
+                            <a href="{{ route('business.list_vote') }}">
                                 <i class="ti ti-ticket"></i><span>Votes</span>
                             </a>
                         </li>
                         <li class="{{ request()->routeIs('*_retrait') ? 'active' : '' }}">
-                            <a href="{{ route('list_retrait') }}">
+                            <a href="{{ route('business.list_retrait') }}">
                                 <i class="ti ti-report-money"></i><span>Retraits</span>
                             </a>
                         </li>

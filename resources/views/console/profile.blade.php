@@ -59,7 +59,7 @@
                         </div>
                         <div class="card-body">
 
-                            <form action="{{ route('update_profile') }}" method="POST" enctype="multipart/form-data">
+                            <form action="{{ route('console.update_profile') }}" method="POST" enctype="multipart/form-data">
                                 @csrf
                                 <input type="hidden" name="user_id" value="{{ $user->user_id }}">
                                 <!-- SECTION 1 : INFORMATIONS UTILISATEUR (Compte de connexion) -->

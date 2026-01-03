@@ -47,7 +47,7 @@
                     <div class="row">
 
                         <div class="col-md-10 mx-auto">
-                            <form id="registrationForm" action="{{ route('updatepassword_customer') }}" class=" vh-100 d-flex justify-content-between flex-column p-4 pb-0" method="POST" enctype="multipart/form-data">
+                            <form id="registrationForm" action="{{ route('console.updatepassword_customer') }}" class=" vh-100 d-flex justify-content-between flex-column p-4 pb-0" method="POST" enctype="multipart/form-data">
                                 @csrf
                                 <input type="hidden" name="email" value="{{ $email }}">
                                 <div class="text-center mb-4 auth-logo">

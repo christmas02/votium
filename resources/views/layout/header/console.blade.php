@@ -148,7 +148,7 @@
                             </div>
 
                             <!-- Item-->
-                            <a href="{{ route('profile') }}" class="dropdown-item">
+                            <a href="{{ route('console.profile') }}" class="dropdown-item">
                                 <i class="ti ti-user-circle me-1 align-middle"></i>
                                 <span class="align-middle">Profile</span>
                             </a>
