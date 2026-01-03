@@ -19,7 +19,7 @@ class CreateWithdrawalAccountsTable extends Migration
             $table->string('account_name');
             $table->string('payment_methode');
             $table->string('payment_methode_icon');
-            $table->string('is_active');
+            $table->string('is_active')->default(true);
             $table->timestamps();
         });
     }

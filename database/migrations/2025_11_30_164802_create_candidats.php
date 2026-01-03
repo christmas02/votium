@@ -16,12 +16,17 @@ class CreateCandidats extends Migration
         Schema::create('candidats', function (Blueprint $table) {
             $table->uuid('candidat_id')->primary();
             $table->string('name');
-            $table->date('date_naissance');
-            $table->string('phonenumber');
             $table->string('email');
-            $table->string('categorie')->nullable();
-            $table->text('galerie');
-            $table->text('data');
+            $table->string('phonenumber');
+            $table->string('sexe');
+            $table->date('date_naissance');
+            $table->date('ville');
+            $table->date('pays');
+            $table->string('profession');
+            $table->text('photo');
+            $table->text('description');
+            $table->text('data')->nullable();
+            $table->string('is_active')->default(true);
             $table->timestamps();
         });
     }
