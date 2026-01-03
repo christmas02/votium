@@ -102,7 +102,43 @@
 
         <div class="col-xl-9">
             <div class="row bg-light js-candidat-table-body">
-                <!-- Les cartes des candidats seront chargées ici via AJAX -->
+                <div class="col-xxl-3 col-xl-4 col-md-6">
+                    <div class="card border shadow">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center justify-content-between mb-3">
+                                <div class="d-flex align-items-center">
+                                    <a href="#"
+                                        class="avatar avatar-xl flex-shrink-0 me-2">
+                                        <img src="assets/img/profiles/avatar-19.jpg" alt="img" class="rounded-1">
+                                    </a>
+                                    <div>
+                                        <h6 class="fs-14"><a href="#" class="fw-medium">Da Robertson</a></h6>
+                                        <p class="text-default mb-0">Num: 001</p>
+                                        <p class="text-default mb-0">Age: 36 ans</p>
+                                    </div>
+                                </div>
+                                <div class="dropdown table-action">
+                                    <a href="#" class="action-icon btn btn-icon btn-sm btn-outline-light shadow" data-bs-toggle="dropdown"
+                                        aria-expanded="false">
+                                        <i class="ti ti-dots-vertical"></i>
+                                    </a>
+                                    <div class="dropdown-menu dropdown-menu-right">
+                                        <a class="dropdown-item" href="#" data-bs-toggle="modal"
+                                            data-bs-target="#modal_edit_candidat"><i
+                                                class="ti ti-edit text-blue"></i> Modifier</a>
+                                        <a class="dropdown-item" href="#" data-bs-toggle="modal"
+                                            data-bs-target="#delete_contact"><i
+                                                class="ti ti-trash"></i> Supprimer</a>
+                                        <a class="dropdown-item" href="#"><i
+                                                class="ti ti-eye text-blue-light"></i> Voir</a>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
 
             </div>
         </div>
@@ -464,113 +500,147 @@
 <script>
     // Ce script centralise toute la logique jQuery pour la gestion des étapes de campagne
     $(document).ready(function() {
-    $.ajaxSetup({
-        headers: {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        }
-    });
 
-    // Écouter le changement sur n'importe lequel des 3 selects
-    $(document).on('change', '.js-select-campagne, .js-select-etape, .js-select-categorie', function() {
-        chargerCandidats();
-    });
 
-    function chargerCandidats() {
-        // Récupérer les valeurs des 3 filtres
-        const campagneId = $('.js-select-campagne').val();
-        const etapeId = $('.js-select-etape').val();
-        const categorieId = $('.js-select-categorie').val();
-
-        // On n'envoie la requête que si au moins la campagne est sélectionnée (ou selon votre logique)
-        if (!campagneId) return;
-
-        $('.js-candidat-table-body').html('<div class="col-12 text-center"><div class="spinner-border text-primary"></div></div>');
-
-        $.ajax({
-            url: `/business/recherche_candidat`, // URL plus générique
-            method: 'GET',
-            data: {
-                campagne_id: campagneId,
-                etape_id: etapeId,
-                category_id: categorieId
-            },
-            success: function(candidats) {
-                renderCandidatCards(candidats);
-            },
-            error: function() {
-                $('.js-candidat-table-body').html('<div class="col-12"><p class="text-danger text-center">Erreur de chargement des candidats.</p></div>');
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             }
         });
-    }
 
-    function renderCandidatCards(candidats) {
-        let html = '';
-        if (candidats.length === 0) {
-            html = '<div class="col-12"><p class="text-center bg-white p-4 shadow-sm">Aucun candidat trouvé pour ces critères.</p></div>';
-        } else {
-            candidats.forEach(candidat => {
-                const dataStr = encodeURIComponent(JSON.stringify(candidat));
-                // Utilisation d'une image par défaut si photo vide
-                const photoUrl = candidat.photo ? `{{ env('IMAGES_PATH') }}/${candidat.photo}` : 'assets/img/profiles/avatar-01.jpg';
-                
-                html += `
-                <div class="col-xxl-3 col-xl-4 col-md-6 mb-3">
-                    <div class="card border shadow-sm h-100">
+        //-- 1. SELECTION DE CAMPAGNE
+        $(document).on('change', '.js-select-campagne', function() {
+            const id = $(this).val();
+
+
+            // 3. REQUÊTE AJAX POUR RÉCUPÉRER LES ÉTAPES
+            $.ajax({
+                url: `/business/recherche_candidat/${id}`,
+                method: 'GET',
+                success: function(candidats) {
+                    renderEtapeTable(candidats);
+                },
+                error: function() {
+                    $('.js-candidat-table-body').html('<div class="col-xxl-12 col-xl-12 col-md-12"><p class="text-danger">Erreur de chargement.</p></div>');
+                }
+            });
+        });
+
+        // --- 2. FONCTION DE RENDU DU TABLEAU ---
+        function renderEtapeTable(candidats) {
+            let html = '';
+            if (candidats.length === 0) {
+                html = '<div class="col-xxl-12 col-xl-12 col-md-12"><p class="text-center">Aucun candidat trouvé.</p></div>';
+            } else {
+                candidats.forEach(candidat => {
+                    // On stocke l'objet entier en JSON dans un attribut data pour l'édition
+                    const candidatData = encodeURIComponent(JSON.stringify(candidat));
+                    html += `
+                    <div class="col-xxl-3 col-xl-4 col-md-6">
+                    <div class="card border shadow">
                         <div class="card-body">
                             <div class="d-flex align-items-center justify-content-between mb-3">
                                 <div class="d-flex align-items-center">
-                                    <div class="avatar avatar-xl flex-shrink-0 me-2">
-                                        <img src="${photoUrl}" alt="img" class="rounded-1 object-fit-cover w-100 h-100">
-                                    </div>
+                                    <a href="#"
+                                        class="avatar avatar-xl flex-shrink-0 me-2">
+                                        <img src="{{ env('IMAGES_PATH') }}/${candidat.photo}" alt="img" class="rounded-1">
+                                    </a>
                                     <div>
-                                        <h6 class="fs-14 mb-0"><a href="#" class="fw-medium text-dark">${candidat.nom} ${candidat.prenom}</a></h6>
-                                        <p class="text-muted mb-0 small">Num: 00${candidat.id}</p>
-                                        <p class="text-muted mb-0 small">${candidat.profession || ''}</p>
+                                        <h6 class="fs-14"><a href="#" class="fw-medium">${candidat.nom} ${candidat.prenom}</a></h6>
+                                        <p class="text-default mb-0">Num: 00${candidat.id}</p>
+                                        <p class="text-default mb-0">Date de naissance: ${candidat.date_naissance}</p>
                                     </div>
                                 </div>
-                                <div class="dropdown">
-                                    <a href="#" class="btn btn-icon btn-sm btn-outline-light" data-bs-toggle="dropdown">
+                                <div class="dropdown table-action">
+                                    <a href="#" class="action-icon btn btn-icon btn-sm btn-outline-light shadow" data-bs-toggle="dropdown"
+                                        aria-expanded="false">
                                         <i class="ti ti-dots-vertical"></i>
                                     </a>
-                                    <div class="dropdown-menu dropdown-menu-end">
-                                        <a class="dropdown-item js-btn-edit" href="javascript:void(0);" data-candidat="${dataStr}">
-                                            <i class="ti ti-edit text-blue me-1"></i> Modifier
-                                        </a>
-                                        <a class="dropdown-item js-btn-delete" href="javascript:void(0);" data-id="${candidat.candidat_id || candidat.id}">
-                                            <i class="ti ti-trash text-danger me-1"></i> Supprimer
-                                        </a>
+                                    <div class="dropdown-menu dropdown-menu-right">
+                                        <a class="dropdown-item js-btn-edit" data-candidat="${candidatData}"><i
+                                                class="ti ti-edit text-blue"></i> Modifier</a>
+                                        <a class="dropdown-item js-btn-delete" data-id="${candidat.candidat_id}"><i
+                                                class="ti ti-trash"></i> Supprimer</a>
+                                        <a class="dropdown-item" href="#"><i
+                                                class="ti ti-eye text-blue-light"></i> Voir</a>
                                     </div>
                                 </div>
                             </div>
+
                         </div>
+
                     </div>
-                </div>`;
-            });
+                </div>
+                `;
+                });
+            }
+            $('.js-candidat-table-body').html(html);
         }
-        $('.js-candidat-table-body').html(html);
-    }
 
-    // Gestion de l'édition (Remplissage de la modale)
-    $(document).on('click', '.js-btn-edit', function() {
-        const data = JSON.parse(decodeURIComponent($(this).data('candidat')));
-        const $modal = $('#modal_edit_candidat');
+        // --- 3. OUVERTURE MODAL ÉDITION ---
+        $(document).on('click', '.js-btn-edit', function() {
+            const data = JSON.parse(decodeURIComponent($(this).data('etape')));
+            const $modal = $('#modal_update_step');
 
-        // Remplissage des champs
-        $modal.find('input[name="nom"]').val(data.nom);
-        $modal.find('input[name="prenom"]').val(data.prenom);
-        $modal.find('select[name="sexe"]').val(data.sexe);
-        $modal.find('input[name="telephone"]').val(data.telephone);
-        $modal.find('input[name="email"]').val(data.email);
-        $modal.find('input[name="pays"]').val(data.pays);
-        $modal.find('input[name="ville"]').val(data.ville);
-        $modal.find('input[name="profession"]').val(data.profession);
-        $modal.find('select[name="campagne_id"]').val(data.campagne_id);
-        $modal.find('select[name="category_id"]').val(data.category_id);
-        $modal.find('select[name="etape_id"]').val(data.etape_id);
+            // Remplissage des champs du modal par leurs noms
+            $modal.find('input[name="candidat_id"]').val(data.candidat_id);
+           
 
-        $modal.modal('show');
+            // Remplissage des packages
+            renderUpdatePackages(data.package, $modal);
+
+            $modal.modal('show');
+        });
+
+        // --- 4. OUVERTURE MODAL SUPPRESSION ---
+        $(document).on('click', '.js-btn-delete', function() {
+            const id = $(this).data('id');
+            const $modal = $('#modal_delete_step');
+            $modal.find('.js-confirm-delete').attr('data-id', id);
+            $modal.modal('show');
+        });
+
+        // --- 5. ACTION SUPPRIMER ---
+        $(document).on('click', '.js-confirm-delete', function() {
+            const id = $(this).data('id');
+            const $btn = $(this);
+
+            // Désactiver le bouton pendant le chargement
+            $btn.prop('disabled', true).html('<span class="spinner-border spinner-border-sm"></span>...');
+
+            $.ajax({
+                url: `/business/delete_etape/${id}`,
+                method: 'POST',
+                data: {
+                    _method: 'DELETE',
+                    _token: $('meta[name="csrf-token"]').attr('content')
+                },
+                success: function(response) {
+                    $('#modal_delete_step').modal('hide');
+
+                    if (response.success) {
+                        showAjaxAlert('success', response.message);
+                    }
+
+                    // Rafraîchir le tableau
+                    $('.js-select-campagne').trigger('change');
+                },
+                error: function(xhr) {
+                    $('#modal_delete_step').modal('hide');
+                    let msg = "Erreur lors de la suppression.";
+                    if (xhr.responseJSON && xhr.responseJSON.message) {
+                        msg = xhr.responseJSON.message;
+                    }
+                    showAjaxAlert('danger', msg);
+                },
+                complete: function() {
+                    // Réinitialiser le bouton
+                    $btn.prop('disabled', false).text('Supprimer');
+                }
+            });
+        });
+
     });
-});
 </script>
 @endsection
 <!-- section js -->

@@ -18,23 +18,27 @@ use Illuminate\Support\Facades\Hash;
 use App\Models\User;
 use App\Models\Customer;
 use App\Models\Etape;
+use App\Services\CandidatureService;
 use PhpParser\Node\Stmt\TryCatch;
 
 class BusinessController extends Controller
 {
     protected CustomerService $CustomerService;
     protected CampagneService $CampagneService;
+    protected CandidatureService $CandidatureService;
     protected Setting $setting;
     protected Files $files;
 
     public function __construct(
         CustomerService $CustomerService,
         CampagneService $CampagneService,
+        CandidatureService $CandidatureService,
         Setting $setting,
         Files $files
     ) {
         $this->CustomerService = $CustomerService;
         $this->CampagneService = $CampagneService;
+        $this->CandidatureService = $CandidatureService;
         $this->setting = $setting;
         $this->files = $files;
     }
@@ -679,12 +683,183 @@ class BusinessController extends Controller
     #CANDIDATS
     public function listCandidat()
     {
-        $title_back = "Tableau de bord";
-        $link_back = "list_candidat";
-        $title = "Liste candidats";
-        return view('business.listCandidats', compact('title', 'title_back', 'link_back'));
+        try {
+            $title_back = "Tableau de bord";
+            $link_back = "list_candidat";
+            $title = "Liste des Candidats";
+
+            $user = auth()->user();
+            $customer = $this->CustomerService->customerByIdUser($user->user_id);
+
+            $campagnes = $this->CampagneService->listCampagnesByCustomerId($customer->customer_id);
+
+            $etapes = collect();
+            foreach ($campagnes as $campagne) {
+                $etapesForCampagne = $this->CampagneService->listEtapesByCampagneId($campagne->campagne_id);
+                $etapes = $etapes->merge($etapesForCampagne);
+            }
+
+            $categories = collect();
+            foreach ($campagnes as $campagne) {
+                $categoriesForCampagne = $this->CampagneService->listCategoriesByCampagneId($campagne->campagne_id);
+                $categories = $categories->merge($categoriesForCampagne);
+            }
+
+            return view('business.listCandidats', compact('title', 'title_back', 'link_back', 'campagnes', 'etapes', 'categories'));
+        } catch (\Exception $th) {
+            Log::error("Erreur lors de la récupération des candidats : " . $th->getMessage(), [
+                'stack_trace' => $th->getTraceAsString(),
+            ]);
+            return redirect()->back()->with('error', 'Erreur lors de la récupération des candidats : ' . $th->getMessage());
+        }
     }
 
+    #RECHERCHE CANDIDAT
+    public function rechercheCandidat(Request $request)
+    {
+        try {
+
+            if ($request->has('campagne_id') && $request->campagne_id != '') {
+                $candidats = $this->CandidatureService->listCandidatForCampagne($request->campagne_id);
+            }
+            dd($candidats);
+            if ($request->has('category_id') && $request->category_id != '') {
+                $candidats = $this->CandidatureService->searchCandidatsByCategory($request->category_id);
+            }
+            if(!$request->has('etape_id') && !$request->etape_id != ''){
+                $candidats = $this->CandidatureService->listAllCandidats();
+            }
+
+            return response()->json($candidats);
+        } catch (\Exception $th) {
+            Log::error("Erreur lors de la recherche des étapes : " . $th->getMessage(), [
+                'stack_trace' => $th->getTraceAsString(),
+            ]);
+            return response()->json(['error' => 'Erreur lors de la recherche des étapes'], 500);
+        }
+    }
+
+    #SAVE CANDIDAT
+    public function saveCandidat(Request $request)
+    {
+        try {
+            // dd($request->all());
+
+            #Traitement de la photo
+            $name_file = ($request->hasFile('photo'))
+                ? Files::uploadFile($request->photo)
+                : "default_logo.png";
+
+            #Formatage des données
+            $dateCandidat = [
+                'candidat_id' => $this->setting->generateUuid(),
+                'campagne_id' => $request->campagne_id,
+                'etape_id' => $request->etape_id,
+                'category_id' => $request->category_id,
+                'nom' => $request->nom,
+                'prenom' => $request->prenom,
+                'sexe' => $request->sexe,
+                'date_naissance' => $request->date_naissance,
+                'profession' => $request->profession,
+                'telephone' => $request->telephone,
+                'email' => $request->email,
+                'photo' => $name_file,
+                'ville' => $request->ville,
+                'pays' => $request->pays,
+                'description' => $request->description,
+                'is_active' => true,
+            ];
+
+            // Sauvegarde des données via le service
+            $saved = $this->CandidatureService->newCandidat($dateCandidat);
+
+            //Vérification simple
+            if ($saved) {
+                return redirect()
+                    ->back()
+                    ->with('success', 'Candidat créé avec succès !');
+            } else {
+                return redirect()
+                    ->back()
+                    ->withInput()
+                    ->with('error', 'Erreur lors de la création du candidat.');
+            }
+        } catch (\Exception $th) {
+            Log::error("Erreur lors de la création du candidat : " . $th->getMessage(), [
+                'request_data' => $request->all(),
+                'stack_trace' => $th->getTraceAsString(),
+            ]);
+            return redirect()->back()->with('error', 'Erreur lors de la création du candidat : ' . $th->getMessage());
+        }
+    }
+
+    #UPDATE CANDIDAT
+    public function updateCandidat(Request $request)
+    {
+        try {
+            // dd($request->all());
+
+            #Traitement de la photo
+            if ($request->hasFile('photo')) {
+                #Supprimer l'ancien fichier si différent du défaut
+                if ($request->old_photo && $request->old_photo !== "default_logo.png") {
+                    Files::deleteFile($request->old_photo);
+                }
+                $name_file = Files::uploadFile($request->photo);
+            } else {
+                $name_file = $request->old_photo;
+            }
+
+            #Formatage des données
+            $dateCandidat = [
+                'candidat_id' => $request->candidat_id,
+                'campagne_id' => $request->campagne_id,
+                'etape_id' => $request->etape_id,
+                'category_id' => $request->category_id,
+                'nom' => $request->nom,
+                'prenom' => $request->prenom,
+                'sexe' => $request->sexe,
+                'date_naissance' => $request->date_naissance,
+                'profession' => $request->profession,
+                'telephone' => $request->telephone,
+                'email' => $request->email,
+                'photo' => $name_file,
+                'ville' => $request->ville,
+                'pays' => $request->pays,
+                'description' => $request->description,
+            ];
+
+            // Sauvegarde des données via le service
+            $saved = $this->CandidatureService->updateInfoCandidat($dateCandidat);
+
+            //Vérification simple
+            if ($saved) {
+                return redirect()
+                    ->back()
+                    ->with('success', 'Candidat mis à jour avec succès !');
+            } else {
+                return redirect()
+                    ->back()
+                    ->withInput()
+                    ->with('error', 'Erreur lors de la mise à jour du candidat.');
+            }
+        } catch (\Exception $th) {
+            Log::error("Erreur lors de la mise à jour du candidat : " . $th->getMessage(), [
+                'request_data' => $request->all(),
+                'stack_trace' => $th->getTraceAsString(),
+            ]);
+            return redirect()->back()->with('error', 'Erreur lors de la mise à jour du candidat : ' . $th->getMessage());
+        }
+    }
+
+    #DETAIL CANDIDAT
+    public function detailCandidat($idCandidat)
+    {
+        $title_back = "Tableau de bord";
+        $link_back = "detail_candidat";
+        $title = "Détail candidat";
+        return view('business.detailCandidat', compact('title', 'title_back', 'link_back', 'idCandidat'));
+    }
     #VOTES
     public function listVote()
     {

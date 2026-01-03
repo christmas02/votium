@@ -20,6 +20,7 @@ class DatabaseSeeder extends Seeder
             CampagnesSeeder::class,
             EtapeSeeder::class,
             CategoryCampagneSeeder::class,
+            CandidatSeeder::class,
         ]);
     }
 }

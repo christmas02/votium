@@ -95,6 +95,11 @@ Route::group(['middleware' => 'auth'], function () {
 
             #ROUTES CANDIDATS
             Route::get('list_candidat', 'listCandidat')->name('list_candidat');
+            Route::get('detail_candidat/{idCandidat}', 'detailCandidat')->name('detail_candidat');
+            Route::get('recherche_candidat', 'rechercheCandidat')->name('recherche_candidat');
+            Route::post('save_candidat', 'saveCandidat')->name('save_candidat');
+            Route::post('update_candidat', 'updateCandidat')->name('update_candidat');
+            Route::delete('delete_candidat', 'deleteCandidat')->name('delete_candidat');
 
             #ROUTES VOTES
             Route::get('list_vote', 'listVote')->name('list_vote');

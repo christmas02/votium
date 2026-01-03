@@ -15,6 +15,11 @@ class CreateCandidatEtapCategoryCampagnesTable extends Migration
     {
         Schema::create('candidat_etap_category_campagnes', function (Blueprint $table) {
             $table->id();
+            $table->string('candidat_id');
+            $table->string('campagne_id');
+            $table->string('etape_id');
+            $table->string('category_id');
+            $table->boolean('is_active')->default(true);
             $table->timestamps();
         });
     }

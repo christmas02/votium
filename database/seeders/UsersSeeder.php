@@ -35,7 +35,7 @@ class UsersSeeder extends Seeder
             ]);
         }
 
-        // 10 customers générés
+        // 10 customers générés customer1@exemple.com
         for ($i = 1; $i <= 10; $i++) {
             User::create([
                 'user_id' => (string) Str::uuid(),
