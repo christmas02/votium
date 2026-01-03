@@ -14,8 +14,7 @@ class CreateCampagnes extends Migration
     public function up()
     {
         Schema::create('campagnes', function (Blueprint $table) {
-            $table->id();
-            $table->string('campagne_id')->unique();
+            $table->uuid('campagne_id')->primary();
             $table->string('name');
             $table->longText('description');
             $table->string('image_couverture');

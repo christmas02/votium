@@ -14,21 +14,19 @@ class CreateCandidats extends Migration
     public function up()
     {
         Schema::create('candidats', function (Blueprint $table) {
-            $table->id();
-            $table->string('candidat_id')->unique();
-            $table->string('nom');
-            $table->string('prenom');
+            $table->uuid('candidat_id')->primary();
+            $table->string('name');
+            $table->string('email');
+            $table->string('phonenumber');
             $table->string('sexe');
-            $table->string('date_naissance');
+            $table->date('date_naissance');
+            $table->date('ville');
+            $table->date('pays');
             $table->string('profession');
-            $table->string('telephone');
-            $table->string('email')->unique();
-            $table->string('pays');
-            $table->string('ville');
-            $table->string('photo')->nullable();
+            $table->text('photo');
             $table->text('description');
             $table->text('data')->nullable();
-            $table->boolean('is_active')->default(true);
+            $table->string('is_active')->default(true);
             $table->timestamps();
         });
     }

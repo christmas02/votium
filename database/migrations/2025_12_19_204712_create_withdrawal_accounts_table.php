@@ -14,7 +14,12 @@ class CreateWithdrawalAccountsTable extends Migration
     public function up()
     {
         Schema::create('withdrawal_accounts', function (Blueprint $table) {
-            $table->id();
+            $table->uuid('withdrawal_account_id')->primary();
+            $table->string('phone_number');
+            $table->string('account_name');
+            $table->string('payment_methode');
+            $table->string('payment_methode_icon');
+            $table->string('is_active');
             $table->timestamps();
         });
     }

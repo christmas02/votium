@@ -756,8 +756,8 @@ class BusinessController extends Controller
                 'campagne_id' => $request->campagne_id,
                 'etape_id' => $request->etape_id,
                 'category_id' => $request->category_id,
-                'nom' => $request->nom,
-                'prenom' => $request->prenom,
+                'candidat_etap_id' => $this->setting->generateUuid(),
+                'name' => $request->name,
                 'sexe' => $request->sexe,
                 'date_naissance' => $request->date_naissance,
                 'profession' => $request->profession,
@@ -812,6 +812,7 @@ class BusinessController extends Controller
 
             #Formatage des données
             $dateCandidat = [
+                'candidat_etap_id' => $request->candidat_etap_id,
                 'candidat_id' => $request->candidat_id,
                 'campagne_id' => $request->campagne_id,
                 'etape_id' => $request->etape_id,

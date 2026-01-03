@@ -158,13 +158,8 @@
 
                         <!-- ================= IDENTITÉ ================= -->
                         <div class="col-md-12 mb-3">
-                            <label class="form-label">Nom <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control" name="nom" required>
-                        </div>
-
-                        <div class="col-md-12 mb-3">
-                            <label class="form-label">Prénom <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control" name="prenom" required>
+                            <label class="form-label">Nom complet<span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" name="name" required>
                         </div>
 
                         <div class="col-md-6 mb-3">
@@ -213,8 +208,9 @@
                             <label class="form-label">Campagne <span class="text-danger">*</span></label>
                             <select class="form-select" name="campagne_id" required>
                                 <option value="">Sélectionner une campagne</option>
-                                <option value="1">Campagne A</option>
-                                <option value="2">Campagne B</option>
+                                @foreach($campagnes as $campagne)
+                                <option value="{{ $campagne->campagne_id }}">{{ $campagne->name }}</option>
+                                @endforeach
                             </select>
                         </div>
 
@@ -222,8 +218,9 @@
                             <label class="form-label">Catégorie</label>
                             <select class="form-select" name="category_id">
                                 <option value="">Sélectionner</option>
-                                <option value="1">Catégorie A</option>
-                                <option value="2">Catégorie B</option>
+                                @foreach($categories as $category)
+                                <option value="{{ $category->category_id }}">{{ $category->name }}</option>
+                                @endforeach
                             </select>
                         </div>
 
@@ -231,8 +228,9 @@
                             <label class="form-label">Étape <span class="text-danger">*</span></label>
                             <select class="form-select" name="etape_id" required>
                                 <option value="">Sélectionner</option>
-                                <option value="1">Étape A</option>
-                                <option value="2">Étape B</option>
+                                @foreach($etapes as $etape)
+                                <option value="{{ $etape->etape_id }}">{{ $etape->name }}</option>
+                                @endforeach
                             </select>
                         </div>
 
