@@ -112,6 +112,7 @@ class CandidatRepository
     {
         try {
             $result = new CandidatEtapCategoryCampagne;
+            $result->candidat_etap_id = $data['candidat_etap_id'];
             $result->campagne_id = $data['campagne_id'];
             $result->candidat_id  = $data['candidat_id'];
             $result->etape_id = $data['etape_id']; // etape id obligatoire
