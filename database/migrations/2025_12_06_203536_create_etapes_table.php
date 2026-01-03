@@ -26,6 +26,8 @@ class CreateEtapesTable extends Migration
             $table->string('seuil_selection');
             $table->string('prix_vote');
             $table->string('renitialisation');
+            $table->string('package');
+            $table->string('is_active')->default(true);
             $table->timestamps();
         });
     }

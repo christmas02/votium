@@ -14,11 +14,11 @@ class CreateCategoryCampagnesTable extends Migration
     public function up()
     {
         Schema::create('category_campagnes', function (Blueprint $table) {
-            $table->uuid('category_campagne_id')->primary();
+            $table->uuid('category_id')->primary();
             $table->string('name');
-            $table->string('candidat_id');
-            $table->string('etape_id');
-            $table->string('category_id');
+            $table->string('campagne_id');
+            $table->string('description');
+            $table->string('icon');
             $table->string('is_active');
             $table->timestamps();
         });

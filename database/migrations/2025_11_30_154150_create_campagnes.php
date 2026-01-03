@@ -28,7 +28,7 @@ class CreateCampagnes extends Migration
             $table->string('identifiants_personnalises_isActive');
             $table->string('afficher_montant_pourcentage')->default('clair'); //clair,
             $table->string('ordonner_candidats_votes_decroissants');
-            $table->string('quantite_vote');
+            $table->string('quantite_vote')->nullable();
             $table->string('color_primaire');
             $table->string('color_secondaire');
             $table->string('condition_participation');
