@@ -13,7 +13,7 @@ class CandidatRepository
     {
         try {
             $candidat = new Candidat;
-            $candidat->campagne_id = $dataCandidat['campagne_id'];
+            $candidat->candidat_id = $dataCandidat['candidat_id'];
             $candidat->name = $dataCandidat['name'];
             $candidat->email = $dataCandidat['email'];
             $candidat->phonenumber = $dataCandidat['telephone'];
