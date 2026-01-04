@@ -21,7 +21,7 @@ class CampagnesSeeder extends Seeder
 
         $customerIds = Customer::pluck('customer_id')->toArray();
 
-        for ($i = 0; $i < 10; $i++) {
+        for ($i = 0; $i < 30; $i++) {
             DB::table('campagnes')->insert([
                 'campagne_id' => (string) Str::uuid(),
                 'name' => ucfirst($faker->words(3, true)),
