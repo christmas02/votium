@@ -77,6 +77,7 @@ class CustomerRepository
     {
         try {
             $account = new WithdrawalAccount();
+            $account->withdrawal_account_id = $dataWithdrawalAccount['withdrawal_account_id'];
             $account->customer_id = $dataWithdrawalAccount['customer_id'];
             $account->phone_number = $dataWithdrawalAccount['phone_number'];
             $account->account_name = $dataWithdrawalAccount['account_name'];
