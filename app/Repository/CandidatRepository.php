@@ -41,7 +41,7 @@ class CandidatRepository
             // TO DO UPDATE CANDIDAT INFO
             $candidat->name = $dataCandidat['name'];
             $candidat->email = $dataCandidat['email'];
-            $candidat->telephone = $dataCandidat['telephone'];
+            $candidat->phonenumber = $dataCandidat['telephone'];
             $candidat->sexe = $dataCandidat['sexe'];
             $candidat->date_naissance = $dataCandidat['date_naissance'];
             $candidat->ville = $dataCandidat['ville'];
