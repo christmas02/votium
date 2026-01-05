@@ -19,9 +19,9 @@ class CreateCandidats extends Migration
             $table->string('email');
             $table->string('phonenumber');
             $table->string('sexe');
-            $table->date('date_naissance');
-            $table->date('ville');
-            $table->date('pays');
+            $table->string('date_naissance');
+            $table->string('ville');
+            $table->string('pays');
             $table->string('profession');
             $table->text('photo');
             $table->text('description');

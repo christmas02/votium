@@ -66,6 +66,7 @@
                                 @csrf
                                 <div class="modal-body">
                                     <input type="hidden" name="user_id" value="{{ $user->user_id }}">
+                                    <input type="hidden" name="customer_id" value="{{ $customer->customer_id }}">
                                     <!-- SECTION 2 : INFORMATIONS ENTREPRISE -->
                                     <div>
                                         <h6 class="mb-3 d-flex align-items-center text-dark">
@@ -75,13 +76,18 @@
                                         <div class="row">
                                             <!-- Logo Upload avec Prévisualisation -->
                                             <div class="col-md-12 mb-3 image-upload-group">
-                                                <div class="d-flex align-items-center bg-light p-2 rounded">
-                                                    <!-- Zone de l'image -->
+                                                <div class="d-flex align-items-center bg-light p-2 rounded border {{ $customer->logo ? 'border-primary' : 'border-dashed' }}">
+
+                                                    <!-- Zone de l'image (L'avatar doit rester visible pour afficher soit l'icône, soit l'image) -->
                                                     <div class="avatar avatar-xl border border-dashed me-3 flex-shrink-0 d-flex justify-content-center align-items-center bg-light position-relative overflow-hidden">
-                                                        <!-- Placeholder -->
-                                                        <i class="ti ti-photo text-muted fs-4 placeholder-target"></i>
-                                                        <!-- Preview -->
-                                                        <img src="#" alt="Aperçu" class="preview-target d-none w-100 h-100 object-fit-cover">
+
+                                                        <!-- Placeholder : Caché si le logo existe -->
+                                                        <i class="ti ti-photo text-muted fs-4 placeholder-target {{ $customer->logo ? 'd-none' : '' }}"></i>
+
+                                                        <!-- Preview : Visible si le logo existe, src configuré avec le chemin env -->
+                                                        <img src="{{ $customer->logo ? asset(env('IMAGES_PATH').'/'.$customer->logo) : '#' }}"
+                                                            alt="Aperçu"
+                                                            class="preview-target {{ $customer->logo ? '' : 'd-none' }} w-100 h-100 object-fit-cover">
                                                     </div>
 
                                                     <div class="d-flex flex-column">
@@ -93,8 +99,10 @@
                                                             onchange="handleImagePreview(this)">
                                                         <small class="text-muted">JPG, GIF ou PNG. Max 800K</small>
 
-                                                        <!-- Bouton supprimer pour le logo (optionnel) -->
-                                                        <button type="button" class="btn btn-sm btn-link text-danger p-0 d-none remove-btn-target text-start" onclick="handleImageRemove(this)">
+                                                        <!-- Bouton supprimer : Visible uniquement si un logo existe -->
+                                                        <button type="button"
+                                                            class="btn btn-sm btn-link text-danger p-0 remove-btn-target text-start {{ $customer->logo ? '' : 'd-none' }}"
+                                                            onclick="handleImageRemove(this)">
                                                             Supprimer
                                                         </button>
                                                     </div>
@@ -104,39 +112,33 @@
                                             <!-- Nom Entreprise -->
                                             <div class="col-md-6 mb-3">
                                                 <label class="form-label">Nom de l'organisation <span class="text-danger">*</span></label>
-                                                <input type="text" class="form-control" name="entreprise" required>
+                                                <input type="text" class="form-control" name="entreprise" value="{{ $customer->entreprise }}" required>
                                             </div>
 
                                             <!-- Pays -->
                                             <div class="col-md-6 mb-4">
                                                 <label class="form-label">Pays siège <span class="text-danger">*</span></label>
-                                                <select class="select form-control form-select" name="pays_siege" required>
-                                                    <option value="">Sélectionner</option>
-                                                    <option value="France">France</option>
-                                                    <option value="Côte d'Ivoire">Côte d'Ivoire</option>
-                                                    <option value="Senegal">Sénégal</option>
-                                                    <option value="USA">USA</option>
-                                                    <option value="Canada">Canada</option>
-                                                </select>
+                                                <input type="text" class="form-control" name="pays_siege" value="{{ $customer->pays_siege }}" required>
+
                                             </div>
 
                                             <!-- NOUVEAU : Email de l'entreprise -->
                                             <div class="col-md-6 mb-3">
                                                 <label class="form-label">Email de l'organisation</label>
                                                 <!-- Nommé 'company_email' pour ne pas écraser l'email du User -->
-                                                <input type="email" class="form-control" name="email" placeholder="contact@entreprise.com">
+                                                <input type="email" class="form-control" name="email" value="{{$customer->email}}">
                                             </div>
 
                                             <!-- Téléphone -->
                                             <div class="col-md-6 mb-3">
                                                 <label class="form-label">Téléphone <span class="text-danger">*</span></label>
-                                                <input type="text" class="form-control phone" name="phonenumber" required>
+                                                <input type="text" class="form-control phone" name="phonenumber" value="{{ $customer->phonenumber }}" required>
                                             </div>
 
                                             <!-- Adresse -->
                                             <div class="col-md-12 mb-3">
                                                 <label class="form-label">Adresse <span class="text-danger">*</span></label>
-                                                <input type="text" class="form-control" name="adresse" placeholder="Siège social" required>
+                                                <input type="text" class="form-control" name="adresse" value="{{ $customer->adresse }}" required>
                                             </div>
                                         </div>
 
@@ -148,7 +150,7 @@
                                                 <div class="col-md-6 mb-3">
                                                     <div class="input-group">
                                                         <span class="input-group-text bg-light"><i class="ti ti-brand-facebook"></i></span>
-                                                        <input type="url" class="form-control" name="link_facebook" placeholder="Facebook URL">
+                                                        <input type="url" class="form-control" name="link_facebook" value="{{ $customer->link_facebook }}">
                                                     </div>
                                                 </div>
 
@@ -156,7 +158,7 @@
                                                 <div class="col-md-6 mb-3">
                                                     <div class="input-group">
                                                         <span class="input-group-text bg-light"><i class="ti ti-brand-instagram"></i></span>
-                                                        <input type="url" class="form-control" name="link_instagram" placeholder="Instagram URL">
+                                                        <input type="url" class="form-control" name="link_instagram" value="{{ $customer->link_instagram }}">
                                                     </div>
                                                 </div>
 
@@ -164,7 +166,7 @@
                                                 <div class="col-md-6 mb-3">
                                                     <div class="input-group">
                                                         <span class="input-group-text bg-light"><i class="ti ti-brand-linkedin"></i></span>
-                                                        <input type="url" class="form-control" name="link_linkedin" placeholder="LinkedIn URL">
+                                                        <input type="url" class="form-control" name="link_linkedin" value="{{ $customer->link_linkedin }}">
                                                     </div>
                                                 </div>
 
@@ -172,7 +174,7 @@
                                                 <div class="col-md-6 mb-3">
                                                     <div class="input-group">
                                                         <span class="input-group-text bg-light"><i class="ti ti-brand-youtube"></i></span>
-                                                        <input type="url" class="form-control" name="link_youtube" placeholder="Youtube URL">
+                                                        <input type="url" class="form-control" name="link_youtube" value="{{ $customer->link_youtube }}">
                                                     </div>
                                                 </div>
 
@@ -180,7 +182,7 @@
                                                 <div class="col-md-6 mb-3">
                                                     <div class="input-group">
                                                         <span class="input-group-text bg-light"><i class="ti ti-brand-tiktok"></i></span>
-                                                        <input type="url" class="form-control" name="link_tiktok" placeholder="Tiktok URL">
+                                                        <input type="url" class="form-control" name="link_tiktok" value="{{ $customer->link_tiktok }}">
                                                     </div>
                                                 </div>
 
@@ -188,7 +190,7 @@
                                                 <div class="col-md-6 mb-3">
                                                     <div class="input-group">
                                                         <span class="input-group-text bg-light"><i class="ti ti-brand-telegram"></i></span>
-                                                        <input type="url" class="form-control" name="link_website" placeholder="https://...">
+                                                        <input type="url" class="form-control" name="link_website" value="{{ $customer->link_website }}">
                                                     </div>
                                                 </div>
 

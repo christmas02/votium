@@ -938,3 +938,24 @@ Template Name: CRMS - Bootstrap Admin Template
         // Masquer le bouton lui-même
         button.classList.add('d-none');
     }
+
+	function showAjaxAlert(type, message) {
+        const title = type === 'success' ? 'Succès' : (type === 'danger' ? 'Erreur' : 'Attention');
+        const alertClass = 'alert-' + type;
+
+        const alertHtml = `
+            <div class="alert ${alertClass} alert-dismissible fade show" role="alert">
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fermer"></button>
+                <strong>${title} — </strong> ${message}
+            </div>
+        `;
+
+        // Injecter l'alerte en haut du conteneur et scroller vers le haut
+        $('#ajax-alert-container').html(alertHtml);
+
+        // Optionnel : Scroller automatiquement vers le message pour être sûr que l'utilisateur le voit
+        $('html, body').animate({
+            scrollTop: 0
+        }, 'slow');
+
+    }
