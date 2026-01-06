@@ -62,7 +62,7 @@
                             </a>
                         </li>
                         
-                        <li><a href="tickets.html"><i class="ti ti-ticket"></i><span>Billeterie</span></a></li>
+                        <!-- <li><a href="tickets.html"><i class="ti ti-ticket"></i><span>Billeterie</span></a></li> -->
 
                     </ul>
                 </li>

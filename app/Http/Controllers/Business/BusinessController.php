@@ -9,6 +9,7 @@ use App\Services\Setting;
 use App\Services\Files;
 use App\Services\CustomerService;
 use App\Services\CampagneService;
+use App\Enums\PaymentMethod;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Log;
@@ -66,7 +67,12 @@ class BusinessController extends Controller
             $user = auth()->user();
             $customer = $this->CustomerService->customerByIdUser($user->user_id);
 
-            return view('business.profile', compact('title', 'title_back', 'link_back', 'user', 'customer'));
+            $paymentMethods = PaymentMethod::cases();
+
+            //Liste des comptes de retrait
+            $compteRetraits = $this->CustomerService->listWithdrawalAccountByCustomer($customer->customer_id);
+
+            return view('business.profile', compact('title', 'title_back', 'link_back', 'user', 'customer', 'paymentMethods', 'compteRetraits'));
         } catch (\Exception $e) {
             return redirect()->route('back_office_business')->with('error', 'Une erreur est survenue, veuillez réessayer plus tard.');
         }
@@ -915,6 +921,124 @@ class BusinessController extends Controller
                 'stack_trace' => $th->getTraceAsString(),
             ]);
             return redirect()->back()->with('error', 'Erreur lors de la suppression du candidat : ' . $th->getMessage());
+        }
+    }
+
+    #COMPTES RETRAIT
+    public function listCompteRetrait()
+    {
+        $title_back = "Tableau de bord";
+        $link_back = "list_compte_retrait";
+        $title = "Liste comptes retrait";
+        return view('business.listCompteRetraits', compact('title', 'title_back', 'link_back'));
+    }
+
+    #SAVE COMPTE RETRAIT
+    public function saveCompteRetrait(Request $request)
+    {
+        try {
+            // dd($request->all());
+
+            #Formatage des données
+            $dateCompteRetrait = [
+                'withdrawal_account_id' => $this->setting->generateUuid(),
+                'customer_id' => $request->customer_id,
+                'payment_methode' => $request->payment_methode,
+                'account_name' => $request->account_name,
+                'phone_number' => $request->phone_number,
+                'is_active' => true,
+            ];
+
+            // Sauvegarde des données via le service
+            $saved = $this->CustomerService->createWithdrawalAccount($dateCompteRetrait);
+
+            //Vérification simple
+            if ($saved) {
+                return redirect()
+                    ->back()
+                    ->with('success', 'Compte retrait créé avec succès !');
+            } else {
+                return redirect()
+                    ->back()
+                    ->withInput()
+                    ->with('error', 'Erreur lors de la création du compte retrait.');
+            }
+        } catch (\Exception $th) {
+            Log::error("Erreur lors de la création du compte retrait : " . $th->getMessage(), [
+                'request_data' => $request->all(),
+                'stack_trace' => $th->getTraceAsString(),
+            ]);
+            return redirect()->back()->with('error', 'Erreur lors de la création du compte retrait : ' . $th->getMessage());
+        }
+    }
+
+    #UPDATE COMPTE RETRAIT
+    public function updateCompteRetrait(Request $request)
+    {
+        try {
+            // dd($request->all());
+
+            #Formatage des données
+            $dateCompteRetrait = [
+                'withdrawal_account_id' => $request->withdrawal_account_id,
+                'customer_id' => $request->customer_id,
+                'payment_methode' => $request->payment_methode,
+                'account_name' => $request->account_name,
+                'phone_number' => $request->phone_number,
+                'is_active' => true,
+            ];
+
+            // Sauvegarde des données via le service
+            $saved = $this->CustomerService->updateWithdrawalAccount($dateCompteRetrait);
+
+            //Vérification simple
+            if ($saved) {
+                return redirect()
+                    ->back()
+                    ->with('success', 'Compte retrait mis à jour avec succès !');
+            } else {
+                return redirect()
+                    ->back()
+                    ->withInput()
+                    ->with('error', 'Erreur lors de la mise à jour du compte retrait.');
+            }
+        } catch (\Exception $th) {
+            Log::error("Erreur lors de la mise à jour du compte retrait : " . $th->getMessage(), [
+                'request_data' => $request->all(),
+                'stack_trace' => $th->getTraceAsString(),
+            ]);
+            return redirect()->back()->with('error', 'Erreur lors de la mise à jour du compte retrait : ' . $th->getMessage());
+        }
+    }
+
+    #DELETE COMPTE RETRAIT
+    public function deleteCompteRetrait(Request $request)
+    {
+        try {
+
+            // Trouver le compte retrait
+            $deleted = $this->CustomerService->deleteWithdrawalAccount($request->account_id);
+            if (!$deleted) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Compte retrait non trouvé.'
+                ], 404);
+            }
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Compte retrait supprimé avec succès !'
+            ]);
+        } catch (\Exception $e) {
+            Log::error("Erreur lors de la suppression du compte retrait : " . $e->getMessage(), [
+                'request_data' => $request->all(),
+                'stack_trace' => $e->getTraceAsString(),
+            ]);
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Erreur lors de la suppression du compte retrait : ' . $e->getMessage()
+            ], 500);
         }
     }
 
