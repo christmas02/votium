@@ -101,6 +101,12 @@ Route::group(['middleware' => 'auth'], function () {
             Route::post('update_candidat', 'updateCandidat')->name('update_candidat');
             Route::delete('delete_candidat', 'deleteCandidat')->name('delete_candidat');
 
+            #ROUTE COMPTES RETRAITS
+            Route::get('list_compte_retrait', 'listCompteRetrait')->name('list_compte_retrait');
+            Route::post('save_compte_retrait', 'saveCompteRetrait')->name('save_compte_retrait');
+            Route::post('update_compte_retrait', 'updateCompteRetrait')->name('update_compte_retrait');
+            Route::post('delete_compte_retrait', 'deleteCompteRetrait')->name('delete_compte_retrait');
+
             #ROUTES VOTES
             Route::get('list_vote', 'listVote')->name('list_vote');
 
