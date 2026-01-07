@@ -7,8 +7,8 @@ enum PaymentMethod: string
     // un tableau des methodes de paiement avec leurs valeurs respectives plus icones
     case MTN = 'mtn';
     case ORANGE_MONEY = 'orange_money';
-    const MOOV_MONEY = 'moov_money';
-    const WAVE = 'wave';
+    case MOOV_MONEY = 'moov_money';
+    case WAVE = 'wave';
 
     public function icon(): string
     {

@@ -22,10 +22,10 @@ class CreateEtapesTable extends Migration
             $table->date('date_fin');
             $table->time('heure_debut');
             $table->time('heure_fin');
-            $table->string('type_eligibility');
-            $table->string('seuil_selection');
+            $table->string('type_eligibility')->nullable();
+            $table->string('seuil_selection')->nullable();
             $table->string('prix_vote');
-            $table->string('renitialisation');
+            $table->string('renitialisation')->nullable();
             $table->string('package');
             $table->string('is_active')->default(true);
             $table->timestamps();

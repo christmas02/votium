@@ -66,6 +66,7 @@
                                 @csrf
                                 <div class="modal-body">
                                     <input type="hidden" name="user_id" value="{{ $user->user_id }}">
+                                    <input type="hidden" name="customer_id" value="{{ $customer->customer_id }}">
                                     <!-- SECTION 2 : INFORMATIONS ENTREPRISE -->
                                     <div>
                                         <h6 class="mb-3 d-flex align-items-center text-dark">
@@ -75,13 +76,18 @@
                                         <div class="row">
                                             <!-- Logo Upload avec Prévisualisation -->
                                             <div class="col-md-12 mb-3 image-upload-group">
-                                                <div class="d-flex align-items-center bg-light p-2 rounded">
-                                                    <!-- Zone de l'image -->
+                                                <div class="d-flex align-items-center bg-light p-2 rounded border {{ $customer->logo ? 'border-primary' : 'border-dashed' }}">
+
+                                                    <!-- Zone de l'image (L'avatar doit rester visible pour afficher soit l'icône, soit l'image) -->
                                                     <div class="avatar avatar-xl border border-dashed me-3 flex-shrink-0 d-flex justify-content-center align-items-center bg-light position-relative overflow-hidden">
-                                                        <!-- Placeholder -->
-                                                        <i class="ti ti-photo text-muted fs-4 placeholder-target"></i>
-                                                        <!-- Preview -->
-                                                        <img src="#" alt="Aperçu" class="preview-target d-none w-100 h-100 object-fit-cover">
+
+                                                        <!-- Placeholder : Caché si le logo existe -->
+                                                        <i class="ti ti-photo text-muted fs-4 placeholder-target {{ $customer->logo ? 'd-none' : '' }}"></i>
+
+                                                        <!-- Preview : Visible si le logo existe, src configuré avec le chemin env -->
+                                                        <img src="{{ $customer->logo ? asset(env('IMAGES_PATH').'/'.$customer->logo) : '#' }}"
+                                                            alt="Aperçu"
+                                                            class="preview-target {{ $customer->logo ? '' : 'd-none' }} w-100 h-100 object-fit-cover">
                                                     </div>
 
                                                     <div class="d-flex flex-column">
@@ -93,8 +99,10 @@
                                                             onchange="handleImagePreview(this)">
                                                         <small class="text-muted">JPG, GIF ou PNG. Max 800K</small>
 
-                                                        <!-- Bouton supprimer pour le logo (optionnel) -->
-                                                        <button type="button" class="btn btn-sm btn-link text-danger p-0 d-none remove-btn-target text-start" onclick="handleImageRemove(this)">
+                                                        <!-- Bouton supprimer : Visible uniquement si un logo existe -->
+                                                        <button type="button"
+                                                            class="btn btn-sm btn-link text-danger p-0 remove-btn-target text-start {{ $customer->logo ? '' : 'd-none' }}"
+                                                            onclick="handleImageRemove(this)">
                                                             Supprimer
                                                         </button>
                                                     </div>
@@ -104,39 +112,33 @@
                                             <!-- Nom Entreprise -->
                                             <div class="col-md-6 mb-3">
                                                 <label class="form-label">Nom de l'organisation <span class="text-danger">*</span></label>
-                                                <input type="text" class="form-control" name="entreprise" required>
+                                                <input type="text" class="form-control" name="entreprise" value="{{ $customer->entreprise }}" required>
                                             </div>
 
                                             <!-- Pays -->
                                             <div class="col-md-6 mb-4">
                                                 <label class="form-label">Pays siège <span class="text-danger">*</span></label>
-                                                <select class="select form-control form-select" name="pays_siege" required>
-                                                    <option value="">Sélectionner</option>
-                                                    <option value="France">France</option>
-                                                    <option value="Côte d'Ivoire">Côte d'Ivoire</option>
-                                                    <option value="Senegal">Sénégal</option>
-                                                    <option value="USA">USA</option>
-                                                    <option value="Canada">Canada</option>
-                                                </select>
+                                                <input type="text" class="form-control" name="pays_siege" value="{{ $customer->pays_siege }}" required>
+
                                             </div>
 
                                             <!-- NOUVEAU : Email de l'entreprise -->
                                             <div class="col-md-6 mb-3">
                                                 <label class="form-label">Email de l'organisation</label>
                                                 <!-- Nommé 'company_email' pour ne pas écraser l'email du User -->
-                                                <input type="email" class="form-control" name="email" placeholder="contact@entreprise.com">
+                                                <input type="email" class="form-control" name="email" value="{{$customer->email}}">
                                             </div>
 
                                             <!-- Téléphone -->
                                             <div class="col-md-6 mb-3">
                                                 <label class="form-label">Téléphone <span class="text-danger">*</span></label>
-                                                <input type="text" class="form-control phone" name="phonenumber" required>
+                                                <input type="text" class="form-control phone" name="phonenumber" value="{{ $customer->phonenumber }}" required>
                                             </div>
 
                                             <!-- Adresse -->
                                             <div class="col-md-12 mb-3">
                                                 <label class="form-label">Adresse <span class="text-danger">*</span></label>
-                                                <input type="text" class="form-control" name="adresse" placeholder="Siège social" required>
+                                                <input type="text" class="form-control" name="adresse" value="{{ $customer->adresse }}" required>
                                             </div>
                                         </div>
 
@@ -148,7 +150,7 @@
                                                 <div class="col-md-6 mb-3">
                                                     <div class="input-group">
                                                         <span class="input-group-text bg-light"><i class="ti ti-brand-facebook"></i></span>
-                                                        <input type="url" class="form-control" name="link_facebook" placeholder="Facebook URL">
+                                                        <input type="url" class="form-control" name="link_facebook" value="{{ $customer->link_facebook }}">
                                                     </div>
                                                 </div>
 
@@ -156,7 +158,7 @@
                                                 <div class="col-md-6 mb-3">
                                                     <div class="input-group">
                                                         <span class="input-group-text bg-light"><i class="ti ti-brand-instagram"></i></span>
-                                                        <input type="url" class="form-control" name="link_instagram" placeholder="Instagram URL">
+                                                        <input type="url" class="form-control" name="link_instagram" value="{{ $customer->link_instagram }}">
                                                     </div>
                                                 </div>
 
@@ -164,7 +166,7 @@
                                                 <div class="col-md-6 mb-3">
                                                     <div class="input-group">
                                                         <span class="input-group-text bg-light"><i class="ti ti-brand-linkedin"></i></span>
-                                                        <input type="url" class="form-control" name="link_linkedin" placeholder="LinkedIn URL">
+                                                        <input type="url" class="form-control" name="link_linkedin" value="{{ $customer->link_linkedin }}">
                                                     </div>
                                                 </div>
 
@@ -172,7 +174,7 @@
                                                 <div class="col-md-6 mb-3">
                                                     <div class="input-group">
                                                         <span class="input-group-text bg-light"><i class="ti ti-brand-youtube"></i></span>
-                                                        <input type="url" class="form-control" name="link_youtube" placeholder="Youtube URL">
+                                                        <input type="url" class="form-control" name="link_youtube" value="{{ $customer->link_youtube }}">
                                                     </div>
                                                 </div>
 
@@ -180,7 +182,7 @@
                                                 <div class="col-md-6 mb-3">
                                                     <div class="input-group">
                                                         <span class="input-group-text bg-light"><i class="ti ti-brand-tiktok"></i></span>
-                                                        <input type="url" class="form-control" name="link_tiktok" placeholder="Tiktok URL">
+                                                        <input type="url" class="form-control" name="link_tiktok" value="{{ $customer->link_tiktok }}">
                                                     </div>
                                                 </div>
 
@@ -188,7 +190,7 @@
                                                 <div class="col-md-6 mb-3">
                                                     <div class="input-group">
                                                         <span class="input-group-text bg-light"><i class="ti ti-brand-telegram"></i></span>
-                                                        <input type="url" class="form-control" name="link_website" placeholder="https://...">
+                                                        <input type="url" class="form-control" name="link_website" value="{{ $customer->link_website }}">
                                                     </div>
                                                 </div>
 
@@ -224,17 +226,24 @@
 
                                 <!-- Email Wrap -->
                                 <div class="col-md-12">
+                                    @foreach($compteRetraits as $compte)
                                     <!-- Payment -->
                                     <div class="border rounded shadow p-3 mb-3">
                                         <div class="row gy-3">
                                             <div class="col-sm-5">
                                                 <div class="d-flex align-items-center">
                                                     <span>
-                                                        <img src="assets/img/payments/payment-1.svg" alt="Img">
+                                                        @foreach($paymentMethods as $method)
+                                                        @if($method->value === $compte->payment_methode)
+                                                        <img src="{{ asset(env('IMAGES_PATH') . '/' . $method->icon()) }}" alt="{{ $method->label() }}" class="me-2" style="width:50px; height:50px;">
+                                                        @endif
+                                                        @endforeach
+
                                                     </span>
                                                     <div class="ms-2">
                                                         <a href="javascript:void(0);"
-                                                            class="badge badge-tag badge-soft-success ms-2">Connected
+                                                            class="badge badge-tag ms-2 {{ $compte->is_active ? 'badge-soft-success' : 'badge-soft-danger' }}">
+                                                            {{ $compte->is_active ? 'Connecté' : 'Déconnecté' }}
                                                         </a>
                                                     </div>
                                                 </div>
@@ -250,12 +259,17 @@
                                                                 class="ti ti-info-circle-filled"></i></a>
                                                         <a href="#" class="btn btn-light"
                                                             data-bs-toggle="modal"
-                                                            data-bs-target="#add_paypal"><i
-                                                                class="ti ti-tool me-1"></i>Modifer</a>
+                                                            data-bs-target="#add_paypal{{ $compte->withdrawal_account_id }}"><i
+                                                                class="ti ti-tool me-1"></i>Voir</a>
                                                     </div>
                                                     <div class="form-check form-switch p-0">
                                                         <label class="form-check-label d-flex align-items-center gap-2 w-100">
-                                                            <input class="form-check-input switchCheckDefault ms-auto" type="checkbox" role="switch" checked>
+                                                            <input
+                                                                class="form-check-input switchCheckDefault ms-auto"
+                                                                type="checkbox"
+                                                                role="switch"
+                                                                data-id="{{ $compte->withdrawal_account_id }}"
+                                                                {{ $compte->is_active ? 'checked' : '' }}>
                                                         </label>
                                                     </div>
                                                 </div>
@@ -263,117 +277,12 @@
                                         </div>
                                         <div class="collapse pt-3 mt-3 border-top" id="php-mail">
                                             <div>
-                                                <p class="mb-0">PayPal Holdings, Inc. is an American multinational
-                                                    financial technology company operating an online
-                                                    payments system in the majority of countries that
-                                                    support online money transfers, and serves as an
-                                                    electronic alternative to traditional paper methods such
-                                                    as checks and money orders. </p>
+                                                <p class="mb-0">« Ce compte de retrait ne peut pas être supprimé. Vous pouvez toutefois le désactiver en cliquant sur le point rouge. »</p>
                                             </div>
                                         </div>
                                     </div>
                                     <!-- /Payment -->
-
-                                    <!-- Payment-2 -->
-                                    <div class="border rounded shadow p-3 mb-3">
-                                        <div class="row gy-3">
-                                            <div class="col-sm-5">
-                                                <div class="d-flex align-items-center">
-                                                    <span>
-                                                        <img src="assets/img/payments/payment-2.svg" alt="Img">
-                                                    </span>
-                                                    <div class="ms-2">
-                                                        <a href="javascript:void(0);"
-                                                            class="badge badge-tag badge-soft-success ms-2">Connected
-                                                        </a>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-sm-7">
-                                                <div
-                                                    class="d-flex align-items-center justify-content-between flex-wrap gap-2">
-                                                    <div class="d-flex align-items-center">
-                                                        <a href="javascript:void(0);"
-                                                            data-bs-toggle="collapse"
-                                                            data-bs-target="#stripe-pay"
-                                                            class="text-default me-1 me-lg-3 me-md-3 me-sm-3 border-end pe-1 pe-lg-3 pe-md-3 pe-sm-3 fs-16"><i
-                                                                class="ti ti-info-circle-filled"></i></a>
-                                                        <a href="#" class="btn btn-light"
-                                                            data-bs-toggle="modal"
-                                                            data-bs-target="#add_stripe"><i
-                                                                class="ti ti-tool me-1"></i>Modifer</a>
-                                                    </div>
-                                                    <div class="form-check form-switch p-0">
-                                                        <label class="form-check-label d-flex align-items-center gap-2 w-100">
-                                                            <input class="form-check-input switchCheckDefault ms-auto" type="checkbox" role="switch" checked>
-                                                        </label>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="collapse pt-3 mt-3 border-top" id="stripe-pay">
-                                            <div>
-                                                <p class="mb-0">Stripe Holdings, Inc. is an American multinational
-                                                    financial technology company operating an online
-                                                    payments system in the majority of countries that
-                                                    support online money transfers, and serves as an
-                                                    electronic alternative to traditional paper methods such
-                                                    as checks and money orders. </p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <!-- /Payment-2 -->
-
-                                    <!-- Payment-3 -->
-                                    <div class="border rounded shadow p-3 mb-3">
-                                        <div class="row gy-3">
-                                            <div class="col-sm-5">
-                                                <div class="d-flex align-items-center">
-                                                    <span>
-                                                        <img src="assets/img/payments/payment-3.svg" alt="Img">
-                                                    </span>
-                                                    <div class="ms-2">
-                                                        <a href="javascript:void(0);"
-                                                            class="badge badge-tag badge-soft-success ms-2">Connected
-                                                        </a>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-sm-7">
-                                                <div
-                                                    class="d-flex align-items-center justify-content-between flex-wrap gap-2">
-                                                    <div class="d-flex align-items-center">
-                                                        <a href="javascript:void(0);"
-                                                            data-bs-toggle="collapse"
-                                                            data-bs-target="#brain-pay"
-                                                            class="text-default me-1 me-lg-3 me-md-3 me-sm-3 border-end pe-1 pe-lg-3 pe-md-3 pe-sm-3 fs-16"><i
-                                                                class="ti ti-info-circle-filled"></i></a>
-                                                        <a href="#" class="btn btn-light"
-                                                            data-bs-toggle="modal"
-                                                            data-bs-target="#add_brain"><i
-                                                                class="ti ti-tool me-1"></i>Modifer</a>
-                                                    </div>
-                                                    <div class="form-check form-switch p-0">
-                                                        <label class="form-check-label d-flex align-items-center gap-2 w-100">
-                                                            <input class="form-check-input switchCheckDefault ms-auto" type="checkbox" role="switch" checked>
-                                                        </label>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="collapse pt-3 mt-3 border-top" id="brain-pay">
-                                            <div>
-                                                <p class="mb-0">Braintree Holdings, Inc. is an American multinational
-                                                    financial technology company operating an online
-                                                    payments system in the majority of countries that
-                                                    support online money transfers, and serves as an
-                                                    electronic alternative to traditional paper methods such
-                                                    as checks and money orders. </p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <!-- /Payment-3 -->
-
+                                    @endforeach
 
                                 </div>
                                 <!-- /Email Wrap -->
@@ -453,512 +362,13 @@
 </div>
 <!-- End Content -->
 
-<!-- Add offcanvas -->
-<div class="offcanvas offcanvas-end offcanvas-large" tabindex="-1" id="offcanvas_add_campagne">
-    <div class="offcanvas-header border-bottom">
-        <h5 class="mb-0">Ajouter une nouvelle campagne</h5>
-        <button type="button"
-            class="btn-close custom-btn-close border p-1 me-0 d-flex align-items-center justify-content-center rounded-circle"
-            data-bs-dismiss="offcanvas" aria-label="Close">
-        </button>
-    </div>
-    <div class="offcanvas-body">
-        <form action="#" method="POST" enctype="multipart/form-data">
-            <!-- @csrf -->
-
-            <div class="accordion accordion-bordered" id="campagne_accordion">
-
-                <!-- 1. Informations Générales -->
-                <div class="accordion-item rounded mb-3">
-                    <div class="accordion-header">
-                        <a href="#"
-                            class="accordion-button accordion-custom-button rounded"
-                            data-bs-toggle="collapse" data-bs-target="#general">
-                            <span class="avatar avatar-md rounded me-1"><i class="ti ti-info-circle"></i></span>
-                            Informations Générales
-                        </a>
-                    </div>
-                    <div class="accordion-collapse collapse show" id="general" data-bs-parent="#campagne_accordion">
-                        <div class="accordion-body border-top">
-                            <div class="row">
-                                <!-- Image Couverture -->
-                                <!-- Image Couverture Large avec Preview -->
-                                <div class="col-md-12">
-                                    <label class="form-label">Image de couverture <span class="text-danger">*</span></label>
-
-                                    <!-- Zone de l'image -->
-                                    <div class="position-relative w-100 rounded border border-dashed bg-light d-flex align-items-center justify-content-center overflow-hidden"
-                                        style="height: 300px; border-width: 2px !important; transition: all 0.3s ease;"
-                                        id="drop-zone">
-
-                                        <!-- Contenu par défaut (Texte + Icone) -->
-                                        <div class="text-center p-4" id="upload-placeholder">
-                                            <div class="avatar avatar-xl bg-white border rounded-circle mb-3 mx-auto">
-                                                <i class="ti ti-cloud-upload text-primary fs-2"></i>
-                                            </div>
-                                            <h5 class="mb-1 fw-bold">Glissez une image ou cliquez ici</h5>
-                                            <p class="text-muted mb-0 fs-12">Format accepté : JPG, PNG. Taille Max : 5MB</p>
-                                        </div>
-
-                                        <!-- L'image de prévisualisation (Cachée par défaut) -->
-                                        <img id="image-preview" src="#" alt="Aperçu"
-                                            class="position-absolute top-0 start-0 w-100 h-100 object-fit-cover d-none">
-
-                                        <!-- L'input file (Invisible mais couvre toute la zone pour être cliquable) -->
-                                        <input type="file"
-                                            name="image_couverture"
-                                            id="input-image"
-                                            class="position-absolute top-0 start-0 w-100 h-100 opacity-0 cursor-pointer"
-                                            accept="image/png, image/jpeg, image/jpg"
-                                            onchange="previewImage(this)">
-                                    </div>
-
-                                    <!-- Bouton pour supprimer l'image (Caché par défaut) -->
-                                    <div class="d-flex justify-content-end mt-2">
-                                        <button type="button"
-                                            id="remove-btn"
-                                            class="btn btn-sm btn-outline-danger d-none"
-                                            onclick="removeImage()">
-                                            <i class="ti ti-trash me-1"></i> Supprimer l'image
-                                        </button>
-                                    </div>
-                                </div>
-
-                                <!-- Nom de la campagne -->
-                                <div class="col-md-12">
-                                    <div class="mb-3">
-                                        <label class="form-label">Nom de la campagne <span class="text-danger">*</span></label>
-                                        <!-- Mapping: name -->
-                                        <input type="text" class="form-control" name="name" required>
-                                    </div>
-                                </div>
-
-                                <!-- Description -->
-                                <div class="col-md-12">
-                                    <div class="mb-0">
-                                        <label class="form-label">Description courte <span class="text-danger">*</span></label>
-                                        <!-- Mapping: description -->
-                                        <textarea class="form-control" rows="4" name="description" required></textarea>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- 2. Inscription & Conditions -->
-                <div class="accordion-item border-top rounded mb-3">
-                    <div class="accordion-header">
-                        <a href="#"
-                            class="accordion-button accordion-custom-button rounded"
-                            data-bs-toggle="collapse" data-bs-target="#inscription_sec">
-                            <span class="avatar avatar-md rounded me-1"><i class="ti ti-calendar-event"></i></span>
-                            Inscription & Règles
-                        </a>
-                    </div>
-                    <div class="accordion-collapse collapse" id="inscription_sec" data-bs-parent="#campagne_accordion">
-                        <div class="accordion-body border-top">
-                            <div class="row">
-                                <!-- Activer Inscription -->
-                                <div class="col-md-12">
-                                    <div class="mb-3 form-check form-switch">
-                                        <input type="hidden" name="inscription" value="0">
-                                        <!-- Mapping: inscription -->
-                                        <input class="form-check-input" type="checkbox" role="switch" id="inscriptionSwitch" name="inscription" value="1">
-                                        <label class="form-check-label" for="inscriptionSwitch">Activer les inscriptions</label>
-                                    </div>
-                                </div>
-
-                                <!-- Date Début -->
-                                <div class="col-md-6">
-                                    <div class="mb-3">
-                                        <label class="form-label">Date de début</label>
-                                        <!-- Mapping: inscription_date_debut -->
-                                        <input type="datetime-local" class="form-control" name="inscription_date_debut">
-                                    </div>
-                                </div>
-
-                                <!-- Date Fin -->
-                                <div class="col-md-6">
-                                    <div class="mb-3">
-                                        <label class="form-label">Date de fin</label>
-                                        <!-- Mapping: inscription_date_fin -->
-                                        <input type="datetime-local" class="form-control" name="inscription_date_fin">
-                                    </div>
-                                </div>
-
-                                <!-- Conditions de participation -->
-                                <div class="col-md-12">
-                                    <div class="mb-0">
-                                        <label class="form-label">Conditions de participation (Long Text) <span class="text-danger">*</span></label>
-                                        <!-- Mapping: condition_participation -->
-                                        <textarea class="form-control" rows="4" name="condition_participation" required></textarea>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- 3. Apparence & Configuration -->
-                <div class="accordion-item border-top rounded mb-3">
-                    <div class="accordion-header">
-                        <a href="#"
-                            class="accordion-button accordion-custom-button rounded"
-                            data-bs-toggle="collapse" data-bs-target="#config">
-                            <span class="avatar avatar-md rounded me-1"><i class="ti ti-settings"></i></span>
-                            Apparence & Configuration
-                        </a>
-                    </div>
-                    <div class="accordion-collapse collapse" id="config" data-bs-parent="#campagne_accordion">
-                        <div class="accordion-body border-top">
-                            <div class="row">
-                                <!-- Couleurs -->
-                                <div class="col-md-6">
-                                    <div class="mb-3">
-                                        <label class="form-label">Couleur Primaire</label>
-                                        <!-- Mapping: color_primaire -->
-                                        <input type="color" class="form-control form-control-color w-100" name="color_primaire" value="#563d7c" title="Choisir une couleur">
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="mb-3">
-                                        <label class="form-label">Couleur Secondaire</label>
-                                        <!-- Mapping: color_secondaire -->
-                                        <input type="color" class="form-control form-control-color w-100" name="color_secondaire" value="#cccccc" title="Choisir une couleur">
-                                    </div>
-                                </div>
-
-                                <!-- Text Cover Toggle -->
-                                <div class="col-md-6">
-                                    <div class="mb-3 form-check form-switch">
-                                        <input type="hidden" name="text_cover" value="0">
-                                        <!-- Mapping: text_cover -->
-                                        <input class="form-check-input" type="checkbox" role="switch" id="textCoverSwitch" name="text_cover" value="1">
-                                        <label class="form-check-label" for="textCoverSwitch">Afficher le texte sur la couverture</label>
-                                    </div>
-                                </div>
-
-                                <!-- Ordonner Candidats Toggle/Select -->
-                                <div class="col-md-6">
-                                    <div class="mb-3">
-                                        <label class="form-label">Ordre des candidats</label>
-                                        <!-- Mapping: ordonner_candidats_votes_decroissants -->
-                                        <select class="form-control" name="ordonner_candidats_votes_decroissants">
-                                            <option value="non">Par défaut</option>
-                                            <option value="oui">Votes décroissants (Top en premier)</option>
-                                        </select>
-                                    </div>
-                                </div>
-
-                                <!-- Affichage Montant -->
-                                <div class="col-md-6">
-                                    <div class="mb-3">
-                                        <label class="form-label">Affichage Montant/Pourcentage</label>
-                                        <!-- Mapping: afficher_montant_pourcentage -->
-                                        <select class="form-control" name="afficher_montant_pourcentage">
-                                            <option value="clair" selected>Clair</option>
-                                            <option value="masque">Masqué</option>
-                                            <option value="pourcentage_seul">Pourcentage seul</option>
-                                        </select>
-                                    </div>
-                                </div>
-
-                                <!-- Quantité Vote -->
-                                <div class="col-md-6">
-                                    <div class="mb-0">
-                                        <label class="form-label">Quantité de votes autorisés</label>
-                                        <!-- Mapping: quantite_vote -->
-                                        <input type="text" class="form-control" name="quantite_vote" placeholder="ex: Illimité ou 100">
-                                    </div>
-                                </div>
-
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-
-            <!-- Actions -->
-            <div class="d-flex align-items-center justify-content-end">
-                <button type="button" data-bs-dismiss="offcanvas" class="btn btn-light me-2">Annuler</button>
-                <button type="submit" class="btn btn-primary">Créer la campagne</button>
-            </div>
-        </form>
-    </div>
-</div>
-<!-- /Add offcanvas -->
-
-<!-- edit offcanvas -->
-<!-- Modale de modification (ID statique pour test) -->
-<div class="offcanvas offcanvas-end offcanvas-large" tabindex="-1" id="offcanvas_edit">
-    <div class="offcanvas-header border-bottom">
-        <h5 class="mb-0">Modifier la campagne : Campagne Été 2024</h5>
-        <button type="button"
-            class="btn-close custom-btn-close border p-1 me-0 d-flex align-items-center justify-content-center rounded-circle"
-            data-bs-dismiss="offcanvas" aria-label="Close">
-        </button>
-    </div>
-    <div class="offcanvas-body">
-        <form action="#" method="POST" enctype="multipart/form-data">
-
-            <div class="accordion accordion-bordered" id="campagne_accordion_edit">
-
-                <!-- 1. Informations Générales -->
-                <div class="accordion-item rounded mb-3">
-                    <div class="accordion-header">
-                        <a href="#"
-                            class="accordion-button accordion-custom-button rounded"
-                            data-bs-toggle="collapse" data-bs-target="#general_edit">
-                            <span class="avatar avatar-md rounded me-1"><i class="ti ti-info-circle"></i></span>
-                            Informations Générales
-                        </a>
-                    </div>
-                    <div class="accordion-collapse collapse show" id="general_edit" data-bs-parent="#campagne_accordion_edit">
-                        <div class="accordion-body border-top">
-                            <div class="row">
-                                <!-- Image Couverture (Simulation: Image déjà présente) -->
-                                <div class="col-md-12">
-                                    <label class="form-label">Image de couverture</label>
-
-                                    <!-- Zone de l'image (Bordure pleine car image présente) -->
-                                    <div class="position-relative w-100 rounded border border-primary bg-light d-flex align-items-center justify-content-center overflow-hidden"
-                                        style="height: 300px; border-width: 2px !important; transition: all 0.3s ease;"
-                                        id="drop-zone-edit">
-
-                                        <!-- Placeholder (Caché car image présente) -->
-                                        <div class="text-center p-4 d-none" id="upload-placeholder-edit">
-                                            <div class="avatar avatar-xl bg-white border rounded-circle mb-3 mx-auto">
-                                                <i class="ti ti-cloud-upload text-primary fs-2"></i>
-                                            </div>
-                                            <h5 class="mb-1 fw-bold">Modifier l'image</h5>
-                                            <p class="text-muted mb-0 fs-12">Cliquez pour remplacer (Max 5MB)</p>
-                                        </div>
-
-                                        <!-- Image de prévisualisation (Affichée) -->
-                                        <!-- J'ai mis une image placeholder pour l'exemple -->
-                                        <img id="image-preview-edit"
-                                            src="https://placehold.co/600x400/563d7c/ffffff?text=Cover+Image"
-                                            alt="Aperçu"
-                                            class="position-absolute top-0 start-0 w-100 h-100 object-fit-cover">
-
-                                        <!-- Input file -->
-                                        <input type="file"
-                                            name="image_couverture"
-                                            id="input-image-edit"
-                                            class="position-absolute top-0 start-0 w-100 h-100 opacity-0 cursor-pointer"
-                                            accept="image/png, image/jpeg, image/jpg"
-                                            onchange="previewImageEdit(this)">
-                                    </div>
-
-                                    <!-- Bouton Supprimer (Affiché) -->
-                                    <div class="d-flex justify-content-end mt-2">
-                                        <button type="button"
-                                            id="remove-btn-edit"
-                                            class="btn btn-sm btn-outline-danger"
-                                            onclick="removeImageEdit()">
-                                            <i class="ti ti-trash me-1"></i> Retirer l'image
-                                        </button>
-                                    </div>
-                                </div>
-
-                                <!-- Campagne ID -->
-                                <input type="hidden" class="form-control" name="campagne_id" value="CAMP-2024-001" required>
-
-                                <!-- Nom -->
-                                <div class="col-md-6">
-                                    <div class="mb-3">
-                                        <label class="form-label">Nom de la campagne <span class="text-danger">*</span></label>
-                                        <input type="text" class="form-control" name="name" value="Campagne Été 2024" required>
-                                    </div>
-                                </div>
-
-                                <!-- Customer Select -->
-                                <div class="col-md-6">
-                                    <div class="mb-3">
-                                        <label class="form-label">Client associé <span class="text-danger">*</span></label>
-                                        <select class="select form-control" name="customer_id" required>
-                                            <option value="">Sélectionner un client</option>
-                                            <option value="1" selected>Coca-Cola (CUST-001)</option>
-                                            <option value="2">Orange (CUST-002)</option>
-                                        </select>
-                                    </div>
-                                </div>
-
-                                <!-- Description -->
-                                <div class="col-md-12">
-                                    <div class="mb-0">
-                                        <label class="form-label">Description courte <span class="text-danger">*</span></label>
-                                        <textarea class="form-control" rows="4" name="description" required>Campagne promotionnelle pour la saison estivale avec voting système.</textarea>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- 2. Inscription & Conditions -->
-                <div class="accordion-item border-top rounded mb-3">
-                    <div class="accordion-header">
-                        <a href="#"
-                            class="accordion-button accordion-custom-button rounded"
-                            data-bs-toggle="collapse" data-bs-target="#inscription_sec_edit">
-                            <span class="avatar avatar-md rounded me-1"><i class="ti ti-calendar-event"></i></span>
-                            Inscription & Règles
-                        </a>
-                    </div>
-                    <div class="accordion-collapse collapse" id="inscription_sec_edit" data-bs-parent="#campagne_accordion_edit">
-                        <div class="accordion-body border-top">
-                            <div class="row">
-                                <!-- Switch Inscription -->
-                                <div class="col-md-12">
-                                    <div class="mb-3 form-check form-switch">
-                                        <input type="hidden" name="inscription" value="0">
-                                        <input class="form-check-input" type="checkbox" role="switch" id="inscriptionSwitchEdit" name="inscription" value="1" checked>
-                                        <label class="form-check-label" for="inscriptionSwitchEdit">Activer les inscriptions</label>
-                                    </div>
-                                </div>
-
-                                <!-- Date Début -->
-                                <div class="col-md-6">
-                                    <div class="mb-3">
-                                        <label class="form-label">Date de début</label>
-                                        <input type="datetime-local" class="form-control" name="inscription_date_debut" value="2024-06-01T08:00">
-                                    </div>
-                                </div>
-
-                                <!-- Date Fin -->
-                                <div class="col-md-6">
-                                    <div class="mb-3">
-                                        <label class="form-label">Date de fin</label>
-                                        <input type="datetime-local" class="form-control" name="inscription_date_fin" value="2024-08-31T23:59">
-                                    </div>
-                                </div>
-
-                                <!-- Conditions -->
-                                <div class="col-md-12">
-                                    <div class="mb-0">
-                                        <label class="form-label">Conditions de participation <span class="text-danger">*</span></label>
-                                        <textarea class="form-control" rows="4" name="condition_participation" required>1. Être majeur.
-2. Résider dans le pays.
-3. Accepter les CGU.</textarea>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- 3. Apparence & Configuration -->
-                <div class="accordion-item border-top rounded mb-3">
-                    <div class="accordion-header">
-                        <a href="#"
-                            class="accordion-button accordion-custom-button rounded"
-                            data-bs-toggle="collapse" data-bs-target="#config_edit">
-                            <span class="avatar avatar-md rounded me-1"><i class="ti ti-settings"></i></span>
-                            Apparence & Configuration
-                        </a>
-                    </div>
-                    <div class="accordion-collapse collapse" id="config_edit" data-bs-parent="#campagne_accordion_edit">
-                        <div class="accordion-body border-top">
-                            <div class="row">
-                                <!-- Couleurs -->
-                                <div class="col-md-6">
-                                    <div class="mb-3">
-                                        <label class="form-label">Couleur Primaire</label>
-                                        <input type="color" class="form-control form-control-color w-100" name="color_primaire" value="#563d7c" title="Choisir une couleur">
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="mb-3">
-                                        <label class="form-label">Couleur Secondaire</label>
-                                        <input type="color" class="form-control form-control-color w-100" name="color_secondaire" value="#ffc107" title="Choisir une couleur">
-                                    </div>
-                                </div>
-
-                                <!-- Switch Text Cover -->
-                                <div class="col-md-6">
-                                    <div class="mb-3 form-check form-switch">
-                                        <input type="hidden" name="text_cover" value="0">
-                                        <input class="form-check-input" type="checkbox" role="switch" id="textCoverSwitchEdit" name="text_cover" value="1">
-                                        <label class="form-check-label" for="textCoverSwitchEdit">Texte sur couverture</label>
-                                    </div>
-                                </div>
-
-                                <!-- Ordre -->
-                                <div class="col-md-6">
-                                    <div class="mb-3">
-                                        <label class="form-label">Ordre des candidats</label>
-                                        <select class="form-control" name="ordonner_candidats_votes_decroissants">
-                                            <option value="non">Par défaut</option>
-                                            <option value="oui" selected>Votes décroissants</option>
-                                        </select>
-                                    </div>
-                                </div>
-
-                                <!-- Affichage Montant -->
-                                <div class="col-md-6">
-                                    <div class="mb-3">
-                                        <label class="form-label">Affichage Montant/Pourcentage</label>
-                                        <select class="form-control" name="afficher_montant_pourcentage">
-                                            <option value="clair">Clair</option>
-                                            <option value="masque">Masqué</option>
-                                            <option value="pourcentage_seul" selected>Pourcentage seul</option>
-                                        </select>
-                                    </div>
-                                </div>
-
-                                <!-- Quantité Vote -->
-                                <div class="col-md-6">
-                                    <div class="mb-0">
-                                        <label class="form-label">Quantité de votes</label>
-                                        <input type="text" class="form-control" name="quantite_vote" value="10">
-                                    </div>
-                                </div>
-
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Actions -->
-            <div class="d-flex align-items-center justify-content-end">
-                <button type="button" data-bs-dismiss="offcanvas" class="btn btn-light me-2">Annuler</button>
-                <button type="submit" class="btn btn-primary">Enregistrer les modifications</button>
-            </div>
-        </form>
-    </div>
-</div>
-<!-- /edit offcanvas -->
-
-<!-- delete modal -->
-<div class="modal fade" id="delete_contact">
-    <div class="modal-dialog modal-dialog-centered modal-sm rounded-0">
-        <div class="modal-content rounded-0">
-            <div class="modal-body p-4 text-center position-relative">
-                <div class="mb-3 position-relative z-1">
-                    <span class="avatar avatar-xl badge-soft-danger border-0 text-danger rounded-circle"><i class="ti ti-trash fs-24"></i></span>
-                </div>
-                <h5 class="mb-1">Confirmer la suppression</h5>
-                <p class="mb-3">Êtes-vous sûr de vouloir supprimer l'entreprise sélectionnée ?</p>
-                <div class="d-flex justify-content-center">
-                    <a href="#" class="btn btn-light position-relative z-1 me-2 w-100" data-bs-dismiss="modal">Annuler</a>
-                    <a href="#" class="btn btn-primary position-relative z-1 w-100" data-bs-dismiss="modal">Oui, supprimer</a>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-<!-- delete modal -->
-
 <!-- Paypal -->
-<div class="modal fade" id="add_paypal" role="dialog">
+ @foreach($compteRetraits as $compte)
+<div class="modal fade" id="add_paypal{{ $compte->withdrawal_account_id }}" role="dialog">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Modifier compte</h5>
+                <h5 class="modal-title">Voir compte</h5>
                 <button type="button"
                     class="btn-close custom-btn-close border p-1 me-0 d-flex align-items-center justify-content-center rounded-circle"
                     data-bs-dismiss="modal" aria-label="Close">
@@ -969,32 +379,36 @@
                 <div class="modal-body">
                     <div class="mb-3 ">
                         <label class="form-label">Type de compte <span class="text-danger">*</span></label>
-                        <select class="select">
-                            <option>Select</option>
-                            <option>MTN</option>
-                            <option>WAVE</option>
-                            <option>ORANGE</option>
+                        <select class="select" name="payment_methode" readonly>
+                            <option value="{{ $compte->payment_methode }}">
+                                @foreach($paymentMethods as $method)
+                                @if($method->value === $compte->payment_methode)
+                                {{ $method->label() }}
+                                @endif
+                                @endforeach
+                            </option>
                         </select>
                     </div>
                     <div class="mb-3">
                         <label class="form-label">Nom du compte <span class="text-danger">*</span></label>
-                        <input type="text" class="form-control">
+                        <input type="text" name="account_name" value="{{ $compte->account_name }}" class="form-control" readonly>
                     </div>
                     <div class="mb-3">
                         <label class="form-label">Numéro du compte <span class="text-danger">*</span></label>
-                        <input type="text" class="form-control">
+                        <input type="text" class="form-control" name="phone_number" value="{{ $compte->phone_number }}" readonly>
                     </div>
                 </div>
-                <div class="modal-footer">
+                <!-- <div class="modal-footer">
                     <div class="d-flex align-items-center justify-content-end m-0">
                         <a href="#" class="btn btn-sm btn-light me-2" data-bs-dismiss="modal">Cancel</a>
                         <button type="submit" class="btn btn-sm btn-primary">Enregistrer</button>
                     </div>
-                </div>
+                </div> -->
             </form>
         </div>
     </div>
 </div>
+@endforeach
 <!-- /Paypal -->
 
 <!-- Add Bank Account -->
@@ -1009,24 +423,30 @@
                     <i class="ti ti-x"></i>
                 </button>
             </div>
-            <form action="#">
+            <form action="{{ route('business.save_compte_retrait') }}" method="POST">
+                @csrf
+                <input type="hidden" name="customer_id" value="{{ $customer->customer_id }}">
+
                 <div class="modal-body">
                     <div class="mb-3 ">
                         <label class="form-label">Type de compte <span class="text-danger">*</span></label>
-                        <select class="select">
-                            <option>Select</option>
-                            <option>MTN</option>
-                            <option>WAVE</option>
-                            <option>ORANGE</option>
+                        <select class="select" name="payment_methode">
+                            <option value="">Sélectionner</option>
+                            @foreach($paymentMethods as $method)
+                            <option value="{{ $method->value }}">
+                                {{ $method->label() }}
+                            </option>
+                            @endforeach
                         </select>
                     </div>
+
                     <div class="mb-3">
                         <label class="form-label">Nom du compte <span class="text-danger">*</span></label>
-                        <input type="text" class="form-control">
+                        <input type="text" class="form-control" name="account_name">
                     </div>
                     <div class="mb-3">
                         <label class="form-label">Numéro du compte <span class="text-danger">*</span></label>
-                        <input type="text" class="form-control">
+                        <input type="text" class="form-control" name="phone_number">
                     </div>
 
                 </div>
@@ -1044,21 +464,38 @@
 
 <!-- Script JavaScript pour gérer l'affichage -->
 <script>
-    document.addEventListener('change', function(e) {
+    $(document).ready(function() {
+        $('.switchCheckDefault').change(function() {
+            let checkbox = $(this);
+            let accountId = checkbox.data('id');
+            let isActive = checkbox.is(':checked') ? 1 : 0;
 
-        // Vérifie si l'élément déclencheur est un toggle inscription
-        if (!e.target.classList.contains('inscriptionSwitch')) return;
+            $.ajax({
+                url: "{{ route('business.delete_compte_retrait') }}",
+                method: "POST",
+                data: {
+                    _token: "{{ csrf_token() }}",
+                    account_id: accountId,
+                    is_active: isActive
+                },
+                success: function(response) {
+                    showAjaxAlert('success', response.message);
+                },
+                error: function(xhr) {
+                     let errorMessage = "Erreur lors de la mise à jour du compte";
 
-        // On travaille dans la modale courante
-        const modalBody = e.target.closest('.modal-body');
-        if (!modalBody) return;
+                    if (xhr.status === 422) {
+                        let errors = xhr.responseJSON.errors;
+                        errorMessage = Object.values(errors).flat().join("<br>");
+                    } else if (xhr.responseJSON && xhr.responseJSON.message) {
+                        errorMessage = xhr.responseJSON.message;
+                    }
 
-        const blocDates = modalBody.querySelector('.blocDates');
-
-        if (!blocDates) return;
-
-        blocDates.classList.toggle('d-none', !e.target.checked);
-
+                    showAjaxAlert('danger', errorMessage);
+                    checkbox.prop('checked', !isActive); // revert en cas d'erreur
+                }
+            });
+        });
     });
 </script>
 
