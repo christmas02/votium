@@ -4,7 +4,6 @@ namespace App\Repository;
 
 use App\Models\Customer;
 use App\Models\WithdrawalAccount;
-use Illuminate\Support\Facades\Auth;
 
 class CustomerRepository
 {
@@ -82,12 +81,24 @@ class CustomerRepository
             $account->phone_number = $dataWithdrawalAccount['phone_number'];
             $account->account_name = $dataWithdrawalAccount['account_name'];
             $account->payment_methode = $dataWithdrawalAccount['payment_methode'];
-            $account->payment_methode_icon = $dataWithdrawalAccount['payment_methode_icon'];
             $account->is_active = true;
             return $account->save();
 
         } catch (\Exception $e) {
             \Log::error('Erreur lors de la sauvegarde du compte de retrait - file:CustomerRepository  : ' . $e->getMessage());
+            return false;
+        }
+    }
+
+    public function archiveWithdrawalAccount($dataWithdrawalAccount)
+    {
+        try {
+            $account = WithdrawalAccount::where('withdrawal_account_id', $dataWithdrawalAccount['withdrawal_account_id'])->first();
+            $account->is_active = false;
+            return $account->save();
+
+        } catch (\Exception $e) {
+            \Log::error('Erreur lors de l\'archivage du compte de retrait - file:CustomerRepository  : ' . $e->getMessage());
             return false;
         }
     }

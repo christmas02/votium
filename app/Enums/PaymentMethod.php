@@ -5,8 +5,8 @@ namespace App\Enums;
 enum PaymentMethod: string
 {
     // un tableau des methodes de paiement avec leurs valeurs respectives plus icones
-    const MTN = 'mtn';
-    const ORANGE_MONEY = 'orange_money';
+    case MTN = 'mtn';
+    case ORANGE_MONEY = 'orange_money';
     const MOOV_MONEY = 'moov_money';
     const WAVE = 'wave';
 
