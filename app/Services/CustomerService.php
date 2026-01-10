@@ -99,13 +99,16 @@ class CustomerService
     public function saveNewPassword($user_email, $password)
     {return $this->authRepository->makeResetPassword($user_email, $password);}
 
+    public function archiveWithdrawalAccount($dataWithdrawalAccount){
+        return $this->authRepository->archiveWithdrawalAccount($dataWithdrawalAccount);
+    }
+
     public function createWithdrawalAccount($dataWithdrawalAccount)
     {
         try {
             DB::beginTransaction();
             // TO DO SAVE INFO USER ROLE CUSTOMER
             $this->customerRepository->saveWithdrawalAccount($dataWithdrawalAccount);
-
             DB::commit();
             return true;
 
@@ -124,6 +127,5 @@ class CustomerService
             \Log::error('Erreur lors de la recuperation des comptes de retrait: ' . $e->getMessage());
             return false;
         }
-
     }
 }
