@@ -22,6 +22,15 @@ use App\Models\Etape;
 use App\Services\CandidatureService;
 use PhpParser\Node\Stmt\TryCatch;
 
+use App\Http\Requests\CampagneRequest;
+use App\Http\Requests\CandidatRequest;
+use App\Http\Requests\CategoryCampagneRequest;
+use App\Http\Requests\CustomerRequest;
+use App\Http\Requests\EtapeRequest;
+use App\Http\Requests\UserRequest;
+use App\Http\Requests\WithdrawalAccountRequest;
+
+
 class BusinessController extends Controller
 {
     protected CustomerService $CustomerService;
@@ -53,7 +62,9 @@ class BusinessController extends Controller
             $title = "Espace Business";
             return view('business.index', compact('title', 'title_back', 'link_back'));
         } catch (\Exception $e) {
-            return redirect()->route('business.espace')->with('error', 'Une erreur est survenue, veuillez réessayer plus tard.');
+            return redirect()->back()
+                ->withInput()
+                ->with('error', __('messages.server_error'));
         }
     }
 
@@ -74,7 +85,9 @@ class BusinessController extends Controller
 
             return view('business.profile', compact('title', 'title_back', 'link_back', 'user', 'customer', 'paymentMethods', 'compteRetraits'));
         } catch (\Exception $e) {
-            return redirect()->route('back_office_business')->with('error', 'Une erreur est survenue, veuillez réessayer plus tard.');
+            return redirect()->back()
+                ->withInput()
+                ->with('error', __('messages.server_error'));
         }
     }
 
@@ -82,12 +95,14 @@ class BusinessController extends Controller
     public function updateProfile(Request $request)
     {
         try {
-            // dd($request->all());
 
             // Mise à jour du mot de passe si fourni
             if ($request->filled('password')) {
                 $password = $this->setting->hashPassword($request->password);
+            } else {
+                $password = $request->old_password;
             }
+
             $data = [
                 'user_id' => $request->user_id,
                 'name' => $request->name,
@@ -101,12 +116,14 @@ class BusinessController extends Controller
             if (!$saved) {
                 return redirect()->back()->withInput()->with('error', 'Erreur lors de la mise à jour du profil.');
             }
-            return redirect()->route('profile')->with('success', 'Profil mis à jour avec succès !');
+            return redirect()->back()->with('success', 'Profil mis à jour avec succès !');
         } catch (\Exception $th) {
             Log::error("Erreur lors de la mise à jour du profil : " . $th->getMessage(), [
                 'stack_trace' => $th->getTraceAsString(),
             ]);
-            return redirect()->back()->with('error', 'Erreur lors de la mise à jour du profil : ' . $th->getMessage());
+            return redirect()->back()
+                ->withInput()
+                ->with('error', __('messages.server_error'));
         }
     }
 
@@ -124,7 +141,6 @@ class BusinessController extends Controller
             } else {
                 $name_file = "default_logo.png";
             }
-
 
             // Formatage des données
             $dateCustomer = [
@@ -167,7 +183,9 @@ class BusinessController extends Controller
                 'request_data' => $request->except('password', 'logo'),
                 'stack_trace' => $th->getTraceAsString(),
             ]);
-            return redirect()->back()->with('error', 'Erreur lors de la mise à jour de l entreprise : ' . $th->getMessage());
+            return redirect()->back()
+                ->withInput()
+                ->with('error', __('messages.server_error'));
         }
     }
 
@@ -188,7 +206,9 @@ class BusinessController extends Controller
             Log::error("Erreur lors de la récupération des campagnes : " . $th->getMessage(), [
                 'stack_trace' => $th->getTraceAsString(),
             ]);
-            return redirect()->back()->with('error', 'Erreur lors de la récupération des campagnes : ' . $th->getMessage());
+            return redirect()->back()
+                ->withInput()
+                ->with('error', __('messages.server_error'));
         }
     }
 
@@ -223,7 +243,7 @@ class BusinessController extends Controller
                 'identifiants_personnalises_isActive' => $request->identifiants_personnalises_isActive ? 1 : 0,
                 'afficher_montant_pourcentage' => $request->afficher_montant_pourcentage,
                 'ordonner_candidats_votes_decroissants' => $request->ordonner_candidats_votes_decroissants ? 1 : 0,
-                'quantite_vote' => $request->quantite_vote,
+                'quantite_vote' => $request->input('quantite_vote'),
                 'color_primaire' => $request->color_primaire,
                 'color_secondaire' => $request->color_secondaire,
                 'condition_participation' => $uploadedFiles['condition_participation'],
@@ -257,9 +277,12 @@ class BusinessController extends Controller
                 'request_data' => $request->all(),
                 'stack_trace' => $th->getTraceAsString(),
             ]);
-            return redirect()->back()->with('error', 'Erreur lors de la création de la campagne : ' . $th->getMessage());
+            return redirect()->back()
+                ->withInput()
+                ->with('error', __('messages.server_error'));
         }
     }
+
 
     #UPDATE CAMPAGNE
     public function updateCampagne(Request $request)
@@ -304,13 +327,13 @@ class BusinessController extends Controller
                 'identifiants_personnalises_isActive' => $request->identifiants_personnalises_isActive ? 1 : 0,
                 'afficher_montant_pourcentage' => $request->afficher_montant_pourcentage,
                 'ordonner_candidats_votes_decroissants' => $request->ordonner_candidats_votes_decroissants ? 1 : 0,
-                'quantite_vote' => $request->quantite_vote,
+                'quantite_vote' => $request->input('quantite_vote'),
                 'color_primaire' => $request->color_primaire,
                 'color_secondaire' => $request->color_secondaire,
                 'condition_participation' => $uploadedFiles['condition_participation'],
                 'is_active' => true,
             ];
-            // dd($dateCampagne);
+
             // Sauvegarde des données via le service
             $saved = $this->CampagneService->updateExistingCampagne($dateCampagne);
 
@@ -330,15 +353,19 @@ class BusinessController extends Controller
                 'request_data' => $request->all(),
                 'stack_trace' => $th->getTraceAsString(),
             ]);
-            return redirect()->back()->with('error', 'Erreur lors de la mise à jour de la campagne : ' . $th->getMessage());
+            return redirect()->back()
+                ->withInput()
+                ->with('error', __('messages.server_error'));
         }
     }
+
+
 
     #DELETE CAMPAGNE
     public function deleteCampagne(Request $request)
     {
         try {
-            dd($request->all());
+
             $campagne_id = $request->input('campagne_id');
 
             // Trouver le campagne
@@ -356,7 +383,9 @@ class BusinessController extends Controller
                 'request_data' => $request->all(),
                 'stack_trace' => $th->getTraceAsString(),
             ]);
-            return redirect()->back()->with('error', 'Erreur lors de la suppression de la campagne : ' . $th->getMessage());
+            return redirect()->back()
+                ->withInput()
+                ->with('error', __('messages.server_error'));
         }
     }
 
@@ -377,7 +406,9 @@ class BusinessController extends Controller
             Log::error("Erreur lors de l'affichage de la detail page de la campagne : " . $th->getMessage(), [
                 'stack_trace' => $th->getTraceAsString(),
             ]);
-            return redirect()->back()->with('error', 'Erreur lors de l\'affichage de la detail page de la campagne : ' . $th->getMessage());
+            return redirect()->back()
+                ->withInput()
+                ->with('error', __('messages.server_error'));
         }
     }
 
@@ -396,14 +427,15 @@ class BusinessController extends Controller
             Log::error("Erreur lors de la récupération des catégories campagne : " . $th->getMessage(), [
                 'stack_trace' => $th->getTraceAsString(),
             ]);
-            return redirect()->back()->with('error', 'Erreur lors de la récupération des catégories campagne : ' . $th->getMessage());
+            return redirect()->back()
+                ->withInput()
+                ->with('error', __('messages.server_error'));
         }
     }
     #SAVE CATEGORIE
     public function saveCategorie(Request $request)
     {
         try {
-            // dd($request->all());
 
             #Formatage des données
             $dateCategorie = [
@@ -434,15 +466,15 @@ class BusinessController extends Controller
                 'request_data' => $request->all(),
                 'stack_trace' => $th->getTraceAsString(),
             ]);
-            return redirect()->back()->with('error', 'Erreur lors de la création de la catégorie : ' . $th->getMessage());
+            return redirect()->back()
+                ->withInput()
+                ->with('error', __('messages.server_error'));
         }
     }
     #UPDATE CATEGORIE
     public function updateCategorie(Request $request)
     {
         try {
-            // dd($request->all());
-
             #Formatage des données
             $dateCategorie = [
                 'category_id' => $request->category_id,
@@ -472,7 +504,9 @@ class BusinessController extends Controller
                 'request_data' => $request->all(),
                 'stack_trace' => $th->getTraceAsString(),
             ]);
-            return redirect()->back()->with('error', 'Erreur lors de la mise à jour de la catégorie : ' . $th->getMessage());
+            return redirect()->back()
+                ->withInput()
+                ->with('error', __('messages.server_error'));
         }
     }
 
@@ -480,7 +514,7 @@ class BusinessController extends Controller
     public function deleteCategorie(Request $request)
     {
         try {
-            // dd($request->all());
+
             $category_id = $request->input('category_id');
 
             // Trouver le categorie
@@ -495,7 +529,9 @@ class BusinessController extends Controller
                 'request_data' => $request->all(),
                 'stack_trace' => $th->getTraceAsString(),
             ]);
-            return redirect()->back()->with('error', 'Erreur lors de la suppression de la catégorie : ' . $th->getMessage());
+            return redirect()->back()
+                ->withInput()
+                ->with('error', __('messages.server_error'));
         }
     }
 
@@ -503,13 +539,11 @@ class BusinessController extends Controller
     public function listEtape($customer_id)
     {
         try {
-            // dd($customer_id);
+
             $title_back = "Tableau de bord";
             $link_back = "list_etape";
             $title = "Liste des Étapes";
 
-            // $etapes = $this->CampagneService->listEtapesByCampagneId($campagne_id);
-            // dd($etapes);
             $campagnes = $this->CampagneService->listCampagnesByCustomerId($customer_id);
 
             return view('business.listEtapesCampagne', compact('title', 'title_back', 'link_back', 'campagnes', 'customer_id'));
@@ -517,7 +551,9 @@ class BusinessController extends Controller
             Log::error("Erreur lors de la récupération des étapes : " . $th->getMessage(), [
                 'stack_trace' => $th->getTraceAsString(),
             ]);
-            return redirect()->back()->with('error', 'Erreur lors de la récupération des étapes : ' . $th->getMessage());
+            return redirect()->back()
+                ->withInput()
+                ->with('error', __('messages.server_error'));
         }
     }
 
@@ -540,7 +576,6 @@ class BusinessController extends Controller
     public function saveEtape(Request $request)
     {
         try {
-            // dd($request->all());
 
             $packages = collect($request->packages ?? [])
                 ->filter(fn($p) => isset($p['votes'], $p['montant']) && is_numeric($p['votes']) && is_numeric($p['montant']))
@@ -593,7 +628,7 @@ class BusinessController extends Controller
             ]);
             return response()->json([
                 'success' => false,
-                'message' => 'Erreur technique : ' . $th->getMessage()
+                'message' => __('messages.server_error')
             ], 500);
         }
     }
@@ -602,7 +637,6 @@ class BusinessController extends Controller
     public function updateEtape(Request $request)
     {
         try {
-            // dd($request->all());
 
             $packages = collect($request->packages ?? [])
                 ->filter(fn($p) => isset($p['votes'], $p['montant']) && is_numeric($p['votes']) && is_numeric($p['montant']))
@@ -631,7 +665,6 @@ class BusinessController extends Controller
                 'seuil_selection' => $request->seuil_selection ?? null,
                 'reinitialisation' => $request->reinitialisation ? 1 : 0,
             ];
-            // dd($dataUpdate);
 
             $updated = $this->CampagneService->updateEtape($dataUpdate);
 
@@ -653,7 +686,7 @@ class BusinessController extends Controller
             ]);
             return response()->json([
                 'success' => false,
-                'message' => 'Erreur technique : ' . $th->getMessage()
+                'message' => __('messages.server_error')
             ], 500);
         }
     }
@@ -662,7 +695,7 @@ class BusinessController extends Controller
     public function deleteEtape($etape_id)
     {
         try {
-            dd($etape_id);
+
             // Suppression via votre service ou Eloquent
             $deleted = $this->CampagneService->deleteEtape($etape_id);
 
@@ -681,7 +714,7 @@ class BusinessController extends Controller
             Log::error("Erreur Delete Etape : " . $e->getMessage());
             return response()->json([
                 'success' => false,
-                'message' => 'Erreur technique : ' . $e->getMessage()
+                'message' => __('messages.server_error')
             ], 500);
         }
     }
@@ -716,7 +749,9 @@ class BusinessController extends Controller
             Log::error("Erreur lors de la récupération des candidats : " . $th->getMessage(), [
                 'stack_trace' => $th->getTraceAsString(),
             ]);
-            return redirect()->back()->with('error', 'Erreur lors de la récupération des candidats : ' . $th->getMessage());
+            return redirect()->back()
+                ->withInput()
+                ->with('error', __('messages.server_error'));
         }
     }
 
@@ -814,7 +849,9 @@ class BusinessController extends Controller
                 'request_data' => $request->all(),
                 'stack_trace' => $th->getTraceAsString(),
             ]);
-            return redirect()->back()->with('error', 'Erreur lors de la création du candidat : ' . $th->getMessage());
+            return redirect()->back()
+                ->withInput()
+                ->with('error', __('messages.server_error'));
         }
     }
 
@@ -871,7 +908,7 @@ class BusinessController extends Controller
             ]);
             return response()->json([
                 'success' => false,
-                'message' => 'Erreur technique: ' . $th->getMessage()
+                'message' => __('messages.server_error')
             ], 500);
         }
     }
@@ -893,7 +930,9 @@ class BusinessController extends Controller
             Log::error("Erreur lors de l'affichage de la detail page du candidat : " . $th->getMessage(), [
                 'stack_trace' => $th->getTraceAsString(),
             ]);
-            return redirect()->back()->with('error', 'Erreur lors de l\'affichage de la detail page du candidat : ' . $th->getMessage());
+            return redirect()->back()
+                ->withInput()
+                ->with('error', __('messages.server_error'));
         }
     }
     #DELETE CANDIDAT
@@ -920,7 +959,9 @@ class BusinessController extends Controller
                 'request_data' => $request->all(),
                 'stack_trace' => $th->getTraceAsString(),
             ]);
-            return redirect()->back()->with('error', 'Erreur lors de la suppression du candidat : ' . $th->getMessage());
+            return redirect()->back()
+                ->withInput()
+                ->with('error', __('messages.server_error'));
         }
     }
 
@@ -937,7 +978,6 @@ class BusinessController extends Controller
     public function saveCompteRetrait(Request $request)
     {
         try {
-            // dd($request->all());
 
             #Formatage des données
             $dateCompteRetrait = [
@@ -968,7 +1008,9 @@ class BusinessController extends Controller
                 'request_data' => $request->all(),
                 'stack_trace' => $th->getTraceAsString(),
             ]);
-            return redirect()->back()->with('error', 'Erreur lors de la création du compte retrait : ' . $th->getMessage());
+            return redirect()->back()
+                ->withInput()
+                ->with('error', __('messages.server_error'));
         }
     }
 
@@ -976,7 +1018,6 @@ class BusinessController extends Controller
     public function updateCompteRetrait(Request $request)
     {
         try {
-            // dd($request->all());
 
             #Formatage des données
             $dateCompteRetrait = [
@@ -1007,7 +1048,9 @@ class BusinessController extends Controller
                 'request_data' => $request->all(),
                 'stack_trace' => $th->getTraceAsString(),
             ]);
-            return redirect()->back()->with('error', 'Erreur lors de la mise à jour du compte retrait : ' . $th->getMessage());
+            return redirect()->back()
+                ->withInput()
+                ->with('error', __('messages.server_error'));
         }
     }
 
@@ -1037,7 +1080,7 @@ class BusinessController extends Controller
 
             return response()->json([
                 'success' => false,
-                'message' => 'Erreur lors de la suppression du compte retrait : ' . $e->getMessage()
+                'message' => __('messages.server_error')
             ], 500);
         }
     }

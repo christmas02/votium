@@ -1,0 +1,21 @@
+<script>
+$(document).ready(function() {
+            @if($errors->any())
+                let errors = @json($errors->messages());
+                for (const [field, messages] of Object.entries(errors)) {
+                    let input = $('[name="' + field + '"]');
+                    input.addClass('is-invalid');
+                    if (input.next('.invalid-feedback').length === 0) {
+                        input.after('<span class="invalid-feedback">' + messages[0] + '</span>');
+                    }
+                }
+
+                // Si le formulaire est dans une modal, l'ouvrir automatiquement
+                $('.modal').each(function() {
+                    if ($(this).find('.is-invalid').length > 0) {
+                        $(this).modal('show');
+                    }
+                });
+            @endif
+        });
+</script>

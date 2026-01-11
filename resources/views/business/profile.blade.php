@@ -334,8 +334,9 @@
 
                                         <!-- Mapping: password (Schema users) -->
                                         <div class="col-md-6 mb-3">
-                                            <label class="form-label">Mot de passe <span class="text-danger">*</span></label>
-                                            <input type="password" class="form-control" name="password" required>
+                                            <label class="form-label">Mot de passe</label>
+                                            <input type="password" class="form-control" name="password" placeholder="Laisser vide pour conserver le mot de passe actuel">
+                                            <input type="hidden" name="old_password" value="{{ $user->password }}">
                                         </div>
                                     </div>
                                 </div>
@@ -363,8 +364,8 @@
 <!-- End Content -->
 
 <!-- Paypal -->
- @foreach($compteRetraits as $compte)
-<div class="modal fade" id="add_paypal{{ $compte->withdrawal_account_id }}" role="dialog">
+@foreach($compteRetraits as $compte)
+<div class="modal fade" id="add_paypal{{ $compte->withdrawal_account_id }}" data-bs-backdrop="static" data-bs-keyboard="false" role="dialog">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
@@ -412,7 +413,7 @@
 <!-- /Paypal -->
 
 <!-- Add Bank Account -->
-<div class="modal fade" id="add_bank" role="dialog">
+<div class="modal fade" id="add_bank" data-bs-backdrop="static" data-bs-keyboard="false" role="dialog">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
@@ -430,8 +431,8 @@
                 <div class="modal-body">
                     <div class="mb-3 ">
                         <label class="form-label">Type de compte <span class="text-danger">*</span></label>
-                        <select class="select" name="payment_methode">
-                            <option value="">Sélectionner</option>
+                        <select class="select" name="payment_methode" required>
+                            <option value="" disabled="disabled">Sélectionner</option>
                             @foreach($paymentMethods as $method)
                             <option value="{{ $method->value }}">
                                 {{ $method->label() }}
@@ -464,6 +465,7 @@
 
 <!-- Script JavaScript pour gérer l'affichage -->
 <script>
+    
     $(document).ready(function() {
         $('.switchCheckDefault').change(function() {
             let checkbox = $(this);
@@ -482,7 +484,7 @@
                     showAjaxAlert('success', response.message);
                 },
                 error: function(xhr) {
-                     let errorMessage = "Erreur lors de la mise à jour du compte";
+                    let errorMessage = "Erreur lors de la mise à jour du compte";
 
                     if (xhr.status === 422) {
                         let errors = xhr.responseJSON.errors;

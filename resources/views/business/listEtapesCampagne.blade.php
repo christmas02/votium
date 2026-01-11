@@ -84,7 +84,7 @@
 <!-- End Content -->
 
 <!-- Modal Nouvelle Étape -->
-<div class="modal fade" id="modal_add_step_" tabindex="-1" aria-hidden="true">
+<div class="modal fade" id="modal_add_step_" tabindex="-1" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
     <div class="modal-dialog modal-md modal-dialog-centered">
         <div class="modal-content border-0 shadow-lg" style="border-radius: 15px;">
             <div class="modal-header border-0">
@@ -195,7 +195,7 @@
 </div>
 
 <!-- Modal update étape -->
-<div class="modal fade" id="modal_update_step" tabindex="-1" aria-hidden="true">
+<div class="modal fade" id="modal_update_step" tabindex="-1" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
     <div class="modal-dialog modal-md modal-dialog-centered">
         <div class="modal-content border-0 shadow-lg" style="border-radius: 15px;">
             <div class="modal-header border-0">
@@ -281,7 +281,7 @@
 </div>
 
 <!-- Modal Delete -->
-<div class="modal fade" id="modal_delete_step" tabindex="-1">
+<div class="modal fade" id="modal_delete_step" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-body text-center">

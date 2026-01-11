@@ -92,7 +92,7 @@
 
 <!-- Add Customer -->
 <!-- Structure de la Modale -->
-<div class="modal fade" id="modal_add_client" tabindex="-1" aria-labelledby="modalAddClientLabel" aria-hidden="true">
+<div class="modal fade" id="modal_add_client" tabindex="-1" aria-labelledby="modalAddClientLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
     <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header border-bottom">
@@ -282,7 +282,7 @@
 
 <!-- delete modal -->
 @foreach($customers as $customer)
-<div class="modal fade" id="delete_contact_{{ $customer->customer_id }}">
+<div class="modal fade" id="delete_contact_{{ $customer->customer_id }}" data-bs-backdrop="static" data-bs-keyboard="false">
     <div class="modal-dialog modal-dialog-centered modal-sm rounded-0">
         <div class="modal-content rounded-0">
             <div class="modal-body p-4 text-center position-relative">
@@ -312,8 +312,8 @@
 
 <!-- Structure de la Modale -->
 @foreach($customers as $customer)
-<div class="modal fade" id="modal_add_campaign_{{ $customer->customer_id }}" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-sm modal-dialog-centered modal-dialog-scrollable">
+<div class="modal fade" id="modal_add_campaign_{{ $customer->customer_id }}" tabindex="-1" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header border-bottom">
                 <h5 class="modal-title">Ajouter une nouvelle campagne</h5>

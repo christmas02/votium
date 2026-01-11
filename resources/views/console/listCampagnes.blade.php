@@ -88,8 +88,8 @@
 
 
 <!-- Structure de la Modale -->
-<div class="modal fade" id="modal_add_campaign" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-sm modal-dialog-centered modal-dialog-scrollable">
+<div class="modal fade" id="modal_add_campaign" tabindex="-1" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header border-bottom">
                 <h5 class="modal-title">Ajouter une nouvelle campagne</h5>
@@ -257,15 +257,15 @@
                             </div>
 
                             <!-- 1. Quantité de votes (Tout en haut, pleine largeur) -->
-                            <div class="col-12 mb-3">
+                            <!-- <div class="col-12 mb-3">
                                 <label class="form-label fw-medium">Quantité de votes visibles</label>
-                                <input type="text" class="form-control" name="quantite_vote" placeholder="Ex: 10,20,50,100">
+                                <input type="text" class="form-control" name="quantite_vote" placeholder="Ex: 10,20,50,100"> -->
                                 <!-- Texte d'aide en gris -->
-                                <div class="form-text text-muted mt-2">
+                                <!-- <div class="form-text text-muted mt-2">
                                     Ce sont les quantités de votes que vos clients pourront choisir pour le paiement.
                                     <span class="fw-bold">Les packs dont le montant est inferieur à 200f seront ignorés.</span>
                                 </div>
-                            </div>
+                            </div> -->
 
                             <!-- Couleurs -->
                             <div class="col-md-6 mb-3">
@@ -304,8 +304,8 @@
 <!-- edit offcanvas -->
 <!-- Modale de modification (ID statique pour test) -->
 @foreach($campagnes as $campagne)
-<div class="modal fade" id="modal_edit_campaign_{{$campagne->campagne_id}}" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-sm modal-dialog-centered modal-dialog-scrollable">
+<div class="modal fade" id="modal_edit_campaign_{{$campagne->campagne_id}}" tabindex="-1" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header border-bottom">
                 <h5 class="modal-title">Modifier la campagne : {{$campagne->name}}</h5>
@@ -480,15 +480,15 @@
                             </div>
 
                             <!-- 1. Quantité de votes (Tout en haut, pleine largeur) -->
-                            <div class="col-12 mb-3">
+                            <!-- <div class="col-12 mb-3">
                                 <label class="form-label fw-medium">Quantité de votes visibles</label>
-                                <input type="text" class="form-control" name="quantite_vote" value="{{ $campagne->quantite_vote }}">
+                                <input type="text" class="form-control" name="quantite_vote" value=""> -->
                                 <!-- Texte d'aide en gris -->
-                                <div class="form-text text-muted mt-2">
+                                <!-- <div class="form-text text-muted mt-2">
                                     Ce sont les quantités de votes que vos clients pourront choisir pour le paiement.
                                     <span class="fw-bold">Les packs dont le montant est inferieur à 200f seront ignorés.</span>
                                 </div>
-                            </div>
+                            </div> -->
 
                             <!-- Couleurs -->
                             <div class="col-md-6 mb-3">
@@ -534,7 +534,7 @@
 
 <!-- delete modal -->
 @foreach($campagnes as $campagne)
-<div class="modal fade" id="delete_contact_{{$campagne->campagne_id}}">
+<div class="modal fade" id="delete_contact_{{$campagne->campagne_id}}" data-bs-backdrop="static" data-bs-keyboard="false">
     <div class="modal-dialog modal-dialog-centered modal-sm rounded-0">
         <div class="modal-content rounded-0">
             <div class="modal-body p-4 text-center position-relative">

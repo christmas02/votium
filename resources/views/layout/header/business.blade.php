@@ -251,6 +251,61 @@
     <!-- Main JS -->
     <script src="{{ asset('assets/js/script.js') }}"></script>
 
+    <script>
+        // Gestion du chargement des formulaires avec jQuery
+        $(document).on('submit', 'form', function() {
+            // 1. On récupère le bouton de soumission
+            var $form = $(this);
+            var $btn = $form.find('button[type="submit"]');
+
+            // 2. Vérification optionnelle : si le formulaire est invalide (HTML5), on ne bloque pas
+            if (this.checkValidity()) {
+                // 3. On désactive le bouton
+                $btn.prop('disabled', true);
+
+                // 4. Optionnel : on ajoute un petit indicateur de chargement
+                var loadingText = '<i class="fa fa-spinner fa-spin"></i> Patientez...';
+                if ($btn.html() !== loadingText) {
+                    $btn.data('original-text', $btn.html()); // Sauvegarde du texte original
+                    $btn.html(loadingText);
+                }
+            }
+        });
+
+        $(document).ready(function() {
+            @if($errors->any())
+                let errors = @json($errors->messages());
+
+                // Parcours tous les champs avec erreurs
+                let firstModalOpened = false;
+
+                for (const [field, messages] of Object.entries(errors)) {
+                    let inputs = $('[name="' + field + '"]');
+
+                    inputs.each(function() {
+                        let input = $(this);
+                        input.addClass('is-invalid');
+
+                        if (input.next('.invalid-feedback').length === 0) {
+                            input.after('<span class="invalid-feedback">' + messages[0] + '</span>');
+                        }
+
+                        // Ouvre la modal parente du premier champ avec erreur uniquement
+                        if (!firstModalOpened) {
+                            let modal = input.closest('.modal');
+                            if (modal.length) {
+                                modal.modal('show');
+                                firstModalOpened = true;
+                            }
+                        }
+                    });
+                }
+            @endif
+        });
+
+
+    </script>
+
 </body>
 
 

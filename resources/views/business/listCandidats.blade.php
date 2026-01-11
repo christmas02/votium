@@ -125,8 +125,8 @@
 
 
 <!-- Structure de la Modale -->
-<div class="modal fade" id="modal_add_candidat" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-sm modal-dialog-centered modal-dialog-scrollable">
+<div class="modal fade" id="modal_add_candidat" tabindex="-1" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header border-bottom">
                 <h5 class="modal-title">Ajouter candidat</h5>
@@ -268,7 +268,7 @@
 
 <!-- edit offcanvas -->
 <!-- Modale de modification (ID statique pour test) -->
-<div class="modal fade" id="modal_edit_candidat" tabindex="-1" aria-hidden="true">
+<div class="modal fade" id="modal_edit_candidat" tabindex="-1" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header border-bottom">
@@ -406,7 +406,7 @@
 <!-- /edit offcanvas -->
 
 <!-- delete modal -->
-<div class="modal fade" id="delete_contact" tabindex="-1" aria-hidden="true">
+<div class="modal fade" id="delete_contact" tabindex="-1" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
     <div class="modal-dialog modal-dialog-centered modal-sm">
         <div class="modal-content">
             <!-- On enveloppe le contenu dans le formulaire -->

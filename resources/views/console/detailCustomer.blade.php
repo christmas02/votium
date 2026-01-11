@@ -410,7 +410,7 @@
 <!-- End Content -->
 
 <!-- Add offcanvas -->
-<div class="offcanvas offcanvas-end offcanvas-large" tabindex="-1" id="offcanvas_add_campagne">
+<div class="offcanvas offcanvas-end offcanvas-large" tabindex="-1" id="offcanvas_add_campagne" data-bs-backdrop="static" data-bs-keyboard="false">
     <div class="offcanvas-header border-bottom">
         <h5 class="mb-0">Ajouter une nouvelle campagne</h5>
         <button type="button"
@@ -648,7 +648,7 @@
 
 <!-- edit offcanvas -->
 <!-- Modale de modification (ID statique pour test) -->
-<div class="offcanvas offcanvas-end offcanvas-large" tabindex="-1" id="offcanvas_edit">
+<div class="offcanvas offcanvas-end offcanvas-large" tabindex="-1" id="offcanvas_edit" data-bs-backdrop="static" data-bs-keyboard="false">
     <div class="offcanvas-header border-bottom">
         <h5 class="mb-0">Modifier la campagne : Campagne Été 2024</h5>
         <button type="button"
@@ -890,7 +890,7 @@
 <!-- /edit offcanvas -->
 
 <!-- delete modal -->
-<div class="modal fade" id="delete_contact">
+<div class="modal fade" id="delete_contact" data-bs-backdrop="static" data-bs-keyboard="false">
     <div class="modal-dialog modal-dialog-centered modal-sm rounded-0">
         <div class="modal-content rounded-0">
             <div class="modal-body p-4 text-center position-relative">
@@ -910,7 +910,7 @@
 <!-- delete modal -->
 
 <!-- Paypal -->
-<div class="modal fade" id="add_paypal" role="dialog">
+<div class="modal fade" id="add_paypal" role="dialog" data-bs-backdrop="static" data-bs-keyboard="false">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">

@@ -51,7 +51,9 @@ class ConsoleController  extends Controller
             Log::error("Erreur lors de l'affichage de la console : " . $th->getMessage(), [
                 'stack_trace' => $th->getTraceAsString(),
             ]);
-            return redirect()->back()->with('error', 'Erreur lors de l\'affichage de la console : ' . $th->getMessage());
+            return redirect()->back()
+                ->withInput()
+                ->with('error', __('messages.server_error'));
         }
     }
 
@@ -68,7 +70,9 @@ class ConsoleController  extends Controller
             Log::error("Erreur lors de l'affichage du profil : " . $th->getMessage(), [
                 'stack_trace' => $th->getTraceAsString(),
             ]);
-            return redirect()->back()->with('error', 'Erreur lors de l\'affichage du profil : ' . $th->getMessage());
+            return redirect()->back()
+                ->withInput()
+                ->with('error', __('messages.server_error'));
         }
     }
 
@@ -76,7 +80,7 @@ class ConsoleController  extends Controller
     public function updateProfile(Request $request)
     {
         try {
-            // dd($request->all());
+            
             
             // Mise à jour du mot de passe si fourni
             if ($request->filled('password')) {
@@ -100,7 +104,9 @@ class ConsoleController  extends Controller
             Log::error("Erreur lors de la mise à jour du profil : " . $th->getMessage(), [
                 'stack_trace' => $th->getTraceAsString(),
             ]);
-            return redirect()->back()->with('error', 'Erreur lors de la mise à jour du profil : ' . $th->getMessage());
+            return redirect()->back()
+                ->withInput()
+                ->with('error', __('messages.server_error'));
         }
     }
 
@@ -118,7 +124,9 @@ class ConsoleController  extends Controller
             Log::error("Erreur lors de la récupération des clients : " . $th->getMessage(), [
                 'stack_trace' => $th->getTraceAsString(),
             ]);
-            return redirect()->back()->with('error', 'Erreur lors de la récupération des clients : ' . $th->getMessage());
+            return redirect()->back()
+                ->withInput()
+                ->with('error', __('messages.server_error'));
         }
     }
 
@@ -126,7 +134,6 @@ class ConsoleController  extends Controller
     public function saveCustomer(Request $request)
     {
         try {
-            // dd($request->all());
             #Transfert et upload du fichier logo
             $name_file = ($request->hasFile('logo'))
                 ? Files::uploadFile($request->logo)
@@ -178,7 +185,9 @@ class ConsoleController  extends Controller
                 'request_data' => $request->except('password', 'logo'),
                 'stack_trace' => $th->getTraceAsString(),
             ]);
-            return redirect()->back()->with('error', 'Erreur lors de la création du customer : ' . $th->getMessage());
+            return redirect()->back()
+                ->withInput()
+                ->with('error', __('messages.server_error'));
         }
     }
 
@@ -205,7 +214,9 @@ class ConsoleController  extends Controller
                 'request_data' => $request->all(),
                 'stack_trace' => $th->getTraceAsString(),
             ]);
-            return redirect()->back()->with('error', 'Erreur lors de la suppression du client : ' . $th->getMessage());
+            return redirect()->back()
+                ->withInput()
+                ->with('error', __('messages.server_error'));
         }
     }
 
@@ -229,7 +240,9 @@ class ConsoleController  extends Controller
             Log::error("Erreur lors de l'affichage de la detail page du customer : " . $th->getMessage(), [
                 'stack_trace' => $th->getTraceAsString(),
             ]);
-            return redirect()->back()->with('error', 'Erreur lors de l\'affichage de la detail page du client : ' . $th->getMessage());
+            return redirect()->back()
+                ->withInput()
+                ->with('error', __('messages.server_error'));
         }
     }
 
@@ -255,7 +268,9 @@ class ConsoleController  extends Controller
             Log::error("Erreur lors de l'affichage de la page de modification du mot de passe du customer : " . $th->getMessage(), [
                 'stack_trace' => $th->getTraceAsString(),
             ]);
-            return redirect()->back()->with('error', 'Erreur lors de l\'affichage de la page de modification du mot de passe du client : ' . $th->getMessage());
+            return redirect()->back()
+                ->withInput()
+                ->with('error', __('messages.server_error'));
         }
     }
 
@@ -278,7 +293,9 @@ class ConsoleController  extends Controller
             Log::error("Erreur lors de la mise à jour du mot de passe du customer : " . $th->getMessage(), [
                 'stack_trace' => $th->getTraceAsString(),
             ]);
-            return redirect()->back()->with('error', 'Erreur lors de la mise à jour du mot de passe du client : ' . $th->getMessage());
+            return redirect()->back()
+                ->withInput()
+                ->with('error', __('messages.server_error'));
         }
     }
 
@@ -299,7 +316,9 @@ class ConsoleController  extends Controller
             Log::error("Erreur lors de la récupération des campagnes : " . $th->getMessage(), [
                 'stack_trace' => $th->getTraceAsString(),
             ]);
-            return redirect()->back()->with('error', 'Erreur lors de la récupération des campagnes : ' . $th->getMessage());
+            return redirect()->back()
+                ->withInput()
+                ->with('error', __('messages.server_error'));
         }
     }
 
@@ -334,7 +353,7 @@ class ConsoleController  extends Controller
                 'identifiants_personnalises_isActive' => $request->identifiants_personnalises_isActive ? 1 : 0,
                 'afficher_montant_pourcentage' => $request->afficher_montant_pourcentage,
                 'ordonner_candidats_votes_decroissants' => $request->ordonner_candidats_votes_decroissants ? 1 : 0,
-                'quantite_vote' => $request->quantite_vote,
+                'quantite_vote' => $request->input('quantite_vote'),
                 'color_primaire' => $request->color_primaire,
                 'color_secondaire' => $request->color_secondaire,
                 'condition_participation' => $uploadedFiles['condition_participation'],
@@ -368,7 +387,9 @@ class ConsoleController  extends Controller
                 'request_data' => $request->all(),
                 'stack_trace' => $th->getTraceAsString(),
             ]);
-            return redirect()->back()->with('error', 'Erreur lors de la création de la campagne : ' . $th->getMessage());
+            return redirect()->back()
+                ->withInput()
+                ->with('error', __('messages.server_error'));
         }
     }
 
@@ -415,13 +436,13 @@ class ConsoleController  extends Controller
                 'identifiants_personnalises_isActive' => $request->identifiants_personnalises_isActive ? 1 : 0,
                 'afficher_montant_pourcentage' => $request->afficher_montant_pourcentage,
                 'ordonner_candidats_votes_decroissants' => $request->ordonner_candidats_votes_decroissants ? 1 : 0,
-                'quantite_vote' => $request->quantite_vote,
+                'quantite_vote' => $request->input('quantite_vote'),
                 'color_primaire' => $request->color_primaire,
                 'color_secondaire' => $request->color_secondaire,
                 'condition_participation' => $uploadedFiles['condition_participation'],
                 'is_active' => true,
             ];
-            // dd($dateCampagne);
+
             // Sauvegarde des données via le service
             $saved = $this->CampagneService->updateExistingCampagne($dateCampagne);
 
@@ -441,7 +462,9 @@ class ConsoleController  extends Controller
                 'request_data' => $request->all(),
                 'stack_trace' => $th->getTraceAsString(),
             ]);
-            return redirect()->back()->with('error', 'Erreur lors de la mise à jour de la campagne : ' . $th->getMessage());
+            return redirect()->back()
+                ->withInput()
+                ->with('error', __('messages.server_error'));
         }
     }
 
@@ -467,7 +490,9 @@ class ConsoleController  extends Controller
                 'request_data' => $request->all(),
                 'stack_trace' => $th->getTraceAsString(),
             ]);
-            return redirect()->back()->with('error', 'Erreur lors de la suppression de la campagne : ' . $th->getMessage());
+            return redirect()->back()
+                ->withInput()
+                ->with('error', __('messages.server_error'));
         }
     }
 
@@ -488,7 +513,9 @@ class ConsoleController  extends Controller
             Log::error("Erreur lors de l'affichage de la detail page de la campagne : " . $th->getMessage(), [
                 'stack_trace' => $th->getTraceAsString(),
             ]);
-            return redirect()->back()->with('error', 'Erreur lors de l\'affichage de la detail page de la campagne : ' . $th->getMessage());
+            return redirect()->back()
+                ->withInput()
+                ->with('error', __('messages.server_error'));
         }
     }
 }
