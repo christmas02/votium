@@ -33,7 +33,7 @@ class EtapeRequest extends FormRequest
             'prix_vote'        => 'required|numeric|min:0',
             
             'renitialisation'  => 'nullable|string',
-            'package'          => 'required|string', // ex: Gratuit, Premium, etc.
+            'package'          => 'nullable|string', // ex: Gratuit, Premium, etc.
             'is_active'        => 'nullable'
         ];
     }

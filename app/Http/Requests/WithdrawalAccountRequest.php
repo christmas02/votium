@@ -13,19 +13,13 @@ class WithdrawalAccountRequest extends FormRequest
 
     public function rules(): array
     {
+
         return [
             'customer_id'     => 'required|exists:customers,customer_id',
-            
-            // Le nom du titulaire du compte
             'account_name'    => 'required|string|min:3|max:255',
-            
-            // Le numéro (MoMo, OM, ou RIB)
             'phone_number'    => 'required|string|min:8|max:20',
-            
-            // La méthode (OM, MOMO, WAVE, BANK, etc.)
             'payment_methode' => 'required|string',
-            
-            'is_active'       => 'nullable'
+            'is_active'       => 'required'
         ];
     }
 

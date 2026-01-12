@@ -99,7 +99,7 @@
                 <h5 class="modal-title" id="modalAddClientLabel">Ajouter un nouveau client</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <form action="{{ route('console.save_customer') }}" method="POST" enctype="multipart/form-data">
+            <form class="ajax-form" action="{{ route('console.save_customer') }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 <div class="modal-body">
                     <!-- SECTION 1 : INFORMATIONS UTILISATEUR (Compte de connexion) -->
@@ -321,7 +321,7 @@
             </div>
 
             <div class="modal-body">
-                <form action="{{ route('console.save_campagne') }}" method="POST" enctype="multipart/form-data">
+                <form class="ajax-form" action="{{ route('console.save_campagne') }}" method="POST" enctype="multipart/form-data">
                     @csrf
 
                     <!-- 2. INFORMATIONS PRINCIPALES -->
@@ -477,16 +477,16 @@
                                 </div>
                             </div>
 
-                            <!-- 1. Quantité de votes (Tout en haut, pleine largeur) -->
+                            <!-- 1. Quantité de votes (Tout en haut, pleine largeur)
                             <div class="col-12 mb-3">
                                 <label class="form-label fw-medium">Quantité de votes visibles</label>
                                 <input type="text" class="form-control" name="quantite_vote" placeholder="Ex: 10,20,50,100">
-                                <!-- Texte d'aide en gris -->
+                                Texte d'aide en gris
                                 <div class="form-text text-muted mt-2">
                                     Ce sont les quantités de votes que vos clients pourront choisir pour le paiement.
                                     <span class="fw-bold">Les packs dont le montant est inferieur à 200f seront ignorés.</span>
                                 </div>
-                            </div>
+                            </div> -->
 
                             <!-- Couleurs -->
                             <div class="col-md-6 mb-3">

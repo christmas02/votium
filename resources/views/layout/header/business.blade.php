@@ -273,37 +273,105 @@
         });
 
         $(document).ready(function() {
-            @if($errors->any())
-                let errors = @json($errors->messages());
+            /**
+             * Gestionnaire global pour tous les formulaires AJAX
+             * Cible tous les formulaires ayant la classe .ajax-form
+             */
+            $(document).on('submit', '.ajax-form', function(e) {
+                e.preventDefault();
 
-                // Parcours tous les champs avec erreurs
-                let firstModalOpened = false;
+                const $form = $(this);
+                const $submitBtn = $form.find('button[type="submit"]');
+                const formData = new FormData(this); // Gère Text + Fichiers (Logo)
+                const originalBtnHtml = $submitBtn.html();
 
-                for (const [field, messages] of Object.entries(errors)) {
-                    let inputs = $('[name="' + field + '"]');
+                // 1. Reset visuel : On efface les erreurs précédentes
+                $form.find('.is-invalid').removeClass('is-invalid');
+                $form.find('.invalid-feedback').remove();
 
-                    inputs.each(function() {
-                        let input = $(this);
-                        input.addClass('is-invalid');
+                // Désactiver le bouton et mettre un spinner
+                $submitBtn.prop('disabled', true).html('<span class="spinner-border spinner-border-sm me-1"></span> Traitement...');
 
-                        if (input.next('.invalid-feedback').length === 0) {
-                            input.after('<span class="invalid-feedback">' + messages[0] + '</span>');
+                $.ajax({
+                    url: $form.attr('action'),
+                    method: $form.attr('method'), // POST (Laravel gère le @method('PUT') via FormData)
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                        'Accept': 'application/json' // FORCE Laravel à répondre en JSON et à respecter le FormRequest
+                    },
+                    success: function(response) {
+                        // Utilisation de ton système d'alerte existant
+                        if (typeof showAjaxAlert === 'function') {
+                            showAjaxAlert('success', response.message || 'Action réussie !');
                         }
 
-                        // Ouvre la modal parente du premier champ avec erreur uniquement
-                        if (!firstModalOpened) {
-                            let modal = input.closest('.modal');
-                            if (modal.length) {
-                                modal.modal('show');
-                                firstModalOpened = true;
+                        // Si le formulaire est dans une modale, on la ferme après un court délai
+                        const $modal = $form.closest('.modal');
+                        if ($modal.length) {
+                            setTimeout(() => {
+                                $modal.modal('hide');
+                            }, 1000);
+                        }
+
+                        // Redirection ou Refresh selon le besoin (défini dans la réponse JSON ou par défaut)
+                        if (response.redirect) {
+                            window.location.href = response.redirect;
+                        } else {
+                            setTimeout(() => {
+                                location.reload();
+                            }, 1500);
+                        }
+                    },
+                    error: function(xhr) {
+                        $submitBtn.prop('disabled', false).html(originalBtnHtml);
+
+                        if (xhr.status === 422) { // Erreur de validation Laravel
+                            const errors = xhr.responseJSON.errors;
+
+                            if (typeof showAjaxAlert === 'function') {
+                                showAjaxAlert('danger', "Veuillez vérifier les champs du formulaire.");
+                            }
+
+                            // BOUCLE SCALABLE : Parcourt toutes les erreurs renvoyées par Laravel
+                            $.each(errors, function(fieldName, messages) {
+                                // On gère les noms de champs complexes (ex: 'logo.image' ou 'tags[]')
+                                let $input = $form.find(`[name="${fieldName}"], [name="${fieldName}[]"]`).first();
+
+                                if ($input.length > 0) {
+                                    $input.addClass('is-invalid');
+                                    let errorMsg = `<div class="invalid-feedback d-block">${messages[0]}</div>`;
+
+                                    // Placement intelligent de l'erreur
+                                    if ($input.closest('.input-group').length) {
+                                        // Si c'est un input group (réseaux sociaux), on met l'erreur après le groupe
+                                        $input.closest('.input-group').after(errorMsg);
+                                    } else if ($input.attr('type') === 'file' && $input.closest('.image-upload-group').length) {
+                                        // Cas spécifique de ton upload de logo
+                                        $input.closest('.image-upload-group').after(errorMsg);
+                                    } else {
+                                        // Cas standard
+                                        $input.after(errorMsg);
+                                    }
+                                }
+                            });
+
+                            // Focus sur le premier champ en erreur
+                            $form.find('.is-invalid').first().focus();
+
+                        } else {
+                            // Autre erreur (500, 403, etc.)
+                            const errorTxt = xhr.responseJSON?.message || "Une erreur est survenue.";
+                            if (typeof showAjaxAlert === 'function') {
+                                showAjaxAlert('danger', errorTxt);
                             }
                         }
-                    });
-                }
-            @endif
+                    }
+                });
+            });
         });
-
-
     </script>
 
 </body>

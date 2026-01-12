@@ -92,7 +92,7 @@ class BusinessController extends Controller
     }
 
     #UPDATE PROFILE
-    public function updateProfile(Request $request)
+    public function updateProfile(UserRequest $request)
     {
         try {
 
@@ -114,32 +114,43 @@ class BusinessController extends Controller
             $saved = $this->CustomerService->UpdateAccountCustomer($data);
 
             if (!$saved) {
-                return redirect()->back()->withInput()->with('error', 'Erreur lors de la mise à jour du profil.');
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Erreur lors de la mise à jour du profil.'
+                ], 500);
             }
-            return redirect()->back()->with('success', 'Profil mis à jour avec succès !');
+            return response()->json([
+                'success' => true,
+                'message' => 'Profil mis à jour avec succès !'
+            ], 200);
         } catch (\Exception $th) {
             Log::error("Erreur lors de la mise à jour du profil : " . $th->getMessage(), [
                 'stack_trace' => $th->getTraceAsString(),
             ]);
-            return redirect()->back()
-                ->withInput()
-                ->with('error', __('messages.server_error'));
+            return response()->json([
+                'success' => false,
+                'message' => __('messages.server_error')
+            ], 500);
         }
     }
 
     #UPDATE CUSTOMER
-    public function updateCustomer(Request $request)
+    public function updateCustomer(CustomerRequest $request)
     {
         try {
             // dd($request->all());
-            #Transfert et upload du fichier logo
+            // Initialisation du logo : on garde l'ancien par défaut
+            $name_file = $request->old_logo ?? "default_logo.png";
+
+            // Transfert et upload du fichier logo si présent
             if ($request->hasFile('logo')) {
+                // Supprimer l'ancien fichier si ce n'est pas le logo par défaut
                 if ($request->old_logo && $request->old_logo !== "default_logo.png") {
                     Files::deleteFile($request->old_logo);
                 }
+
+                // Upload du nouveau logo
                 $name_file = Files::uploadFile($request->logo);
-            } else {
-                $name_file = "default_logo.png";
             }
 
             // Formatage des données
@@ -169,23 +180,27 @@ class BusinessController extends Controller
                 if (isset($name_file) && $name_file !== "default_logo.png") {
                     Files::deleteFile($name_file);
                 };
-                return redirect()->back()->withInput()->with('error', 'Erreur lors de la mise à jour de l entreprise.');
-            }
 
-            return redirect()->back()->with('success', 'Client et entreprise créés avec succès !');
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Erreur lors de la mise à jour de l entreprise.'
+                ], 500);
+            }
+            return response()->json([
+                'success' => true,
+                'message' => 'Client et entreprise créés avec succès !'
+            ], 200);
         } catch (\Exception $th) {
-            // Suppression du fichier uploadé en cas d'erreur
-            if (isset($name_file) && $name_file !== "default_logo.png") {
-                Files::deleteFile($name_file);
-            };
+
             // Journaliser l'erreur
             Log::error("Erreur lors de la mise à jour de l entreprise : " . $th->getMessage(), [
                 'request_data' => $request->except('password', 'logo'),
                 'stack_trace' => $th->getTraceAsString(),
             ]);
-            return redirect()->back()
-                ->withInput()
-                ->with('error', __('messages.server_error'));
+            return response()->json([
+                'success' => false,
+                'message' => __('messages.server_error')
+            ], 500);
         }
     }
 
@@ -200,7 +215,7 @@ class BusinessController extends Controller
             $user = auth()->user();
             $customer = $this->CustomerService->customerByIdUser($user->user_id);
             $campagnes = $this->CampagneService->listCampagnesByCustomerId($customer->customer_id)->sortByDesc('created_at');
-
+            
             return view('business.listCampagnes', compact('title', 'title_back', 'link_back', 'campagnes', 'customer'));
         } catch (\Exception $th) {
             Log::error("Erreur lors de la récupération des campagnes : " . $th->getMessage(), [
@@ -213,7 +228,7 @@ class BusinessController extends Controller
     }
 
     #SAVE CAMPAGNE
-    public function saveCampagne(Request $request)
+    public function saveCampagne(CampagneRequest $request)
     {
         #Pour garder trace des fichiers uploadés
         $uploadedFiles = [];
@@ -255,18 +270,19 @@ class BusinessController extends Controller
 
             //Vérification simple
             if ($saved) {
-                return redirect()
-                    ->back()
-                    ->with('success', 'Campagne créée avec succès !');
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Campagne créée avec succès !'
+                ], 200);
             } else {
                 // Supprimer les fichiers si échec
                 foreach ($uploadedFiles as $filePath) {
                     Files::deleteFile($filePath);
                 }
-                return redirect()
-                    ->back()
-                    ->withInput()
-                    ->with('error', 'Erreur lors de la création de la campagne.');
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Erreur lors de la création de la campagne.'
+                ], 500);
             }
         } catch (\Exception $th) {
             //Suppression des fichiers uploadés
@@ -277,15 +293,16 @@ class BusinessController extends Controller
                 'request_data' => $request->all(),
                 'stack_trace' => $th->getTraceAsString(),
             ]);
-            return redirect()->back()
-                ->withInput()
-                ->with('error', __('messages.server_error'));
+            return response()->json([
+                'success' => false,
+                'message' => __('messages.server_error')
+            ], 500);
         }
     }
 
 
     #UPDATE CAMPAGNE
-    public function updateCampagne(Request $request)
+    public function updateCampagne(CampagneRequest $request)
     {
         #Pour garder trace des fichiers uploadés
         $uploadedFiles = [];
@@ -339,27 +356,27 @@ class BusinessController extends Controller
 
             //Vérification simple
             if ($saved) {
-                return redirect()
-                    ->back()
-                    ->with('success', 'Campagne mise à jour avec succès !');
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Campagne mise à jour avec succès !'
+                ], 200);
             } else {
-                return redirect()
-                    ->back()
-                    ->withInput()
-                    ->with('error', 'Erreur lors de la mise à jour de la campagne.');
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Erreur lors de la mise à jour de la campagne.'
+                ], 500);
             }
         } catch (\Exception $th) {
             Log::error("Erreur lors de la mise à jour de la campagne : " . $th->getMessage(), [
                 'request_data' => $request->all(),
                 'stack_trace' => $th->getTraceAsString(),
             ]);
-            return redirect()->back()
-                ->withInput()
-                ->with('error', __('messages.server_error'));
+            return response()->json([
+                'success' => false,
+                'message' => __('messages.server_error')
+            ], 500);
         }
     }
-
-
 
     #DELETE CAMPAGNE
     public function deleteCampagne(Request $request)
@@ -433,7 +450,7 @@ class BusinessController extends Controller
         }
     }
     #SAVE CATEGORIE
-    public function saveCategorie(Request $request)
+    public function saveCategorie(CategoryCampagneRequest $request)
     {
         try {
 
@@ -452,27 +469,29 @@ class BusinessController extends Controller
 
             //Vérification simple
             if ($saved) {
-                return redirect()
-                    ->back()
-                    ->with('success', 'Catégorie créée avec succès !');
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Catégorie créée avec succès !'
+                ], 200);
             } else {
-                return redirect()
-                    ->back()
-                    ->withInput()
-                    ->with('error', 'Erreur lors de la création de la catégorie.');
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Erreur lors de la création de la catégorie.'
+                ], 500);
             }
         } catch (\Exception $th) {
             Log::error("Erreur lors de la création de la catégorie : " . $th->getMessage(), [
                 'request_data' => $request->all(),
                 'stack_trace' => $th->getTraceAsString(),
             ]);
-            return redirect()->back()
-                ->withInput()
-                ->with('error', __('messages.server_error'));
+            return response()->json([
+                'success' => false,
+                'message' => __('messages.server_error')
+            ], 500);
         }
     }
     #UPDATE CATEGORIE
-    public function updateCategorie(Request $request)
+    public function updateCategorie(CategoryCampagneRequest $request)
     {
         try {
             #Formatage des données
@@ -490,23 +509,25 @@ class BusinessController extends Controller
 
             //Vérification simple
             if ($saved) {
-                return redirect()
-                    ->back()
-                    ->with('success', 'Catégorie mise à jour avec succès !');
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Catégorie mise à jour avec succès !'
+                ], 200);
             } else {
-                return redirect()
-                    ->back()
-                    ->withInput()
-                    ->with('error', 'Erreur lors de la mise à jour de la catégorie.');
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Erreur lors de la mise à jour de la catégorie.'
+                ], 500);
             }
         } catch (\Exception $th) {
             Log::error("Erreur lors de la mise à jour de la catégorie : " . $th->getMessage(), [
                 'request_data' => $request->all(),
                 'stack_trace' => $th->getTraceAsString(),
             ]);
-            return redirect()->back()
-                ->withInput()
-                ->with('error', __('messages.server_error'));
+            return response()->json([
+                'success' => false,
+                'message' => __('messages.server_error')
+            ], 500);
         }
     }
 
@@ -573,7 +594,7 @@ class BusinessController extends Controller
     }
 
     #SAVE ETAPE
-    public function saveEtape(Request $request)
+    public function saveEtape(EtapeRequest $request)
     {
         try {
 
@@ -634,7 +655,7 @@ class BusinessController extends Controller
     }
 
     #UPDATE ETAPE
-    public function updateEtape(Request $request)
+    public function updateEtape(EtapeRequest $request)
     {
         try {
 
@@ -802,7 +823,7 @@ class BusinessController extends Controller
     }
 
     #SAVE CANDIDAT
-    public function saveCandidat(Request $request)
+    public function saveCandidat(CandidatRequest $request)
     {
         try {
 
@@ -835,28 +856,31 @@ class BusinessController extends Controller
             $saved = $this->CandidatureService->newCandidat($dateCandidat);
 
             if ($saved) {
-                return redirect()
-                    ->back()
-                    ->with('success', 'Candidat créé avec succès !');
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Candidat créé avec succès !'
+                ], 200);
             } else {
-                return redirect()
-                    ->back()
-                    ->withInput()
-                    ->with('error', 'Erreur lors de la création du candidat.');
+
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Erreur lors de la création du candidat.'
+                ], 500);
             }
         } catch (\Exception $th) {
             Log::error("Erreur lors de la création du candidat : " . $th->getMessage(), [
                 'request_data' => $request->all(),
                 'stack_trace' => $th->getTraceAsString(),
             ]);
-            return redirect()->back()
-                ->withInput()
-                ->with('error', __('messages.server_error'));
+            return response()->json([
+                'success' => false,
+                'message' => __('messages.server_error')
+            ], 500);
         }
     }
 
     #UPDATE CANDIDAT
-    public function updateCandidat(Request $request)
+    public function updateCandidat(CandidatRequest $request)
     {
         try {
             #Traitement de la photo
@@ -975,7 +999,7 @@ class BusinessController extends Controller
     }
 
     #SAVE COMPTE RETRAIT
-    public function saveCompteRetrait(Request $request)
+    public function saveCompteRetrait(WithdrawalAccountRequest $request)
     {
         try {
 
@@ -994,28 +1018,31 @@ class BusinessController extends Controller
 
             //Vérification simple
             if ($saved) {
-                return redirect()
-                    ->back()
-                    ->with('success', 'Compte retrait créé avec succès !');
+
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Compte retrait créé avec succès !'
+                ], 200);
             } else {
-                return redirect()
-                    ->back()
-                    ->withInput()
-                    ->with('error', 'Erreur lors de la création du compte retrait.');
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Erreur lors de la création du compte retrait.'
+                ], 500);
             }
         } catch (\Exception $th) {
             Log::error("Erreur lors de la création du compte retrait : " . $th->getMessage(), [
                 'request_data' => $request->all(),
                 'stack_trace' => $th->getTraceAsString(),
             ]);
-            return redirect()->back()
-                ->withInput()
-                ->with('error', __('messages.server_error'));
+            return response()->json([
+                'success' => false,
+                'message' => __('messages.server_error')
+            ], 500);
         }
     }
 
     #UPDATE COMPTE RETRAIT
-    public function updateCompteRetrait(Request $request)
+    public function updateCompteRetrait(WithdrawalAccountRequest $request)
     {
         try {
 
@@ -1034,23 +1061,25 @@ class BusinessController extends Controller
 
             //Vérification simple
             if ($saved) {
-                return redirect()
-                    ->back()
-                    ->with('success', 'Compte retrait mis à jour avec succès !');
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Compte retrait mis à jour avec succès !'
+                ], 200);
             } else {
-                return redirect()
-                    ->back()
-                    ->withInput()
-                    ->with('error', 'Erreur lors de la mise à jour du compte retrait.');
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Erreur lors de la mise à jour du compte retrait.'
+                ], 500);
             }
         } catch (\Exception $th) {
             Log::error("Erreur lors de la mise à jour du compte retrait : " . $th->getMessage(), [
                 'request_data' => $request->all(),
                 'stack_trace' => $th->getTraceAsString(),
             ]);
-            return redirect()->back()
-                ->withInput()
-                ->with('error', __('messages.server_error'));
+            return response()->json([
+                'success' => false,
+                'message' => __('messages.server_error')
+            ], 500);
         }
     }
 

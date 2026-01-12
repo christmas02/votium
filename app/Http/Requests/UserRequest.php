@@ -24,13 +24,10 @@ class UserRequest extends FormRequest
      */
     public function rules(): array
     {
-        // On récupère l'ID de l'utilisateur s'il s'agit d'une mise à jour
-        // pour ignorer son propre email dans la vérification 'unique'
-        $userId = $this->route('user_id') ?? $this->user_id;
-
+        $isUpdate = $this->filled('user_id');
+        $userId = $this->input('user_id');
         return [
             'name' => 'required|string|max:255',
-
             'phonenumber' => 'required|string|max:20',
 
             'email' => [

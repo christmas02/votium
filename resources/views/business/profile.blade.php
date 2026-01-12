@@ -62,11 +62,12 @@
                         </div>
                         <div class="card-body">
 
-                            <form action="{{ route('business.update_customer') }}" method="POST" enctype="multipart/form-data">
+                            <form class="ajax-form" action="{{ route('business.update_customer') }}" method="POST" enctype="multipart/form-data">
                                 @csrf
                                 <div class="modal-body">
                                     <input type="hidden" name="user_id" value="{{ $user->user_id }}">
                                     <input type="hidden" name="customer_id" value="{{ $customer->customer_id }}">
+                                    <input type="hidden" name="old_logo" value="{{ $customer->logo }}">
                                     <!-- SECTION 2 : INFORMATIONS ENTREPRISE -->
                                     <div>
                                         <h6 class="mb-3 d-flex align-items-center text-dark">
@@ -307,7 +308,7 @@
                         </div>
                         <div class="card-body">
 
-                            <form action="{{ route('business.update_profile') }}" method="POST" enctype="multipart/form-data">
+                            <form class="ajax-form" action="{{ route('business.update_profile') }}" method="POST" enctype="multipart/form-data">
                                 @csrf
                                 <input type="hidden" name="user_id" value="{{ $user->user_id }}">
                                 <!-- SECTION 1 : INFORMATIONS UTILISATEUR (Compte de connexion) -->
@@ -417,14 +418,14 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Ajouter un compte</h5>
+                <h5 class="modal-title">Ajouter un compte retrait</h5>
                 <button type="button"
                     class="btn-close custom-btn-close border p-1 me-0 d-flex align-items-center justify-content-center rounded-circle"
                     data-bs-dismiss="modal" aria-label="Close">
                     <i class="ti ti-x"></i>
                 </button>
             </div>
-            <form action="{{ route('business.save_compte_retrait') }}" method="POST">
+            <form class="ajax-form" action="{{ route('business.save_compte_retrait') }}" method="POST">
                 @csrf
                 <input type="hidden" name="customer_id" value="{{ $customer->customer_id }}">
 
@@ -467,6 +468,10 @@
 <script>
     
     $(document).ready(function() {
+
+        
+
+        // Formulaire AJAX pour activer/désactiver un compte de retrait
         $('.switchCheckDefault').change(function() {
             let checkbox = $(this);
             let accountId = checkbox.data('id');

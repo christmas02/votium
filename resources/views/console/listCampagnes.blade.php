@@ -97,7 +97,7 @@
             </div>
 
             <div class="modal-body">
-                <form action="{{ route('console.save_campagne') }}" method="POST" enctype="multipart/form-data">
+                <form class="ajax-form" action="{{ route('console.save_campagne') }}" method="POST" enctype="multipart/form-data">
                     @csrf
 
                     <!-- 2. INFORMATIONS PRINCIPALES -->
@@ -313,7 +313,7 @@
             </div>
 
             <div class="modal-body">
-                <form action="{{ route('console.update_campagne') }}" method="POST" enctype="multipart/form-data">
+                <form class="ajax-form" action="{{ route('console.update_campagne') }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     <input type="hidden" name="campagne_id" value="{{ $campagne->campagne_id }}">
                     <input type="hidden" name="old_image_couverture" value="{{ $campagne->image_couverture }}">

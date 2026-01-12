@@ -59,7 +59,7 @@
                         </div>
                         <div class="card-body">
 
-                            <form action="{{ route('console.update_profile') }}" method="POST" enctype="multipart/form-data">
+                            <form class="ajax-form" action="{{ route('console.update_profile') }}" method="POST" enctype="multipart/form-data">
                                 @csrf
                                 <input type="hidden" name="user_id" value="{{ $user->user_id }}">
                                 <!-- SECTION 1 : INFORMATIONS UTILISATEUR (Compte de connexion) -->
@@ -114,60 +114,6 @@
 </div>
 <!-- End Content -->
 
-
-<script>
-    function previewImage(input) {
-        const preview = document.getElementById('image-preview');
-        const placeholder = document.getElementById('upload-placeholder');
-        const removeBtn = document.getElementById('remove-btn');
-        const dropZone = document.getElementById('drop-zone');
-
-        if (input.files && input.files[0]) {
-            const reader = new FileReader();
-
-            reader.onload = function(e) {
-                // Affiche l'image
-                preview.src = e.target.result;
-                preview.classList.remove('d-none');
-
-                // Masque le texte d'upload
-                placeholder.classList.add('d-none');
-
-                // Affiche le bouton supprimer
-                removeBtn.classList.remove('d-none');
-
-                // Change la bordure pour indiquer le succès
-                dropZone.classList.remove('border-dashed');
-                dropZone.classList.add('border-primary');
-            }
-
-            reader.readAsDataURL(input.files[0]);
-        }
-    }
-
-    function removeImage() {
-        const input = document.getElementById('input-image');
-        const preview = document.getElementById('image-preview');
-        const placeholder = document.getElementById('upload-placeholder');
-        const removeBtn = document.getElementById('remove-btn');
-        const dropZone = document.getElementById('drop-zone');
-
-        // Reset de l'input
-        input.value = '';
-
-        // Masque l'image et le bouton
-        preview.src = '#';
-        preview.classList.add('d-none');
-        removeBtn.classList.add('d-none');
-
-        // Réaffiche le placeholder
-        placeholder.classList.remove('d-none');
-
-        // Remet le style par défaut
-        dropZone.classList.add('border-dashed');
-        dropZone.classList.remove('border-primary');
-    }
-</script>
 @endsection
 <!-- section js -->
 @section('extra-js')
