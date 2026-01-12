@@ -62,11 +62,12 @@
                         </div>
                         <div class="card-body">
 
-                            <form action="{{ route('business.update_customer') }}" method="POST" enctype="multipart/form-data">
+                            <form class="ajax-form" action="{{ route('business.update_customer') }}" method="POST" enctype="multipart/form-data">
                                 @csrf
                                 <div class="modal-body">
                                     <input type="hidden" name="user_id" value="{{ $user->user_id }}">
                                     <input type="hidden" name="customer_id" value="{{ $customer->customer_id }}">
+                                    <input type="hidden" name="old_logo" value="{{ $customer->logo }}">
                                     <!-- SECTION 2 : INFORMATIONS ENTREPRISE -->
                                     <div>
                                         <h6 class="mb-3 d-flex align-items-center text-dark">
@@ -307,7 +308,7 @@
                         </div>
                         <div class="card-body">
 
-                            <form action="{{ route('business.update_profile') }}" method="POST" enctype="multipart/form-data">
+                            <form class="ajax-form" action="{{ route('business.update_profile') }}" method="POST" enctype="multipart/form-data">
                                 @csrf
                                 <input type="hidden" name="user_id" value="{{ $user->user_id }}">
                                 <!-- SECTION 1 : INFORMATIONS UTILISATEUR (Compte de connexion) -->
@@ -334,8 +335,9 @@
 
                                         <!-- Mapping: password (Schema users) -->
                                         <div class="col-md-6 mb-3">
-                                            <label class="form-label">Mot de passe <span class="text-danger">*</span></label>
-                                            <input type="password" class="form-control" name="password" required>
+                                            <label class="form-label">Mot de passe</label>
+                                            <input type="password" class="form-control" name="password" placeholder="Laisser vide pour conserver le mot de passe actuel">
+                                            <input type="hidden" name="old_password" value="{{ $user->password }}">
                                         </div>
                                     </div>
                                 </div>
@@ -363,8 +365,8 @@
 <!-- End Content -->
 
 <!-- Paypal -->
- @foreach($compteRetraits as $compte)
-<div class="modal fade" id="add_paypal{{ $compte->withdrawal_account_id }}" role="dialog">
+@foreach($compteRetraits as $compte)
+<div class="modal fade" id="add_paypal{{ $compte->withdrawal_account_id }}" data-bs-backdrop="static" data-bs-keyboard="false" role="dialog">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
@@ -412,26 +414,26 @@
 <!-- /Paypal -->
 
 <!-- Add Bank Account -->
-<div class="modal fade" id="add_bank" role="dialog">
+<div class="modal fade" id="add_bank" data-bs-backdrop="static" data-bs-keyboard="false" role="dialog">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Ajouter un compte</h5>
+                <h5 class="modal-title">Ajouter un compte retrait</h5>
                 <button type="button"
                     class="btn-close custom-btn-close border p-1 me-0 d-flex align-items-center justify-content-center rounded-circle"
                     data-bs-dismiss="modal" aria-label="Close">
                     <i class="ti ti-x"></i>
                 </button>
             </div>
-            <form action="{{ route('business.save_compte_retrait') }}" method="POST">
+            <form class="ajax-form" action="{{ route('business.save_compte_retrait') }}" method="POST">
                 @csrf
                 <input type="hidden" name="customer_id" value="{{ $customer->customer_id }}">
 
                 <div class="modal-body">
                     <div class="mb-3 ">
                         <label class="form-label">Type de compte <span class="text-danger">*</span></label>
-                        <select class="select" name="payment_methode">
-                            <option value="">Sélectionner</option>
+                        <select class="select" name="payment_methode" required>
+                            <option value="" disabled="disabled">Sélectionner</option>
                             @foreach($paymentMethods as $method)
                             <option value="{{ $method->value }}">
                                 {{ $method->label() }}
@@ -464,7 +466,12 @@
 
 <!-- Script JavaScript pour gérer l'affichage -->
 <script>
+    
     $(document).ready(function() {
+
+        
+
+        // Formulaire AJAX pour activer/désactiver un compte de retrait
         $('.switchCheckDefault').change(function() {
             let checkbox = $(this);
             let accountId = checkbox.data('id');
@@ -482,7 +489,7 @@
                     showAjaxAlert('success', response.message);
                 },
                 error: function(xhr) {
-                     let errorMessage = "Erreur lors de la mise à jour du compte";
+                    let errorMessage = "Erreur lors de la mise à jour du compte";
 
                     if (xhr.status === 422) {
                         let errors = xhr.responseJSON.errors;

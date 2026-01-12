@@ -20,6 +20,15 @@ use App\Models\User;
 use App\Models\Customer;
 use PhpParser\Node\Stmt\TryCatch;
 
+use App\Http\Requests\CampagneRequest;
+use App\Http\Requests\CandidatRequest;
+use App\Http\Requests\CategoryCampagneRequest;
+use App\Http\Requests\CustomerRequest;
+use App\Http\Requests\EtapeRequest;
+use App\Http\Requests\UserRequest;
+use App\Http\Requests\WithdrawalAccountRequest;
+use App\Enums\PaymentMethod;
+
 class ConsoleController  extends Controller
 {
     protected CustomerService $CustomerService;
@@ -51,7 +60,9 @@ class ConsoleController  extends Controller
             Log::error("Erreur lors de l'affichage de la console : " . $th->getMessage(), [
                 'stack_trace' => $th->getTraceAsString(),
             ]);
-            return redirect()->back()->with('error', 'Erreur lors de l\'affichage de la console : ' . $th->getMessage());
+            return redirect()->back()
+                ->withInput()
+                ->with('error', __('messages.server_error'));
         }
     }
 
@@ -68,20 +79,24 @@ class ConsoleController  extends Controller
             Log::error("Erreur lors de l'affichage du profil : " . $th->getMessage(), [
                 'stack_trace' => $th->getTraceAsString(),
             ]);
-            return redirect()->back()->with('error', 'Erreur lors de l\'affichage du profil : ' . $th->getMessage());
+            return redirect()->back()
+                ->withInput()
+                ->with('error', __('messages.server_error'));
         }
     }
 
     #UPDATE PROFILE
-    public function updateProfile(Request $request)
+    public function updateProfile(UserRequest $request)
     {
         try {
-            // dd($request->all());
-            
+
             // Mise à jour du mot de passe si fourni
             if ($request->filled('password')) {
                 $password = $this->setting->hashPassword($request->password);
+            } else {
+                $password = $request->old_password;
             }
+
             $data = [
                 'user_id' => $request->user_id,
                 'name' => $request->name,
@@ -93,14 +108,23 @@ class ConsoleController  extends Controller
             $saved = $this->CustomerService->UpdateAccountCustomer($data);
 
             if (!$saved) {
-                return redirect()->back()->withInput()->with('error', 'Erreur lors de la mise à jour du profil.');
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Erreur lors de la mise à jour du profil.'
+                ], 500);
             }
-            return redirect()->route('console.profile')->with('success', 'Profil mis à jour avec succès !');
+            return response()->json([
+                'success' => true,
+                'message' => 'Profil mis à jour avec succès !'
+            ], 200);
         } catch (\Exception $th) {
             Log::error("Erreur lors de la mise à jour du profil : " . $th->getMessage(), [
                 'stack_trace' => $th->getTraceAsString(),
             ]);
-            return redirect()->back()->with('error', 'Erreur lors de la mise à jour du profil : ' . $th->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => __('messages.server_error')
+            ], 500);
         }
     }
 
@@ -118,15 +142,16 @@ class ConsoleController  extends Controller
             Log::error("Erreur lors de la récupération des clients : " . $th->getMessage(), [
                 'stack_trace' => $th->getTraceAsString(),
             ]);
-            return redirect()->back()->with('error', 'Erreur lors de la récupération des clients : ' . $th->getMessage());
+            return redirect()->back()
+                ->withInput()
+                ->with('error', __('messages.server_error'));
         }
     }
 
     #SAVE CUSTOMER
-    public function saveCustomer(Request $request)
+    public function saveCustomer(CustomerRequest $request)
     {
         try {
-            // dd($request->all());
             #Transfert et upload du fichier logo
             $name_file = ($request->hasFile('logo'))
                 ? Files::uploadFile($request->logo)
@@ -158,27 +183,35 @@ class ConsoleController  extends Controller
 
             // Sauvegarde des données via le service
             $saved = $this->CustomerService->createNewCustomer($dateCustomer);
+
             //Vérification simple
             if (!$saved) {
                 // Suppression du fichier uploadé en cas d'erreur
                 if (isset($name_file) && $name_file !== "default_logo.png") {
                     Files::deleteFile($name_file);
                 };
-                return redirect()->back()->withInput()->with('error', 'Erreur lors de la création du client et de l entreprise.');
+
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Erreur lors de la création du client et de l entreprise.'
+                ], 500);
             }
 
-            return redirect()->route('console.list_customer')->with('success', 'Client et entreprise créés avec succès !');
+            return response()->json([
+                'success' => true,
+                'message' => 'Client et entreprise créés avec succès !'
+            ], 200);
         } catch (\Exception $th) {
-            // Suppression du fichier uploadé en cas d'erreur
-            if (isset($name_file) && $name_file !== "default_logo.png") {
-                Files::deleteFile($name_file);
-            };
+
             // Journaliser l'erreur
             Log::error("Erreur lors de la création du customer : " . $th->getMessage(), [
                 'request_data' => $request->except('password', 'logo'),
                 'stack_trace' => $th->getTraceAsString(),
             ]);
-            return redirect()->back()->with('error', 'Erreur lors de la création du customer : ' . $th->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => __('messages.server_error')
+            ], 500);
         }
     }
 
@@ -205,7 +238,9 @@ class ConsoleController  extends Controller
                 'request_data' => $request->all(),
                 'stack_trace' => $th->getTraceAsString(),
             ]);
-            return redirect()->back()->with('error', 'Erreur lors de la suppression du client : ' . $th->getMessage());
+            return redirect()->back()
+                ->withInput()
+                ->with('error', __('messages.server_error'));
         }
     }
 
@@ -224,12 +259,19 @@ class ConsoleController  extends Controller
             }
             $user = User::where('user_id', $customer->user_id)->first();
 
-            return view('console.detailCustomer', compact('title', 'title_back', 'link_back', 'customer', 'user'));
+             $paymentMethods = PaymentMethod::cases();
+
+            //Liste des comptes de retrait
+            $compteRetraits = $this->CustomerService->listWithdrawalAccountByCustomer($idcustomer);
+
+            return view('console.detailCustomer', compact('title', 'title_back', 'link_back', 'customer', 'user', 'paymentMethods', 'compteRetraits'));
         } catch (\Exception $th) {
             Log::error("Erreur lors de l'affichage de la detail page du customer : " . $th->getMessage(), [
                 'stack_trace' => $th->getTraceAsString(),
             ]);
-            return redirect()->back()->with('error', 'Erreur lors de l\'affichage de la detail page du client : ' . $th->getMessage());
+            return redirect()->back()
+                ->withInput()
+                ->with('error', __('messages.server_error'));
         }
     }
 
@@ -255,7 +297,9 @@ class ConsoleController  extends Controller
             Log::error("Erreur lors de l'affichage de la page de modification du mot de passe du customer : " . $th->getMessage(), [
                 'stack_trace' => $th->getTraceAsString(),
             ]);
-            return redirect()->back()->with('error', 'Erreur lors de l\'affichage de la page de modification du mot de passe du client : ' . $th->getMessage());
+            return redirect()->back()
+                ->withInput()
+                ->with('error', __('messages.server_error'));
         }
     }
 
@@ -278,7 +322,9 @@ class ConsoleController  extends Controller
             Log::error("Erreur lors de la mise à jour du mot de passe du customer : " . $th->getMessage(), [
                 'stack_trace' => $th->getTraceAsString(),
             ]);
-            return redirect()->back()->with('error', 'Erreur lors de la mise à jour du mot de passe du client : ' . $th->getMessage());
+            return redirect()->back()
+                ->withInput()
+                ->with('error', __('messages.server_error'));
         }
     }
 
@@ -287,7 +333,7 @@ class ConsoleController  extends Controller
     {
         try {
             $campagnes = $this->CampagneService->listCampagnes()->sortByDesc('created_at');
-           
+
             $customers = $this->CustomerService->listCustmer()
                 ->pluck('entreprise', 'customer_id')
                 ->toArray();
@@ -299,12 +345,14 @@ class ConsoleController  extends Controller
             Log::error("Erreur lors de la récupération des campagnes : " . $th->getMessage(), [
                 'stack_trace' => $th->getTraceAsString(),
             ]);
-            return redirect()->back()->with('error', 'Erreur lors de la récupération des campagnes : ' . $th->getMessage());
+            return redirect()->back()
+                ->withInput()
+                ->with('error', __('messages.server_error'));
         }
     }
 
     #SAVE CAMPAGNE
-    public function saveCampagne(Request $request)
+    public function saveCampagne(CampagneRequest $request)
     {
         #Pour garder trace des fichiers uploadés
         $uploadedFiles = [];
@@ -334,7 +382,7 @@ class ConsoleController  extends Controller
                 'identifiants_personnalises_isActive' => $request->identifiants_personnalises_isActive ? 1 : 0,
                 'afficher_montant_pourcentage' => $request->afficher_montant_pourcentage,
                 'ordonner_candidats_votes_decroissants' => $request->ordonner_candidats_votes_decroissants ? 1 : 0,
-                'quantite_vote' => $request->quantite_vote,
+                'quantite_vote' => $request->input('quantite_vote'),
                 'color_primaire' => $request->color_primaire,
                 'color_secondaire' => $request->color_secondaire,
                 'condition_participation' => $uploadedFiles['condition_participation'],
@@ -346,18 +394,20 @@ class ConsoleController  extends Controller
 
             //Vérification simple
             if ($saved) {
-                return redirect()
-                    ->route('console.list_campagne')
-                    ->with('success', 'Campagne créée avec succès !');
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Campagne créée avec succès !',
+                    'redirect' => route('console.list_campagne')
+                ]);
             } else {
                 // Supprimer les fichiers si échec
                 foreach ($uploadedFiles as $filePath) {
                     Files::deleteFile($filePath);
                 }
-                return redirect()
-                    ->back()
-                    ->withInput()
-                    ->with('error', 'Erreur lors de la création de la campagne.');
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Erreur lors de la création de la campagne.'
+                ], 500);
             }
         } catch (\Exception $th) {
             //Suppression des fichiers uploadés
@@ -368,12 +418,15 @@ class ConsoleController  extends Controller
                 'request_data' => $request->all(),
                 'stack_trace' => $th->getTraceAsString(),
             ]);
-            return redirect()->back()->with('error', 'Erreur lors de la création de la campagne : ' . $th->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => __('messages.server_error')
+            ], 500);
         }
     }
 
     #UPDATE CAMPAGNE
-    public function updateCampagne(Request $request)
+    public function updateCampagne(CampagneRequest $request)
     {
         #Pour garder trace des fichiers uploadés
         $uploadedFiles = [];
@@ -415,33 +468,37 @@ class ConsoleController  extends Controller
                 'identifiants_personnalises_isActive' => $request->identifiants_personnalises_isActive ? 1 : 0,
                 'afficher_montant_pourcentage' => $request->afficher_montant_pourcentage,
                 'ordonner_candidats_votes_decroissants' => $request->ordonner_candidats_votes_decroissants ? 1 : 0,
-                'quantite_vote' => $request->quantite_vote,
+                'quantite_vote' => $request->input('quantite_vote'),
                 'color_primaire' => $request->color_primaire,
                 'color_secondaire' => $request->color_secondaire,
                 'condition_participation' => $uploadedFiles['condition_participation'],
                 'is_active' => true,
             ];
-            // dd($dateCampagne);
+
             // Sauvegarde des données via le service
             $saved = $this->CampagneService->updateExistingCampagne($dateCampagne);
 
             //Vérification simple
             if ($saved) {
-                return redirect()
-                    ->route('console.list_campagne')
-                    ->with('success', 'Campagne mise à jour avec succès !');
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Campagne mise à jour avec succès !'
+                ], 200);
             } else {
-                return redirect()
-                    ->back()
-                    ->withInput()
-                    ->with('error', 'Erreur lors de la mise à jour de la campagne.');
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Erreur lors de la mise à jour de la campagne.'
+                ], 500);
             }
         } catch (\Exception $th) {
             Log::error("Erreur lors de la mise à jour de la campagne : " . $th->getMessage(), [
                 'request_data' => $request->all(),
                 'stack_trace' => $th->getTraceAsString(),
             ]);
-            return redirect()->back()->with('error', 'Erreur lors de la mise à jour de la campagne : ' . $th->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => __('messages.server_error')
+            ], 500);
         }
     }
 
@@ -467,7 +524,9 @@ class ConsoleController  extends Controller
                 'request_data' => $request->all(),
                 'stack_trace' => $th->getTraceAsString(),
             ]);
-            return redirect()->back()->with('error', 'Erreur lors de la suppression de la campagne : ' . $th->getMessage());
+            return redirect()->back()
+                ->withInput()
+                ->with('error', __('messages.server_error'));
         }
     }
 
@@ -488,7 +547,9 @@ class ConsoleController  extends Controller
             Log::error("Erreur lors de l'affichage de la detail page de la campagne : " . $th->getMessage(), [
                 'stack_trace' => $th->getTraceAsString(),
             ]);
-            return redirect()->back()->with('error', 'Erreur lors de l\'affichage de la detail page de la campagne : ' . $th->getMessage());
+            return redirect()->back()
+                ->withInput()
+                ->with('error', __('messages.server_error'));
         }
     }
 }

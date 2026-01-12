@@ -73,8 +73,8 @@
                                                 <!-- Image de prévisualisation -->
                                                 <img src="{{ env('IMAGES_PATH') }}/{{ $customer->logo }}" alt="Aperçu" class="w-100 h-100 object-fit-cover">
                                             </div>
-                                            
-                                           
+
+
                                         </div>
                                     </div>
 
@@ -178,26 +178,28 @@
                     <div class="card mb-0">
                         <div class="card-body">
 
-                            <!-- <div class="border-bottom mb-3 pb-3 d-flex align-items-center justify-content-between flex-wrap gap-2">
-                                <h4 class="fs-17 mb-0">Compte de retrait</h4>
-                                <a href="javascript:void(0)" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#add_bank"><i class="ti ti-square-rounded-plus-filled me-1"></i>Créer Compte</a>
-                            </div> -->
-
                             <div class="row">
 
                                 <!-- Email Wrap -->
                                 <div class="col-md-12">
+                                    @foreach($compteRetraits as $compte)
                                     <!-- Payment -->
                                     <div class="border rounded shadow p-3 mb-3">
                                         <div class="row gy-3">
                                             <div class="col-sm-5">
                                                 <div class="d-flex align-items-center">
                                                     <span>
-                                                        <img src="assets/img/payments/payment-1.svg" alt="Img">
+                                                        @foreach($paymentMethods as $method)
+                                                        @if($method->value === $compte->payment_methode)
+                                                        <img src="{{ asset(env('IMAGES_PATH') . '/' . $method->icon()) }}" alt="{{ $method->label() }}" class="me-2" style="width:50px; height:50px;">
+                                                        @endif
+                                                        @endforeach
+
                                                     </span>
                                                     <div class="ms-2">
                                                         <a href="javascript:void(0);"
-                                                            class="badge badge-tag badge-soft-success ms-2">Connected
+                                                            class="badge badge-tag ms-2 {{ $compte->is_active ? 'badge-soft-success' : 'badge-soft-danger' }}">
+                                                            {{ $compte->is_active ? 'Connecté' : 'Déconnecté' }}
                                                         </a>
                                                     </div>
                                                 </div>
@@ -213,12 +215,17 @@
                                                                 class="ti ti-info-circle-filled"></i></a>
                                                         <a href="#" class="btn btn-light"
                                                             data-bs-toggle="modal"
-                                                            data-bs-target="#add_paypal"><i
-                                                                class="ti ti-tool me-1"></i>Modifer</a>
+                                                            data-bs-target="#add_paypal{{ $compte->withdrawal_account_id }}"><i
+                                                                class="ti ti-tool me-1"></i>Voir</a>
                                                     </div>
                                                     <div class="form-check form-switch p-0">
                                                         <label class="form-check-label d-flex align-items-center gap-2 w-100">
-                                                            <input class="form-check-input switchCheckDefault ms-auto" type="checkbox" role="switch" checked>
+                                                            <input
+                                                                class="form-check-input switchCheckDefault ms-auto"
+                                                                type="checkbox"
+                                                                role="switch"
+                                                                data-id="{{ $compte->withdrawal_account_id }}"
+                                                                {{ $compte->is_active ? 'checked' : '' }} readonly>
                                                         </label>
                                                     </div>
                                                 </div>
@@ -226,117 +233,12 @@
                                         </div>
                                         <div class="collapse pt-3 mt-3 border-top" id="php-mail">
                                             <div>
-                                                <p class="mb-0">PayPal Holdings, Inc. is an American multinational
-                                                    financial technology company operating an online
-                                                    payments system in the majority of countries that
-                                                    support online money transfers, and serves as an
-                                                    electronic alternative to traditional paper methods such
-                                                    as checks and money orders. </p>
+                                                <p class="mb-0">« Ce compte de retrait ne peut pas être supprimé. Vous pouvez toutefois le désactiver en cliquant sur le point rouge. »</p>
                                             </div>
                                         </div>
                                     </div>
                                     <!-- /Payment -->
-
-                                    <!-- Payment-2 -->
-                                    <div class="border rounded shadow p-3 mb-3">
-                                        <div class="row gy-3">
-                                            <div class="col-sm-5">
-                                                <div class="d-flex align-items-center">
-                                                    <span>
-                                                        <img src="assets/img/payments/payment-2.svg" alt="Img">
-                                                    </span>
-                                                    <div class="ms-2">
-                                                        <a href="javascript:void(0);"
-                                                            class="badge badge-tag badge-soft-success ms-2">Connected
-                                                        </a>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-sm-7">
-                                                <div
-                                                    class="d-flex align-items-center justify-content-between flex-wrap gap-2">
-                                                    <div class="d-flex align-items-center">
-                                                        <a href="javascript:void(0);"
-                                                            data-bs-toggle="collapse"
-                                                            data-bs-target="#stripe-pay"
-                                                            class="text-default me-1 me-lg-3 me-md-3 me-sm-3 border-end pe-1 pe-lg-3 pe-md-3 pe-sm-3 fs-16"><i
-                                                                class="ti ti-info-circle-filled"></i></a>
-                                                        <a href="#" class="btn btn-light"
-                                                            data-bs-toggle="modal"
-                                                            data-bs-target="#add_stripe"><i
-                                                                class="ti ti-tool me-1"></i>Modifer</a>
-                                                    </div>
-                                                    <div class="form-check form-switch p-0">
-                                                        <label class="form-check-label d-flex align-items-center gap-2 w-100">
-                                                            <input class="form-check-input switchCheckDefault ms-auto" type="checkbox" role="switch" checked>
-                                                        </label>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="collapse pt-3 mt-3 border-top" id="stripe-pay">
-                                            <div>
-                                                <p class="mb-0">Stripe Holdings, Inc. is an American multinational
-                                                    financial technology company operating an online
-                                                    payments system in the majority of countries that
-                                                    support online money transfers, and serves as an
-                                                    electronic alternative to traditional paper methods such
-                                                    as checks and money orders. </p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <!-- /Payment-2 -->
-
-                                    <!-- Payment-3 -->
-                                    <div class="border rounded shadow p-3 mb-3">
-                                        <div class="row gy-3">
-                                            <div class="col-sm-5">
-                                                <div class="d-flex align-items-center">
-                                                    <span>
-                                                        <img src="assets/img/payments/payment-3.svg" alt="Img">
-                                                    </span>
-                                                    <div class="ms-2">
-                                                        <a href="javascript:void(0);"
-                                                            class="badge badge-tag badge-soft-success ms-2">Connected
-                                                        </a>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-sm-7">
-                                                <div
-                                                    class="d-flex align-items-center justify-content-between flex-wrap gap-2">
-                                                    <div class="d-flex align-items-center">
-                                                        <a href="javascript:void(0);"
-                                                            data-bs-toggle="collapse"
-                                                            data-bs-target="#brain-pay"
-                                                            class="text-default me-1 me-lg-3 me-md-3 me-sm-3 border-end pe-1 pe-lg-3 pe-md-3 pe-sm-3 fs-16"><i
-                                                                class="ti ti-info-circle-filled"></i></a>
-                                                        <a href="#" class="btn btn-light"
-                                                            data-bs-toggle="modal"
-                                                            data-bs-target="#add_brain"><i
-                                                                class="ti ti-tool me-1"></i>Modifer</a>
-                                                    </div>
-                                                    <div class="form-check form-switch p-0">
-                                                        <label class="form-check-label d-flex align-items-center gap-2 w-100">
-                                                            <input class="form-check-input switchCheckDefault ms-auto" type="checkbox" role="switch" checked>
-                                                        </label>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="collapse pt-3 mt-3 border-top" id="brain-pay">
-                                            <div>
-                                                <p class="mb-0">Braintree Holdings, Inc. is an American multinational
-                                                    financial technology company operating an online
-                                                    payments system in the majority of countries that
-                                                    support online money transfers, and serves as an
-                                                    electronic alternative to traditional paper methods such
-                                                    as checks and money orders. </p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <!-- /Payment-3 -->
-
+                                    @endforeach
 
                                 </div>
                                 <!-- /Email Wrap -->
@@ -409,488 +311,58 @@
 </div>
 <!-- End Content -->
 
-<!-- Add offcanvas -->
-<div class="offcanvas offcanvas-end offcanvas-large" tabindex="-1" id="offcanvas_add_campagne">
-    <div class="offcanvas-header border-bottom">
-        <h5 class="mb-0">Ajouter une nouvelle campagne</h5>
-        <button type="button"
-            class="btn-close custom-btn-close border p-1 me-0 d-flex align-items-center justify-content-center rounded-circle"
-            data-bs-dismiss="offcanvas" aria-label="Close">
-        </button>
-    </div>
-    <div class="offcanvas-body">
-        <form action="#" method="POST" enctype="multipart/form-data">
-            <!-- @csrf -->
-
-            <div class="accordion accordion-bordered" id="campagne_accordion">
-
-                <!-- 1. Informations Générales -->
-                <div class="accordion-item rounded mb-3">
-                    <div class="accordion-header">
-                        <a href="#"
-                            class="accordion-button accordion-custom-button rounded"
-                            data-bs-toggle="collapse" data-bs-target="#general">
-                            <span class="avatar avatar-md rounded me-1"><i class="ti ti-info-circle"></i></span>
-                            Informations Générales
-                        </a>
-                    </div>
-                    <div class="accordion-collapse collapse show" id="general" data-bs-parent="#campagne_accordion">
-                        <div class="accordion-body border-top">
-                            <div class="row">
-                                <!-- Image Couverture -->
-                                <!-- Image Couverture Large avec Preview -->
-                                <div class="col-md-12">
-                                    <label class="form-label">Image de couverture <span class="text-danger">*</span></label>
-
-                                    <!-- Zone de l'image -->
-                                    <div class="position-relative w-100 rounded border border-dashed bg-light d-flex align-items-center justify-content-center overflow-hidden"
-                                        style="height: 300px; border-width: 2px !important; transition: all 0.3s ease;"
-                                        id="drop-zone">
-
-                                        <!-- Contenu par défaut (Texte + Icone) -->
-                                        <div class="text-center p-4" id="upload-placeholder">
-                                            <div class="avatar avatar-xl bg-white border rounded-circle mb-3 mx-auto">
-                                                <i class="ti ti-cloud-upload text-primary fs-2"></i>
-                                            </div>
-                                            <h5 class="mb-1 fw-bold">Glissez une image ou cliquez ici</h5>
-                                            <p class="text-muted mb-0 fs-12">Format accepté : JPG, PNG. Taille Max : 5MB</p>
-                                        </div>
-
-                                        <!-- L'image de prévisualisation (Cachée par défaut) -->
-                                        <img id="image-preview" src="#" alt="Aperçu"
-                                            class="position-absolute top-0 start-0 w-100 h-100 object-fit-cover d-none">
-
-                                        <!-- L'input file (Invisible mais couvre toute la zone pour être cliquable) -->
-                                        <input type="file"
-                                            name="image_couverture"
-                                            id="input-image"
-                                            class="position-absolute top-0 start-0 w-100 h-100 opacity-0 cursor-pointer"
-                                            accept="image/png, image/jpeg, image/jpg"
-                                            onchange="previewImage(this)">
-                                    </div>
-
-                                    <!-- Bouton pour supprimer l'image (Caché par défaut) -->
-                                    <div class="d-flex justify-content-end mt-2">
-                                        <button type="button"
-                                            id="remove-btn"
-                                            class="btn btn-sm btn-outline-danger d-none"
-                                            onclick="removeImage()">
-                                            <i class="ti ti-trash me-1"></i> Supprimer l'image
-                                        </button>
-                                    </div>
-                                </div>
-
-                                <!-- Nom de la campagne -->
-                                <div class="col-md-12">
-                                    <div class="mb-3">
-                                        <label class="form-label">Nom de la campagne <span class="text-danger">*</span></label>
-                                        <!-- Mapping: name -->
-                                        <input type="text" class="form-control" name="name" required>
-                                    </div>
-                                </div>
-
-                                <!-- Description -->
-                                <div class="col-md-12">
-                                    <div class="mb-0">
-                                        <label class="form-label">Description courte <span class="text-danger">*</span></label>
-                                        <!-- Mapping: description -->
-                                        <textarea class="form-control" rows="4" name="description" required></textarea>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- 2. Inscription & Conditions -->
-                <div class="accordion-item border-top rounded mb-3">
-                    <div class="accordion-header">
-                        <a href="#"
-                            class="accordion-button accordion-custom-button rounded"
-                            data-bs-toggle="collapse" data-bs-target="#inscription_sec">
-                            <span class="avatar avatar-md rounded me-1"><i class="ti ti-calendar-event"></i></span>
-                            Inscription & Règles
-                        </a>
-                    </div>
-                    <div class="accordion-collapse collapse" id="inscription_sec" data-bs-parent="#campagne_accordion">
-                        <div class="accordion-body border-top">
-                            <div class="row">
-                                <!-- Activer Inscription -->
-                                <div class="col-md-12">
-                                    <div class="mb-3 form-check form-switch">
-                                        <input type="hidden" name="inscription" value="0">
-                                        <!-- Mapping: inscription -->
-                                        <input class="form-check-input" type="checkbox" role="switch" id="inscriptionSwitch" name="inscription" value="1">
-                                        <label class="form-check-label" for="inscriptionSwitch">Activer les inscriptions</label>
-                                    </div>
-                                </div>
-
-                                <!-- Date Début -->
-                                <div class="col-md-6">
-                                    <div class="mb-3">
-                                        <label class="form-label">Date de début</label>
-                                        <!-- Mapping: inscription_date_debut -->
-                                        <input type="datetime-local" class="form-control" name="inscription_date_debut">
-                                    </div>
-                                </div>
-
-                                <!-- Date Fin -->
-                                <div class="col-md-6">
-                                    <div class="mb-3">
-                                        <label class="form-label">Date de fin</label>
-                                        <!-- Mapping: inscription_date_fin -->
-                                        <input type="datetime-local" class="form-control" name="inscription_date_fin">
-                                    </div>
-                                </div>
-
-                                <!-- Conditions de participation -->
-                                <div class="col-md-12">
-                                    <div class="mb-0">
-                                        <label class="form-label">Conditions de participation (Long Text) <span class="text-danger">*</span></label>
-                                        <!-- Mapping: condition_participation -->
-                                        <textarea class="form-control" rows="4" name="condition_participation" required></textarea>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- 3. Apparence & Configuration -->
-                <div class="accordion-item border-top rounded mb-3">
-                    <div class="accordion-header">
-                        <a href="#"
-                            class="accordion-button accordion-custom-button rounded"
-                            data-bs-toggle="collapse" data-bs-target="#config">
-                            <span class="avatar avatar-md rounded me-1"><i class="ti ti-settings"></i></span>
-                            Apparence & Configuration
-                        </a>
-                    </div>
-                    <div class="accordion-collapse collapse" id="config" data-bs-parent="#campagne_accordion">
-                        <div class="accordion-body border-top">
-                            <div class="row">
-                                <!-- Couleurs -->
-                                <div class="col-md-6">
-                                    <div class="mb-3">
-                                        <label class="form-label">Couleur Primaire</label>
-                                        <!-- Mapping: color_primaire -->
-                                        <input type="color" class="form-control form-control-color w-100" name="color_primaire" value="#563d7c" title="Choisir une couleur">
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="mb-3">
-                                        <label class="form-label">Couleur Secondaire</label>
-                                        <!-- Mapping: color_secondaire -->
-                                        <input type="color" class="form-control form-control-color w-100" name="color_secondaire" value="#cccccc" title="Choisir une couleur">
-                                    </div>
-                                </div>
-
-                                <!-- Text Cover Toggle -->
-                                <div class="col-md-6">
-                                    <div class="mb-3 form-check form-switch">
-                                        <input type="hidden" name="text_cover" value="0">
-                                        <!-- Mapping: text_cover -->
-                                        <input class="form-check-input" type="checkbox" role="switch" id="textCoverSwitch" name="text_cover" value="1">
-                                        <label class="form-check-label" for="textCoverSwitch">Afficher le texte sur la couverture</label>
-                                    </div>
-                                </div>
-
-                                <!-- Ordonner Candidats Toggle/Select -->
-                                <div class="col-md-6">
-                                    <div class="mb-3">
-                                        <label class="form-label">Ordre des candidats</label>
-                                        <!-- Mapping: ordonner_candidats_votes_decroissants -->
-                                        <select class="form-control" name="ordonner_candidats_votes_decroissants">
-                                            <option value="non">Par défaut</option>
-                                            <option value="oui">Votes décroissants (Top en premier)</option>
-                                        </select>
-                                    </div>
-                                </div>
-
-                                <!-- Affichage Montant -->
-                                <div class="col-md-6">
-                                    <div class="mb-3">
-                                        <label class="form-label">Affichage Montant/Pourcentage</label>
-                                        <!-- Mapping: afficher_montant_pourcentage -->
-                                        <select class="form-control" name="afficher_montant_pourcentage">
-                                            <option value="clair" selected>Clair</option>
-                                            <option value="masque">Masqué</option>
-                                            <option value="pourcentage_seul">Pourcentage seul</option>
-                                        </select>
-                                    </div>
-                                </div>
-
-                                <!-- Quantité Vote -->
-                                <div class="col-md-6">
-                                    <div class="mb-0">
-                                        <label class="form-label">Quantité de votes autorisés</label>
-                                        <!-- Mapping: quantite_vote -->
-                                        <input type="text" class="form-control" name="quantite_vote" placeholder="ex: Illimité ou 100">
-                                    </div>
-                                </div>
-
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
+<!-- Paypal -->
+@foreach($compteRetraits as $compte)
+<div class="modal fade" id="add_paypal{{ $compte->withdrawal_account_id }}" data-bs-backdrop="static" data-bs-keyboard="false" role="dialog">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Voir compte</h5>
+                <button type="button"
+                    class="btn-close custom-btn-close border p-1 me-0 d-flex align-items-center justify-content-center rounded-circle"
+                    data-bs-dismiss="modal" aria-label="Close">
+                    <i class="ti ti-x"></i>
+                </button>
             </div>
-
-            <!-- Actions -->
-            <div class="d-flex align-items-center justify-content-end">
-                <button type="button" data-bs-dismiss="offcanvas" class="btn btn-light me-2">Annuler</button>
-                <button type="submit" class="btn btn-primary">Créer la campagne</button>
-            </div>
-        </form>
+            <form action="#">
+                <div class="modal-body">
+                    <div class="mb-3 ">
+                        <label class="form-label">Type de compte <span class="text-danger">*</span></label>
+                        <select class="select" name="payment_methode" readonly>
+                            <option value="{{ $compte->payment_methode }}">
+                                @foreach($paymentMethods as $method)
+                                @if($method->value === $compte->payment_methode)
+                                {{ $method->label() }}
+                                @endif
+                                @endforeach
+                            </option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Nom du compte <span class="text-danger">*</span></label>
+                        <input type="text" name="account_name" value="{{ $compte->account_name }}" class="form-control" readonly>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Numéro du compte <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" name="phone_number" value="{{ $compte->phone_number }}" readonly>
+                    </div>
+                </div>
+                <!-- <div class="modal-footer">
+                    <div class="d-flex align-items-center justify-content-end m-0">
+                        <a href="#" class="btn btn-sm btn-light me-2" data-bs-dismiss="modal">Cancel</a>
+                        <button type="submit" class="btn btn-sm btn-primary">Enregistrer</button>
+                    </div>
+                </div> -->
+            </form>
+        </div>
     </div>
 </div>
-<!-- /Add offcanvas -->
+@endforeach
+<!-- /Paypal -->
 
-<!-- edit offcanvas -->
-<!-- Modale de modification (ID statique pour test) -->
-<div class="offcanvas offcanvas-end offcanvas-large" tabindex="-1" id="offcanvas_edit">
-    <div class="offcanvas-header border-bottom">
-        <h5 class="mb-0">Modifier la campagne : Campagne Été 2024</h5>
-        <button type="button"
-            class="btn-close custom-btn-close border p-1 me-0 d-flex align-items-center justify-content-center rounded-circle"
-            data-bs-dismiss="offcanvas" aria-label="Close">
-        </button>
-    </div>
-    <div class="offcanvas-body">
-        <form action="#" method="POST" enctype="multipart/form-data">
-
-            <div class="accordion accordion-bordered" id="campagne_accordion_edit">
-
-                <!-- 1. Informations Générales -->
-                <div class="accordion-item rounded mb-3">
-                    <div class="accordion-header">
-                        <a href="#"
-                            class="accordion-button accordion-custom-button rounded"
-                            data-bs-toggle="collapse" data-bs-target="#general_edit">
-                            <span class="avatar avatar-md rounded me-1"><i class="ti ti-info-circle"></i></span>
-                            Informations Générales
-                        </a>
-                    </div>
-                    <div class="accordion-collapse collapse show" id="general_edit" data-bs-parent="#campagne_accordion_edit">
-                        <div class="accordion-body border-top">
-                            <div class="row">
-                                <!-- Image Couverture (Simulation: Image déjà présente) -->
-                                <div class="col-md-12">
-                                    <label class="form-label">Image de couverture</label>
-
-                                    <!-- Zone de l'image (Bordure pleine car image présente) -->
-                                    <div class="position-relative w-100 rounded border border-primary bg-light d-flex align-items-center justify-content-center overflow-hidden"
-                                        style="height: 300px; border-width: 2px !important; transition: all 0.3s ease;"
-                                        id="drop-zone-edit">
-
-                                        <!-- Placeholder (Caché car image présente) -->
-                                        <div class="text-center p-4 d-none" id="upload-placeholder-edit">
-                                            <div class="avatar avatar-xl bg-white border rounded-circle mb-3 mx-auto">
-                                                <i class="ti ti-cloud-upload text-primary fs-2"></i>
-                                            </div>
-                                            <h5 class="mb-1 fw-bold">Modifier l'image</h5>
-                                            <p class="text-muted mb-0 fs-12">Cliquez pour remplacer (Max 5MB)</p>
-                                        </div>
-
-                                        <!-- Image de prévisualisation (Affichée) -->
-                                        <!-- J'ai mis une image placeholder pour l'exemple -->
-                                        <img id="image-preview-edit"
-                                            src="https://placehold.co/600x400/563d7c/ffffff?text=Cover+Image"
-                                            alt="Aperçu"
-                                            class="position-absolute top-0 start-0 w-100 h-100 object-fit-cover">
-
-                                        <!-- Input file -->
-                                        <input type="file"
-                                            name="image_couverture"
-                                            id="input-image-edit"
-                                            class="position-absolute top-0 start-0 w-100 h-100 opacity-0 cursor-pointer"
-                                            accept="image/png, image/jpeg, image/jpg"
-                                            onchange="previewImageEdit(this)">
-                                    </div>
-
-                                    <!-- Bouton Supprimer (Affiché) -->
-                                    <div class="d-flex justify-content-end mt-2">
-                                        <button type="button"
-                                            id="remove-btn-edit"
-                                            class="btn btn-sm btn-outline-danger"
-                                            onclick="removeImageEdit()">
-                                            <i class="ti ti-trash me-1"></i> Retirer l'image
-                                        </button>
-                                    </div>
-                                </div>
-
-                                <!-- Campagne ID -->
-                                <input type="hidden" class="form-control" name="campagne_id" value="CAMP-2024-001" required>
-
-                                <!-- Nom -->
-                                <div class="col-md-6">
-                                    <div class="mb-3">
-                                        <label class="form-label">Nom de la campagne <span class="text-danger">*</span></label>
-                                        <input type="text" class="form-control" name="name" value="Campagne Été 2024" required>
-                                    </div>
-                                </div>
-
-                                <!-- Customer Select -->
-                                <div class="col-md-6">
-                                    <div class="mb-3">
-                                        <label class="form-label">Client associé <span class="text-danger">*</span></label>
-                                        <select class="select form-control" name="customer_id" required>
-                                            <option value="">Sélectionner un client</option>
-                                            <option value="1" selected>Coca-Cola (CUST-001)</option>
-                                            <option value="2">Orange (CUST-002)</option>
-                                        </select>
-                                    </div>
-                                </div>
-
-                                <!-- Description -->
-                                <div class="col-md-12">
-                                    <div class="mb-0">
-                                        <label class="form-label">Description courte <span class="text-danger">*</span></label>
-                                        <textarea class="form-control" rows="4" name="description" required>Campagne promotionnelle pour la saison estivale avec voting système.</textarea>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- 2. Inscription & Conditions -->
-                <div class="accordion-item border-top rounded mb-3">
-                    <div class="accordion-header">
-                        <a href="#"
-                            class="accordion-button accordion-custom-button rounded"
-                            data-bs-toggle="collapse" data-bs-target="#inscription_sec_edit">
-                            <span class="avatar avatar-md rounded me-1"><i class="ti ti-calendar-event"></i></span>
-                            Inscription & Règles
-                        </a>
-                    </div>
-                    <div class="accordion-collapse collapse" id="inscription_sec_edit" data-bs-parent="#campagne_accordion_edit">
-                        <div class="accordion-body border-top">
-                            <div class="row">
-                                <!-- Switch Inscription -->
-                                <div class="col-md-12">
-                                    <div class="mb-3 form-check form-switch">
-                                        <input type="hidden" name="inscription" value="0">
-                                        <input class="form-check-input" type="checkbox" role="switch" id="inscriptionSwitchEdit" name="inscription" value="1" checked>
-                                        <label class="form-check-label" for="inscriptionSwitchEdit">Activer les inscriptions</label>
-                                    </div>
-                                </div>
-
-                                <!-- Date Début -->
-                                <div class="col-md-6">
-                                    <div class="mb-3">
-                                        <label class="form-label">Date de début</label>
-                                        <input type="datetime-local" class="form-control" name="inscription_date_debut" value="2024-06-01T08:00">
-                                    </div>
-                                </div>
-
-                                <!-- Date Fin -->
-                                <div class="col-md-6">
-                                    <div class="mb-3">
-                                        <label class="form-label">Date de fin</label>
-                                        <input type="datetime-local" class="form-control" name="inscription_date_fin" value="2024-08-31T23:59">
-                                    </div>
-                                </div>
-
-                                <!-- Conditions -->
-                                <div class="col-md-12">
-                                    <div class="mb-0">
-                                        <label class="form-label">Conditions de participation <span class="text-danger">*</span></label>
-                                        <textarea class="form-control" rows="4" name="condition_participation" required>1. Être majeur.
-2. Résider dans le pays.
-3. Accepter les CGU.</textarea>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- 3. Apparence & Configuration -->
-                <div class="accordion-item border-top rounded mb-3">
-                    <div class="accordion-header">
-                        <a href="#"
-                            class="accordion-button accordion-custom-button rounded"
-                            data-bs-toggle="collapse" data-bs-target="#config_edit">
-                            <span class="avatar avatar-md rounded me-1"><i class="ti ti-settings"></i></span>
-                            Apparence & Configuration
-                        </a>
-                    </div>
-                    <div class="accordion-collapse collapse" id="config_edit" data-bs-parent="#campagne_accordion_edit">
-                        <div class="accordion-body border-top">
-                            <div class="row">
-                                <!-- Couleurs -->
-                                <div class="col-md-6">
-                                    <div class="mb-3">
-                                        <label class="form-label">Couleur Primaire</label>
-                                        <input type="color" class="form-control form-control-color w-100" name="color_primaire" value="#563d7c" title="Choisir une couleur">
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="mb-3">
-                                        <label class="form-label">Couleur Secondaire</label>
-                                        <input type="color" class="form-control form-control-color w-100" name="color_secondaire" value="#ffc107" title="Choisir une couleur">
-                                    </div>
-                                </div>
-
-                                <!-- Switch Text Cover -->
-                                <div class="col-md-6">
-                                    <div class="mb-3 form-check form-switch">
-                                        <input type="hidden" name="text_cover" value="0">
-                                        <input class="form-check-input" type="checkbox" role="switch" id="textCoverSwitchEdit" name="text_cover" value="1">
-                                        <label class="form-check-label" for="textCoverSwitchEdit">Texte sur couverture</label>
-                                    </div>
-                                </div>
-
-                                <!-- Ordre -->
-                                <div class="col-md-6">
-                                    <div class="mb-3">
-                                        <label class="form-label">Ordre des candidats</label>
-                                        <select class="form-control" name="ordonner_candidats_votes_decroissants">
-                                            <option value="non">Par défaut</option>
-                                            <option value="oui" selected>Votes décroissants</option>
-                                        </select>
-                                    </div>
-                                </div>
-
-                                <!-- Affichage Montant -->
-                                <div class="col-md-6">
-                                    <div class="mb-3">
-                                        <label class="form-label">Affichage Montant/Pourcentage</label>
-                                        <select class="form-control" name="afficher_montant_pourcentage">
-                                            <option value="clair">Clair</option>
-                                            <option value="masque">Masqué</option>
-                                            <option value="pourcentage_seul" selected>Pourcentage seul</option>
-                                        </select>
-                                    </div>
-                                </div>
-
-                                <!-- Quantité Vote -->
-                                <div class="col-md-6">
-                                    <div class="mb-0">
-                                        <label class="form-label">Quantité de votes</label>
-                                        <input type="text" class="form-control" name="quantite_vote" value="10">
-                                    </div>
-                                </div>
-
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Actions -->
-            <div class="d-flex align-items-center justify-content-end">
-                <button type="button" data-bs-dismiss="offcanvas" class="btn btn-light me-2">Annuler</button>
-                <button type="submit" class="btn btn-primary">Enregistrer les modifications</button>
-            </div>
-        </form>
-    </div>
-</div>
-<!-- /edit offcanvas -->
 
 <!-- delete modal -->
-<div class="modal fade" id="delete_contact">
+<div class="modal fade" id="delete_contact" data-bs-backdrop="static" data-bs-keyboard="false">
     <div class="modal-dialog modal-dialog-centered modal-sm rounded-0">
         <div class="modal-content rounded-0">
             <div class="modal-body p-4 text-center position-relative">
@@ -909,148 +381,9 @@
 </div>
 <!-- delete modal -->
 
-<!-- Paypal -->
-<div class="modal fade" id="add_paypal" role="dialog">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Modifier compte</h5>
-                <button type="button"
-                    class="btn-close custom-btn-close border p-1 me-0 d-flex align-items-center justify-content-center rounded-circle"
-                    data-bs-dismiss="modal" aria-label="Close">
-                    <i class="ti ti-x"></i>
-                </button>
-            </div>
-            <form action="#">
-                <div class="modal-body">
-                    <div class="mb-3 ">
-                        <label class="form-label">Type de compte <span class="text-danger">*</span></label>
-                        <select class="select">
-                            <option>Select</option>
-                            <option>MTN</option>
-                            <option>WAVE</option>
-                            <option>ORANGE</option>
-                        </select>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Nom du compte <span class="text-danger">*</span></label>
-                        <input type="text" class="form-control">
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Numéro du compte <span class="text-danger">*</span></label>
-                        <input type="text" class="form-control">
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <div class="d-flex align-items-center justify-content-end m-0">
-                        <a href="#" class="btn btn-sm btn-light me-2" data-bs-dismiss="modal">Cancel</a>
-                        <button type="submit" class="btn btn-sm btn-primary">Enregistrer</button>
-                    </div>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
-<!-- /Paypal -->
-
-<!-- Add Bank Account -->
-<div class="modal fade" id="add_bank" role="dialog">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Ajouter un compte</h5>
-                <button type="button"
-                    class="btn-close custom-btn-close border p-1 me-0 d-flex align-items-center justify-content-center rounded-circle"
-                    data-bs-dismiss="modal" aria-label="Close">
-                    <i class="ti ti-x"></i>
-                </button>
-            </div>
-            <form action="#">
-                <div class="modal-body">
-                    <div class="mb-3 ">
-                        <label class="form-label">Type de compte <span class="text-danger">*</span></label>
-                        <select class="select">
-                            <option>Select</option>
-                            <option>MTN</option>
-                            <option>WAVE</option>
-                            <option>ORANGE</option>
-                        </select>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Nom du compte <span class="text-danger">*</span></label>
-                        <input type="text" class="form-control">
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Numéro du compte <span class="text-danger">*</span></label>
-                        <input type="text" class="form-control">
-                    </div>
-
-                </div>
-                <div class="modal-footer">
-                    <div class="d-flex align-items-center justify-content-end m-0">
-                        <a href="#" class="btn btn-sm btn-light me-2" data-bs-dismiss="modal">Annuler</a>
-                        <button type="submit" class="btn btn-sm btn-primary">Enregistrer</button>
-                    </div>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
-<!-- /Add Bank Account -->
-
 
 <script>
-    function previewImage(input) {
-        const preview = document.getElementById('image-preview');
-        const placeholder = document.getElementById('upload-placeholder');
-        const removeBtn = document.getElementById('remove-btn');
-        const dropZone = document.getElementById('drop-zone');
-
-        if (input.files && input.files[0]) {
-            const reader = new FileReader();
-
-            reader.onload = function(e) {
-                // Affiche l'image
-                preview.src = e.target.result;
-                preview.classList.remove('d-none');
-
-                // Masque le texte d'upload
-                placeholder.classList.add('d-none');
-
-                // Affiche le bouton supprimer
-                removeBtn.classList.remove('d-none');
-
-                // Change la bordure pour indiquer le succès
-                dropZone.classList.remove('border-dashed');
-                dropZone.classList.add('border-primary');
-            }
-
-            reader.readAsDataURL(input.files[0]);
-        }
-    }
-
-    function removeImage() {
-        const input = document.getElementById('input-image');
-        const preview = document.getElementById('image-preview');
-        const placeholder = document.getElementById('upload-placeholder');
-        const removeBtn = document.getElementById('remove-btn');
-        const dropZone = document.getElementById('drop-zone');
-
-        // Reset de l'input
-        input.value = '';
-
-        // Masque l'image et le bouton
-        preview.src = '#';
-        preview.classList.add('d-none');
-        removeBtn.classList.add('d-none');
-
-        // Réaffiche le placeholder
-        placeholder.classList.remove('d-none');
-
-        // Remet le style par défaut
-        dropZone.classList.add('border-dashed');
-        dropZone.classList.remove('border-primary');
-    }
+   
 </script>
 @endsection
 <!-- section js -->

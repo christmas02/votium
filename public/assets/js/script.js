@@ -867,6 +867,7 @@ Template Name: CRMS - Bootstrap Admin Template
 
 })();
 
+
 // MES SCRIPTES ICI //
 /**
      * Fonction universelle de prévisualisation

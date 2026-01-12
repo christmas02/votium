@@ -125,8 +125,8 @@
 
 
 <!-- Structure de la Modale -->
-<div class="modal fade" id="modal_add_candidat" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-sm modal-dialog-centered modal-dialog-scrollable">
+<div class="modal fade" id="modal_add_candidat" tabindex="-1" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header border-bottom">
                 <h5 class="modal-title">Ajouter candidat</h5>
@@ -134,7 +134,7 @@
             </div>
 
             <div class="modal-body">
-                <form action="{{ route('business.save_candidat') }}" method="POST" enctype="multipart/form-data">
+                <form class="ajax-form" action="{{ route('business.save_candidat') }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     <div class="row">
 
@@ -268,7 +268,7 @@
 
 <!-- edit offcanvas -->
 <!-- Modale de modification (ID statique pour test) -->
-<div class="modal fade" id="modal_edit_candidat" tabindex="-1" aria-hidden="true">
+<div class="modal fade" id="modal_edit_candidat" tabindex="-1" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header border-bottom">
@@ -406,7 +406,7 @@
 <!-- /edit offcanvas -->
 
 <!-- delete modal -->
-<div class="modal fade" id="delete_contact" tabindex="-1" aria-hidden="true">
+<div class="modal fade" id="delete_contact" tabindex="-1" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
     <div class="modal-dialog modal-dialog-centered modal-sm">
         <div class="modal-content">
             <!-- On enveloppe le contenu dans le formulaire -->
@@ -643,47 +643,97 @@
 
             let $form = $(this);
             let $submitBtn = $form.find('button[type="submit"]');
+            let originalBtnHtml = $submitBtn.html();
             let formData = new FormData(this);
+
+            // 🔄 Nettoyage des anciennes erreurs
+            $form.find('.is-invalid').removeClass('is-invalid');
+            $form.find('.invalid-feedback').remove();
 
             // Désactiver le bouton
             $submitBtn.prop('disabled', true).html('Mise à jour...');
 
             $.ajax({
                 url: $form.attr('action'),
-                method: 'POST',
+                type: 'POST', // PUT/PATCH via _method si besoin
                 data: formData,
                 processData: false,
                 contentType: false,
+
                 success: function(response) {
                     // 1. Fermer le modal
                     $('#modal_edit_candidat').modal('hide');
 
-                    // 2. Afficher le message de succès (utilise la fonction showAjaxAlert définie précédemment)
-                    if (response.success) {
+                    // 2. Message succès
+                    if (response.success && typeof showAjaxAlert === 'function') {
                         showAjaxAlert('success', response.message);
                     }
 
-                    // 3. RAFRAÎCHIR LE TABLEAU
+                    // 3. Rafraîchir le tableau / données
                     $('.js-select-campagne').trigger('change');
                 },
+
                 error: function(xhr) {
-                    let errorMessage = "Erreur lors de la modification.";
-
                     if (xhr.status === 422) {
-                        let errors = xhr.responseJSON.errors;
-                        errorMessage = Object.values(errors).flat().join("<br>");
-                    } else if (xhr.responseJSON && xhr.responseJSON.message) {
-                        errorMessage = xhr.responseJSON.message;
-                    }
+                        const errors = xhr.responseJSON.errors;
 
-                    showAjaxAlert('danger', errorMessage);
+                        if (typeof showAjaxAlert === 'function') {
+                            showAjaxAlert('danger', 'Veuillez corriger les champs en erreur.');
+                        }
+
+                        // 🔁 Affichage champ par champ
+                        $.each(errors, function(fieldName, messages) {
+
+                            // Gestion des champs Laravel complexes (ex: skills.0.name)
+                            let fieldSelector = fieldName
+                                .replace(/\.(\d+)\./g, '[$1][')
+                                .replace(/\./g, ']')
+                                .replace(/$/, ']');
+
+                            let $input = $form.find(
+                                `[name="${fieldName}"],
+                         [name="${fieldName}[]"],
+                         [name="${fieldSelector}"]`
+                            ).first();
+
+                            if ($input.length) {
+                                $input.addClass('is-invalid');
+
+                                let errorHtml = `
+                            <div class="invalid-feedback d-block">
+                                ${messages[0]}
+                            </div>
+                        `;
+
+                                // 📍 Placement intelligent
+                                if ($input.closest('.input-group').length) {
+                                    $input.closest('.input-group').after(errorHtml);
+                                } else if ($input.attr('type') === 'file' && $input.closest('.image-upload-group').length) {
+                                    $input.closest('.image-upload-group').after(errorHtml);
+                                } else {
+                                    $input.after(errorHtml);
+                                }
+                            }
+                        });
+
+                        // 🎯 Focus premier champ invalide
+                        $form.find('.is-invalid').first().focus();
+
+                    } else {
+                        const errorTxt = xhr.responseJSON?.message || 'Erreur lors de la modification.';
+                        if (typeof showAjaxAlert === 'function') {
+                            showAjaxAlert('danger', errorTxt);
+                        }
+                    }
                 },
+
                 complete: function() {
                     // Réactiver le bouton
-                    $submitBtn.prop('disabled', false).html("Mettre à jour l'étape");
+                    $submitBtn.prop('disabled', false).html(originalBtnHtml);
                 }
             });
         });
+
 
         // Delete candidat
         $('#form_delete_candidat').on('submit', function(e) {
@@ -694,7 +744,7 @@
             let formData = new FormData(this);
 
             // Désactiver le bouton
-              $submitBtn.prop('disabled', true).html('<span class="spinner-border spinner-border-sm"></span>');
+            $submitBtn.prop('disabled', true).html('<span class="spinner-border spinner-border-sm"></span>');
 
             $.ajax({
                 url: $form.attr('action'),

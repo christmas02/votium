@@ -84,7 +84,7 @@
 <!-- End Content -->
 
 <!-- Modal Nouvelle Étape -->
-<div class="modal fade" id="modal_add_step_" tabindex="-1" aria-hidden="true">
+<div class="modal fade" id="modal_add_step_" tabindex="-1" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
     <div class="modal-dialog modal-md modal-dialog-centered">
         <div class="modal-content border-0 shadow-lg" style="border-radius: 15px;">
             <div class="modal-header border-0">
@@ -96,34 +96,34 @@
                     @csrf
                     <input type="hidden" id="modal_add_campagne_id" name="campagne_id" value="">
                     <div class="mb-3">
-                        <label class="form-label fw-semibold">Nom de l'étape</label>
+                        <label class="form-label fw-semibold">Nom de l'étape <span class="text-danger">*</span></label>
                         <input type="text" class="form-control bg-light border-0" name="name" placeholder="Attribuez un nom à cette étape.">
                     </div>
 
                     <div class="row g-3 mb-3">
                         <div class="col-6">
-                            <label class="form-label fw-semibold">Date de début</label>
+                            <label class="form-label fw-semibold">Date de début <span class="text-danger">*</span></label>
                             <input type="date" class="form-control bg-light border-0" name="date_debut">
                         </div>
                         <div class="col-6">
-                            <label class="form-label fw-semibold">Heure de début</label>
+                            <label class="form-label fw-semibold">Heure de début <span class="text-danger">*</span></label>
                             <input type="time" class="form-control bg-light border-0" name="heure_debut">
                         </div>
                     </div>
 
                     <div class="row g-3 mb-3">
                         <div class="col-6">
-                            <label class="form-label fw-semibold">Date de fin</label>
+                            <label class="form-label fw-semibold">Date de fin <span class="text-danger">*</span></label>
                             <input type="date" class="form-control bg-light border-0" name="date_fin">
                         </div>
                         <div class="col-6">
-                            <label class="form-label fw-semibold">Heure de fin</label>
+                            <label class="form-label fw-semibold">Heure de fin <span class="text-danger">*</span></label>
                             <input type="time" class="form-control bg-light border-0" name="heure_fin">
                         </div>
                     </div>
 
                     <div class="mb-3">
-                        <label class="form-label fw-semibold">Décrivez l'étape</label>
+                        <label class="form-label fw-semibold">Décrivez l'étape <span class="text-danger">*</span></label>
                         <textarea class="form-control bg-light border-0" rows="4" name="description" placeholder="Décrivez l'étape ..."></textarea>
                     </div>
 
@@ -150,12 +150,12 @@
                     </div> -->
 
                     <div class="mb-3">
-                        <label class="form-label fw-semibold">Prix d'un vote</label>
+                        <label class="form-label fw-semibold">Prix d'un vote <span class="text-danger">*</span></label>
                         <input type="text" class="form-control bg-light border-0" name="prix_vote" placeholder="Ex: 500">
                     </div>
 
                     <div class="mb-3">
-                        <label class="form-label fw-semibold">Packages de vote</label>
+                        <label class="form-label fw-semibold">Packages de vote <span class="text-danger">*</span></label>
 
                         <div class="packages-wrapper">
                             <div class="packages-container" data-index="1" id="packages_container">
@@ -195,7 +195,7 @@
 </div>
 
 <!-- Modal update étape -->
-<div class="modal fade" id="modal_update_step" tabindex="-1" aria-hidden="true">
+<div class="modal fade" id="modal_update_step" tabindex="-1" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
     <div class="modal-dialog modal-md modal-dialog-centered">
         <div class="modal-content border-0 shadow-lg" style="border-radius: 15px;">
             <div class="modal-header border-0">
@@ -281,7 +281,7 @@
 </div>
 
 <!-- Modal Delete -->
-<div class="modal fade" id="modal_delete_step" tabindex="-1">
+<div class="modal fade" id="modal_delete_step" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-body text-center">
@@ -356,7 +356,7 @@
     // Ce script centralise toute la logique jQuery pour la gestion des étapes de campagne
     $(document).ready(function() {
 
-        
+
         $.ajaxSetup({
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -619,55 +619,99 @@
 
             let $form = $(this);
             let $submitBtn = $form.find('button[type="submit"]');
+            let originalBtnHtml = $submitBtn.html();
             let formData = new FormData(this);
+
+            // 🔄 Nettoyage des anciennes erreurs
+            $form.find('.is-invalid').removeClass('is-invalid');
+            $form.find('.invalid-feedback').remove();
 
             $submitBtn.prop('disabled', true).html('Enregistrement...');
 
             $.ajax({
                 url: $form.attr('action'),
-                method: 'POST',
+                type: 'POST',
                 data: formData,
                 processData: false,
                 contentType: false,
+
                 success: function(response) {
                     // 1. Fermer le modal
                     $('#modal_add_step_').modal('hide');
 
-                    // 2. Réinitialiser le formulaire
+                    // 2. Reset du formulaire
                     $form[0].reset();
-                   
-                    // On garde la première ligne (:first) et on supprime les autres
                     $form.find('.package-itemadd').not(':first').remove();
 
-                    // 3. Afficher le message de succès (Dynamique)
-                    if (response.success) {
+                    // 3. Message de succès
+                    if (response.success && typeof showAjaxAlert === 'function') {
                         showAjaxAlert('success', response.message);
                     }
 
-                    // 4. RAFRAÎCHIR LE TABLEAU
+                    // 4. Rafraîchir les données
                     $('.js-select-campagne').trigger('change');
                 },
+
                 error: function(xhr) {
-                    let errorMessage = "Une erreur est survenue.";
-
-                    // Si c'est une erreur de validation Laravel (422)
                     if (xhr.status === 422) {
-                        let errors = xhr.responseJSON.errors;
-                        errorMessage = Object.values(errors).flat().join("<br>");
-                    }
-                    // Si le contrôleur a envoyé un message d'erreur spécifique
-                    else if (xhr.responseJSON && xhr.responseJSON.message) {
-                        errorMessage = xhr.responseJSON.message;
-                    }
+                        const errors = xhr.responseJSON.errors;
 
-                    // Afficher l'alerte d'erreur (danger)
-                    showAjaxAlert('danger', errorMessage);
+                        if (typeof showAjaxAlert === 'function') {
+                            showAjaxAlert('danger', 'Veuillez vérifier les champs du formulaire.');
+                        }
+
+                        // 🔁 Boucle dynamique sur les erreurs Laravel
+                        $.each(errors, function(fieldName, messages) {
+
+                            // Support champs tableau (ex: items.0.name → items[0][name])
+                            let fieldSelector = fieldName
+                                .replace(/\.(\d+)\./g, '[$1][')
+                                .replace(/\./g, ']')
+                                .replace(/$/, ']');
+
+                            let $input = $form.find(
+                                `[name="${fieldName}"], 
+                         [name="${fieldName}[]"], 
+                         [name="${fieldSelector}"]`
+                            ).first();
+
+                            if ($input.length) {
+                                $input.addClass('is-invalid');
+
+                                let errorHtml = `
+                            <div class="invalid-feedback d-block">
+                                ${messages[0]}
+                            </div>
+                        `;
+
+                                // 📍 Placement intelligent
+                                if ($input.closest('.input-group').length) {
+                                    $input.closest('.input-group').after(errorHtml);
+                                } else if ($input.attr('type') === 'file' && $input.closest('.image-upload-group').length) {
+                                    $input.closest('.image-upload-group').after(errorHtml);
+                                } else {
+                                    $input.after(errorHtml);
+                                }
+                            }
+                        });
+
+                        // 🎯 Focus premier champ en erreur
+                        $form.find('.is-invalid').first().focus();
+
+                    } else {
+                        const errorTxt = xhr.responseJSON?.message || 'Une erreur est survenue.';
+                        if (typeof showAjaxAlert === 'function') {
+                            showAjaxAlert('danger', errorTxt);
+                        }
+                    }
                 },
+
                 complete: function() {
-                    $submitBtn.prop('disabled', false).html("Enregistrer l'étape");
+                    $submitBtn.prop('disabled', false).html(originalBtnHtml);
                 }
             });
         });
+
 
         // --- MISE À JOUR DE L'ÉTAPE EN AJAX ---
         $('#form_update_step').on('submit', function(e) {
@@ -675,49 +719,98 @@
 
             let $form = $(this);
             let $submitBtn = $form.find('button[type="submit"]');
+            let originalBtnHtml = $submitBtn.html();
             let formData = new FormData(this);
+
+            // 🔄 Nettoyage des anciennes erreurs
+            $form.find('.is-invalid').removeClass('is-invalid');
+            $form.find('.invalid-feedback').remove();
 
             // Désactiver le bouton
             $submitBtn.prop('disabled', true).html('Mise à jour...');
 
             $.ajax({
                 url: $form.attr('action'),
-                method: 'POST',
+                type: 'POST', // (PUT/PATCH géré via _method si besoin)
                 data: formData,
                 processData: false,
                 contentType: false,
+
                 success: function(response) {
                     // 1. Fermer le modal
                     $('#modal_update_step').modal('hide');
 
-                    // 2. Afficher le message de succès (utilise la fonction showAjaxAlert définie précédemment)
-                    if (response.success) {
+                    // 2. Message succès
+                    if (response.success && typeof showAjaxAlert === 'function') {
                         showAjaxAlert('success', response.message);
                     }
 
-                    // 3. RAFRAÎCHIR LE TABLEAU
+                    // 3. Rafraîchir le tableau
                     $('.js-select-campagne').trigger('change');
                 },
+
                 error: function(xhr) {
-                    let errorMessage = "Erreur lors de la modification.";
-
                     if (xhr.status === 422) {
-                        let errors = xhr.responseJSON.errors;
-                        errorMessage = Object.values(errors).flat().join("<br>");
-                    } else if (xhr.responseJSON && xhr.responseJSON.message) {
-                        errorMessage = xhr.responseJSON.message;
-                    }
+                        const errors = xhr.responseJSON.errors;
 
-                    showAjaxAlert('danger', errorMessage);
+                        if (typeof showAjaxAlert === 'function') {
+                            showAjaxAlert('danger', 'Veuillez corriger les champs en erreur.');
+                        }
+
+                        // 🔁 Affichage champ par champ
+                        $.each(errors, function(fieldName, messages) {
+
+                            // Support champs Laravel complexes (items.0.name)
+                            let fieldSelector = fieldName
+                                .replace(/\.(\d+)\./g, '[$1][')
+                                .replace(/\./g, ']')
+                                .replace(/$/, ']');
+
+                            let $input = $form.find(
+                                `[name="${fieldName}"],
+                         [name="${fieldName}[]"],
+                         [name="${fieldSelector}"]`
+                            ).first();
+
+                            if ($input.length) {
+                                $input.addClass('is-invalid');
+
+                                let errorHtml = `
+                            <div class="invalid-feedback d-block">
+                                ${messages[0]}
+                            </div>
+                        `;
+
+                                // Placement intelligent
+                                if ($input.closest('.input-group').length) {
+                                    $input.closest('.input-group').after(errorHtml);
+                                } else if ($input.attr('type') === 'file' && $input.closest('.image-upload-group').length) {
+                                    $input.closest('.image-upload-group').after(errorHtml);
+                                } else {
+                                    $input.after(errorHtml);
+                                }
+                            }
+                        });
+
+                        // 🎯 Focus sur le premier champ invalide
+                        $form.find('.is-invalid').first().focus();
+
+                    } else {
+                        const errorTxt = xhr.responseJSON?.message || 'Erreur lors de la modification.';
+                        if (typeof showAjaxAlert === 'function') {
+                            showAjaxAlert('danger', errorTxt);
+                        }
+                    }
                 },
+
                 complete: function() {
                     // Réactiver le bouton
-                    $submitBtn.prop('disabled', false).html("Mettre à jour l'étape");
+                    $submitBtn.prop('disabled', false).html(originalBtnHtml);
                 }
             });
         });
-    });
 
+    });
 </script>
 @endsection
 <!-- section js -->

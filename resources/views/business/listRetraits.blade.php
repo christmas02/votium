@@ -145,7 +145,7 @@
 <!-- End Content -->
 
 <!-- Modal: Effectuer un retrait -->
-<div class="modal fade" id="modalRetrait" tabindex="-1" aria-labelledby="modalRetraitLabel" aria-hidden="true">
+<div class="modal fade" id="modalRetrait" tabindex="-1" aria-labelledby="modalRetraitLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header border-bottom-0 pb-0">
