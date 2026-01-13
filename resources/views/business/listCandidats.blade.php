@@ -73,7 +73,7 @@
 
                         <div class="col-md-12 mb-3">
                             <label class="form-label">Choisir l'étape</label>
-                            <select class="select form-control form-select js-select-etape">
+                            <select class="select form-control form-select js-select-etape" disabled>
                                 <option value="" selected disabled>Sélectionner</option>
                                 @foreach($etapes as $etape)
                                 <option value="{{ $etape->etape_id }}">{{ $etape->name }}</option>
@@ -83,7 +83,7 @@
 
                         <div class="col-md-12 mb-3">
                             <label class="form-label">Choisir la catégorie</label>
-                            <select class="select form-control form-select js-select-categorie">
+                            <select class="select form-control form-select js-select-categorie" disabled>
                                 <option value="" selected disabled>Sélectionner</option>
                                 @foreach($categories as $category)
                                 <option value="{{ $category->category_id }}">{{ $category->name }}</option>
@@ -91,7 +91,6 @@
                             </select>
                         </div>
                     </div>
-
 
                 </div>
 
@@ -448,6 +447,21 @@
         const APP_IMAGES_PATH = "{{ env('IMAGES_PATH') }}/";
 
         // --- ÉVÉNEMENTS ---
+
+        // Reaondly de l'eatpe et categorie selon la section de la campagne
+        $('.js-select-campagne').on('change', function() {
+
+            let campagne = $(this).val();
+
+            if (campagne) {
+                $('.js-select-etape').prop('disabled', false);
+                $('.js-select-categorie').prop('disabled', false);
+            } else {
+                $('.js-select-etape').prop('disabled', true).val('');
+                $('.js-select-categorie').prop('disabled', true).val('');
+            }
+
+        });
 
         // 1. Recherche : On reset la page à 1 et on vide la liste
         $(document).on('keyup', '.js-search-candidat', function() {

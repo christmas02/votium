@@ -242,10 +242,13 @@
 
                                                     </span>
                                                     <div class="ms-2">
-                                                        <a href="javascript:void(0);"
-                                                            class="badge badge-tag ms-2 {{ $compte->is_active ? 'badge-soft-success' : 'badge-soft-danger' }}">
-                                                            {{ $compte->is_active ? 'Connecté' : 'Déconnecté' }}
-                                                        </a>
+                                                        <label class="form-label text-uppercase mb-0">
+                                                            {{ $compte->account_name }}
+                                                        </label>
+                                                        <br>
+                                                        <label class="form-label mt-0">
+                                                            {{ $compte->phone_number }}
+                                                        </label>
                                                     </div>
                                                 </div>
                                             </div>
@@ -255,13 +258,19 @@
                                                     <div class="d-flex align-items-center">
                                                         <a href="javascript:void(0);"
                                                             data-bs-toggle="collapse"
-                                                            data-bs-target="#php-mail"
+                                                            data-bs-target="#php-mail{{ $compte->withdrawal_account_id }}"
                                                             class="text-default me-1 me-lg-3 me-md-3 me-sm-3 border-end pe-1 pe-lg-3 pe-md-3 pe-sm-3 fs-16"><i
                                                                 class="ti ti-info-circle-filled"></i></a>
                                                         <a href="#" class="btn btn-light"
                                                             data-bs-toggle="modal"
                                                             data-bs-target="#add_paypal{{ $compte->withdrawal_account_id }}"><i
                                                                 class="ti ti-tool me-1"></i>Voir</a>
+                                                    </div>
+                                                    <div class="ms-2">
+                                                        <a href="javascript:void(0);"
+                                                            class="badge badge-tag ms-2 {{ $compte->is_active ? 'badge-soft-success' : 'badge-soft-danger' }}">
+                                                            {{ $compte->is_active ? 'Connecté' : 'Déconnecté' }}
+                                                        </a>
                                                     </div>
                                                     <div class="form-check form-switch p-0">
                                                         <label class="form-check-label d-flex align-items-center gap-2 w-100">
@@ -276,7 +285,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="collapse pt-3 mt-3 border-top" id="php-mail">
+                                        <div class="collapse pt-3 mt-3 border-top" id="php-mail{{ $compte->withdrawal_account_id }}">
                                             <div>
                                                 <p class="mb-0">« Ce compte de retrait ne peut pas être supprimé. Vous pouvez toutefois le désactiver en cliquant sur le point rouge. »</p>
                                             </div>
@@ -466,10 +475,9 @@
 
 <!-- Script JavaScript pour gérer l'affichage -->
 <script>
-    
     $(document).ready(function() {
 
-        
+
 
         // Formulaire AJAX pour activer/désactiver un compte de retrait
         $('.switchCheckDefault').change(function() {
