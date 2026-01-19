@@ -14,29 +14,40 @@ class VoteService
     protected $voteRepository;
     protected $transactionRepository;
     protected $payment;
+    protected $setting;
+
     public function __construct(VotesRepository $voteRepository,
                                 TransactionRepository $transactionRepository,
-                                Payment $payment)
+                                Payment $payment, Setting $setting)
     {
         // Initialisation des dépendances si nécessaire
         $this->voteRepository = $voteRepository;
         $this->transactionRepository = $transactionRepository;
         $this->payment = $payment;
+        $this->setting = $setting;
     }
 
     /**
      * Traiter un vote avec transaction associée
      */
-    public function processVote(array $data): Vote
+    public function processVote(array $data)
     {
         try {
+            $dtata = [
+                'vote_id' => $data['vote_id'],
+                'payment_method' => $data['payment_method'],
+                'montant_payee' => $data['amount'],
+                'telephone' => $data['telephone'],
+            ];
+
+
             // 1️⃣ Enregistrement du vote
             $this->voteRepository->save($data);
             \Log::info('Vote enregistré avec succès pour le vote ID ' . $data['vote_id']);
 
             // 2️⃣ Création de la transaction liée au vote
             $dataTransaction = [
-                'transactions_id' => $data['transaction_id'],
+                'transactions_id' => $this->setting->generateUuid(),
                 'vote_id' => $data['vote_id'],
                 'payment_method' => $data['payment_method'],
                 'montant_payee' => $data['amount'],
@@ -54,7 +65,7 @@ class VoteService
 
 
             // 3️⃣ Processing de la transaction (paiement)
-            $resul = $this->payment->processTransactionForVote($dataTransaction);
+            $resul = $this->payment->processTransaction($dataTransaction);
             $dataResul = [
                 'transactions_id' => $resul['transaction_id'],
                 'vote_id' => $data['vote_id'],
