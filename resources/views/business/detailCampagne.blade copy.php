@@ -55,12 +55,9 @@
             font-size: 1.5rem;
             text-transform: uppercase;
         }
-        .etape {
-            color: #000 !important;
-        }
 
         .nav-link {
-            /* color: white !important; */
+            color: white !important;
             margin-left: 20px;
             font-weight: 500;
         }
@@ -487,138 +484,262 @@
         </section>
 
         <!-- Etapes Bar Section -->
-        <!-- BARRE DE NAVIGATION DES ÉTAPES (Crucial pour la règle 1 & 2) -->
-        <nav class="bg-white border-bottom sticky-top">
+        <section class="search-section">
             <div class="container d-flex justify-content-between align-items-center">
-                <ul class="nav nav-pills py-3 gap-2">
-                    @foreach($campagne->etapes as $etape)
-                    <li class="nav-item">
-                        <a class="nav-link etape {{ $selectedEtapeId == $etape->etape_id ? 'active bg-light' : 'text-dark border' }}"
-                            href="?etape_id={{ $etape->etape_id }}">
-                            {{ $etape->name }}
-                        </a>
-                    </li>
-                    @endforeach
-                </ul>
+                <div>
+                    <img src="{{ env('IMAGES_PATH') }}/{{ $customer->logo }}" width="38" class="rounded-1 d-flex" alt="user-image">
+                </div>
                 <div class="search-input-group">
                     <i class="fa fa-search"></i>
-                    <input type="text" id="candidatSearch" class="form-control" placeholder="Rechercher un candidat..." style="width: 250px;">
+                    <input type="text" class="form-control" placeholder="Rechercher un candidat" style="width: 250px;">
                 </div>
             </div>
-        </nav>
+        </section>
 
-        <main class="container mt-5 mb-5">
-            @if($selectedEtape)
-
-            {{-- 1. CAS : L'étape n'est pas encore ouverte (is_upcoming) --}}
-            @if($selectedEtape->is_upcoming)
-            <div class="text-center mb-5">
-                <h2 class="fw-bold">L'étape "{{ $selectedEtape->name }}" ouvrira dans :</h2>
+        <!-- Categories Section -->
+        <section class="container mt-5">
+            <h3 class="section-title">Catégories</h3>
+            <div class="row">
+                <!-- Category 1 -->
+                <div class="col-md-6">
+                    <div class="category-card">
+                        <div class="category-icon">
+                            <i class="fa-solid fa-child-reaching"></i>
+                        </div>
+                        <div class="category-info">
+                            <h5>dessin</h5>
+                            <small>1 Candidat.e(s) / Nominé.e(s)</small>
+                        </div>
+                    </div>
+                </div>
+                <!-- Category 2 -->
+                <div class="col-md-6">
+                    <div class="category-card">
+                        <div class="category-icon">
+                            <i class="fa-solid fa-child"></i>
+                        </div>
+                        <div class="category-info">
+                            <h5>dessin anime</h5>
+                            <small>0 Candidat.e(s) / Nominé.e(s)</small>
+                        </div>
+                    </div>
+                </div>
             </div>
+        </section>
 
-            <div class="d-flex justify-content-center align-items-center gap-4 mb-5">
+        <!-- Candidates Section (Reproduction Capture 2) -->
+        <section class="container mt-5 mb-5">
+            <!-- Countdown Container -->
+            <div class="d-none d-md-flex justify-content-center align-items-center gap-4 mb-5">
+
+                <!-- Unité: Jours -->
                 <div class="countdown-item">
                     <div class="countdown-circle primary">
-                        <span class="countdown-value">{{ sprintf('%02d', $selectedEtape->countdown['days']) }}</span>
+                        <span class="countdown-value">08</span>
                     </div>
                     <span class="countdown-label">Jours</span>
                 </div>
+
+                <!-- Unité: Heures -->
                 <div class="countdown-item">
                     <div class="countdown-circle secondary">
-                        <span class="countdown-value">{{ sprintf('%02d', $selectedEtape->countdown['hours']) }}</span>
+                        <span class="countdown-value">12</span>
                     </div>
                     <span class="countdown-label">Heures</span>
                 </div>
+
+                <!-- Unité: Minutes -->
                 <div class="countdown-item">
                     <div class="countdown-circle primary">
-                        <span class="countdown-value">{{ sprintf('%02d', $selectedEtape->countdown['minutes']) }}</span>
+                        <span class="countdown-value">45</span>
                     </div>
                     <span class="countdown-label">Minutes</span>
                 </div>
+
+                <!-- Unité: Secondes -->
+                <div class="countdown-item">
+                    <div class="countdown-circle secondary">
+                        <span class="countdown-value">30</span>
+                    </div>
+                    <span class="countdown-label">Secondes</span>
+                </div>
+
             </div>
 
-            {{-- 2. CAS : L'étape est en cours (is_active_now) --}}
-            @elseif($selectedEtape->is_active_now)
+            <div class="row">
+                <!-- Card 002 -->
+                <div class="col-md-4 col-lg-3">
+                    <div class="candidate-card">
+                        <div class="candidate-img-wrapper">
+                            <!-- Placeholder image replicating the sketch style -->
+                            <img src="https://placehold.co/400x500/e0e0e0/555?text=Sketch+Image" alt="Zenitsu Sketch">
 
-            @php
-            // On filtre les catégories de la campagne qui ont des candidats liés à CETTE étape
-            $categoriesActives = $campagne->categories->filter(function($cat) use ($selectedEtapeId) {
-            return $cat->candidats->where('etape_id', $selectedEtapeId)->count() > 0;
-            });
-            @endphp
+                            <!-- Note: Pour avoir exactement l'image, remplacez le src par votre fichier local -->
+                        </div>
+                        <div class="card-body-custom">
+                            <h5 class="candidate-title">Zenitsu christmas</h5>
+                            <div class="candidate-subtitle">Candidat(e) / Nominé(e)</div>
 
-            {{-- REGLE 4.1 : Des catégories existent pour cette étape --}}
-            @if($categoriesActives->count() > 0)
-            <section class="mb-5">
-                <h3 class="section-title">Catégories</h3>
-                <div class="row">
-                    @foreach($categoriesActives as $category)
-                    <div class="col-md-6 mb-3">
-                        <a href="?etape_id={{ $selectedEtapeId }}&category_id={{ $category->category_id }}" class="text-decoration-none text-dark">
-                            <div class="category-card {{ $selectedCategoryId == $category->category_id ? 'border-warning border-2 shadow' : '' }}">
-                                <div class="category-icon">
-                                    <i class="fa-solid {{ $category->icon == 'femme' ? 'fa-child-dress' : 'fa-child' }}"></i>
+                            <div class="vote-row">
+                                <div class="candidate-number">
+                                    <small>Numéro</small>
+                                    002
                                 </div>
-                                <div class="category-info">
-                                    <h5>{{ $category->name }}</h5>
-                                    <small>{{ $category->candidats->where('etape_id', $selectedEtapeId)->count() }} Candidat.e(s)</small>
+                                <div class="vote-percent">
+                                    0.00%
+                                    <small>votes</small>
                                 </div>
                             </div>
-                        </a>
+
+                            <!-- MENU DE SÉLECTION (Masqué par défaut) -->
+                            <div class="vote-selection-wrapper">
+                                <div class="vote-item" data-price="500">
+                                    <span>1 Votes</span> <span class="price">500 Fcfa</span>
+                                </div>
+                                <div class="vote-item" data-price="2500">
+                                    <span>5 Votes</span> <span class="price">2500 Fcfa</span>
+                                </div>
+                                <div class="vote-item" data-price="5000">
+                                    <span>10 Votes</span> <span class="price">5000 Fcfa</span>
+                                </div>
+                                <div class="vote-item" data-price="10000">
+                                    <span>20 Votes</span> <span class="price">10000 Fcfa</span>
+                                </div>
+                            </div>
+
+                            <div class="action-row">
+                                <button class="btn btn-share">
+                                    <i class="fa-solid fa-share-nodes"></i>
+                                </button>
+                                <button class="btn btn-vote js-vote-trigger">Voter</button>
+                            </div>
+                        </div>
                     </div>
-                    @endforeach
                 </div>
-            </section>
+                <div class="col-md-4 col-lg-3">
+                    <div class="candidate-card">
+                        <div class="candidate-img-wrapper">
+                            <!-- Placeholder image replicating the sketch style -->
+                            <img src="https://placehold.co/400x500/e0e0e0/555?text=Sketch+Image" alt="Zenitsu Sketch">
 
-            <hr class="my-5">
+                            <!-- Note: Pour avoir exactement l'image, remplacez le src par votre fichier local -->
+                        </div>
+                        <div class="card-body-custom">
+                            <h5 class="candidate-title">Zenitsu christmas</h5>
+                            <div class="candidate-subtitle">Candidat(e) / Nominé(e)</div>
 
-            {{-- Affichage des candidats si une catégorie est sélectionnée --}}
-            @if($selectedCategoryId)
-            @php
-            $candidatsToDisplay = $selectedEtape->candidats->where('category_id', $selectedCategoryId);
-            $catName = $categoriesActives->firstWhere('category_id', $selectedCategoryId)->name ?? '';
-            @endphp
+                            <div class="vote-row">
+                                <div class="candidate-number">
+                                    <small>Numéro</small>
+                                    002
+                                </div>
+                                <div class="vote-percent">
+                                    0.00%
+                                    <small>votes</small>
+                                </div>
+                            </div>
 
-            <h4 class="mb-4">Candidats : {{ $catName }}</h4>
-            @include('partials.candidate-list', ['candidats' => $candidatsToDisplay,'selectedEtape' => $selectedEtape])
-            @else
-            <div class="alert alert-info text-center shadow-sm">
-                <i class="fa-solid fa-arrow-up me-2"></i> Sélectionnez une catégorie pour voir les candidats.
+                            <!-- MENU DE SÉLECTION (Masqué par défaut) -->
+                            <div class="vote-selection-wrapper">
+                                <div class="vote-item" data-price="500">
+                                    <span>1 Votes</span> <span class="price">500 Fcfa</span>
+                                </div>
+                                <div class="vote-item" data-price="2500">
+                                    <span>5 Votes</span> <span class="price">2500 Fcfa</span>
+                                </div>
+                                <div class="vote-item" data-price="5000">
+                                    <span>10 Votes</span> <span class="price">5000 Fcfa</span>
+                                </div>
+                                <div class="vote-item" data-price="10000">
+                                    <span>20 Votes</span> <span class="price">10000 Fcfa</span>
+                                </div>
+                            </div>
+
+                            <div class="action-row">
+                                <button class="btn btn-share">
+                                    <i class="fa-solid fa-share-nodes"></i>
+                                </button>
+                                <button class="btn btn-vote js-vote-trigger">Voter</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 col-lg-3">
+                    <div class="candidate-card">
+                        <div class="candidate-img-wrapper">
+                            <!-- Placeholder image replicating the sketch style -->
+                            <img src="https://placehold.co/400x500/e0e0e0/555?text=Sketch+Image" alt="Zenitsu Sketch">
+
+                            <!-- Note: Pour avoir exactement l'image, remplacez le src par votre fichier local -->
+                        </div>
+                        <div class="card-body-custom">
+                            <h5 class="candidate-title">Zenitsu christmas</h5>
+                            <div class="candidate-subtitle">Candidat(e) / Nominé(e)</div>
+
+                            <div class="vote-row">
+                                <div class="candidate-number">
+                                    <small>Numéro</small>
+                                    002
+                                </div>
+                                <div class="vote-percent">
+                                    0.00%
+                                    <small>votes</small>
+                                </div>
+                            </div>
+
+                           
+
+                            <div class="action-row">
+                                <button class="btn btn-share">
+                                    <i class="fa-solid fa-share-nodes"></i>
+                                </button>
+                                <button class="btn btn-vote">Voter</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 col-lg-3">
+                    <div class="candidate-card">
+                        <div class="candidate-img-wrapper">
+                            <!-- Placeholder image replicating the sketch style -->
+                            <img src="https://placehold.co/400x500/e0e0e0/555?text=Sketch+Image" alt="Zenitsu Sketch">
+
+                            <!-- Note: Pour avoir exactement l'image, remplacez le src par votre fichier local -->
+                        </div>
+                        <div class="card-body-custom">
+                            <h5 class="candidate-title">Zenitsu christmas</h5>
+                            <div class="candidate-subtitle">Candidat(e) / Nominé(e)</div>
+
+                            <div class="vote-row">
+                                <div class="candidate-number">
+                                    <small>Numéro</small>
+                                    002
+                                </div>
+                                <div class="vote-percent">
+                                    0.00%
+                                    <small>votes</small>
+                                </div>
+                            </div>
+
+                            <div class="action-row">
+                                <button class="btn btn-share">
+                                    <i class="fa-solid fa-share-nodes"></i>
+                                </button>
+                                <button class="btn btn-vote">Voter</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Placeholder for layout balance -->
+                <div class="col-md-4 col-lg-3"></div>
+                <div class="col-md-4 col-lg-3"></div>
             </div>
-            @endif
+        </section>
 
-            {{-- REGLE 4.2 : Aucune catégorie n'existe pour cette étape --}}
-            @else
-            <h3 class="section-title">Candidats de l'étape</h3>
-            @if($selectedEtape->candidats->count() > 0)
-            {{-- On affiche tous les candidats de l'étape directement --}}
-            @include('partials.candidate-list', ['candidats' => $selectedEtape->candidats,'selectedEtape' => $selectedEtape])
-            @else
-            <div class="alert alert-warning text-center">Aucun candidat n'est inscrit pour cette étape.</div>
-            @endif
-            @endif
-
-            {{-- 3. CAS : L'étape est terminée (date de fin dépassée) --}}
-            @else
-            <div class="text-center py-5">
-                <i class="fa-solid fa-calendar-check fa-3x text-muted mb-3"></i>
-                <h3 class="text-muted">Cette étape est désormais terminée.</h3>
-                <p>Les votes ne sont plus disponibles pour cette phase.</p>
-            </div>
-            @endif
-
-            @else
-            {{-- Cas critique : pas d'étape du tout --}}
-            <div class="alert alert-danger text-center">
-                Campagne non configurée ou aucune étape disponible.
-            </div>
-            @endif
-        </main>
-    </div>
-
-    <div class="text-center pb-4 text-muted small">
-        With <i class="fa-regular fa-heart"></i> by VOTIUM
-    </div>
+        <div class="text-center pb-4 text-muted small">
+            With <i class="fa-regular fa-heart"></i> by VOTIUM
+        </div>
 
     </div>
     <!-- End Wrapper -->
@@ -628,17 +749,6 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
     <script>
-        //
-        $(document).ready(function() {
-            $("#candidatSearch").on("keyup", function() {
-                var value = $(this).val().toLowerCase();
-                // On cible le parent col-md-4 pour masquer toute la carte
-                $(".candidate-card").each(function() {
-                    var text = $(this).text().toLowerCase();
-                    $(this).closest('.col-md-4').toggle(text.indexOf(value) > -1);
-                });
-            });
-        });
         document.addEventListener('click', function(e) {
             // 1. Gérer le clic sur le bouton "Voter"
             if (e.target.classList.contains('js-vote-trigger')) {
