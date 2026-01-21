@@ -7,23 +7,92 @@
 
     <!-- Page Header -->
     <div class="d-flex align-items-center justify-content-between gap-2 mb-4 flex-wrap">
-        <div>
-            <h4 class="mb-0">Tableau de bord</h4>
-            <nav aria-label="breadcrumb">
-                <ol class="breadcrumb mb-0 p-0">
-                    <li class="breadcrumb-item"><a href="index.html">Home</a></li>
-                    <li class="breadcrumb-item"><a href="javascript:void(0);">Applications</a></li>
-                    <li class="breadcrumb-item active" aria-current="page">Call History</li>
-                </ol>
-            </nav>
+        <div class="row col-12">
+            <div class="col-sm-6">
+                <h4 class="mb-0">{{ $title }}</h4>
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb mb-0 p-0">
+                        <li class="breadcrumb-item"><a href="{{ $link_back }}">{{ $title_back }}</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">{{ $title }}</li>
+                    </ol>
+                </nav>
+            </div>
+            <div class="col-sm-6">@include('layout.status')</div>
         </div>
     </div>
     <!-- End Page Header -->
 
-    <!-- start row -->
+    <!-- row start -->
     <div class="row">
+        <div class="col-xl-3 col-md-6">
+            <div class="card shadow">
+                <div class="card-body">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div class="d-flex align-items-center gap-2">
+                            <span class="avatar avatar-lg rounded-circle bg-secondary fs-24 flex-shrink-0"><i class="ti ti-brand-campaignmonitor"></i></span>
+                            <div>
+                                <p class="mb-1 text-truncate">Campagnes</p>
+                                <h6 class="mb-0">474</h6>
+                            </div>
+                        </div>
+                        <!-- <span class="badge badge-soft-success">+5.62%</span> -->
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-3 col-md-6">
+            <div class="card shadow">
+                <div class="card-body">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div class="d-flex align-items-center gap-2">
+                            <span class="avatar avatar-lg rounded-circle bg-info fs-24 flex-shrink-0"><i class="ti ti-send"></i></span>
+                            <div>
+                                <p class="mb-1 text-truncate">Campagnes active</p>
+                                <h6 class="mb-0">454</h6>
+                            </div>
+                        </div>
+                        <!-- <span class="badge badge-soft-success">+4.12%</span> -->
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-3 col-md-6">
+            <div class="card shadow">
+                <div class="card-body">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div class="d-flex align-items-center gap-2">
+                            <span class="avatar avatar-lg rounded-circle bg-danger fs-24 flex-shrink-0"><i class="ti ti-brand-feedly"></i></span>
+                            <div>
+                                <p class="mb-1 text-truncate">Etapes</p>
+                                <h6 class="mb-0">650</h6>
+                            </div>
+                        </div>
+                        <!-- <span class="badge badge-soft-success">+3.14%</span> -->
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-3 col-md-6">
+            <div class="card shadow">
+                <div class="card-body">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div class="d-flex align-items-center gap-2">
+                            <span class="avatar avatar-lg rounded-circle bg-success fs-24 flex-shrink-0"><i class="ti ti-checks"></i></span>
+                            <div>
+                                <p class="mb-1 text-truncate">Ctégories</p>
+                                <h6 class="mb-0">650</h6>
+                            </div>
+                        </div>
+                        <!-- <span class="badge badge-soft-success">+6.27%</span> -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- row end -->
 
-        <div class="col-md-6 d-flex">
+    <!-- start row -->
+    <!-- <div class="col-md-6 d-flex">
             <div class="card flex-fill">
                 <div class="card-header d-flex align-items-center justify-content-between flex-wrap row-gap-3">
                     <h6 class="mb-0">Recently Created Deals</h6>
@@ -56,11 +125,11 @@
                             </tbody>
                         </table>
                     </div>
-                </div> <!-- end card body -->
-            </div> <!-- end card -->
-        </div> <!-- end col -->
+                </div> 
+            </div>
+        </div> -->
 
-        <div class="col-md-6 d-flex">
+    <!-- <div class="col-md-6 d-flex">
             <div class="card flex-fill">
                 <div class="card-header">
                     <div class="d-flex align-items-center justify-content-between flex-wrap row-gap-3">
@@ -109,11 +178,9 @@
                 </div>
                 <div class="card-body py-0">
                     <div id="deals-chart"></div>
-                </div> <!-- end card body -->
-            </div> <!-- end card -->
-        </div> <!-- end col -->
-
-    </div>
+                </div> 
+            </div>
+        </div> -->
     <!-- end row -->
 
 </div>

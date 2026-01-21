@@ -24,7 +24,7 @@
     <link rel="stylesheet" href="{{ asset('assets/plugins/tabler-icons/tabler-icons.min.css') }}">
 
     <!-- Select2 CSS -->
-	<link rel="stylesheet" href="{{ asset('assets/plugins/select2/css/select2.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/plugins/select2/css/select2.min.css') }}">
 
     <!-- Simplebar CSS -->
     <link rel="stylesheet" href="{{ asset('assets/plugins/simplebar/simplebar.min.css') }}">
@@ -52,7 +52,7 @@
                     <!-- Logo -->
                     <a href="index.html" class="logo">
                         <!-- Logo Normal -->
-                            <span class="logo-light">
+                        <span class="logo-light">
                             <span class="logo-lg"><img src="{{ asset('assets/img/logo.svg') }}" alt="logo"></span>
                             <span class="logo-sm"><img src="{{ asset('assets/img/logo-small.svg') }}" alt="small logo"></span>
                         </span>
@@ -79,10 +79,10 @@
                     <div class="header-item">
                         <div class="dropdown me-2">
 
-                            <button class="topbar-link btn topbar-link dropdown-toggle drop-arrow-none" data-bs-toggle="dropdown" data-bs-offset="0,24" type="button" aria-haspopup="false" aria-expanded="false">
+                            <!-- <button class="topbar-link btn topbar-link dropdown-toggle drop-arrow-none" data-bs-toggle="dropdown" data-bs-offset="0,24" type="button" aria-haspopup="false" aria-expanded="false">
                                 <i class="ti ti-bell-check fs-16 animate-ring"></i>
                                 <span class="badge rounded-pill">10</span>
-                            </button>
+                            </button> -->
 
                             <div class="dropdown-menu p-0 dropdown-menu-end dropdown-menu-lg" style="min-height: 300px;">
 
@@ -142,40 +142,40 @@
                             <div class="d-flex align-items-center bg-light rounded-3 p-2 mb-2">
                                 <img src="{{ asset('assets/img/users/user-40.jpg') }}" class="rounded-circle" width="42" height="42" alt="Img">
                                 <div class="ms-2">
-                                    <p class="fw-medium text-dark mb-0">Katherine Brooks</p>
-                                    <span class="d-block fs-13">Installer</span>
+                                    <p class="fw-medium text-dark mb-0">{{ Auth::user()->name }}</p>
+                                    <span class="d-block fs-13">{{ Auth::user()->role }}</span>
                                 </div>
                             </div>
 
                             <!-- Item-->
-                            <a href="profile-settings.html" class="dropdown-item">
+                            <a href="{{ route('console.profile') }}" class="dropdown-item">
                                 <i class="ti ti-user-circle me-1 align-middle"></i>
-                                <span class="align-middle">Profile Settings</span>
+                                <span class="align-middle">Profile</span>
                             </a>
 
                             <!-- item -->
-                            <div class="form-check form-switch form-check-reverse d-flex align-items-center justify-content-between dropdown-item mb-0">
+                            <!-- <div class="form-check form-switch form-check-reverse d-flex align-items-center justify-content-between dropdown-item mb-0">
                                 <label class="form-check-label" for="notify"><i class="ti ti-bell"></i>Notifications</label>
                                 <input class="form-check-input me-0" type="checkbox" role="switch" id="notify">
-                            </div>
+                            </div> -->
 
                             <!-- Item-->
-                            <a href="javascript:void(0);" class="dropdown-item">
+                            <!-- <a href="javascript:void(0);" class="dropdown-item">
                                 <i class="ti ti-help-circle me-1 align-middle"></i>
                                 <span class="align-middle">Help & Support</span>
-                            </a>
+                            </a> -->
 
                             <!-- Item-->
-                            <a href="profile-settings.html" class="dropdown-item">
+                            <!-- <a href="profile-settings.html" class="dropdown-item">
                                 <i class="ti ti-settings me-1 align-middle"></i>
                                 <span class="align-middle">Settings</span>
-                            </a>
+                            </a> -->
 
                             <!-- Item-->
                             <div class="pt-2 mt-2 border-top">
-                                <a href="login.html" class="dropdown-item text-danger">
+                                <a href="{{ route('logout') }}" class="dropdown-item text-danger">
                                     <i class="ti ti-logout me-1 fs-17 align-middle"></i>
-                                    <span class="align-middle">Sign Out</span>
+                                    <span class="align-middle">Se déconnecter</span>
                                 </a>
                             </div>
                         </div>
@@ -234,11 +234,11 @@
     <script src="{{ asset('assets/plugins/daterangepicker/daterangepicker.js') }}"></script>
 
     <!-- Select2 JS -->
-	<script src="{{ asset('assets/plugins/select2/js/select2.min.js') }}"></script>
+    <script src="{{ asset('assets/plugins/select2/js/select2.min.js') }}"></script>
 
     <!-- Profile Upload JS -->
-	<script src="{{ asset('assets/js/profile-upload.js') }}" type="d22fd2b98b9057776904f99d-text/javascript"></script>
- 
+    <script src="{{ asset('assets/js/profile-upload.js') }}" type="d22fd2b98b9057776904f99d-text/javascript"></script>
+
     <!-- Apexchart JS -->
     <script src="{{ asset('assets/plugins/apexchart/apexcharts.min.js') }}"></script>
     <script src="{{ asset('assets/plugins/apexchart/chart-data.js') }}"></script>
@@ -248,6 +248,130 @@
 
     <!-- Main JS -->
     <script src="{{ asset('assets/js/script.js') }}"></script>
+
+    <script>
+        // Gestion du chargement des formulaires avec jQuery
+        $(document).on('submit', 'form', function() {
+            // 1. On récupère le bouton de soumission
+            var $form = $(this);
+            var $btn = $form.find('button[type="submit"]');
+
+            // 2. Vérification optionnelle : si le formulaire est invalide (HTML5), on ne bloque pas
+            if (this.checkValidity()) {
+                // 3. On désactive le bouton
+                $btn.prop('disabled', true);
+
+                // 4. Optionnel : on ajoute un petit indicateur de chargement
+                var loadingText = '<i class="fa fa-spinner fa-spin"></i> Patientez...';
+                if ($btn.html() !== loadingText) {
+                    $btn.data('original-text', $btn.html()); // Sauvegarde du texte original
+                    $btn.html(loadingText);
+                }
+            }
+        });
+
+
+        $(document).ready(function() {
+            /**
+             * Gestionnaire global pour tous les formulaires AJAX
+             * Cible tous les formulaires ayant la classe .ajax-form
+             */
+            $(document).on('submit', '.ajax-form', function(e) {
+                e.preventDefault();
+
+                const $form = $(this);
+                const $submitBtn = $form.find('button[type="submit"]');
+                const formData = new FormData(this); // Gère Text + Fichiers (Logo)
+                const originalBtnHtml = $submitBtn.html();
+
+                // 1. Reset visuel : On efface les erreurs précédentes
+                $form.find('.is-invalid').removeClass('is-invalid');
+                $form.find('.invalid-feedback').remove();
+
+                // Désactiver le bouton et mettre un spinner
+                $submitBtn.prop('disabled', true).html('<span class="spinner-border spinner-border-sm me-1"></span> Traitement...');
+
+                $.ajax({
+                    url: $form.attr('action'),
+                    method: $form.attr('method'), // POST (Laravel gère le @method('PUT') via FormData)
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                        'Accept': 'application/json' // FORCE Laravel à répondre en JSON et à respecter le FormRequest
+                    },
+                    success: function(response) {
+                        // Utilisation de ton système d'alerte existant
+                        if (typeof showAjaxAlert === 'function') {
+                            showAjaxAlert('success', response.message || 'Action réussie !');
+                        }
+
+                        // Si le formulaire est dans une modale, on la ferme après un court délai
+                        const $modal = $form.closest('.modal');
+                        if ($modal.length) {
+                            setTimeout(() => {
+                                $modal.modal('hide');
+                            }, 1000);
+                        }
+
+                        // Redirection ou Refresh selon le besoin (défini dans la réponse JSON ou par défaut)
+                        if (response.redirect) {
+                            window.location.href = response.redirect;
+                        } else {
+                            setTimeout(() => {
+                                location.reload();
+                            }, 1500);
+                        }
+                    },
+                    error: function(xhr) {
+                        $submitBtn.prop('disabled', false).html(originalBtnHtml);
+
+                        if (xhr.status === 422) { // Erreur de validation Laravel
+                            const errors = xhr.responseJSON.errors;
+
+                            if (typeof showAjaxAlert === 'function') {
+                                showAjaxAlert('danger', "Veuillez vérifier les champs du formulaire.");
+                            }
+
+                            // BOUCLE SCALABLE : Parcourt toutes les erreurs renvoyées par Laravel
+                            $.each(errors, function(fieldName, messages) {
+                                // On gère les noms de champs complexes (ex: 'logo.image' ou 'tags[]')
+                                let $input = $form.find(`[name="${fieldName}"], [name="${fieldName}[]"]`).first();
+
+                                if ($input.length > 0) {
+                                    $input.addClass('is-invalid');
+                                    let errorMsg = `<div class="invalid-feedback d-block">${messages[0]}</div>`;
+
+                                    // Placement intelligent de l'erreur
+                                    if ($input.closest('.input-group').length) {
+                                        // Si c'est un input group (réseaux sociaux), on met l'erreur après le groupe
+                                        $input.closest('.input-group').after(errorMsg);
+                                    } else if ($input.attr('type') === 'file' && $input.closest('.image-upload-group').length) {
+                                        // Cas spécifique de ton upload de logo
+                                        $input.closest('.image-upload-group').after(errorMsg);
+                                    } else {
+                                        // Cas standard
+                                        $input.after(errorMsg);
+                                    }
+                                }
+                            });
+
+                            // Focus sur le premier champ en erreur
+                            $form.find('.is-invalid').first().focus();
+
+                        } else {
+                            // Autre erreur (500, 403, etc.)
+                            const errorTxt = xhr.responseJSON?.message || "Une erreur est survenue.";
+                            if (typeof showAjaxAlert === 'function') {
+                                showAjaxAlert('danger', errorTxt);
+                            }
+                        }
+                    }
+                });
+            });
+        });
+    </script>
 
 </body>
 

@@ -4,17 +4,17 @@
         <div>
             <!-- Logo Normal -->
             <a href="/" class="logo logo-normal">
-                <img src="assets/img/logos/votium.png" width="150" alt="Logo">
+                <img src="{{ asset('assets/img/logos/votium.png') }}" width="150" alt="Logo">
             </a>
 
             <!-- Logo Small -->
             <a href="index.html" class="logo-small">
-                <img src="assets/img/logo-small.svg" alt="Logo">
+                <img src="{{ asset('assets/img/logo-small.svg') }}" alt="Logo">
             </a>
 
             <!-- Logo Dark -->
             <a href="index.html" class="dark-logo">
-                <img src="assets/img/logo-white.svg" alt="Logo">
+                <img src="{{ asset('assets/img/logo-white.svg') }}" alt="Logo">
             </a>
         </div>
         <button class="sidenav-toggle-btn btn border-0 p-0 active" id="toggle_btn">
@@ -35,24 +35,34 @@
                 <li class="menu-title"><span>Navigations</span></li>
                 <li>
                     <ul>
-                        <li class="submenu">
-                            <a href="javascript:void(0);" class="active subdrop">
-                                <i class="ti ti-dashboard"></i><span>Accueil</span>
+                        <li class="{{ request()->routeIs('espace') ? 'active' : '' }}">
+
+                            <a href="{{ route('business.espace') }}">
+                                <i class="ti ti-dashboard"></i><span>Tableau de bord</span>
                             </a>
                         </li>
-                        <li>
-                            <a href=""><i class="ti ti-brand-campaignmonitor"></i><span>Campagnes</span></a>
+                        <li class="{{ request()->routeIs('*_campagne') ? 'active' : '' }}">
+                            <a href="{{ route('business.list_campagne') }}">
+                                <i class="ti ti-brand-campaignmonitor"></i><span>Campagnes</span>
+                            </a>
                         </li>
-                        <li>
-                            <a href=""><i class="ti ti-user-up"></i><span>Candidatures</span></a>
+                        <li class="{{ request()->routeIs('*_candidat') ? 'active' : '' }}">
+                            <a href="{{ route('business.list_candidat') }}">
+                                <i class="ti ti-user-up"></i><span>Candidats</span>
+                            </a>
                         </li>
-                        <li>
-                            <a href="deals.html"><i class="ti ti-medal"></i><span>Votes</span></a>
+                        <li class="{{ request()->routeIs('*_vote') ? 'active' : '' }}">
+                            <a href="{{ route('business.list_vote') }}">
+                                <i class="ti ti-ticket"></i><span>Votes</span>
+                            </a>
                         </li>
-                        <li>
-                            <a href="payments.html"><i class="ti ti-report-money"></i><span>Retraits</span></a>
+                        <li class="{{ request()->routeIs('*_retrait') ? 'active' : '' }}">
+                            <a href="{{ route('business.list_retrait') }}">
+                                <i class="ti ti-report-money"></i><span>Retraits</span>
+                            </a>
                         </li>
-                        <li><a href="tickets.html"><i class="ti ti-ticket"></i><span>Billeterie</span></a></li>
+                        
+                        <!-- <li><a href="tickets.html"><i class="ti ti-ticket"></i><span>Billeterie</span></a></li> -->
 
                     </ul>
                 </li>

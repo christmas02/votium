@@ -23,6 +23,17 @@ class CustomerService
         $this->sendMail = $sendMail;
     }
 
+    public function Customer($idCustomer)
+    {
+        return $this->customerRepository->getCustomer($idCustomer);
+    }
+
+    public function customerByIdUser($user_id)
+    {
+        return $this->customerRepository->getCustomerByIdUser($user_id);
+    }
+
+    // create new customer
     public function createNewCustomer($dataNewCustomer){
         try {
             DB::beginTransaction();
@@ -32,15 +43,87 @@ class CustomerService
             $this->customerRepository->save($dataNewCustomer);
             // SEND EMAIL CUSTOMER
             $email = $dataNewCustomer['email'];
-            $user = $dataNewCustomer['name'];
-            $data = "";
-            $this->sendMail->sendMailAfterSaveCustomer($email, $user, $data);
+            $data = $dataNewCustomer;
+            $this->sendMail->sendMailAfterSaveCustomer($email, $data);
             DB::commit();
             return true;
         } catch (Exception $e){
+            DB::rollBack();
             \Log::error('Erreur lors de la sauvegarde du client : ' . $e->getMessage());
             return false;
-            DB::rollBack();
         }
+    }
+
+    public function UpdateProfileCustomer($customer)
+    {
+        try {
+            DB::beginTransaction();
+            // TO DO SAVE INFO USER ROLE CUSTOMER
+            $this->customerRepository->update($customer);
+
+            DB::commit();
+            return true;
+
+        } catch (Exception $e){
+            DB::rollBack();
+            \Log::error('Erreur lors de la mise a jour du customer : ' . $e->getMessage());
+            return false;
+        }
+    }
+
+    public function UpdateAccountCustomer($Customer)
+    {
+        try {
+            DB::beginTransaction();
+            // TO DO SAVE INFO USER ROLE CUSTOMER
+            $this->authRepository->updateUser($Customer);
+
+            DB::commit();
+            return true;
+
+        } catch (Exception $e){
+            DB::rollBack();
+            \Log::error('Erreur lors de la mise a jour du customer : ' . $e->getMessage());
+            return false;
+        }
+    }
+
+    public function listCustmer()
+    {
+        return $this->customerRepository->allCustomer();
+    }
+
+    public function verifyUserExist($user_email)
+    {return $this->authRepository->userExist($user_email);}
+
+    public function saveNewPassword($user_email, $password)
+    {return $this->authRepository->makeResetPassword($user_email, $password);}
+
+    public function createWithdrawalAccount($dataWithdrawalAccount)
+    {
+        try {
+            DB::beginTransaction();
+            // TO DO SAVE INFO USER ROLE CUSTOMER
+            $this->customerRepository->saveWithdrawalAccount($dataWithdrawalAccount);
+
+            DB::commit();
+            return true;
+
+        } catch (Exception $e){
+            DB::rollBack();
+            \Log::error('Erreur lors de la creation du compte de retrait: ' . $e->getMessage());
+            return false;
+        }
+    }
+
+    public function listWithdrawalAccountByCustomer($idCustomer)
+    {
+        try {
+            return $this->customerRepository->listWithdrawalAccountByCustomer($idCustomer);
+        } catch (Exception $e){
+            \Log::error('Erreur lors de la recuperation des comptes de retrait: ' . $e->getMessage());
+            return false;
+        }
+
     }
 }

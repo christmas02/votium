@@ -7,15 +7,17 @@
 
     <!-- Page Header -->
     <div class="d-flex align-items-center justify-content-between gap-2 mb-4 flex-wrap">
-        <div>
-            <h4 class="mb-0">Tableau de bord</h4>
-            <nav aria-label="breadcrumb">
-                <ol class="breadcrumb mb-0 p-0">
-                    <li class="breadcrumb-item"><a href="index.html">Home</a></li>
-                    <li class="breadcrumb-item"><a href="javascript:void(0);">Applications</a></li>
-                    <li class="breadcrumb-item active" aria-current="page">Call History</li>
-                </ol>
-            </nav>
+        <div class="row col-12">
+            <div class="col-sm-6">
+                <h4 class="mb-0">{{ $title }}</h4>
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb mb-0 p-0">
+                        <li class="breadcrumb-item"><a href="{{ $link_back }}">{{ $title_back }}</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">{{ $title }}</li>
+                    </ol>
+                </nav>
+            </div>
+            <div class="col-sm-6">@include('layout.status')</div>
         </div>
     </div>
     <!-- End Page Header -->
@@ -23,7 +25,7 @@
     <!-- start row -->
     <div class="row">
 
-        <div class="col-md-6 d-flex">
+        <!-- <div class="col-md-6 d-flex">
             <div class="card flex-fill">
                 <div class="card-header d-flex align-items-center justify-content-between flex-wrap row-gap-3">
                     <h6 class="mb-0">Recently Created Deals</h6>
@@ -56,11 +58,11 @@
                             </tbody>
                         </table>
                     </div>
-                </div> <!-- end card body -->
-            </div> <!-- end card -->
-        </div> <!-- end col -->
+                </div> 
+            </div>
+        </div> -->
 
-        <div class="col-md-6 d-flex">
+        <!-- <div class="col-md-6 d-flex">
             <div class="card flex-fill">
                 <div class="card-header">
                     <div class="d-flex align-items-center justify-content-between flex-wrap row-gap-3">
@@ -109,10 +111,10 @@
                 </div>
                 <div class="card-body py-0">
                     <div id="deals-chart"></div>
-                </div> <!-- end card body -->
-            </div> <!-- end card -->
-        </div> <!-- end col -->
-
+                </div> 
+            </div>
+        </div> -->
+ 
     </div>
     <!-- end row -->
 
