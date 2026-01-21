@@ -10,19 +10,18 @@ class TransactionRepository
     {
         try {
             $transaction = new Transaction();
-            $transaction->transactions_id = $dataTransaction['transactions_id'];
-            $transaction->votes_id = $dataTransaction['votes_id'];
-            $transaction->payment_method = $dataTransaction['payment_method'];
+            $transaction->transaction_id = $dataTransaction['transaction_id'];
+            $transaction->vote_id = $dataTransaction['vote_id'];
+            $transaction->payment_method = $dataTransaction['provider'];
             $transaction->currency = $dataTransaction['currency'];
-            $transaction->montant_payee = $dataTransaction['montant_payee'];
-            $transaction->status = $dataTransaction['status'];
-            $transaction->transaction_date = $dataTransaction['transaction_date'];
-            $transaction->telephone = $dataTransaction['telephone'];
+            $transaction->country = $dataTransaction['country'];
+            $transaction->amount_paid = $dataTransaction['amount'];
+            $transaction->telephone = $dataTransaction['phoneNumber'];
             $transaction->api_processing = $dataTransaction['api_processing'];
-            $transaction->api_response = $dataTransaction['api_response'];
-            $transaction->commentaire = $dataTransaction['commentaire'];
-            $transaction->date_transaction = $dataTransaction['date_transaction'];
-            $transaction->date_processing = $dataTransaction['date_processing'];
+            $transaction->comment = $dataTransaction['comment'];
+            $transaction->status = 'created';
+            $transaction->date_transaction = now();
+            $transaction->date_processing = null;
 
             $transaction->save();
             return true;
