@@ -20,6 +20,8 @@ class CreateVotesTable extends Migration
             $table->string('etate_id');
             $table->string('quantity');
             $table->string('montant');
+            $table->string('name');
+            $table->string('email');
             $table->string('status')->default('PENDING');
             $table->date('date_vote');
             $table->timestamps();

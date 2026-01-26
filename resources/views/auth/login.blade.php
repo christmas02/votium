@@ -3,6 +3,7 @@
 
 
 <!-- Mirrored from crms.dreamstechnologies.com/html/template/login.html by HTTrack Website Copier/3.x [XR&CO'2014], Mon, 24 Nov 2025 09:59:19 GMT -->
+
 <head>
 
     <!-- Meta Tags -->
@@ -34,97 +35,114 @@
 
 <body class="account-page bg-white">
 
-<!-- Begin Wrapper -->
-<div class="main-wrapper">
+    <!-- Begin Wrapper -->
+    <div class="main-wrapper">
 
-    <div class="overflow-hidden p-3 acc-vh">
+        <div class="overflow-hidden p-3 acc-vh">
 
-        <!-- start row -->
-        <div class="row vh-100 w-100 g-0">
+            <!-- start row -->
+            <div class="row vh-100 w-100 g-0">
 
-            <div class="col-lg-6 vh-100 overflow-y-auto overflow-x-hidden">
+                <div class="col-lg-6 vh-100 overflow-y-auto overflow-x-hidden">
 
-                <!-- start row -->
-                <div class="row">
+                    <!-- start row -->
+                    <div class="row">
 
-                    <div class="col-md-10 mx-auto">
-                        <form method="post" action="login" class=" vh-100 d-flex justify-content-between flex-column p-4 pb-0">
-                            @csrf
-                            <div class="text-center mb-4 auth-logo">
-                                <img src="assets/img/logos/votium.png" class="img-fluid" alt="Logo">
-                            </div>
-                            <div>
-                                <div class="mb-3">
-                                    <h3 class="mb-2">Se connecter</h3>
-                                    <p class="mb-0">Nous somme contents de vous voir parmis nous. Montez à bord !</p>
+                        <div class="col-md-10 mx-auto">
+                            <form method="post" action="login" class=" vh-100 d-flex justify-content-between flex-column p-4 pb-0">
+                                @csrf
+                                <div class="text-center mb-4 auth-logo">
+                                    <img src="assets/img/logos/votium.png" class="img-fluid" alt="Logo">
                                 </div>
-                                <div class="mb-3">
-                                    <label class="form-label">Adresse email</label>
-                                    <div class="input-group input-group-flat">
-                                        <input type="email" name="email" class="form-control" style="padding: 3%">
-                                        <span class="input-group-text"><i class="ti ti-mail"></i></span>
+                                <div>
+                                    <div class="mb-3">
+                                        <h3 class="mb-2">Se connecter</h3>
+                                        <p class="mb-0">Nous somme contents de vous voir parmis nous. Montez à bord !</p>
                                     </div>
-                                </div>
-                                <div class="mb-3">
-                                    <label class="form-label">Mot de passe</label>
-                                    <div class="input-group input-group-flat pass-group">
-                                        <input type="password" name="password" class="form-control pass-input" style="padding: 3%">
-                                        <span class="input-group-text toggle-password "><i class="ti ti-eye-off"></i></span>
+                                    <div class="mb-3">
+                                        @if(session('success'))
+                                        <div class="alert alert-success">
+                                            {{ session('success') }}
+                                        </div>
+                                        @endif
+
+                                        @if(session('error'))
+                                        <div class="alert alert-danger">
+                                            {{ session('error') }}
+                                        </div>
+                                        @endif
                                     </div>
-                                </div>
-                                <div class="d-flex align-items-center justify-content-between mb-3">
-                                    <div class="form-check form-check-md d-flex align-items-center">
-                                        <input class="form-check-input mt-0" type="checkbox" value="" id="checkebox-md" checked="">
-                                        <label class="form-check-label text-dark ms-1" for="checkebox-md">
-                                            Se souvenir de moi
-                                        </label>
+                                    <div class="mb-3">
+                                        <label class="form-label">Adresse email <span class="text-danger">*</span></label>
+                                        <div class="input-group input-group-flat">
+                                            <input type="email" name="email" class="form-control" style="padding: 3%" required>
+                                            <span class="input-group-text"><i class="ti ti-mail"></i></span>
+                                        </div>
                                     </div>
-                                    <div class="text-end">
-                                        <a href="forgot-password.html" class="link-danger fw-medium link-hover">Mot de passe oublier ?</a>
+                                    <div class="mb-3">
+                                        <label class="form-label">Mot de passe <span class="text-danger">*</span></label>
+                                        <div class="input-group input-group-flat pass-group">
+                                            <input type="password" name="password" class="form-control pass-input" style="padding: 3%" required>
+                                            <span class="input-group-text toggle-password "><i class="ti ti-eye-off"></i></span>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="mb-3">
-                                    <button type="submit" class="btn btn-primary w-100">Connexion</button>
-                                </div>
-                                <div class="mb-3">
-                                    <p class="mb-0">Pas encore inscrit ? <a href="register.html" class="link-indigo fw-bold link-hover"> Cliquez ici</a></p>
-                                </div>
+                                    <div class="d-flex align-items-center justify-content-between mb-3">
+                                        <div class="form-check form-check-md d-flex align-items-center">
+                                            <input class="form-check-input mt-0" type="checkbox" value="" id="checkebox-md" checked="">
+                                            <label class="form-check-label text-dark ms-1" for="checkebox-md">
+                                                Se souvenir de moi
+                                            </label>
+                                        </div>
+                                        <div class="text-end">
+                                            <a href="#" class="link-danger fw-medium link-hover">Mot de passe oublier ?</a>
+                                        </div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <button type="submit" class="btn btn-primary w-100">Connexion</button>
+                                    </div>
+                                    <div class="mb-3">
+                                        <p class="mb-0">Pas encore inscrit ? <a href="#" class="link-indigo fw-bold link-hover"> Cliquez ici</a></p>
+                                    </div>
 
 
-                            </div>
-                            <div class="text-center pb-4">
-                                <p class="text-dark mb-0">Copyright &copy; <script type="b135dffc5896e74b0ec0117e-text/javascript">document.write(new Date().getFullYear())</script> - VOTIUM</p>
-                            </div>
-                        </form>
-                    </div> <!-- end col -->
+                                </div>
+                                <div class="text-center pb-4">
+                                    <p class="text-dark mb-0">Copyright &copy; <script type="b135dffc5896e74b0ec0117e-text/javascript">
+                                            document.write(new Date().getFullYear())
+                                        </script> - VOTIUM</p>
+                                </div>
+                            </form>
+                        </div> <!-- end col -->
+
+                    </div>
+                    <!-- end row -->
 
                 </div>
-                <!-- end row -->
+
+                <div class="col-lg-6 account-bg-01"></div> <!-- end col -->
 
             </div>
-
-            <div class="col-lg-6 account-bg-01"></div> <!-- end col -->
+            <!-- end row -->
 
         </div>
-        <!-- end row -->
 
     </div>
+    <!-- End Wrapper -->
 
-</div>
-<!-- End Wrapper -->
+    <!-- jQuery -->
+    <script src="assets/js/jquery-3.7.1.min.js" type="b135dffc5896e74b0ec0117e-text/javascript"></script>
 
-<!-- jQuery -->
-<script src="assets/js/jquery-3.7.1.min.js" type="b135dffc5896e74b0ec0117e-text/javascript"></script>
+    <!-- Bootstrap Core JS -->
+    <script src="assets/js/bootstrap.bundle.min.js" type="b135dffc5896e74b0ec0117e-text/javascript"></script>
 
-<!-- Bootstrap Core JS -->
-<script src="assets/js/bootstrap.bundle.min.js" type="b135dffc5896e74b0ec0117e-text/javascript"></script>
+    <!-- Main JS -->
+    <script src="assets/js/script.js" type="b135dffc5896e74b0ec0117e-text/javascript"></script>
 
-<!-- Main JS -->
-<script src="assets/js/script.js" type="b135dffc5896e74b0ec0117e-text/javascript"></script>
-
-<script src="https://crms.dreamstechnologies.com/cdn-cgi/scripts/7d0fa10a/cloudflare-static/rocket-loader.min.js" data-cf-settings="b135dffc5896e74b0ec0117e-|49" defer></script><script defer src="https://static.cloudflareinsights.com/beacon.min.js/vcd15cbe7772f49c399c6a5babf22c1241717689176015" integrity="sha512-ZpsOmlRQV6y907TI0dKBHq9Md29nnaEIPlkf84rnaERnq6zvWvPUqr2ft8M1aS28oN72PdrCzSjY4U6VaAw1EQ==" data-cf-beacon='{"version":"2024.11.0","token":"3ca157e612a14eccbb30cf6db6691c29","server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
+    <script src="https://crms.dreamstechnologies.com/cdn-cgi/scripts/7d0fa10a/cloudflare-static/rocket-loader.min.js" data-cf-settings="b135dffc5896e74b0ec0117e-|49" defer></script>
+    <script defer src="https://static.cloudflareinsights.com/beacon.min.js/vcd15cbe7772f49c399c6a5babf22c1241717689176015" integrity="sha512-ZpsOmlRQV6y907TI0dKBHq9Md29nnaEIPlkf84rnaERnq6zvWvPUqr2ft8M1aS28oN72PdrCzSjY4U6VaAw1EQ==" data-cf-beacon='{"version":"2024.11.0","token":"3ca157e612a14eccbb30cf6db6691c29","server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
 </body>
 
 
 <!-- Mirrored from crms.dreamstechnologies.com/html/template/login.html by HTTrack Website Copier/3.x [XR&CO'2014], Mon, 24 Nov 2025 09:59:22 GMT -->
+
 </html>

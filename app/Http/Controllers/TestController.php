@@ -29,6 +29,8 @@ class TestController extends Controller
             'etate_id' => $this->setting->generateUuid(),
             'quantity' => 1,
             'otpCode' => '0000',
+            'email' => 'email',
+            'name' => 'name',
             'amount' => 100,
             'phoneNumber' => '00000001',
             'provider' => 'orange',

@@ -15,6 +15,9 @@ class VotesRepository
             $vote->campagne_id = $dataVote['campagne_id'];
             $vote->etate_id = $dataVote['etate_id'];
             $vote->quantity = $dataVote['quantity'];
+            $vote->name = $dataVote['name'];
+            $vote->email = $dataVote['email'];
+            $vote->phoneNumber = $dataVote['phoneNumber'];
             $vote->montant = $dataVote['amount'];
             $vote->status = 'created';
             $vote->date_vote = now();

@@ -17,7 +17,6 @@ class AuthController  extends Controller
     public function login(Request $request)
     {
         try {
-            // dd($request->all());
             $inputVal = $request->all();
 
             $this->validate($request, [
@@ -35,13 +34,12 @@ class AuthController  extends Controller
                 }
             } else {
                 //dd('Infromation invalide, veiller contacter notre service');
-                return redirect('authentification')->with('error', 'Infromation invalide, veiller contacter notre service');
+                return redirect('/')->with('error', 'Vos accès sont invalides, veuillez réessayer avec les bons identifiants.');
             }
 
         } catch (\Throwable $th){
-            dd($th->getMessage());
             Log::error($th->getMessage());
-            return redirect('error')->with('error','Infromation invalide, veiller contacter notre service');
+            return redirect('/')->with('error','Infromation invalide, veiller contacter notre service');
         }
     }
     #SE DECONNECTER

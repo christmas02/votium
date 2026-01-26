@@ -408,107 +408,6 @@ class BusinessController extends Controller
     }
 
     #DETAIL CAMPAGNE
-    // public function detailCampagne($idCampagne)
-    // {
-    //     try {
-    //         $campagne = $this->CampagneService->detailCampagne($idCampagne);
-    //         $customer = $this->CustomerService->Customer($campagne->customer_id);
-
-    //         $listEtapes = $this->CampagneService->listEtapesByCampagneId($idCampagne);
-    //         $listCategories = $this->CampagneService->listCategoriesByCampagneId($idCampagne);
-    //         // dd($campagne, $listEtapes, $listCategories);
-    //         $data = [];
-
-    //         //parcouri etape et catégori campagne pour recupéer les candidats
-    //         foreach ($listEtapes as $etape) {
-    //             # code...
-    //             $dateActuel = now();
-    //             $startDate = \Carbon\Carbon::parse($etape->date_debut . ' ' . $etape->heure_debut);
-    //             $endDate = \Carbon\Carbon::parse($etape->date_fin . ' ' . $etape->heure_fin);
-
-    //             foreach ($listCategories as $category) {
-    //                 # recherche des candidats...
-
-    //                 $filters = [
-    //                     'campagne_id' => $idCampagne,
-    //                     'etape_id'    => $etape->etape_id,
-    //                     'category_id' => $category->category_id,
-    //                 ];
-
-    //                 $candidats = $this->CandidatureService->searchCandidat($filters);
-
-    //                 //Transformer en Collection
-    //                 $collection = collect($candidats);
-
-    //                 //Appliquer la recherche (si le champ search est rempli)
-    //                 if ($candidats) {
-    //                     $searchTerm = strtolower($idCampagne);
-    //                     $collection = $collection->filter(function ($candidat) use ($searchTerm) {
-    //                         return str_contains(strtolower($candidat->name ?? ''), $searchTerm) ||
-    //                             str_contains(strtolower($candidat->email ?? ''), $searchTerm);
-    //                     });
-    //                 }
-    //             }
-    //         }
-
-    //         if (!$campagne) {
-    //             return redirect()->back()->with('error', 'Campagne non trouvée.');
-    //         }
-    //         $title_back = "Tableau de bord";
-    //         $link_back = "detail_campagne";
-    //         $title = $campagne->name;
-    //         return view('business.detailCampagne', compact('title', 'title_back', 'link_back', 'campagne', 'customer'));
-    //     } catch (\Exception $th) {
-    //         Log::error("Erreur lors de l'affichage de la detail page de la campagne : " . $th->getMessage(), [
-    //             'stack_trace' => $th->getTraceAsString(),
-    //         ]);
-    //         return redirect()->back()
-    //             ->withInput()
-    //             ->with('error', __('messages.server_error'));
-    //     }
-    // }
-
-
-
-    // public function detailCampagne($idCampagne)
-    // {
-    //     $campagne = $this->CampagneService->detailCampagne($idCampagne);
-
-    //     $customer = $this->CustomerService->Customer($campagne->customer_id);
-
-    //     $etapes = $this->CampagneService->listEtapesByCampagneId($idCampagne);
-    //     $categories = $this->CampagneService->listCategoriesByCampagneId($idCampagne);
-
-    //     // 4. Récupérer TOUS les candidats liés à cette campagne via la table pivot
-    //     // On fait une jointure pour avoir les infos des candidats (nom, photo, etc.)
-    //     $assignments = DB::table('candidat_etap_category_campagnes')
-    //         ->join('candidats', 'candidat_etap_category_campagnes.candidat_id', '=', 'candidats.candidat_id')
-    //         ->where('candidat_etap_category_campagnes.campagne_id', $idCampagne)
-    //         ->select('candidats.*', 'candidat_etap_category_campagnes.etape_id', 'candidat_etap_category_campagnes.category_id')
-    //         ->get();
-
-    //     // 5. Organisation des données : Associer les candidats aux étapes et catégories
-    //     foreach ($etapes as $etape) {
-    //         // On filtre les assignments qui correspondent à cette étape
-    //         $etape->candidats = $assignments->where('etape_id', $etape->etape_id)->values();
-
-
-    //     }
-
-    //     foreach ($categories as $category) {
-    //         // On filtre les assignments qui correspondent à cette catégorie
-    //         $category->candidats = $assignments->where('category_id', $category->category_id)->values();
-    //     }
-
-    //     // On attache les listes à l'objet campagne
-    //     $campagne->etapes = $etapes;
-    //     $campagne->categories = $categories;
-    //     dd($campagne);
-
-    //     return $campagne;
-    // }
-
-
     public function detailCampagne($idCampagne)
     {
         $campagne = $this->CampagneService->detailCampagne($idCampagne);
@@ -555,9 +454,6 @@ class BusinessController extends Controller
 
         foreach ($categories as $category) {
             $category->candidats = $assignments->where('category_id', $category->category_id)->values();
-
-            // Optionnel : Une catégorie est considérée active si au moins une de ses étapes liées est active
-            // Ou vous pouvez simplement utiliser la logique des étapes dans votre vue.
         }
 
         $campagne->etapes = $etapes;
