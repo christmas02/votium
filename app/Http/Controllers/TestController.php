@@ -6,19 +6,31 @@ namespace App\Http\Controllers;
 use App\Services\Setting;
 use App\Services\VoteService;
 use App\Transactions\ProcessPaymentHub2;
+use App\Transactions\ProcessPaymentPaystack;
 
 class TestController extends Controller
 {
     protected $payment;
     protected $voteService;
     protected $setting;
+    protected $paymentPaystack;
 
     public function __construct(ProcessPaymentHub2 $payment, VoteService $voteService,
-    Setting $setting)
+    Setting $setting, ProcessPaymentPaystack $paymentPaystack)
     {
         $this->payment = $payment;
         $this->voteService = $voteService;
         $this->setting = $setting;
+        $this->paymentPaystack = $paymentPaystack;
+
+    }
+    public function testPaystackpayment()
+    {
+        $paramTransaction = [
+            'amount' => 200,
+            'email' => 'customer@mail.com',
+        ];
+        return $this->paymentPaystack->execute($paramTransaction);
     }
     public function testProcessVote()
     {
