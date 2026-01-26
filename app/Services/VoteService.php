@@ -4,9 +4,8 @@ namespace App\Services;
 
 use App\Repository\TransactionRepository;
 use App\Repository\VotesRepository;
-use App\Transactions\Payment;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Str;
+use App\Transactions\ProcessPaymentHub2;
+use Illuminate\Support\Facades\DB;
 
 
 class VoteService
@@ -14,63 +13,124 @@ class VoteService
     protected $voteRepository;
     protected $transactionRepository;
     protected $payment;
+    protected $setting;
+
     public function __construct(VotesRepository $voteRepository,
                                 TransactionRepository $transactionRepository,
-                                Payment $payment)
+                                ProcessPaymentHub2 $payment, Setting $setting)
     {
         // Initialisation des dépendances si nécessaire
         $this->voteRepository = $voteRepository;
         $this->transactionRepository = $transactionRepository;
         $this->payment = $payment;
+        $this->setting = $setting;
     }
 
     /**
      * Traiter un vote avec transaction associée
      */
-    public function processVote(array $data): Vote
+    public function processVote(array $data)
     {
         try {
+            DB::beginTransaction();
             // 1️⃣ Enregistrement du vote
             $this->voteRepository->save($data);
             \Log::info('Vote enregistré avec succès pour le vote ID ' . $data['vote_id']);
 
             // 2️⃣ Création de la transaction liée au vote
             $dataTransaction = [
-                'transactions_id' => $data['transaction_id'],
+                // data de la transaction
+                'transaction_id' => $this->setting->generateUuid(),
                 'vote_id' => $data['vote_id'],
-                'payment_method' => $data['payment_method'],
-                'montant_payee' => $data['amount'],
+                'provider' => $data['provider'],
+                'amount' => $data['amount'],
                 'currency' => 'XOF',
-                'telephone' => $data['telephone'],
-                'api_processing' => '',
-                'api_response' => '',
-                'status' => 'INITIATED',
-                'commentaire' => 'Transaction pour le vote ID ' . $data['vote_id'],
-                'date_transaction' => now(),
-                'date_processing' => null,
+                'country' => 'CI',
+                'phoneNumber' => $data['phoneNumber'],
+                'api_processing' => 'hub2',
+                'comment' => 'creat payment for vote',
+                'otpCode' => $data['otpCode'],
             ];
             $this->transactionRepository->createTransaction($dataTransaction);
-            \Log::info('Transaction créée avec succès pour le vote ID ' . $data['transaction_id']);
+            \Log::info('Transaction créée avec succès pour le vote ID ' . $dataTransaction['transaction_id']);
 
 
             // 3️⃣ Processing de la transaction (paiement)
-            $resul = $this->payment->processTransactionForVote($dataTransaction);
-            $dataResul = [
-                'transactions_id' => $resul['transaction_id'],
-                'vote_id' => $data['vote_id'],
-                'status' => $resul['status'],
-            ];
-            \Log::info('Transaction traitée avec succès pour le vote ID ' . $resul);
+            $resul = $this->payment->execute($dataTransaction);
 
-            // 4️⃣ Mise à jour des statuts
-            $this->voteRepository->updateVoteStatus($dataResul);
-            $this->transactionRepository->updateTransactionStatus($dataResul);
+            //\Log::info('Transaction traitée avec succès pour le vote ID ' . $resul);
+            // 4️⃣ Mise à jour des status du vote en fonction du résultat du paiement
+            $this->updateVoteStatusAfterPayment($resul);
 
-            return true;
+            DB::commit();
+            return $resul;
 
         } catch (\Exception $e) {
+            DB::rollBack();
             \Log::error('Erreur lors du traitement du vote : ' . $e->getMessage());
             throw $e; // Rejeter l'exception pour gestion en amont
+        }
+
+    }
+
+
+    public function updateVoteStatusAfterPayment(array $resul): array
+    {
+        $transactionId = $resul['transactions_id'] ?? $resul['transaction_id'] ?? null;
+        if (! $transactionId) {
+            return ['status' => 'error', 'message' => 'transaction_id manquant'];
+        }
+        try {
+            DB::beginTransaction();
+
+            // Récupère la ligne transaction + vote
+            $row = DB::table('transactions')
+                ->join('votes', 'transactions.vote_id', '=', 'votes.vote_id')
+                ->where('transactions.transaction_id', $transactionId)
+                ->select('votes.vote_id as vote_id', 'votes.status as vote_status', 'transactions.status as transaction_status')
+                ->first();
+
+            if (! $row) {
+                DB::rollBack();
+                return ['status' => 'error', 'message' => 'Transaction ou vote introuvable', 'transaction_id' => $transactionId];
+            }
+
+            // Statut fourni par le résultat du paiement (fallback sur la transaction en base)
+            $txStatus = $resul['status'] ?? $row->transaction_status ?? null;
+
+            // Mapping simple des statuts transaction -> statut vote
+            $voteStatus = match ($txStatus) {
+                'completed', 'valid', 'success' => 'confirmed',
+                'failed'    => 'rejected',
+                'pending', 'processing' => 'pending',
+                default     => 'processing',
+            };
+
+            // Mise à jour du vote
+            DB::table('votes')
+                ->where('vote_id', $row->vote_id)
+                ->update([
+                    'status' => $voteStatus,
+                    'updated_at' => now(),
+                ]);
+
+            DB::commit();
+
+            \Log::info('Statut du vote mis à jour après paiement', [
+                'transaction_id' => $transactionId,
+                'vote_id' => $row->vote_id,
+                'new_status' => $voteStatus,
+            ]);
+
+            return ['status' => 'ok', 'vote_id' => $row->vote_id, 'vote_status' => $voteStatus];
+        } catch (\Throwable $e) {
+            DB::rollBack();
+            \Log::error('Erreur lors de la mise à jour du statut du vote', [
+                'transaction_id' => $transactionId,
+                'error' => $e->getMessage(),
+            ]);
+
+            return ['status' => 'error', 'message' => $e->getMessage(), 'transaction_id' => $transactionId];
         }
 
     }

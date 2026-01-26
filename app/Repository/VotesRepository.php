@@ -10,14 +10,17 @@ class VotesRepository
     {
         try {
             $vote = new Vote();
-            $vote->votes_id = $dataVote['votes_id'];
+            $vote->vote_id = $dataVote['vote_id'];
             $vote->candidat_id = $dataVote['candidat_id'];
             $vote->campagne_id = $dataVote['campagne_id'];
             $vote->etate_id = $dataVote['etate_id'];
             $vote->quantity = $dataVote['quantity'];
-            $vote->montant = $dataVote['montant'];
-            $vote->status = $dataVote['status'];
-            $vote->date_vote = $dataVote['date_vote'];
+            $vote->name = $dataVote['name'];
+            $vote->email = $dataVote['email'];
+            $vote->phoneNumber = $dataVote['phoneNumber'];
+            $vote->montant = $dataVote['amount'];
+            $vote->status = 'created';
+            $vote->date_vote = now();
 
             $vote->save();
             return true;

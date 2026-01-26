@@ -29,4 +29,9 @@ enum PaymentMethod: string
             self::WAVE => 'wave',
         };
     }
+
+    public function optionPayment(): array
+    {
+
+    }
 }
