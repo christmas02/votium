@@ -332,14 +332,17 @@ class ConsoleController  extends Controller
     public function listCampagne()
     {
         try {
+            $title_back = "Tableau de bord";
+            $link_back = "list_campagne";
+            $title = "Liste Campagnes";
+
             $campagnes = $this->CampagneService->listCampagnes()->sortByDesc('created_at');
+
 
             $customers = $this->CustomerService->listCustmer()
                 ->pluck('entreprise', 'customer_id')
                 ->toArray();
-            $title_back = "Tableau de bord";
-            $link_back = "list_campagne";
-            $title = "Liste Campagnes";
+
             return view('console.listCampagnes', compact('title', 'title_back', 'link_back', 'campagnes', 'customers'));
         } catch (\Exception $th) {
             Log::error("Erreur lors de la récupération des campagnes : " . $th->getMessage(), [

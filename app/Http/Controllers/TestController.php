@@ -26,11 +26,20 @@ class TestController extends Controller
     }
     public function testPaystackpayment()
     {
+//        $paramTransaction = [
+//            'amount' => 200,
+//            'email' => 'customer@mail.com',
+//        ];
+//        return $this->paymentPaystack->execute($paramTransaction);
+
         $paramTransaction = [
             'amount' => 200,
             'email' => 'customer@mail.com',
+            'currency' => 'CFA',
+            'phone' => '0551234987',
+            'provider' => 'mtn',
         ];
-        return $this->paymentPaystack->execute($paramTransaction);
+        return $this->paymentPaystack->testInitCharge($paramTransaction);
     }
     public function testProcessVote()
     {

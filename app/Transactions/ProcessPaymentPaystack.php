@@ -38,4 +38,27 @@ class ProcessPaymentPaystack
         }
 
     }
+
+    public function testInitCharge(array $paramTransaction): array
+    {
+        try {
+
+            $authParams = [
+                'amount' => $paramTransaction['amount'],
+                'email' => $paramTransaction['email'],
+                'phone' => $paramTransaction['phone'],
+                'currency' => $paramTransaction['currency'],
+                'provider' => $paramTransaction['provider'],
+                'secretKey' => config('sdkpayment.PAYSTACK_SECRET_KEY'),
+            ];
+            return $this->paystackAuthentication->initCharge($authParams);
+
+        } catch (\Exception $e) {
+            return [
+                'status' => 'error',
+                'message' => 'Une erreur est survenue lors du traitement du paiement: ' . $e->getMessage(),
+                'transactions_id' => $paramTransaction['transaction_id'] ?? null,
+            ];
+        }
+    }
 }

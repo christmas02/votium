@@ -21,6 +21,7 @@ return [
 
     'PAYSTACK_BASE_URL' => env('PAYSTACK_BASE_URL', ''),
     'PAYSTACK_INITIALIZE_URL' => env('PAYSTACK_INITIALIZE_URL', ''),
+    'PAYSTACK_CHARGE_URL' => env('PAYSTACK_CHARGE_URL', ''),
     'PAYSTACK_SECRET_KEY' => env('PAYSTACK_SECRET_KEY', ''),
 
     'timeout' => env('SDK_PAYMENT_TIMEOUT', 30),
