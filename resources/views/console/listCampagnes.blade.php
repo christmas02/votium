@@ -63,7 +63,7 @@
                                     <td>@if($campagne->inscription_isActive) Autorisées @else Non-autorisées @endif</td>
                                     <td>
                                         <div class="d-inline-flex gap-2">
-                                            <a href="{{ route('console.detail_campagne', [$campagne->campagne_id]) }}" class="btn btn-icon btn-sm btn-success"><i class="ti ti-location"></i></a>
+                                            <a href="{{ route('console.site_campagne', [$campagne->campagne_id]) }}" class="btn btn-icon btn-sm btn-success"><i class="ti ti-location"></i></a>
                                             <a class="btn btn-icon btn-sm btn-info" data-bs-toggle="modal" data-bs-target="#modal_edit_campaign_{{$campagne->campagne_id}}"><i class="ti ti-edit"></i></a>
                                             @if($campagne->inscription_isActive)<a href="#;" class="btn btn-icon btn-sm btn-light"><i class="ti ti-menu-2"></i></a>@endif
                                             <a class="btn btn-icon btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#delete_contact_{{$campagne->campagne_id}}"><i class="ti ti-trash"></i></a>
