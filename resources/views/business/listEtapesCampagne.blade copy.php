@@ -30,9 +30,9 @@
                 <div class="card-body">
                     <label class="form-label">Choisir la campagne</label>
                     <select class="form-select js-select-campagne">
-                        <option value="" disabled {{ !request('campagne_id') ? 'selected' : '' }}>Sélectionnez</option>
+                        <option value="" selected disabled>Sélectionnez</option>
                         @foreach($campagnes as $campagne)
-                        <option value="{{ $campagne->campagne_id }}" {{ request('campagne_id') == $campagne->campagne_id ? 'selected' : '' }}>{{ $campagne->name }}</option>
+                        <option value="{{ $campagne->campagne_id }}">{{ $campagne->name }}</option>
                         @endforeach
                     </select>
 
@@ -608,13 +608,6 @@
             $(this).closest('.package-item').remove();
             calculateGlobalTotal($modal);
         });
-
-        // --- AUTOLOAD SI CAMPAGNE PRÉ-SÉLECTIONNÉE ---
-        const preSelectedVal = $('.js-select-campagne').val();
-        if (preSelectedVal) {
-            // On déclenche manuellement le change pour lancer l'AJAX et afficher le tableau
-            $('.js-select-campagne').trigger('change');
-        }
 
     });
 

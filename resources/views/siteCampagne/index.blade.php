@@ -580,7 +580,7 @@
             @endphp
 
             <h4 class="mb-4">Candidats : {{ $catName }}</h4>
-            @include('partials.candidate-list', ['candidats' => $candidatsToDisplay,'selectedEtape' => $selectedEtape])
+            @include('siteCampagne.partials.candidate-list', ['candidats' => $candidatsToDisplay,'selectedEtape' => $selectedEtape])
             @else
             <div class="alert alert-info text-center shadow-sm">
                 <i class="fa-solid fa-arrow-up me-2"></i> Sélectionnez une catégorie pour voir les candidats.
@@ -592,7 +592,7 @@
             <h3 class="section-title">Candidats de l'étape</h3>
             @if($selectedEtape->candidats->count() > 0)
             {{-- On affiche tous les candidats de l'étape directement --}}
-            @include('partials.candidate-list', ['candidats' => $selectedEtape->candidats,'selectedEtape' => $selectedEtape])
+            @include('siteCampagne.partials.candidate-list', ['candidats' => $selectedEtape->candidats,'selectedEtape' => $selectedEtape])
             @else
             <div class="alert alert-warning text-center">Aucun candidat n'est inscrit pour cette étape.</div>
             @endif

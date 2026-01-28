@@ -66,7 +66,7 @@
                                         @foreach($campagnes as $campagne)
                                         <tr>
                                             <td class="text-uppercase fw-bold" class="text-uppercase fw-bold">
-                                                <a href="{{ route('business.list_etape', [$customer->customer_id, $campagne->campagne_id]) }}">
+                                                <a href="{{ route('business.list_etape', [$customer->customer_id]) }}">
                                                     {{$campagne->name}}
                                                 </a>
                                             </td>

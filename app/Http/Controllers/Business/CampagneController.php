@@ -1,25 +1,28 @@
 <?php
 
-namespace App\Http\Controllers\Console;
-
+namespace App\Http\Controllers\Business;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
+
 use App\Models\Campagne;
 use App\Services\SendMail;
 use App\Services\Setting;
 use App\Services\Files;
 use App\Services\CustomerService;
 use App\Services\CampagneService;
+use App\Enums\PaymentMethod;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
 use App\Models\Customer;
-use PhpParser\Node\Stmt\TryCatch;
+use App\Models\Etape;
 use Carbon\Carbon;
+use App\Services\CandidatureService;
+use PhpParser\Node\Stmt\TryCatch;
 
 use App\Http\Requests\CampagneRequest;
 use App\Http\Requests\CandidatRequest;
@@ -28,331 +31,43 @@ use App\Http\Requests\CustomerRequest;
 use App\Http\Requests\EtapeRequest;
 use App\Http\Requests\UserRequest;
 use App\Http\Requests\WithdrawalAccountRequest;
-use App\Enums\PaymentMethod;
 
-class ConsoleController  extends Controller
+class CampagneController extends Controller
 {
+    //
     protected CustomerService $CustomerService;
     protected CampagneService $CampagneService;
+    protected CandidatureService $CandidatureService;
     protected Setting $setting;
     protected Files $files;
 
     public function __construct(
         CustomerService $CustomerService,
         CampagneService $CampagneService,
+        CandidatureService $CandidatureService,
         Setting $setting,
         Files $files
     ) {
         $this->CustomerService = $CustomerService;
         $this->CampagneService = $CampagneService;
+        $this->CandidatureService = $CandidatureService;
         $this->setting = $setting;
         $this->files = $files;
-    }
-
-
-    public function index()
-    {
-        try {
-            $title_back = "Tableau de bord";
-            $link_back = "back_office_console";
-            $title = "Console d'administration";
-
-            $title_back = "Tableau de bord";
-            $link_back = "back_office_business";
-            $title = "Paramètre du compte";
-            $user = auth()->user();
-            $customer = $this->CustomerService->customerByIdUser($user->user_id);
-
-            $paymentMethods = PaymentMethod::cases();
-
-            //Liste des comptes de retrait
-            $compteRetraits = $this->CustomerService->listWithdrawalAccountByCustomer($customer->customer_id);
-            return view('console.index', compact('title', 'title_back', 'link_back', 'user', 'customer', 'paymentMethods', 'compteRetraits'));
-        } catch (\Exception $th) {
-            Log::error("Erreur lors de l'affichage de la console : " . $th->getMessage(), [
-                'stack_trace' => $th->getTraceAsString(),
-            ]);
-            return redirect()->back()
-                ->withInput()
-                ->with('error', __('messages.server_error'));
-        }
-    }
-
-    #PROFILE
-    public function profile()
-    {
-        try {
-            $title_back = "Tableau de bord";
-            $link_back = "profile";
-            $title = "Profil Administrateur";
-            $user = auth()->user();
-            return view('console.profile', compact('title', 'title_back', 'link_back', 'user'));
-        } catch (\Exception $th) {
-            Log::error("Erreur lors de l'affichage du profil : " . $th->getMessage(), [
-                'stack_trace' => $th->getTraceAsString(),
-            ]);
-            return redirect()->back()
-                ->withInput()
-                ->with('error', __('messages.server_error'));
-        }
-    }
-
-    #UPDATE PROFILE
-    public function updateProfile(UserRequest $request)
-    {
-        try {
-
-            // Mise à jour du mot de passe si fourni
-            if ($request->filled('password')) {
-                $password = $this->setting->hashPassword($request->password);
-            } else {
-                $password = $request->old_password;
-            }
-
-            $data = [
-                'user_id' => $request->user_id,
-                'name' => $request->name,
-                'phonenumber' => $request->phonenumber,
-                'email' => $request->email,
-                'password' => $password,
-            ];
-
-            $saved = $this->CustomerService->UpdateAccountCustomer($data);
-
-            if (!$saved) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Erreur lors de la mise à jour du profil.'
-                ], 500);
-            }
-            return response()->json([
-                'success' => true,
-                'message' => 'Profil mis à jour avec succès !'
-            ], 200);
-        } catch (\Exception $th) {
-            Log::error("Erreur lors de la mise à jour du profil : " . $th->getMessage(), [
-                'stack_trace' => $th->getTraceAsString(),
-            ]);
-            return response()->json([
-                'success' => false,
-                'message' => __('messages.server_error')
-            ], 500);
-        }
-    }
-
-    #CUSTOMERS
-    public function listCustomer()
-    {
-        try {
-            $customers = $this->CustomerService->listCustmer()->sortByDesc('created_at');
-            // dd( $customers);
-            $title_back = "Tableau de bord";
-            $link_back = "list_customer";
-            $title = "Liste Clients";
-            return view('console.listCustomer', compact('title', 'title_back', 'link_back', 'customers'));
-        } catch (\Exception $th) {
-            Log::error("Erreur lors de la récupération des clients : " . $th->getMessage(), [
-                'stack_trace' => $th->getTraceAsString(),
-            ]);
-            return redirect()->back()
-                ->withInput()
-                ->with('error', __('messages.server_error'));
-        }
-    }
-
-    #SAVE CUSTOMER
-    public function saveCustomer(CustomerRequest $request)
-    {
-        try {
-            #Transfert et upload du fichier logo
-            $name_file = ($request->hasFile('logo'))
-                ? Files::uploadFile($request->logo)
-                : "default_logo.png";
-
-            // Formatage des données
-            $dateCustomer = [
-                'customer_id' => $this->setting->generateUuid(),
-                'name' => $request->name,
-                'phonenumber' => $request->phonenumber,
-                'email' => $request->email_customer,
-                'role' => 'customer',
-                'password' => $this->setting->hashPassword("12345678Aa"),
-                'entreprise' => $request->entreprise,
-                'user_id' => $this->setting->generateUuid(),
-                'email_customer' => $request->email,
-                'phonenumber_customer' => $request->phonenumber_entreprise,
-                'pays_siege' => $request->pays_siege,
-                'adresse' => $request->adresse,
-                'logo' => $name_file,
-                'link_website' => $request->link_website,
-                'link_facebook' => $request->link_facebook,
-                'link_instagram' => $request->link_instagram,
-                'link_linkedin' => $request->link_linkedin,
-                'link_youtube' => $request->link_youtube,
-                'link_tiktok' => $request->link_tiktok,
-                'is_active' => false,
-            ];
-
-            // Sauvegarde des données via le service
-            $saved = $this->CustomerService->createNewCustomer($dateCustomer);
-
-            //Vérification simple
-            if (!$saved) {
-                // Suppression du fichier uploadé en cas d'erreur
-                if (isset($name_file) && $name_file !== "default_logo.png") {
-                    Files::deleteFile($name_file);
-                };
-
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Erreur lors de la création du client et de l entreprise.'
-                ], 500);
-            }
-
-            return response()->json([
-                'success' => true,
-                'message' => 'Client et entreprise créés avec succès !'
-            ], 200);
-        } catch (\Exception $th) {
-
-            // Journaliser l'erreur
-            Log::error("Erreur lors de la création du customer : " . $th->getMessage(), [
-                'request_data' => $request->except('password', 'logo'),
-                'stack_trace' => $th->getTraceAsString(),
-            ]);
-            return response()->json([
-                'success' => false,
-                'message' => __('messages.server_error')
-            ], 500);
-        }
-    }
-
-    #DELETE CUSTOMER
-    public function deleteCustomer(Request $request)
-    {
-        try {
-            dd($request->all());
-            $customerId = $request->input('customer_id');
-
-            // Trouver le customer
-            $customer = Customer::where('customer_id', $customerId)->first();
-
-            if (!$customer) {
-                return redirect()->back()->with('error', 'Client non trouvé.');
-            }
-
-            // Mettre is_active à false
-            $customer->update(['is_active' => false]);
-
-            return redirect()->route('console.list_customer')->with('success', 'Client supprimé avec succès !');
-        } catch (\Exception $th) {
-            Log::error("Erreur lors de la suppression du customer : " . $th->getMessage(), [
-                'request_data' => $request->all(),
-                'stack_trace' => $th->getTraceAsString(),
-            ]);
-            return redirect()->back()
-                ->withInput()
-                ->with('error', __('messages.server_error'));
-        }
-    }
-
-    #DETAIL CUSTOMER
-    public function detailCustomer($idcustomer)
-    {
-        try {
-            $title_back = "Tableau de bord";
-            $link_back = "detail_customer";
-            $title = "Détail Client";
-
-            $customer = $this->CustomerService->Customer($idcustomer);
-
-            if (!$customer) {
-                return redirect()->back()->with('error', "Le client n'existe pas.");
-            }
-            $user = User::where('user_id', $customer->user_id)->first();
-
-             $paymentMethods = PaymentMethod::cases();
-
-            //Liste des comptes de retrait
-            $compteRetraits = $this->CustomerService->listWithdrawalAccountByCustomer($idcustomer);
-
-            return view('console.detailCustomer', compact('title', 'title_back', 'link_back', 'customer', 'user', 'paymentMethods', 'compteRetraits'));
-        } catch (\Exception $th) {
-            Log::error("Erreur lors de l'affichage de la detail page du customer : " . $th->getMessage(), [
-                'stack_trace' => $th->getTraceAsString(),
-            ]);
-            return redirect()->back()
-                ->withInput()
-                ->with('error', __('messages.server_error'));
-        }
-    }
-
-    #VERIFICATION CUSTOMER
-    // public function verificationCustomer()
-    // {
-    //     $title_back = "Tableau de bord";
-    //     $link_back = "verification_customer";
-    //     $title = "Verification customer";
-    //     return view('mails.inscriptioncustomer', compact('title', 'title_back', 'link_back'));
-    // }
-
-    #EDIT PASSWORD CUSTOMER
-    public function editpasswordCustomer($email)
-    {
-        try {
-            $title_back = "Tableau de bord";
-            $link_back = "editpassword_customer";
-            $title = "Edition mot de passe Client";
-
-            return view('console.editpasswordCustomer', compact('title', 'title_back', 'link_back', 'email'));
-        } catch (\Exception $th) {
-            Log::error("Erreur lors de l'affichage de la page de modification du mot de passe du customer : " . $th->getMessage(), [
-                'stack_trace' => $th->getTraceAsString(),
-            ]);
-            return redirect()->back()
-                ->withInput()
-                ->with('error', __('messages.server_error'));
-        }
-    }
-
-    #UPDATE PASSWORD CUSTOMER
-    public function updatePasswordCustomer(Request $request)
-    {
-        try {
-            // dd($request->all());
-            $password = $this->setting->hashPassword($request->password);
-
-            // Mise à jour du mot de passe
-            $updated = $this->CustomerService->saveNewPassword($request->email, $password);
-
-            if (!$updated) {
-                return redirect()->back()->withInput()->with('error', 'Erreur lors de la mise à jour du mot de passe.');
-            }
-
-            return redirect()->route('business.espace')->with('success', 'Mot de passe mis à jour avec succès !');
-        } catch (\Exception $th) {
-            Log::error("Erreur lors de la mise à jour du mot de passe du customer : " . $th->getMessage(), [
-                'stack_trace' => $th->getTraceAsString(),
-            ]);
-            return redirect()->back()
-                ->withInput()
-                ->with('error', __('messages.server_error'));
-        }
     }
 
     #CAMPAGNES
     public function listCampagne()
     {
         try {
-            $campagnes = $this->CampagneService->listCampagnes()->sortByDesc('created_at');
-
-            $customers = $this->CustomerService->listCustmer()
-                ->pluck('entreprise', 'customer_id')
-                ->toArray();
             $title_back = "Tableau de bord";
             $link_back = "list_campagne";
-            $title = "Liste Campagnes";
-            return view('console.listCampagnes', compact('title', 'title_back', 'link_back', 'campagnes', 'customers'));
+            $title = "Liste des Campagnes";
+
+            $user = auth()->user();
+            $customer = $this->CustomerService->customerByIdUser($user->user_id);
+            $campagnes = $this->CampagneService->listCampagnesByCustomerId($customer->customer_id)->sortByDesc('created_at');
+
+            return view('business.listCampagnes', compact('title', 'title_back', 'link_back', 'campagnes', 'customer'));
         } catch (\Exception $th) {
             Log::error("Erreur lors de la récupération des campagnes : " . $th->getMessage(), [
                 'stack_trace' => $th->getTraceAsString(),
@@ -408,9 +123,8 @@ class ConsoleController  extends Controller
             if ($saved) {
                 return response()->json([
                     'success' => true,
-                    'message' => 'Campagne créée avec succès !',
-                    'redirect' => route('console.list_campagne')
-                ]);
+                    'message' => 'Campagne créée avec succès !'
+                ], 200);
             } else {
                 // Supprimer les fichiers si échec
                 foreach ($uploadedFiles as $filePath) {
@@ -436,6 +150,7 @@ class ConsoleController  extends Controller
             ], 500);
         }
     }
+
 
     #UPDATE CAMPAGNE
     public function updateCampagne(CampagneRequest $request)
@@ -518,7 +233,7 @@ class ConsoleController  extends Controller
     public function deleteCampagne(Request $request)
     {
         try {
-            dd($request->all());
+
             $campagne_id = $request->input('campagne_id');
 
             // Trouver le campagne
@@ -530,7 +245,7 @@ class ConsoleController  extends Controller
 
             // Mettre is_active à false
             $campagne->update(['is_active' => false]);
-            return redirect()->route('console.list_campagne')->with('success', 'Campagne supprimée avec succès !');
+            return redirect()->back()->with('success', 'Campagne supprimée avec succès !');
         } catch (\Exception $th) {
             Log::error("Erreur lors de la suppression du campagne : " . $th->getMessage(), [
                 'request_data' => $request->all(),
@@ -614,5 +329,318 @@ class ConsoleController  extends Controller
             'selectedEtapeId',
             'selectedCategoryId'
         ));
+    }
+
+
+    #CATEGORIES CAMPAGNES
+    public function listCategorie($campagne_id)
+    {
+        try {
+            $title_back = "Tableau de bord";
+            $link_back = "list_categorie";
+            $title = "Liste des Catégories";
+
+            $categories = $this->CampagneService->listCategoriesByCampagneId($campagne_id);
+
+            return view('business.listCategoriesCampagne', compact('title', 'title_back', 'link_back', 'categories', 'campagne_id'));
+        } catch (\Exception $th) {
+            Log::error("Erreur lors de la récupération des catégories campagne : " . $th->getMessage(), [
+                'stack_trace' => $th->getTraceAsString(),
+            ]);
+            return redirect()->back()
+                ->withInput()
+                ->with('error', __('messages.server_error'));
+        }
+    }
+
+    #SAVE CATEGORIE
+    public function saveCategorie(CategoryCampagneRequest $request)
+    {
+        try {
+
+            #Formatage des données
+            $dateCategorie = [
+                'category_id' => $this->setting->generateUuid(),
+                'campagne_id' => $request->campagne_id,
+                'name' => $request->name,
+                'description' => $request->description,
+                'icon' => $request->icon,
+                'is_active' => true,
+            ];
+
+            // Sauvegarde des données via le service
+            $saved = $this->CampagneService->saveNewCategory($dateCategorie);
+
+            //Vérification simple
+            if ($saved) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Catégorie créée avec succès !'
+                ], 200);
+            } else {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Erreur lors de la création de la catégorie.'
+                ], 500);
+            }
+        } catch (\Exception $th) {
+            Log::error("Erreur lors de la création de la catégorie : " . $th->getMessage(), [
+                'request_data' => $request->all(),
+                'stack_trace' => $th->getTraceAsString(),
+            ]);
+            return response()->json([
+                'success' => false,
+                'message' => __('messages.server_error')
+            ], 500);
+        }
+    }
+    #UPDATE CATEGORIE
+    public function updateCategorie(CategoryCampagneRequest $request)
+    {
+        try {
+            #Formatage des données
+            $dateCategorie = [
+                'category_id' => $request->category_id,
+                'campagne_id' => $request->campagne_id,
+                'name' => $request->name,
+                'description' => $request->description,
+                'icon' => $request->icon,
+                'is_active' => true,
+            ];
+
+            // Sauvegarde des données via le service
+            $saved = $this->CampagneService->updateCategory($dateCategorie);
+
+            //Vérification simple
+            if ($saved) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Catégorie mise à jour avec succès !'
+                ], 200);
+            } else {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Erreur lors de la mise à jour de la catégorie.'
+                ], 500);
+            }
+        } catch (\Exception $th) {
+            Log::error("Erreur lors de la mise à jour de la catégorie : " . $th->getMessage(), [
+                'request_data' => $request->all(),
+                'stack_trace' => $th->getTraceAsString(),
+            ]);
+            return response()->json([
+                'success' => false,
+                'message' => __('messages.server_error')
+            ], 500);
+        }
+    }
+
+    #DELETE CATEGORIE
+    public function deleteCategorie(Request $request)
+    {
+        try {
+
+            $category_id = $request->input('category_id');
+
+            // Trouver le categorie
+            $categorie = $this->CampagneService->detailCategory($category_id);
+            if (!$categorie) {
+                return redirect()->back()->with('error', 'Catégorie non trouvée.');
+            }
+
+            return redirect()->back()->with('success', 'Catégorie supprimée avec succès !');
+        } catch (\Exception $th) {
+            Log::error("Erreur lors de la suppression de la catégorie : " . $th->getMessage(), [
+                'request_data' => $request->all(),
+                'stack_trace' => $th->getTraceAsString(),
+            ]);
+            return redirect()->back()
+                ->withInput()
+                ->with('error', __('messages.server_error'));
+        }
+    }
+
+    #ETAPES CAMPAGNES
+    public function listEtape($customer_id, $campagne_id)
+    {
+        try {
+
+            $title_back = "Tableau de bord";
+            $link_back = "list_etape";
+            $title = "Liste des Étapes";
+
+            $campagnes = $this->CampagneService->listCampagnesByCustomerId($customer_id);
+
+            return view('business.listEtapesCampagne', compact('title', 'title_back', 'link_back', 'campagnes', 'customer_id', 'campagne_id'));
+        } catch (\Exception $th) {
+            Log::error("Erreur lors de la récupération des étapes : " . $th->getMessage(), [
+                'stack_trace' => $th->getTraceAsString(),
+            ]);
+            return redirect()->back()
+                ->withInput()
+                ->with('error', __('messages.server_error'));
+        }
+    }
+
+    #RECHERCHE ETAPE CAMPAGNE
+    public function rechercheEtapeCampagne($campagne_id)
+    {
+        try {
+
+            $etapes = $this->CampagneService->listEtapesByCampagneId($campagne_id);
+            return response()->json($etapes);
+        } catch (\Exception $th) {
+            Log::error("Erreur lors de la recherche des étapes : " . $th->getMessage(), [
+                'stack_trace' => $th->getTraceAsString(),
+            ]);
+            return response()->json(['error' => 'Erreur lors de la recherche des étapes'], 500);
+        }
+    }
+
+    #SAVE ETAPE
+    public function saveEtape(EtapeRequest $request)
+    {
+        try {
+
+            $packages = collect($request->packages ?? [])
+                ->filter(fn($p) => isset($p['votes'], $p['montant']) && is_numeric($p['votes']) && is_numeric($p['montant']))
+                ->map(fn($p) => [
+                    'vote'    => (int) $p['votes'],
+                    'montant' => (int) $p['montant'],
+                ])
+                ->values()
+                ->toArray();
+
+            $packagesJson = json_encode($packages);
+
+            #Formatage des données
+            $dateEtape = [
+                'etape_id'     => $this->setting->generateUuid(),
+                'campagne_id'  => $request->campagne_id,
+                'name'         => $request->name,
+                'date_debut'   => $request->date_debut,
+                'heure_debut'  => $request->heure_debut,
+                'date_fin'     => $request->date_fin,
+                'heure_fin'    => $request->heure_fin,
+                'description' => $request->description,
+                'type_eligibility' => $request->type_eligibility ?? null,
+                'seuil_selection' => $request->seuil_selection ?? null,
+                'reinitialisation' => $request->reinitialisation ? 1 : 0,
+                'prix_vote'    => $request->prix_vote,
+                'package'     => $packagesJson,
+                'is_active'    => true,
+            ];
+
+            // Sauvegarde des données via le service
+            $saved = $this->CampagneService->saveNewEtape($dateEtape);
+
+            //Vérification simple
+            if ($saved) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Étape créée avec succès !'
+                ], 200);
+            } else {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Erreur lors de la création de l\'étape en base de données.'
+                ], 500);
+            }
+        } catch (\Exception $th) {
+            Log::error("Erreur lors de la création de l étape : " . $th->getMessage(), [
+                'request_data' => $request->all(),
+                'stack_trace' => $th->getTraceAsString(),
+            ]);
+            return response()->json([
+                'success' => false,
+                'message' => __('messages.server_error')
+            ], 500);
+        }
+    }
+
+    #UPDATE ETAPE
+    public function updateEtape(EtapeRequest $request)
+    {
+        try {
+
+            $packages = collect($request->packages ?? [])
+                ->filter(fn($p) => isset($p['votes'], $p['montant']) && is_numeric($p['votes']) && is_numeric($p['montant']))
+                ->map(fn($p) => [
+                    'vote'    => (int) $p['votes'],
+                    'montant' => (int) $p['montant'],
+                ])
+                ->values()
+                ->toArray();
+
+            $packagesJson = json_encode($packages);
+
+            // Préparation des données pour l'update
+            $dataUpdate = [
+                'etape_id'     => $request->etape_id,
+                'campagne_id'  => $request->campagne_id,
+                'name'             => $request->name,
+                'date_debut'       => $request->date_debut,
+                'heure_debut'      => $request->heure_debut,
+                'date_fin'         => $request->date_fin,
+                'heure_fin'        => $request->heure_fin,
+                'description'      => $request->description,
+                'prix_vote'        => $request->prix_vote,
+                'package'          => $packagesJson,
+                'type_eligibility' => $request->type_eligibility ?? null,
+                'seuil_selection' => $request->seuil_selection ?? null,
+                'reinitialisation' => $request->reinitialisation ? 1 : 0,
+            ];
+
+            $updated = $this->CampagneService->updateEtape($dataUpdate);
+
+            if ($updated) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Étape mise à jour avec succès !'
+                ], 200);
+            }
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Aucune modification effectuée ou étape introuvable.'
+            ], 500);
+        } catch (\Exception $th) {
+            Log::error("Erreur lors de la mise à jour de l étape : " . $th->getMessage(), [
+                'request_data' => $request->all(),
+                'stack_trace' => $th->getTraceAsString(),
+            ]);
+            return response()->json([
+                'success' => false,
+                'message' => __('messages.server_error')
+            ], 500);
+        }
+    }
+
+    #DELETE ETAPE
+    public function deleteEtape($etape_id)
+    {
+        try {
+
+            // Suppression via votre service ou Eloquent
+            $deleted = $this->CampagneService->deleteEtape($etape_id);
+
+            if ($deleted) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'L\'étape a été supprimée avec succès.'
+                ], 200);
+            }
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Impossible de supprimer cette étape.'
+            ], 500);
+        } catch (\Exception $e) {
+            Log::error("Erreur Delete Etape : " . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => __('messages.server_error')
+            ], 500);
+        }
     }
 }
