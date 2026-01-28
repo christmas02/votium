@@ -5,7 +5,7 @@ namespace App\Repository;
 use App\Models\Campagne;
 use App\Models\CategoryCampagne;
 use App\Models\Etape;
-use Illuminate\Support\Facades\Auth;
+use App\Models\Candidat;
 
 class CampagneRepository {
 
@@ -17,7 +17,71 @@ class CampagneRepository {
         return Campagne::where('campagne_id', $campagne_id)->first();
     }
     public function getCampagneByCustomerId($customerId){
-        return Campagne::where('customer_id', $customerId)->get();
+        //return Campagne::where('customer_id', $customerId)->get();
+        try {
+            $campagnes = $customerId ? Campagne::where('customer_id', $customerId)->get() : Campagne::all();
+
+            if ($campagnes->isEmpty()) {
+                return [];
+            }
+
+            $campagneIds = $campagnes->pluck('campagne_id')->toArray();
+
+            $etapeCounts = Etape::whereIn('campagne_id', $campagneIds)
+                ->selectRaw('campagne_id, count(*) as cnt')
+                ->groupBy('campagne_id')
+                ->pluck('cnt', 'campagne_id');
+
+            $candidatCounts = Candidat::whereIn('campagne_id', $campagneIds)
+                ->selectRaw('campagne_id, count(*) as cnt')
+                ->groupBy('campagne_id')
+                ->pluck('cnt', 'campagne_id');
+
+            $categoryCounts = CategoryCampagne::whereIn('campagne_id', $campagneIds)
+                ->selectRaw('campagne_id, count(*) as cnt')
+                ->groupBy('campagne_id')
+                ->pluck('cnt', 'campagne_id');
+
+            $result = [];
+            foreach ($campagnes as $campagne) {
+                $cid = $campagne->campagne_id;
+                $result[] = [
+                    'campagne'    => $campagne,
+                    'nbrEtape'    => (int) ($etapeCounts[$cid] ?? 0),
+                    'nbrCandidat' => (int) ($candidatCounts[$cid] ?? 0),
+                    'nbrCategory' => (int) ($categoryCounts[$cid] ?? 0),
+                ];
+            }
+
+            return $result;
+        } catch (\Throwable $e) {
+            \Log::error('Erreur getListCampagne - file:CampagneRepository : ' . $e->getMessage());
+            return false;
+        }
+    }
+
+    public function countElementCampagne($customerId)
+    {
+        try {
+            $campagneIds = Campagne::where('customer_id', $customerId)->pluck('campagne_id');
+
+            $nbrEtape = Etape::whereIn('campagne_id', $campagneIds)->count();
+
+            // Compte les candidats inscrits pour les campagnes du client
+            $nbrCandidat = Candidat::whereIn('campagne_id', $campagneIds)->count();
+
+            $nbrCategory = CategoryCampagne::whereIn('campagne_id', $campagneIds)->count();
+
+            return [
+                'nbrEtape' => $nbrEtape,
+                'nbrCategory' => $nbrCategory,
+                'nbrCandidat' => $nbrCandidat
+            ];
+
+        } catch (\Throwable $e) {
+            \Log::error('Erreur count element campagne - file:CampagneRepository : ' . $e->getMessage());
+            return false;
+        }
     }
 
     public function saveCampagne($dataCampagne)

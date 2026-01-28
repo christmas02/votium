@@ -32,6 +32,11 @@ enum PaymentMethod: string
 
     public function optionPayment(): array
     {
-
+        return match($this) {
+            self::ORANGE_MONEY => ['provider' => 'orange_money', 'params' => [ 'api_processing' => 'hub2','message' => 'Tapez le #144*82# + option 2 pour obtenir le code de paiement,', 'fields' => ['codOtp']  ] ],
+            self::MTN => ['provider' => 'mtn', 'api_processing' => 'hub2'],
+            self::MOOV_MONEY => ['provider' => 'moov_money', 'api_processing' => 'hub2'],
+            self::WAVE => ['provider' => 'wave', 'api_processing' => 'hub2'],
+        };
     }
 }

@@ -18,6 +18,12 @@ return [
     'HUB2_BASE_URL' => env('HUB2_BASE_URL', ''),
     'HUB2_PAYMENT_INTENT_URL' => env('HUB2_PAYMENT_INTENT_URL', ''),
     'HUB2_MAKE_TRANSFER_URL' => env('HUB2_MAKE_TRANSFER_URL', ''),
+
+    'PAYSTACK_BASE_URL' => env('PAYSTACK_BASE_URL', ''),
+    'PAYSTACK_INITIALIZE_URL' => env('PAYSTACK_INITIALIZE_URL', ''),
+    'PAYSTACK_CHARGE_URL' => env('PAYSTACK_CHARGE_URL', ''),
+    'PAYSTACK_SECRET_KEY' => env('PAYSTACK_SECRET_KEY', ''),
+
     'timeout' => env('SDK_PAYMENT_TIMEOUT', 30),
 
     // Add other configuration settings as needed
