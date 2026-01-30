@@ -23,6 +23,5 @@ Route::controller(TestController::class)->group(function () {
     Route::get('/test_hub2_payment', 'testHub2payment')->name('testHub2payment');
     Route::get('/test_process_vote', 'testProcessVote')->name('testProcessVote');
     Route::get('/test_paystack_payment', 'testPaystackpayment')->name('testPaystackpayment');
-
-
+    Route::get('/test_hyperfast_payment', 'testHyperfast')->name('testHyperfast');
 });

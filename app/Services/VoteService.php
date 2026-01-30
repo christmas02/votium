@@ -4,7 +4,8 @@ namespace App\Services;
 
 use App\Repository\TransactionRepository;
 use App\Repository\VotesRepository;
-use App\Transactions\ProcessPaymentHub2;
+use App\Transaction\Payments\ProcessPaymentHub2;
+use App\Transaction\Payments\ProcessPaymentHyperfast;
 use Illuminate\Support\Facades\DB;
 
 
@@ -14,16 +15,19 @@ class VoteService
     protected $transactionRepository;
     protected $payment;
     protected $setting;
+    protected $paymentHyperfast;
 
     public function __construct(VotesRepository $voteRepository,
                                 TransactionRepository $transactionRepository,
-                                ProcessPaymentHub2 $payment, Setting $setting)
+                                ProcessPaymentHub2 $payment, Setting $setting,
+                                ProcessPaymentHyperfast $paymentHyperfast)
     {
         // Initialisation des dépendances si nécessaire
         $this->voteRepository = $voteRepository;
         $this->transactionRepository = $transactionRepository;
         $this->payment = $payment;
         $this->setting = $setting;
+        $this->paymentHyperfast = $paymentHyperfast;
     }
 
     /**
@@ -32,10 +36,19 @@ class VoteService
     public function processVote(array $data)
     {
         try {
-            DB::beginTransaction();
             // 1️⃣ Enregistrement du vote
-            $this->voteRepository->save($data);
-            \Log::info('Vote enregistré avec succès pour le vote ID ' . $data['vote_id']);
+            $vote = $this->voteRepository->save($data);
+            if ($vote) {\Log::info('Vote enregistré avec succès pour le vote ID ' . $data['vote_id']);}
+            else {
+                \Log::error('Erreur lors de la création du vote');
+//                return [
+//                    'status' => 'error',
+//                    'code' => 'VOTE_CREATION_FAILED',
+//                    'message' => 'Erreur lors de la création du vote',
+//                    'detail' => null
+//                ]
+                throw new \RuntimeException('Erreur lors de la creation du vote ');;
+            }
 
             // 2️⃣ Création de la transaction liée au vote
             $dataTransaction = [
@@ -47,26 +60,26 @@ class VoteService
                 'currency' => 'XOF',
                 'country' => 'CI',
                 'phoneNumber' => $data['phoneNumber'],
-                'api_processing' => 'hub2',
+                'api_processing' => 'hyperfast',
                 'comment' => 'creat payment for vote',
                 'otpCode' => $data['otpCode'],
             ];
-            $this->transactionRepository->createTransaction($dataTransaction);
-            \Log::info('Transaction créée avec succès pour le vote ID ' . $dataTransaction['transaction_id']);
-
+            $transaction = $this->transactionRepository->createTransaction($dataTransaction);
+            if ($transaction) {\Log::info('Transaction créée avec succès pour le vote ID ' . $dataTransaction['transaction_id']);}
+            else { throw new \RuntimeException('Erreur lors de la creation du vote ');}
 
             // 3️⃣ Processing de la transaction (paiement)
-            $resul = $this->payment->execute($dataTransaction);
+            //$resul = $this->payment->execute($dataTransaction);
+            $resul = $this->paymentHyperfast->execute($dataTransaction);
+//
+//           //\Log::info('Transaction traitée avec succès pour le vote ID ' . $resul);
+//           // 4️⃣ Mise à jour des status du vote en fonction du résultat du paiement
+            //$this->updateVoteStatusAfterPayment($resul);
 
-            //\Log::info('Transaction traitée avec succès pour le vote ID ' . $resul);
-            // 4️⃣ Mise à jour des status du vote en fonction du résultat du paiement
-            $this->updateVoteStatusAfterPayment($resul);
-
-            DB::commit();
             return $resul;
 
         } catch (\Exception $e) {
-            DB::rollBack();
+
             \Log::error('Erreur lors du traitement du vote : ' . $e->getMessage());
             throw $e; // Rejeter l'exception pour gestion en amont
         }

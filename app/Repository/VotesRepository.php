@@ -6,7 +6,7 @@ use App\Models\Vote;
 
 class VotesRepository
 {
-    public function save($dataVote): bool
+    public function save($dataVote)
     {
         try {
             $vote = new Vote();
@@ -21,8 +21,8 @@ class VotesRepository
             $vote->montant = $dataVote['amount'];
             $vote->status = 'created';
             $vote->date_vote = now();
-
             $vote->save();
+
             return true;
 
         } catch (\Exception $e) {

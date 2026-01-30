@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Transactions;
+namespace App\Transaction\Payments;
 
 use App\Models\Transaction;
 use App\Sdkpayment\Hub2\Hub2authenticate;
@@ -29,31 +29,31 @@ class ProcessPaymentHub2
     /**
      * Execute the payment process.
      *
-     * @param array $dataTransaction
+     * @param array $paymentData
      * @return array
      */
-    public function execute(array $dataTransaction): array
+    public function execute(array $paymentData): array
     {
         try {
             // Vérification des données requises
-            $required = ['transaction_id', 'amount', 'currency', 'country', 'provider', 'phoneNumber', 'otpCode'];
+            $required = ['transaction_id', 'amount', 'currency', 'country', 'provider', 'phoneNumber'];
             foreach ($required as $key) {
-                if (empty($dataTransaction[$key] ?? null)) {
+                if (empty($paymentData[$key] ?? null)) {
                     return [
                         'status' => 'error',
                         'message' => "Champ manquant: {$key}",
-                        'transactions_id' => $dataTransaction['transaction_id'] ?? null,
+                        'transactions_id' => $paymentData['transaction_id'] ?? null,
                     ];
                 }
             }
 
             // Récupérer la transaction existante
-            $transaction = Transaction::where('transaction_id', $dataTransaction['transaction_id'])->first();
+            $transaction = Transaction::where('transaction_id', $paymentData['transaction_id'])->first();
             if (! $transaction) {
                 return [
                     'status' => 'error',
                     'message' => 'Transaction introuvable',
-                    'transactions_id' => $dataTransaction['transaction_id'],
+                    'transactions_id' => $paymentData['transaction_id'],
                 ];
             }
 
@@ -61,10 +61,10 @@ class ProcessPaymentHub2
 
             // Authentification
             $authParams = [
-                'customerReference' => $dataTransaction['transaction_id'],
+                'customerReference' => $paymentData['transaction_id'],
                 'purchaseReference' => 'ORD98' . date('YmdHis'),
-                'amount' => $dataTransaction['amount'],
-                'currency' => $dataTransaction['currency'],
+                'amount' => $paymentData['amount'],
+                'currency' => $paymentData['currency'],
                 'apiKey' => config('sdkpayment.HUB2_API_KEY'),
                 'merchantId' => config('sdkpayment.HUB2_MERCHANT_ID'),
                 'environment' => config('sdkpayment.HUB2_ENVIRONMENT'),
@@ -82,10 +82,10 @@ class ProcessPaymentHub2
                 'token' => $token,
                 'id' => $id,
                 'paymentMethod' => 'mobile_money',
-                'country' => $dataTransaction['country'],
-                'provider' => $dataTransaction['provider'],
-                'phoneNumber' => $dataTransaction['phoneNumber'],
-                'otpCode' => $dataTransaction['otpCode'],
+                'country' => $paymentData['country'],
+                'provider' => $paymentData['provider'],
+                'phoneNumber' => $paymentData['phoneNumber'],
+                'otpCode' => $paymentData['otpCode'],
             ];
             $paymentResponse = $this->hub2payment->executePayment($paymentParams);
 
@@ -137,7 +137,7 @@ class ProcessPaymentHub2
             return [
                 'status' => $tr_status,
                 'message' => $comment,
-                'transactions_id' => $dataTransaction['transaction_id'],
+                'transactions_id' => $paymentData['transaction_id'],
                 'api_processing' => 'Détails du traitement API',
                 'api_response' => $verificationResponse,
             ];
@@ -145,13 +145,13 @@ class ProcessPaymentHub2
             DB::rollBack();
             Log::error('Erreur lors du traitement de la transaction hub2', [
                 'error' => $e->getMessage(),
-                'transaction' => $dataTransaction['transaction_id'] ?? null,
+                'transaction' => $paymentData['transaction_id'] ?? null,
             ]);
 
             return [
                 'status' => 'error',
                 'message' => 'Erreur lors du traitement de la transaction hub2: ' . $e->getMessage(),
-                'transactions_id' => $dataTransaction['transaction_id'] ?? null,
+                'transactions_id' => $paymentData['transaction_id'] ?? null,
             ];
         }
     }
