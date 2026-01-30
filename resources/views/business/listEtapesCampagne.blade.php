@@ -31,8 +31,8 @@
                     <label class="form-label">Choisir la campagne</label>
                     <select class="form-select js-select-campagne">
                         <option value="" disabled {{ !request('campagne_id') ? 'selected' : '' }}>Sélectionnez</option>
-                        @foreach($campagnes as $campagne)
-                        <option value="{{ $campagne->campagne_id }}" {{ request('campagne_id') == $campagne->campagne_id ? 'selected' : '' }}>{{ $campagne->name }}</option>
+                        @foreach($campagnes as $item)
+                        <option value="{{ $item['campagne']->campagne_id }}" {{ request('campagne_id') == $item['campagne']->campagne_id ? 'selected' : '' }}>{{ $item['campagne']->name }}</option>
                         @endforeach
                     </select>
 
