@@ -65,7 +65,9 @@ class CampagneController extends Controller
 
             $user = auth()->user();
             $customer = $this->CustomerService->customerByIdUser($user->user_id);
-            $campagnes = $this->CampagneService->listCampagnesByCustomerId($customer->customer_id)->sortByDesc('created_at');
+            $campagnes = $this->CampagneService->listCampagnesByCustomerId($customer->customer_id);
+
+            // dd($campagnes);
 
             return view('business.listCampagnes', compact('title', 'title_back', 'link_back', 'campagnes', 'customer'));
         } catch (\Exception $th) {
@@ -263,6 +265,11 @@ class CampagneController extends Controller
         $campagne = $this->CampagneService->detailCampagne($idCampagne);
         $customer = $this->CustomerService->Customer($campagne->customer_id);
 
+        $paymentMethods = PaymentMethod::cases();
+
+        //Liste des comptes de retrait
+        $compteRetraits = $this->CustomerService->listWithdrawalAccountByCustomer($customer->customer_id);
+
         $etapes = $this->CampagneService->listEtapesByCampagneId($idCampagne);
         $categories = $this->CampagneService->listCategoriesByCampagneId($idCampagne);
 
@@ -327,7 +334,9 @@ class CampagneController extends Controller
             'customer',
             'selectedEtape',
             'selectedEtapeId',
-            'selectedCategoryId'
+            'selectedCategoryId',
+            'paymentMethods',
+            'compteRetraits'
         ));
     }
 

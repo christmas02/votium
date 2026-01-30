@@ -55,31 +55,33 @@
                                     <thead class="table-light">
                                         <tr>
                                             <th>NOM DE CAMPAGNE</th>
-                                            <th>NBRE D'ETAPES</th>
-                                            <th>NBRE DE CANDIDATS</th>
+                                            <th>N° ETAPES</th>
+                                            <th>N° CANDIDATS</th>
+                                            <th>N° CATEGORIES</th>
                                             <th>CRÉÉE LE</th>
                                             <th>INSCRIPTION</th>
                                             <th>Action</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach($campagnes as $campagne)
+                                        @foreach($campagnes as $item)
                                         <tr>
                                             <td class="text-uppercase fw-bold" class="text-uppercase fw-bold">
-                                                <a href="{{ route('business.list_etape', [$customer->customer_id, $campagne->campagne_id]) }}">
-                                                    {{$campagne->name}}
+                                                <a href="{{ route('business.list_etape', [$customer->customer_id, $item['campagne']->campagne_id]) }}">
+                                                    {{$item['campagne']->name}}
                                                 </a>
                                             </td>
-                                            <td>1 étape</td>
-                                            <td>1 Candidats</td>
-                                            <td>{{ $campagne->created_at->format('d/m/Y') }}</td>
-                                            <td>@if($campagne->inscription_isActive) Autorisées @else Non-autorisées @endif</td>
+                                            <td>{{$item['nbrEtape']}}</td>
+                                            <td>{{$item['nbrCandidat']}}</td>
+                                            <td>{{$item['nbrCategory']}}</td>
+                                            <td>{{ $item['campagne']->created_at->format('d/m/Y') }}</td>
+                                            <td>@if($item['campagne']->inscription_isActive) Autorisées @else Non-autorisées @endif</td>
                                             <td>
                                                 <div class="d-inline-flex gap-2">
-                                                    <a href="{{ route('business.site_campagne', [$campagne->campagne_id]) }}" class="btn btn-icon btn-sm btn-success"><i class="ti ti-location"></i></a>
-                                                    <a class="btn btn-icon btn-sm btn-info" data-bs-toggle="modal" data-bs-target="#modal_edit_campaign_{{$campagne->campagne_id}}"><i class="ti ti-edit"></i></a>
-                                                    @if($campagne->inscription_isActive)<a href="#;" class="btn btn-icon btn-sm btn-light"><i class="ti ti-menu-2"></i></a>@endif
-                                                    <a class="btn btn-icon btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#delete_contact_{{$campagne->campagne_id}}"><i class="ti ti-trash"></i></a>
+                                                    <a href="{{ route('business.site_campagne', [$item['campagne']->campagne_id]) }}" class="btn btn-icon btn-sm btn-success"><i class="ti ti-location"></i></a>
+                                                    <a class="btn btn-icon btn-sm btn-info" data-bs-toggle="modal" data-bs-target="#modal_edit_campaign_{{$item['campagne']->campagne_id}}"><i class="ti ti-edit"></i></a>
+                                                    @if($item['campagne']->inscription_isActive)<a href="#;" class="btn btn-icon btn-sm btn-light"><i class="ti ti-menu-2"></i></a>@endif
+                                                    <a class="btn btn-icon btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#delete_contact_{{$item['campagne']->campagne_id}}"><i class="ti ti-trash"></i></a>
                                                 </div>
                                             </td>
                                         </tr>
@@ -311,26 +313,26 @@
 <!-- /Add offcanvas -->
 
 <!-- Modale de modification (ID statique pour test) -->
-@foreach($campagnes as $campagne)
-<div class="modal fade" id="modal_edit_campaign_{{$campagne->campagne_id}}" tabindex="-1" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+@foreach($campagnes as $item)
+<div class="modal fade" id="modal_edit_campaign_{{$item['campagne']->campagne_id}}" tabindex="-1" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header border-bottom">
-                <h5 class="modal-title">Modifier la campagne : {{$campagne->name}}</h5>
+                <h5 class="modal-title">Modifier la campagne : {{$item['campagne']->name}}</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
 
             <div class="modal-body">
                 <form class="ajax-form" action="{{ route('business.update_campagne') }}" method="POST" enctype="multipart/form-data">
                     @csrf
-                    <input type="hidden" name="campagne_id" value="{{ $campagne->campagne_id }}">
-                    <input type="hidden" name="old_image_couverture" value="{{ $campagne->image_couverture }}">
-                    <input type="hidden" name="old_condition_participation" value="{{ $campagne->condition_participation }}">
+                    <input type="hidden" name="campagne_id" value="{{ $item['campagne']->campagne_id }}">
+                    <input type="hidden" name="old_image_couverture" value="{{ $item['campagne']->image_couverture }}">
+                    <input type="hidden" name="old_condition_participation" value="{{ $item['campagne']->condition_participation }}">
                     <!-- 2. INFORMATIONS PRINCIPALES -->
                     <div class="row mb-4">
                         <div class="col-md-12 mb-3">
                             <label class="form-label">Nom de la campagne <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control" name="name" required value="{{$campagne->name}}">
+                            <input type="text" class="form-control" name="name" required value="{{$item['campagne']->name}}">
                         </div>
 
                         <div class="col-md-12 mb-3">
@@ -339,7 +341,7 @@
 
                         <div class="col-md-12">
                             <label class="form-label">Décrivez la campagne<span class="text-danger">*</span></label>
-                            <textarea class="form-control" rows="4" name="description" required>{{ $campagne->description }}</textarea>
+                            <textarea class="form-control" rows="4" name="description" required>{{ $item['campagne']->description }}</textarea>
                         </div>
                     </div>
 
@@ -348,11 +350,11 @@
                         <label class="form-label fw-bold">Image de couverture <span class="text-danger">*</span></label>
                         <p class="text-muted small">Format recommandé : 1920x1080px | Max : 2 Mo</p>
                         <!-- Condition sur la bordure : border-primary si image existe, border-dashed sinon -->
-                        <div class="position-relative w-100 rounded border {{ $campagne->image_couverture ? 'border-primary' : 'border-dashed' }} bg-light d-flex align-items-center justify-content-center overflow-hidden drop-zone-target"
+                        <div class="position-relative w-100 rounded border {{ $item['campagne']->image_couverture ? 'border-primary' : 'border-dashed' }} bg-light d-flex align-items-center justify-content-center overflow-hidden drop-zone-target"
                             style="height: 250px; border-width: 2px !important; transition: all 0.3s ease;">
 
                             <!-- Placeholder : d-none si l'image existe -->
-                            <div class="text-center p-4 placeholder-target {{ $campagne->image_couverture ? 'd-none' : '' }}">
+                            <div class="text-center p-4 placeholder-target {{ $item['campagne']->image_couverture ? 'd-none' : '' }}">
                                 <div class="avatar avatar-lg bg-white border rounded-circle mb-2 mx-auto">
                                     <i class="ti ti-cloud-upload text-primary fs-3"></i>
                                 </div>
@@ -361,9 +363,9 @@
                             </div>
 
                             <!-- Image Preview : d-none seulement si pas d'image, sinon affiche l'URL -->
-                            <img src="{{ $campagne->image_couverture ? env('IMAGES_PATH').'/'.$campagne->image_couverture : '#' }}"
+                            <img src="{{ $item['campagne']->image_couverture ? env('IMAGES_PATH').'/'.$item['campagne']->image_couverture : '#' }}"
                                 alt="Aperçu"
-                                class="preview-target position-absolute top-0 start-0 w-100 h-100 object-fit-cover {{ $campagne->image_couverture ? '' : 'd-none' }}">
+                                class="preview-target position-absolute top-0 start-0 w-100 h-100 object-fit-cover {{ $item['campagne']->image_couverture ? '' : 'd-none' }}">
 
                             <!-- Input File -->
                             <input type="file" name="image_couverture"
@@ -375,7 +377,7 @@
                         <!-- Bouton Supprimer : visible (pas de d-none) si l'image existe -->
                         <div class="d-flex justify-content-end mt-1">
                             <button type="button"
-                                class="btn btn-sm btn-link text-danger text-decoration-none remove-btn-target {{ $campagne->image_couverture ? '' : 'd-none' }}"
+                                class="btn btn-sm btn-link text-danger text-decoration-none remove-btn-target {{ $item['campagne']->image_couverture ? '' : 'd-none' }}"
                                 onclick="handleImageRemove(this)">
                                 <i class="ti ti-trash me-1"></i> Supprimer l'image
                             </button>
@@ -386,7 +388,7 @@
                     <div class="bg-light p-3 rounded mb-3">
                         <div class="col-md-12 d-flex align-items-end">
                             <div class="form-check form-switch mb-2">
-                                <input class="form-check-input" type="checkbox" role="switch" id="textCoverSwitch" name="text_cover_isActive" value="1" {{ $campagne->text_cover_isActive ? 'checked' : '' }}>
+                                <input class="form-check-input" type="checkbox" role="switch" id="textCoverSwitch" name="text_cover_isActive" value="1" {{ $item['campagne']->text_cover_isActive ? 'checked' : '' }}>
                                 <label class="form-check-label" for="textCoverSwitch">Texte sur le cover</label>
                             </div>
                         </div>
@@ -395,7 +397,7 @@
                     <div class="bg-light p-3 rounded mb-3">
                         <div class="col-md-12 d-flex align-items-end">
                             <div class="form-check form-switch mb-2">
-                                <input class="form-check-input" type="checkbox" role="switch" id="identifiants_personnalises_isActive" name="identifiants_personnalises_isActive" value="1" {{ $campagne->identifiants_personnalises_isActive ? 'checked' : '' }}>
+                                <input class="form-check-input" type="checkbox" role="switch" id="identifiants_personnalises_isActive" name="identifiants_personnalises_isActive" value="1" {{ $item['campagne']->identifiants_personnalises_isActive ? 'checked' : '' }}>
                                 <label class="form-check-label" for="identifiants_personnalises_isActive">Identifiants candidats personnalisés</label>
                             </div>
                         </div>
@@ -408,24 +410,24 @@
                             <!-- Toggle Inscription -->
                             <div class="col-md-12 mb-3">
                                 <div class="form-check form-switch">
-                                    <input class="form-check-input inscriptionSwitch" type="checkbox" role="switch" id="inscriptionSwitch" name="inscription_isActive" value="1" {{ $campagne->inscription_isActive ? 'checked' : '' }}>
+                                    <input class="form-check-input inscriptionSwitch" type="checkbox" role="switch" id="inscriptionSwitch" name="inscription_isActive" value="1" {{ $item['campagne']->inscription_isActive ? 'checked' : '' }}>
                                     <label class="form-check-label fw-medium" for="inscriptionSwitch">Autoriser les inscriptions</label>
                                 </div>
                             </div>
 
                             <!-- Bloc Conteneur (Masqué par défaut) -->
-                            <div id="blocDates" class="blocDates {{ $campagne->inscription_isActive ? '' : 'd-none' }}">
+                            <div id="blocDates" class="blocDates {{ $item['campagne']->inscription_isActive ? '' : 'd-none' }}">
 
                                 <!-- Ligne Début -->
                                 <div class="row">
 
                                     <div class="col-md-12 mb-3">
                                         <label class="form-label">Date de début</label>
-                                        <input type="date" class="form-control" name="inscription_date_debut" value="{{ $campagne->inscription_date_debut }}">
+                                        <input type="date" class="form-control" name="inscription_date_debut" value="{{ $item['campagne']->inscription_date_debut }}">
                                     </div>
                                     <div class="col-md-12 mb-3">
                                         <label class="form-label">Date de fin</label>
-                                        <input type="date" class="form-control" name="inscription_date_fin" value="{{ $campagne->inscription_date_fin }}">
+                                        <input type="date" class="form-control" name="inscription_date_fin" value="{{ $item['campagne']->inscription_date_fin }}">
                                     </div>
 
 
@@ -435,12 +437,12 @@
                                 <div class="row">
                                     <div class="col-md-12 mb-3">
                                         <label class="form-label">Heure de début</label>
-                                        <input type="time" class="form-control" name="heure_debut_inscription" value="{{ $campagne->heure_debut_inscription }}">
+                                        <input type="time" class="form-control" name="heure_debut_inscription" value="{{ $item['campagne']->heure_debut_inscription }}">
                                     </div>
 
                                     <div class="col-md-12 mb-3">
                                         <label class="form-label">Heure de fin</label>
-                                        <input type="time" class="form-control" name="heure_fin_inscription" value="{{ $campagne->heure_fin_inscription }}">
+                                        <input type="time" class="form-control" name="heure_fin_inscription" value="{{ $item['campagne']->heure_fin_inscription }}">
                                     </div>
                                 </div>
 
@@ -459,16 +461,16 @@
                                 <div class="btn-group w-100" role="group" aria-label="Affichage montant">
 
                                     <!-- Option 1 : Clair -->
-                                    <input type="radio" class="btn-check" name="afficher_montant_pourcentage" id="clair{{ $campagne->campagne_id }}" value="{{ $campagne->afficher_montant_pourcentage }}" {{ $campagne->afficher_montant_pourcentage == 'clair' ? 'checked' : '' }}>
-                                    <label class="btn btn-outline-custom" for="clair{{ $campagne->campagne_id }}">Clair</label>
+                                    <input type="radio" class="btn-check" name="afficher_montant_pourcentage" id="clair{{ $item['campagne']->campagne_id }}" value="{{ $item['campagne']->afficher_montant_pourcentage }}" {{ $item['campagne']->afficher_montant_pourcentage == 'clair' ? 'checked' : '' }}>
+                                    <label class="btn btn-outline-custom" for="clair{{ $item['campagne']->campagne_id }}">Clair</label>
 
                                     <!-- Option 2 : Pourcentage -->
-                                    <input type="radio" class="btn-check" name="afficher_montant_pourcentage" id="pourcentage{{ $campagne->campagne_id }}" value="{{ $campagne->afficher_montant_pourcentage }}" {{ $campagne->afficher_montant_pourcentage == 'pourcentage' ? 'checked' : '' }}>
-                                    <label class="btn btn-outline-custom" for="pourcentage{{ $campagne->campagne_id }}">Pourcentage</label>
+                                    <input type="radio" class="btn-check" name="afficher_montant_pourcentage" id="pourcentage{{ $item['campagne']->campagne_id }}" value="{{ $item['campagne']->afficher_montant_pourcentage }}" {{ $item['campagne']->afficher_montant_pourcentage == 'pourcentage' ? 'checked' : '' }}>
+                                    <label class="btn btn-outline-custom" for="pourcentage{{ $item['campagne']->campagne_id }}">Pourcentage</label>
 
                                     <!-- Option 3 : Les deux -->
-                                    <input type="radio" class="btn-check" name="afficher_montant_pourcentage" id="les_deux{{ $campagne->campagne_id }}" value="{{ $campagne->afficher_montant_pourcentage }}" {{ $campagne->afficher_montant_pourcentage == 'les_deux' ? 'checked' : '' }}>
-                                    <label class="btn btn-outline-custom" for="les_deux{{ $campagne->campagne_id }}">Les deux</label>
+                                    <input type="radio" class="btn-check" name="afficher_montant_pourcentage" id="les_deux{{ $item['campagne']->campagne_id }}" value="{{ $item['campagne']->afficher_montant_pourcentage }}" {{ $item['campagne']->afficher_montant_pourcentage == 'les_deux' ? 'checked' : '' }}>
+                                    <label class="btn btn-outline-custom" for="les_deux{{ $item['campagne']->campagne_id }}">Les deux</label>
                                 </div>
                             </div>
 
@@ -476,7 +478,7 @@
                             <div class="bg-light p-3 rounded mb-3">
                                 <div class="col-md-12 d-flex align-items-end">
                                     <div class="form-check form-switch mb-2">
-                                        <input class="form-check-input" type="checkbox" role="switch" id="ordonner_candidats_votes_decroissants" name="ordonner_candidats_votes_decroissants" value="1" {{ $campagne->ordonner_candidats_votes_decroissants ? 'checked' : '' }}>
+                                        <input class="form-check-input" type="checkbox" role="switch" id="ordonner_candidats_votes_decroissants" name="ordonner_candidats_votes_decroissants" value="1" {{ $item['campagne']->ordonner_candidats_votes_decroissants ? 'checked' : '' }}>
                                         <label class="form-check-label" for="ordonner_candidats_votes_decroissants">Ordonner les candidats par votes décroissants</label>
                                     </div>
                                 </div>
@@ -497,21 +499,21 @@
                             <div class="col-md-6 mb-3">
                                 <label class="form-label">Couleur Primaire</label>
                                 <div class="input-group">
-                                    <input type="color" class="form-control form-control-color" name="color_primaire" value="{{ $campagne->color_primaire }}" title="Choisir">
+                                    <input type="color" class="form-control form-control-color" name="color_primaire" value="{{ $item['campagne']->color_primaire }}" title="Choisir">
                                 </div>
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label class="form-label">Couleur Secondaire</label>
                                 <div class="input-group">
-                                    <input type="color" class="form-control form-control-color" name="color_secondaire" value="{{ $campagne->color_secondaire }}" title="Choisir">
+                                    <input type="color" class="form-control form-control-color" name="color_secondaire" value="{{ $item['campagne']->color_secondaire }}" title="Choisir">
                                 </div>
                             </div>
 
                             <!-- 1. IMAGE DE COUVERTURE (Mise en avant) -->
                             <div class="mb-4">
                                 <label class="form-label fw-bold">Condition de participation (Document)<span class="text-danger">*</span></label>
-                                @if($campagne->condition_participation)
-                                <a href="{{ env('IMAGES_PATH') }}/{{ $campagne->condition_participation }}"
+                                @if($item['campagne']->condition_participation)
+                                <a href="{{ env('IMAGES_PATH') }}/{{ $item['campagne']->condition_participation }}"
                                     target="_blank"
                                     class="d-block mb-2 text-primary">
                                     📄 Voir le document actuel
@@ -536,8 +538,8 @@
 <!-- /edit offcanvas -->
 
 <!-- delete modal -->
-@foreach($campagnes as $campagne)
-<div class="modal fade" id="delete_contact_{{$campagne->campagne_id}}" data-bs-backdrop="static" data-bs-keyboard="false">
+@foreach($campagnes as $item)
+<div class="modal fade" id="delete_contact_{{$item['campagne']->campagne_id}}" data-bs-backdrop="static" data-bs-keyboard="false">
     <div class="modal-dialog modal-dialog-centered modal-sm rounded-0">
         <div class="modal-content rounded-0">
             <div class="modal-body p-4 text-center position-relative">
@@ -551,7 +553,7 @@
                     @csrf
                     @method('DELETE')
                     <div class="d-flex justify-content-center">
-                        <input type="hidden" name="campagne_id" value="{{$campagne->campagne_id}}">
+                        <input type="hidden" name="campagne_id" value="{{$item['campagne']->campagne_id}}">
                         <button type="button" class="btn btn-light position-relative z-1 me-2 w-100" data-bs-dismiss="modal">Annuler</button>
                         <button type="submit" class="btn btn-primary position-relative z-1 w-100">Oui, supprimer</button>
                     </div>
@@ -588,8 +590,8 @@
                                 <label class="form-label">Choisir la campagne <span class="text-danger">*</span></label>
                                 <select class="select form-control form-select" name="campagne_id" required>
                                     <option value="">Sélectionner une campagne</option>
-                                    @foreach($campagnes as $campagne)
-                                    <option value="{{ $campagne->campagne_id }}">{{ $campagne->name }}</option>
+                                    @foreach($campagnes as $item)
+                                    <option value="{{ $item['campagne']->campagne_id }}">{{ $item['campagne']->name }}</option>
                                     @endforeach
                                 </select>
                             </div>

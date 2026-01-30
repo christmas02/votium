@@ -132,6 +132,12 @@ Route::group(['middleware' => 'auth'], function () {
             // --- FINANCES (Votes, Retraits, Transactions) ---
             Route::controller(FinanceController::class)->group(function () {
 
+                #ROUTE POUR INITIER PAIEMENT VOTE
+                Route::post('/paiement/initier', 'initiatePaymentVote')->name('paiementVote');
+
+                #ROUTE POUR VERIFIER PAIEMENT VOTE
+                Route::get('/paiement/verifier/{reference}', 'verifyPaymentVote')->name('payment.verify');
+
                 #ROUTES VOTES
                 Route::get('list_vote', 'listVote')->name('list_vote');
 

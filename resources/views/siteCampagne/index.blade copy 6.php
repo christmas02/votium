@@ -10,7 +10,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Votez pour le meilleur dessin">
     <meta name="robots" content="noindex, nofollow">
-    <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <!-- Favicon -->
     <link rel="shortcut icon" href="assets/img/favicon.png">
@@ -798,7 +797,7 @@
             document.querySelectorAll('.js-open-modal').forEach(item => {
                 item.addEventListener('click', function() {
                     const parentCard = this.closest('.candidate-card');
-                    const candidatId = this.getAttribute('data-candidate-id') || (parentCard ?
+                    const candidatId = this.getAttribute('data-candidat-id') || (parentCard ?
                         parentCard.getAttribute('data-id') : null);
 
                     currentTransaction.campagneId = this.getAttribute('data-campagne-id');
@@ -905,12 +904,8 @@
             // ==========================================
             // 5. PAIEMENT FINAL
             // ==========================================
-            // ==========================================
-            // 5. PAIEMENT FINAL (CORRIGÉ & SÉCURISÉ)
-            // ==========================================
             btnPay.addEventListener('click', function() {
 
-                // 1. Validation du téléphone
                 const phoneNumber = inputPhone.value.trim();
                 if (phoneNumber === '') {
                     inputPhone.classList.add('is-invalid');
@@ -919,8 +914,8 @@
                     inputPhone.classList.remove('is-invalid');
                 }
 
-                // 2. Validation OTP si visible
-                let otpValue = '0000';
+                // Validation OTP si le champ est visible
+                let otpValue = '0000'; // Valeur par défaut
                 if (otpSection.style.display !== 'none') {
                     if (inputOtp.value.trim() === '') {
                         inputOtp.classList.add('is-invalid');
@@ -931,120 +926,111 @@
                     otpValue = inputOtp.value.trim();
                 }
 
-                // --- DÉBUT DU BLOC SÉCURISÉ ---
+                let rawAmount = currentTransaction.amount.toString().replace(/[^0-9]/g, '');
 
-                // UI : On lance le chargement
+                const payload = {
+                    candidat_id: currentTransaction.candidatId,
+                    campagne_id: 1,
+                    etate_id: 1,
+                    quantity: currentTransaction.votes,
+                    otpCode: otpValue, // Ici on envoie la vraie valeur
+                    email: inputEmail.value, // Peut être vide
+                    name: inputName.value,
+                    amount: parseInt(rawAmount),
+                    phoneNumber: phoneNumber,
+                    provider: currentTransaction.providerSlug
+                };
+
                 const originalBtnText = btnPay.innerHTML;
                 btnPay.disabled = true;
                 btnPay.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Traitement...';
 
-                try {
-                    // A. Vérification de sécurité : Montant
-                    // On s'assure que amount n'est pas null avant de faire toString()
-                    let amountSafe = currentTransaction.amount ? currentTransaction.amount : '0';
-                    let rawAmount = amountSafe.toString().replace(/[^0-9]/g, '');
+                // 5. Envoi AJAX
+                fetch("/paiement/initier", { // Vérifie que ta route est bonne
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')
+                                .getAttribute('content')
+                        },
+                        body: JSON.stringify(payload)
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        // On cache le modal Bootstrap
+                        bsModal.hide();
 
-                    // B. Vérification de sécurité : Token CSRF
-                    const csrfMeta = document.querySelector('meta[name="csrf-token"]');
-                    if (!csrfMeta) {
-                        throw new Error(
-                            "ERREUR TECHNIQUE : La balise meta csrf-token est absente du fichier HTML.");
-                    }
-                    const csrfToken = csrfMeta.getAttribute('content');
+                        // Gestion via SweetAlert2
+                        if (data.success) {
 
-                    // C. Construction du Payload
-                    const payload = {
-                        candidat_id: currentTransaction.candidatId,
+                            // CAS 1 : SUCCÈS OU EN ATTENTE (PENDING)
 
-                        // Récupération dynamique ou fallback sur 1
-                        campagne_id: currentTransaction.campagneId || 1,
-                        etate_id: currentTransaction.etapeId || 1,
-
-                        quantity: currentTransaction.votes,
-                        otpCode: otpValue,
-                        email: inputEmail.value,
-                        name: inputName.value,
-                        amount: parseInt(rawAmount),
-                        phoneNumber: phoneNumber,
-                        provider: currentTransaction.providerSlug
-                    };
-
-                    // D. Envoi de la requête
-                    fetch("{{route('business.paiementVote')}}", {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json',
-                                'X-CSRF-TOKEN': csrfToken
-                            },
-                            body: JSON.stringify(payload)
-                        })
-                        .then(async response => {
-                            // Si le serveur renvoie une erreur HTML (500) au lieu de JSON
-                            const contentType = response.headers.get("content-type");
-                            if (!contentType || !contentType.includes("application/json")) {
-                                const text = await response.text();
-                                console.error("Erreur HTML Serveur:", text);
-                                throw new Error(
-                                    "Une erreur technique est survenue. Veuillez réessayer plus tard ou contacter le support si le problème persiste."
-                                    );
-                            }
-                            return response.json();
-                        })
-                        .then(data => {
-                            // Succès de la communication avec le serveur
-                            bsModal.hide();
-
-                            if (data.success) {
-                                if (data.status === 'pending' || data.status === 'pending_validation') {
-                                    Swal.fire({
-                                        title: 'Vérifiez votre téléphone',
-                                        text: data.message,
-                                        icon: 'info',
-                                        timer: 15000, // 15 secondes
-                                        showConfirmButton: true
-                                    });
-                                } else {
-                                    Swal.fire({
-                                        title: 'Paiement Réussi !',
-                                        text: 'Merci pour votre vote.',
-                                        icon: 'success'
-                                    }).then(() => {
-                                        if (data.redirect_url) window.location.href = data
-                                            .redirect_url;
-                                        else window.location.reload();
-                                    });
-                                }
-                            } else {
-                                // Erreur métier (ex: solde insuffisant)
+                            // Si le statut est 'pending' (Push USSD envoyé)
+                            if (data.status === 'pending' || data.status === 'pending_validation') {
                                 Swal.fire({
-                                    title: 'Échec',
-                                    text: data.message,
-                                    icon: 'error'
-                                }).then(() => bsModal.show());
+                                    title: 'Vérifiez votre téléphone',
+                                    text: data
+                                    .message, // ex: "Veuillez valider le retrait sur votre mobile..."
+                                    icon: 'info',
+                                    showConfirmButton: true,
+                                    confirmButtonText: 'J\'ai validé',
+                                    confirmButtonColor: '#3085d6',
+                                    timer: 10000, // Fermeture auto après 10s (optionnel)
+                                    timerProgressBar: true
+                                }).then((result) => {
+                                    // Optionnel : Recharger la page ou vérifier le statut
+                                    // window.location.reload();
+                                });
                             }
-                        })
-                        .catch(error => {
-                            // Erreur Réseau ou JSON invalide
-                            console.error('Erreur Fetch:', error);
-                            bsModal.hide();
-                            Swal.fire('Erreur', error.message, 'error');
-                        })
-                        .finally(() => {
-                            // Quoi qu'il arrive, on réactive le bouton
-                            btnPay.disabled = false;
-                            btnPay.innerHTML = originalBtnText;
+                            // Si le statut est 'approved' (Succès immédiat)
+                            else {
+                                Swal.fire({
+                                    title: 'Paiement Réussi !',
+                                    text: 'Merci pour votre vote.',
+                                    icon: 'success',
+                                    confirmButtonText: 'Terminer',
+                                    confirmButtonColor: '#198754'
+                                }).then(() => {
+                                    // Si il y a une redirection (ex: 3D Secure carte bancaire)
+                                    if (data.redirect_url) {
+                                        window.location.href = data.redirect_url;
+                                    } else {
+                                        // Sinon on recharge pour mettre à jour les votes
+                                        window.location.reload();
+                                    }
+                                });
+                            }
+
+                        } else {
+                            // CAS 2 : ERREUR (Refusé, Solde insuffisant, etc.)
+                            Swal.fire({
+                                title: 'Échec du paiement',
+                                text: data.message || 'La transaction a échoué.',
+                                icon: 'error',
+                                confirmButtonText: 'Réessayer',
+                                confirmButtonColor: '#d33'
+                            }).then(() => {
+                                // On réouvre le modal pour qu'il puisse réessayer
+                                bsModal.show();
+                            });
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        // Erreur réseau ou crash serveur
+                        bsModal.hide();
+                        Swal.fire({
+                            title: 'Erreur technique',
+                            text: 'Impossible de contacter le serveur.',
+                            icon: 'error',
+                            confirmButtonText: 'OK'
                         });
-
-                } catch (e) {
-                    // Ce bloc attrape les erreurs synchrones (CSRF manquant, variable null, etc.)
-                    // C'est ce qui manquait dans votre code précédent
-                    console.error("Crash JS avant envoi:", e);
-                    alert("Erreur Script : " + e.message);
-
-                    // On réactive le bouton pour ne pas bloquer l'utilisateur
-                    btnPay.disabled = false;
-                    btnPay.innerHTML = originalBtnText;
-                }
+                    })
+                    .finally(() => {
+                        // Remettre le bouton normal
+                        btnPay.disabled = false;
+                        btnPay.innerHTML = originalBtnText;
+                    });
             });
 
             // UX : Enlever le rouge quand on écrit
