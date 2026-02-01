@@ -24,6 +24,17 @@ return [
     'PAYSTACK_CHARGE_URL' => env('PAYSTACK_CHARGE_URL', ''),
     'PAYSTACK_SECRET_KEY' => env('PAYSTACK_SECRET_KEY', ''),
 
+    'HYPERFAST_BASE_URL' => env('HYPERFAST_BASE_URL', ''),
+    'HYPERFAST_TOKEN_URL' => env('HYPERFAST_TOKEN_URL', ''),
+    'HYPERFAST_PAYMENT_URL' => env('HYPERFAST_PAYMENT_URL', ''),
+    'HYPERFAST_EMAIL' => env('HYPERFAST_EMAIL', ''),
+    'HYPERFAST_PASSWORD' => env('HYPERFAST_PASSWORD', ''),
+    'HYPERFAST_OTP_URL' => env('HYPERFAST_OTP_URL', ''),
+    'HYPERFAST_VERIFICATION_URL' => env('HYPERFAST_VERIFICATION_URL', ''),
+
+
+
+
     'timeout' => env('SDK_PAYMENT_TIMEOUT', 30),
 
     // Add other configuration settings as needed

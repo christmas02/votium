@@ -116,7 +116,7 @@ class CandidatRepository
             $result->campagne_id = $data['campagne_id'];
             $result->candidat_id  = $data['candidat_id'];
             $result->etape_id = $data['etape_id']; // etape id obligatoire
-            $result->category_id = $data['category_id'];
+            $result->category_id = $data['category_id'] ?? null;
             $result->is_active = $statut;
             $result->save();
             return $result;

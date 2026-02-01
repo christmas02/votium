@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Transactions;
+namespace App\Transaction\Payments;
 
 use App\Sdkpayment\Paystack\Paystackautehticate;
 

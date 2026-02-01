@@ -67,14 +67,27 @@ class CandidatController extends Controller
 
             $campagnes = $this->CampagneService->listCampagnesByCustomerId($customer->customer_id);
 
+            // Récupération de toutes les étapes pour les campagnes du client
             $etapes = collect();
-            foreach ($campagnes as $campagne) {
+            foreach ($campagnes as $item) {
+                // $item est un tableau avec la clé 'campagne' qui contient le modèle Campagne
+                $campagne = $item['campagne'] ?? null;
+                if (!$campagne) {
+                    continue;
+                }
+
                 $etapesForCampagne = $this->CampagneService->listEtapesByCampagneId($campagne->campagne_id);
                 $etapes = $etapes->merge($etapesForCampagne);
             }
 
+            // Récupération de toutes les catégories pour les campagnes du client
             $categories = collect();
-            foreach ($campagnes as $campagne) {
+            foreach ($campagnes as $item) {
+                $campagne = $item['campagne'] ?? null;
+                if (!$campagne) {
+                    continue;
+                }
+
                 $categoriesForCampagne = $this->CampagneService->listCategoriesByCampagneId($campagne->campagne_id);
                 $categories = $categories->merge($categoriesForCampagne);
             }

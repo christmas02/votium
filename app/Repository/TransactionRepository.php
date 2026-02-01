@@ -2,10 +2,16 @@
 
 namespace App\Repository;
 
+use App\Models\Invoice;
 use App\Models\Transaction;
 
 class TransactionRepository
 {
+    public function getTransactionByid($transactionId)
+    {
+        return Transaction::where('transaction_id', $transactionId)->first();
+    }
+
     public function createTransaction($dataTransaction): bool
     {
         try {
@@ -32,13 +38,12 @@ class TransactionRepository
         }
     }
 
+
     public function updateTransactionStatus($dataTransaction): bool
     {
         try {
             $transaction = Transaction::where('transactions_id', $dataTransaction['transactions_id'])->first();
-            // TO DO UPDATE TRANSACTION STATUS
             $transaction->status = $dataTransaction['status'];
-
             $transaction->save();
             return true;
 
@@ -48,30 +53,46 @@ class TransactionRepository
         }
     }
 
-    public function update($dataTransaction): bool
+    public function createImvoie($dataInvoice)
     {
+        // Implementation for creating invoice
         try {
-            $transaction = Transaction::where('transactions_id', $dataTransaction['transactions_id'])->first();
-            // TO DO UPDATE TRANSACTION INFO
-            $transaction->votes_id = $dataTransaction['votes_id'];
-            $transaction->payment_method = $dataTransaction['payment_method'];
-            $transaction->currency = $dataTransaction['currency'];
-            $transaction->montant_payee = $dataTransaction['montant_payee'];
-            $transaction->status = $dataTransaction['status'];
-            $transaction->transaction_date = $dataTransaction['transaction_date'];
-            $transaction->telephone = $dataTransaction['telephone'];
-            $transaction->api_processing = $dataTransaction['api_processing'];
-            $transaction->api_response = $dataTransaction['api_response'];
-            $transaction->commentaire = $dataTransaction['commentaire'];
-            $transaction->date_transaction = $dataTransaction['date_transaction'];
-            $transaction->date_processing = $dataTransaction['date_processing'];
-
-            $transaction->save();
+            // Code to create invoice
+            $invoice = new Invoice();
+            $invoice->invoice_id = $dataInvoice['invoice_id'];
+            $invoice->transaction_id = $dataInvoice['transaction_id'];
+            $invoice->invoice_number = $dataInvoice['invoice_number'];
+            $invoice->name_file_pdf = null;
+            $invoice->link_pdf = null; // to be updated after PDF generation
+            $invoice->date_invoice = now();
+            $invoice->save();
             return true;
 
         } catch (\Exception $e) {
-            \Log::error('Erreur lors de la mise à jour de la transaction : ' . $e->getMessage());
+            \Log::error('Erreur lors de la création de la facture : ' . $e->getMessage());
             return false;
         }
     }
+
+    public function getInvoiceByTransactionId($transactionId)
+    {
+        return Invoice::where('transaction_id', $transactionId)->first();
+    }
+
+    public function updateLinkeAndNameInvoice($dataInvoice): bool
+    {
+        try {
+            $invoice = Invoice::where('invoice_id', $dataInvoice['invoice_id'])->first();
+            $invoice->link_pdf = $dataInvoice['link_pdf'];
+            $invoice->name_file_pdf = $dataInvoice['name_file_pdf'];
+            $invoice->save();
+            return true;
+
+        } catch (\Exception $e) {
+            \Log::error('Erreur lors de la mise à jour du lien de la facture : ' . $e->getMessage());
+            return false;
+        }
+    }
+
+
 }

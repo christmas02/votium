@@ -27,6 +27,9 @@ Route::get('/', function () {
 // ==========================================
 // AUTHENTIFICATION
 // ==========================================
+Route::get('/invoice_template', function () {
+    return view('invoice.payment');
+});
 Route::controller(AuthController::class)->group(function () {
     Route::get('/', 'screenLogin')->name('screenLogin');
     Route::post('registered', 'register');

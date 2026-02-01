@@ -68,8 +68,11 @@
                                 <label class="form-label">Choisir la campagne</label>
                                 <select class="select form-control form-select js-select-campagne">
                                     <option value="" selected disabled>Sélectionner</option>
-                                    @foreach ($campagnes as $campagne)
-                                        <option value="{{ $campagne->campagne_id }}">{{ $campagne->name }}</option>
+                                    @foreach ($campagnes as $item)
+                                        @php($campagne = $item['campagne'] ?? null)
+                                        @if ($campagne)
+                                            <option value="{{ $campagne->campagne_id }}">{{ $campagne->name }}</option>
+                                        @endif
                                     @endforeach
                                 </select>
                             </div>
@@ -227,8 +230,11 @@
                                 <!-- J'ai changé la classe 'js-select-campagne' par 'js-add-campagne' -->
                                 <select name="campagne_id" class="form-select js-add-campagne" required>
                                     <option value="">Sélectionner une campagne</option>
-                                    @foreach ($campagnes as $campagne)
-                                        <option value="{{ $campagne->campagne_id }}">{{ $campagne->name }}</option>
+                                    @foreach ($campagnes as $item)
+                                        @php($campagne = $item['campagne'] ?? null)
+                                        @if ($campagne)
+                                            <option value="{{ $campagne->campagne_id }}">{{ $campagne->name }}</option>
+                                        @endif
                                     @endforeach
                                 </select>
                             </div>

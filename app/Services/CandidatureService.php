@@ -77,7 +77,7 @@ class CandidatureService
                 // TO DO ADD CANDIDAT IN ETAPE AND CATEGORY FOR CAMPAGNE
                 $this->candidatRepository->candidatWithEtapAndCategoriByCampagne($data, true);
                 \Log::info('Candidat trouvé pour cette campagne avec l\'ID : ' . $data['candidat_id']);
-                return false;
+                return true;
             }else {
                 \Log::info('Aucun candidat trouvé pour cette campagne avec l\'ID : ' . $data['candidat_id'] . '. Création d\'un nouveau candidat.');
             }

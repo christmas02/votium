@@ -199,7 +199,7 @@ class  Hub2payment
             // Calcul du montant total (montant initial + frais + taxes)
             $result['total_amount'] = ($result['amount'] ?? 0) + $result['total_fees'] + $result['total_taxes'];
 
-            logger()->info('Hub2 authenticate response computed successfully', [
+            logger()->info('Hub2 payment response computed successfully', [
                 'intent_id' => $result['intent_id'],
                 'status' => $result['status'],
                 'amount' => $result['amount'],
@@ -211,7 +211,7 @@ class  Hub2payment
             return $result;
 
         } catch (\Exception $e) {
-            logger()->error('Failed to compute Hub2 authenticate response', [
+            logger()->error('Failed to compute Hub2 payment response', [
                 'error' => $e->getMessage(),
                 'response' => $response
             ]);
