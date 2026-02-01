@@ -26,7 +26,7 @@ class ProcessPaymentHyperfast
     public function execute($paymentData): array
     {
         try {
-
+            //dd($paymentData);
             // Récupérer la transaction existante
             $transaction = Transaction::where('transaction_id', $paymentData['transaction_id'])->first();
             if (! $transaction) {
@@ -43,7 +43,7 @@ class ProcessPaymentHyperfast
             $paymentParams = [
                 'amount' => $paymentData['amount'],
                 'phone' => $paymentData['phoneNumber'],
-                'metadata' => ['customer' => 'dupont', 'Id_transaction' => $paymentData['transaction_id']],
+                'metadata' => json_encode(['customer' => 'dupont', 'Id_transaction' => $paymentData['transaction_id']]),
                 'access_token' => $token,
             ];
             $paymentResponse = $this->hyperfastPayment->processPayment($paymentParams);
@@ -72,7 +72,7 @@ class ProcessPaymentHyperfast
                 //throw new \RuntimeException('Aucun payment_id retourné par le provider');
             }
 
-            if ($paymentData['provider'] == 'orange') {
+            if ($paymentData['provider'] == 'orange' || $paymentData['provider'] == 'orange_money') {
                 // For Orange, we expect an OTP confirmation step
                 $otpParams = [
                     'otp' => $paymentData['otpCode'],

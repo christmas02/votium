@@ -6,6 +6,7 @@ use App\Models\Campagne;
 use App\Models\CategoryCampagne;
 use App\Models\Etape;
 use App\Models\Candidat;
+use App\Models\CandidatEtapCategoryCampagne;
 
 class CampagneRepository {
 
@@ -32,7 +33,7 @@ class CampagneRepository {
                 ->groupBy('campagne_id')
                 ->pluck('cnt', 'campagne_id');
 
-            $candidatCounts = Candidat::whereIn('campagne_id', $campagneIds)
+            $candidatCounts = CandidatEtapCategoryCampagne::whereIn('campagne_id', $campagneIds)
                 ->selectRaw('campagne_id, count(*) as cnt')
                 ->groupBy('campagne_id')
                 ->pluck('cnt', 'campagne_id');

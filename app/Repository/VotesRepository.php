@@ -6,6 +6,27 @@ use App\Models\Vote;
 
 class VotesRepository
 {
+    public function getVoteByCampagne($campagneId)
+    {
+        try {
+            $votes = Vote::where('campagne_id', $campagneId)->get();
+            return $votes;
+        } catch (\Exception $e) {
+            \Log::error('Erreur lors de la récupération des votes par campagne : ' . $e->getMessage());
+            return false;
+        }
+    }
+    public function getVote($voteId)
+    {
+        try {
+            $vote = Vote::where('vote_id', $voteId)->first();
+            return $vote;
+        } catch (\Exception $e) {
+            \Log::error('Erreur lors de la récupération du vote : ' . $e->getMessage());
+            return false;
+        }
+    }
+
     public function save($dataVote)
     {
         try {
@@ -31,15 +52,13 @@ class VotesRepository
         }
     }
 
-    public function updateVoteStatus($dataVote): bool
+    public function updateVoteStatus($dataVote)
     {
         try {
-            $vote = Vote::where('votes_id', $dataVote['votes_id'])->first();
-            // TO DO UPDATE VOTE STATUS
+            $vote = Vote::where('vote_id', $dataVote['vote_id'])->first();
             $vote->status = $dataVote['status'];
-
             $vote->save();
-            return true;
+            return $vote;
 
         } catch (\Exception $e) {
             \Log::error('Erreur lors de la mise à jour du statut du vote : ' . $e->getMessage());

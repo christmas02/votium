@@ -39,6 +39,12 @@ class TestController extends Controller
 
     }
 
+    public function checkStatusTransaction()
+    {
+        $data = '415c767b-4210-49ef-9158-25b505a3e6ac';
+        return $this->voteService->checkStatusTransaction($data);
+    }
+
     public function testHyperfast()
     {
         try {

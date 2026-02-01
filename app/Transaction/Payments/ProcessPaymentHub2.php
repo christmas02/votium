@@ -137,8 +137,7 @@ class ProcessPaymentHub2
             return [
                 'status' => $tr_status,
                 'message' => $comment,
-                'transactions_id' => $paymentData['transaction_id'],
-                'api_processing' => 'Détails du traitement API',
+                'transactions_id' => $transaction['transaction_id'],
                 'api_response' => $verificationResponse,
             ];
         } catch (Throwable $e) {
