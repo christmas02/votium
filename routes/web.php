@@ -7,7 +7,8 @@ use App\Http\Controllers\Console\ConsoleController;
 use App\Http\Controllers\Business\BusinessController;
 use App\Http\Controllers\Business\CampagneController;
 use App\Http\Controllers\Business\CandidatController;
-use App\Http\Controllers\Business\FinanceController;
+use App\Http\Controllers\Business\RetraitController;
+use App\Http\Controllers\Business\VoteController;
 
 /*
 |--------------------------------------------------------------------------
@@ -132,17 +133,22 @@ Route::group(['middleware' => 'auth'], function () {
             });
 
 
-            // --- FINANCES (Votes, Retraits, Transactions) ---
-            Route::controller(FinanceController::class)->group(function () {
-
-                #ROUTE POUR INITIER PAIEMENT VOTE
-                Route::post('/paiement/initier', 'initiatePaymentVote')->name('paiementVote');
-
-                #ROUTE POUR VERIFIER PAIEMENT VOTE
-                Route::get('/paiement/verifier/{reference}', 'verifyPaymentVote')->name('payment.verify');
+            #ROUTES VOTES
+            Route::controller(VoteController::class)->group(function () {
 
                 #ROUTES VOTES
                 Route::get('list_vote', 'listVote')->name('list_vote');
+
+                #ROUTE POUR INITIER PAIEMENT VOTE
+                Route::post('/paiement/initier', 'initiatePaymentVote')->name('paiementVote');
+                // Route::post('/paiement/initier_test', 'TestInitiatePaymentVote')->name('paiementVote'); // Pour tests
+
+                #ROUTE POUR VERIFIER LE STATUT DU PAIEMENT VOTE
+                Route::get('/paiement/verifier_statut/{transactionId}', 'verifyPaymentVote')->name('paymentVerify');
+            });
+
+            #ROUTES RETRAITS
+            Route::controller(RetraitController::class)->group(function () {
 
                 #ROUTES RETRAITS
                 Route::get('list_retrait', 'listRetrait')->name('list_retrait');

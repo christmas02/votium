@@ -472,6 +472,28 @@
         .shake-animation {
             animation: shake 0.3s;
         }
+
+        /* Animation Professionnelle */
+        .spinner-ring {
+            width: 60px;
+            height: 60px;
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid #ff9900;
+            /* Votre couleur Orange */
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
     </style>
     <!-- SweetAlert2 CSS & JS -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -674,6 +696,19 @@
                 </div>
             @endif
         </main>
+
+        <!-- OVERLAY DE TRAITEMENT (Caché par défaut) -->
+        <div id="processing-overlay"
+            style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255, 255, 255, 0.98); z-index: 9999; flex-direction: column; align-items: center; justify-content: center; text-align: center;">
+
+            <!-- Animation CSS Pure (Pulse Ring) -->
+            <div class="loader-container mb-4">
+                <div class="spinner-ring"></div>
+            </div>
+
+            <h3 class="fw-bold text-dark mb-2">Traitement en cours...</h3>
+            <p class="text-muted" id="processing-message">Veuillez patienter, nous vérifions votre transaction.</p>
+        </div>
     </div>
 
     <div class="text-center pb-4 text-muted small">
@@ -699,6 +734,7 @@
                 });
             });
         });
+
         document.addEventListener('click', function(e) {
             // 1. Gérer le clic sur le bouton "Voter"
             if (e.target.classList.contains('js-vote-trigger')) {
@@ -719,8 +755,6 @@
                 const item = e.target.closest('.vote-item');
                 const value = item.querySelector('span').innerText;
                 console.log("Option choisie : " + value);
-
-                // Logique de redirection ou de paiement ici...
 
                 // Fermer le menu après sélection
                 item.closest('.vote-selection-wrapper').classList.remove('show');
@@ -872,7 +906,7 @@
                     s3HelpText.innerHTML = instruction;
 
                     // GESTION DU CHAMP OTP
-                    // Si le slug contient "orange", on affiche le champ OTP
+                    // Si le slug contient "orange", on affiche le champ OTP, je vais utiliser pour les operateurs mtn et wave plus tard
                     if (slug.includes('orange')) {
                         otpSection.style.display = 'block';
                         inputOtp.setAttribute('required', 'required'); // On le rend requis
@@ -905,9 +939,6 @@
             // ==========================================
             // 5. PAIEMENT FINAL
             // ==========================================
-            // ==========================================
-            // 5. PAIEMENT FINAL (CORRIGÉ & SÉCURISÉ)
-            // ==========================================
             btnPay.addEventListener('click', function() {
 
                 // 1. Validation du téléphone
@@ -939,8 +970,7 @@
                 btnPay.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Traitement...';
 
                 try {
-                    // A. Vérification de sécurité : Montant
-                    // On s'assure que amount n'est pas null avant de faire toString()
+                    // A. Vérification de sécurité : Montant, On s'assure que amount n'est pas null avant de faire toString()
                     let amountSafe = currentTransaction.amount ? currentTransaction.amount : '0';
                     let rawAmount = amountSafe.toString().replace(/[^0-9]/g, '');
 
@@ -970,7 +1000,7 @@
                     };
 
                     // D. Envoi de la requête
-                    fetch("{{route('business.paiementVote')}}", {
+                    fetch("{{ route('business.paiementVote') }}", {
                             method: 'POST',
                             headers: {
                                 'Content-Type': 'application/json',
@@ -979,65 +1009,178 @@
                             body: JSON.stringify(payload)
                         })
                         .then(async response => {
-                            // Si le serveur renvoie une erreur HTML (500) au lieu de JSON
+                            // Vérification si réponse HTML (Erreur 500)
                             const contentType = response.headers.get("content-type");
                             if (!contentType || !contentType.includes("application/json")) {
                                 const text = await response.text();
                                 console.error("Erreur HTML Serveur:", text);
-                                throw new Error(
-                                    "Une erreur technique est survenue. Veuillez réessayer plus tard ou contacter le support si le problème persiste."
-                                    );
+                                throw new Error("Erreur technique serveur.");
                             }
                             return response.json();
                         })
                         .then(data => {
-                            // Succès de la communication avec le serveur
+                            // 1. Fermer le modal de saisie immédiatement
                             bsModal.hide();
 
                             if (data.success) {
-                                if (data.status === 'pending' || data.status === 'pending_validation') {
-                                    Swal.fire({
-                                        title: 'Vérifiez votre téléphone',
-                                        text: data.message,
-                                        icon: 'info',
-                                        timer: 15000, // 15 secondes
-                                        showConfirmButton: true
-                                    });
-                                } else {
-                                    Swal.fire({
-                                        title: 'Paiement Réussi !',
-                                        text: 'Merci pour votre vote.',
-                                        icon: 'success'
-                                    }).then(() => {
-                                        if (data.redirect_url) window.location.href = data
-                                            .redirect_url;
-                                        else window.location.reload();
-                                    });
-                                }
+                                // ============================================================
+                                // DÉBUT DU POLLING (VÉRIFICATION STATUS)
+                                // ============================================================
+
+                                // A. Afficher l'overlay blanc
+                                const overlay = document.getElementById('processing-overlay');
+                                const processingMsg = document.getElementById('processing-message');
+                                if (overlay) overlay.style.display = 'flex';
+
+                                // B. Configuration de la boucle
+                                const maxAttempts = 3;
+                                const intervalTime =
+                                    5000; // 5 secondes entre chaque vérification (Total ~15s)
+
+                                let attempts = 0;
+                                const transactionId = data.transaction_id;
+
+                                // C. Fonction de vérification récursive
+                                const checkStatus = () => {
+                                    attempts++;
+
+                                    // Appel à la nouvelle route contrôleur
+                                    fetch(`/business/paiement/verifier_statut/${transactionId}`)
+                                        .then(res => res.json())
+                                        .then(statusData => {
+
+                                            if (statusData.status === 'completed') {
+                                                // --- CAS 1 : SUCCÈS ---
+                                                processingMsg.textContent = "Paiement validé !";
+
+                                                // Feedback Visuel Vert
+                                                setTimeout(() => {
+                                                    if (overlay) {
+                                                        // 1. Bouton Téléchargement
+                                                        const downloadBtn = statusData
+                                                            .receipt_url ?
+                                                            `<a href="${statusData.receipt_url}" target="_blank" class="btn btn-outline-primary mb-2 w-100" download>
+                                                                <i class="fas fa-file-pdf"></i> Télécharger le reçu
+                                                            </a>` :
+                                                            '';
+
+                                                        // 2. Bouton Retour (Le cœur de la solution) pour mettre à jour les données (ex: compteur de vote)
+                                                        const returnBtn = `
+                                                            <button id="btn-reload-page" class="btn btn-light w-100 fw-bold">
+                                                                <i class="fas fa-arrow-left"></i> Retour au site
+                                                            </button>
+                                                        `;
+
+                                                        overlay.innerHTML = `
+                                                            <div class="text-success mb-3 animate__animated animate__bounceIn">
+                                                                <i class="fas fa-check-circle fa-5x"></i>
+                                                            </div>
+                                                            <h3 class="fw-bold text-dark mb-4">Paiement Réussi !</h3>
+                                                            
+                                                            <div class="d-flex flex-column align-items-center justify-content-center" style="max-width: 300px; margin: 0 auto;">
+                                                                ${downloadBtn}
+                                                                ${returnBtn}
+                                                            </div>
+                                                        `;
+
+                                                        // Ajout de l'événement sur le bouton retour après l'insertion HTML
+                                                        setTimeout(() => {
+                                                            const reloadBtn =
+                                                                document
+                                                                .getElementById(
+                                                                    'btn-reload-page'
+                                                                    );
+                                                            if (reloadBtn) {
+                                                                reloadBtn
+                                                                    .addEventListener(
+                                                                        'click',
+                                                                        function() {
+                                                                            // On recharge simplement la page courante. 
+                                                                            window
+                                                                                .location
+                                                                                .reload();
+
+                                                                            // Note : fermer juste le modal sans recharger :
+                                                                            // overlay.style.display = 'none';
+                                                                        });
+                                                            }
+                                                        }, 100);
+                                                    }
+
+                                                }, 1000);
+
+                                            } else if (statusData.status === 'failed') {
+                                                
+                                                handleFailure(
+                                                    "La transaction a été refusée par l'opérateur."
+                                                );
+                                            } else {
+                                                
+                                                if (attempts < maxAttempts) {
+                                                    setTimeout(checkStatus, intervalTime);
+                                                } else {
+                                                    handleFailure(
+                                                        "La transaction a échoué. Veuillez vérifier si votre compte a été débité. Si c’est le cas, merci de contacter votre opérateur."
+                                                    );
+                                                }
+                                            }
+                                        })
+                                        .catch(err => {
+                                            console.error("Erreur polling:", err);
+                                            // On continue d'essayer tant qu'on a des tentatives, sauf si erreur grave
+                                            if (attempts < maxAttempts) setTimeout(checkStatus,
+                                                intervalTime);
+                                            else handleFailure(
+                                                "Erreur de connexion lors de la vérification."
+                                            );
+                                        });
+                                };
+
+                                // Fonction d'affichage d'erreur dans l'overlay
+                                const handleFailure = (message) => {
+                                    if (overlay) {
+                                        overlay.innerHTML = `
+                                        <div class="text-danger mb-4 animate__animated animate__shakeX">
+                                            <i class="fas fa-times-circle fa-5x"></i>
+                                        </div>
+                                        <h3 class="fw-bold text-dark">Échec de la transaction</h3>
+                                        <p class="text-muted px-3 mx-auto" style="max-width:500px; line-height:1.5;">${message}</p>
+                                        <button class="btn btn-dark mt-4 px-4 py-2 rounded-pill" onclick="window.location.reload()">
+                                            Fermer et Actualiser
+                                        </button>
+                                    `;
+                                    } else {
+                                        Swal.fire('Échec', message, 'error');
+                                    }
+                                };
+
+                                // Démarrage de la boucle
+                                checkStatus();
+
                             } else {
-                                // Erreur métier (ex: solde insuffisant)
+                                // Erreur dès l'initiation (ex: validation serveur)
                                 Swal.fire({
-                                    title: 'Échec',
+                                    title: 'Attention',
                                     text: data.message,
-                                    icon: 'error'
+                                    icon: 'warning'
                                 }).then(() => bsModal.show());
                             }
                         })
                         .catch(error => {
-                            // Erreur Réseau ou JSON invalide
-                            console.error('Erreur Fetch:', error);
+                            console.error('Erreur JS:', error);
                             bsModal.hide();
-                            Swal.fire('Erreur', error.message, 'error');
+                            Swal.fire('Erreur technique', "Une erreur est survenue lors de l'envoi.",
+                                'error');
                         })
                         .finally(() => {
-                            // Quoi qu'il arrive, on réactive le bouton
                             btnPay.disabled = false;
                             btnPay.innerHTML = originalBtnText;
                         });
 
+
+
                 } catch (e) {
                     // Ce bloc attrape les erreurs synchrones (CSRF manquant, variable null, etc.)
-                    // C'est ce qui manquait dans votre code précédent
                     console.error("Crash JS avant envoi:", e);
                     alert("Erreur Script : " + e.message);
 
