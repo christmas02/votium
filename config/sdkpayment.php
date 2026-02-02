@@ -31,6 +31,7 @@ return [
     'HYPERFAST_PASSWORD' => env('HYPERFAST_PASSWORD', ''),
     'HYPERFAST_OTP_URL' => env('HYPERFAST_OTP_URL', ''),
     'HYPERFAST_VERIFICATION_URL' => env('HYPERFAST_VERIFICATION_URL', ''),
+    'HYPERFAST_CALLBACK_URL' => env('HYPERFAST_CALLBACK_URL', 'http://votium.net/api/webhook/hyperfast'),
 
 
 
