@@ -35,7 +35,7 @@ use App\Http\Requests\EtapeRequest;
 use App\Http\Requests\UserRequest;
 use App\Http\Requests\WithdrawalAccountRequest;
 
-class FinanceController extends Controller
+class VoteController extends Controller
 {
     protected CustomerService $CustomerService;
     protected CampagneService $CampagneService;
