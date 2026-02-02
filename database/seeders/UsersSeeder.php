@@ -29,7 +29,7 @@ class UsersSeeder extends Seeder
                 'name' => $admin['name'],
                 'email' => $admin['email'],
                 'role' => 'admin',
-                'password' => Hash::make('password123'),
+                'password' => Hash::make('33'),
                 'phonenumber' => $faker->phoneNumber,
             ]);
         }

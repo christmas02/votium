@@ -1,9 +1,14 @@
 <?php
 
-use App\Http\Controllers\Business\BusinessController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Console\ConsoleController;
+
+use App\Http\Controllers\Business\BusinessController;
+use App\Http\Controllers\Business\CampagneController;
+use App\Http\Controllers\Business\CandidatController;
+use App\Http\Controllers\Business\RetraitController;
+use App\Http\Controllers\Business\VoteController;
 
 /*
 |--------------------------------------------------------------------------
@@ -20,7 +25,12 @@ Route::get('/', function () {
 */
 
 
-
+// ==========================================
+// AUTHENTIFICATION
+// ==========================================
+Route::get('/invoice_template', function () {
+    return view('invoice.payment');
+});
 Route::controller(AuthController::class)->group(function () {
     Route::get('/', 'screenLogin')->name('screenLogin');
     Route::post('registered', 'register');
@@ -31,7 +41,10 @@ Route::controller(AuthController::class)->group(function () {
 
 
 Route::group(['middleware' => 'auth'], function () {
-   
+
+    // ==========================================
+    // CONSOLE (Admin)
+    // ==========================================
     Route::prefix('console')
         ->name('console.')
         ->controller(ConsoleController::class)
@@ -52,65 +65,93 @@ Route::group(['middleware' => 'auth'], function () {
 
             //ROUTES CAMPAGNES
             Route::get('list_campagne', 'listCampagne')->name('list_campagne');
-            Route::get('detail_campagne/{idCampagne}', 'detailCampagne')->name('detail_campagne');
+            Route::get('site_campagne/{idCampagne}', 'siteCampagne')->name('site_campagne');
+
             Route::post('save_campagne', 'saveCampagne')->name('save_campagne');
             Route::post('update_campagne', 'updateCampagne')->name('update_campagne');
             Route::delete('delete_campagne', 'deleteCampagne')->name('delete_campagne');
         });
 
-
+    // ==========================================
+    // BUSINESS (Espace Client)
+    // ==========================================
     Route::prefix('business')
         ->name('business.')
-        ->controller(BusinessController::class)
         ->group(function () {
 
-            Route::get('espace', 'index')->name('espace');
+            // --- DASHBOARD ---
+            Route::controller(BusinessController::class)->group(function () {
+                Route::get('espace', 'index')->name('espace');
 
-            # ROUTES PROFILE
-            Route::get('profile', 'profile')->name('profile');
-            Route::post('update_profile', 'updateProfile')->name('update_profile');
+                # ROUTES PROFILE
+                Route::get('profile', 'profile')->name('profile');
+                Route::post('update_profile', 'updateProfile')->name('update_profile');
 
-            # ROUTES CUSTOMERS
-            Route::post('update_customer', 'updateCustomer')->name('update_customer');
+                # ROUTES CUSTOMERS
+                Route::post('update_customer', 'updateCustomer')->name('update_customer');
 
-            #ROUTES CAMPAGNES
-            Route::get('list_campagne', 'listCampagne')->name('list_campagne');
-            Route::get('detail_campagne/{idCampagne}', 'detailCampagne')->name('detail_campagne');
-            Route::post('save_campagne', 'saveCampagne')->name('save_campagne');
-            Route::post('update_campagne', 'updateCampagne')->name('update_campagne');
-            Route::delete('delete_campagne', 'deleteCampagne')->name('delete_campagne');
+                #ROUTE COMPTES RETRAITS
+                Route::get('list_compte_retrait', 'listCompteRetrait')->name('list_compte_retrait');
+                Route::post('save_compte_retrait', 'saveCompteRetrait')->name('save_compte_retrait');
+                Route::post('update_compte_retrait', 'updateCompteRetrait')->name('update_compte_retrait');
+                Route::post('delete_compte_retrait', 'deleteCompteRetrait')->name('delete_compte_retrait');
+            });
 
-            #ROUTES CATEGORIES CAMPAGNES
-            Route::get('list_categorie/{campagne_id}', 'listCategorie')->name('list_categorie');
-            Route::post('save_categorie', 'saveCategorie')->name('save_categorie');
-            Route::post('update_categorie', 'updateCategorie')->name('update_categorie');
-            Route::delete('delete_categorie', 'deleteCategorie')->name('delete_categorie');
+            // --- CAMPAGNES (Principal) ---
+            Route::controller(CampagneController::class)->group(function () {
 
-            #ROUTES ETAPES CAMPAGNES
-            Route::get('list_etape/{customer_id}', 'listEtape')->name('list_etape');
-            Route::get('recherche_etape_campagne/{etape_id}', 'rechercheEtapeCampagne')->name('recherche_etape_campagne');
-            Route::post('save_etape', 'saveEtape')->name('save_etape');
-            Route::post('update_etape', 'updateEtape')->name('update_etape');
-            Route::delete('delete_etape/{etape_id}', 'deleteEtape')->name('delete_etape');
+                #ROUTES CAMPAGNES
+                Route::get('list_campagne', 'listCampagne')->name('list_campagne');
+                Route::get('site_campagne/{idCampagne}', 'siteCampagne')->name('site_campagne');
+                Route::post('save_campagne', 'saveCampagne')->name('save_campagne');
+                Route::post('update_campagne', 'updateCampagne')->name('update_campagne');
+                Route::delete('delete_campagne', 'deleteCampagne')->name('delete_campagne');
 
-            #ROUTES CANDIDATS
-            Route::get('list_candidat', 'listCandidat')->name('list_candidat');
-            Route::get('detail_candidat/{idCandidat}', 'detailCandidat')->name('detail_candidat');
-            Route::get('recherche_candidat', 'rechercheCandidat')->name('recherche_candidat');
-            Route::post('save_candidat', 'saveCandidat')->name('save_candidat');
-            Route::post('update_candidat', 'updateCandidat')->name('update_candidat');
-            Route::delete('delete_candidat', 'deleteCandidat')->name('delete_candidat');
+                #ROUTES CATEGORIES CAMPAGNES
+                Route::get('list_categorie/{campagne_id}', 'listCategorie')->name('list_categorie');
+                Route::post('save_categorie', 'saveCategorie')->name('save_categorie');
+                Route::post('update_categorie', 'updateCategorie')->name('update_categorie');
+                Route::delete('delete_categorie', 'deleteCategorie')->name('delete_categorie');
 
-            #ROUTE COMPTES RETRAITS
-            Route::get('list_compte_retrait', 'listCompteRetrait')->name('list_compte_retrait');
-            Route::post('save_compte_retrait', 'saveCompteRetrait')->name('save_compte_retrait');
-            Route::post('update_compte_retrait', 'updateCompteRetrait')->name('update_compte_retrait');
-            Route::post('delete_compte_retrait', 'deleteCompteRetrait')->name('delete_compte_retrait');
+                #ROUTES ETAPES CAMPAGNES
+                Route::get('list_etape/{customer_id}/{campagne_id}', 'listEtape')->name('list_etape');
+                Route::get('recherche_etape_campagne/{etape_id}', 'rechercheEtapeCampagne')->name('recherche_etape_campagne');
+                Route::post('save_etape', 'saveEtape')->name('save_etape');
+                Route::post('update_etape', 'updateEtape')->name('update_etape');
+                Route::delete('delete_etape/{etape_id}', 'deleteEtape')->name('delete_etape');
+            });
+
+            // --- CANDIDATS ---
+            Route::controller(CandidatController::class)->group(function () {
+                #ROUTES CANDIDATS
+                Route::get('list_candidat', 'listCandidat')->name('list_candidat');
+                Route::get('detail_candidat/{idCandidat}', 'detailCandidat')->name('detail_candidat');
+                Route::get('recherche_candidat', 'rechercheCandidat')->name('recherche_candidat');
+                Route::post('save_candidat', 'saveCandidat')->name('save_candidat');
+                Route::post('update_candidat', 'updateCandidat')->name('update_candidat');
+                Route::delete('delete_candidat', 'deleteCandidat')->name('delete_candidat');
+            });
+
 
             #ROUTES VOTES
-            Route::get('list_vote', 'listVote')->name('list_vote');
+            Route::controller(VoteController::class)->group(function () {
+
+                #ROUTES VOTES
+                Route::get('list_vote', 'listVote')->name('list_vote');
+
+                #ROUTE POUR INITIER PAIEMENT VOTE
+                Route::post('/paiement/initier', 'initiatePaymentVote')->name('paiementVote');
+                // Route::post('/paiement/initier_test', 'TestInitiatePaymentVote')->name('paiementVote'); // Pour tests
+
+                #ROUTE POUR VERIFIER LE STATUT DU PAIEMENT VOTE
+                Route::get('/paiement/verifier_statut/{transactionId}', 'verifyPaymentVote')->name('paymentVerify');
+            });
 
             #ROUTES RETRAITS
-            Route::get('list_retrait', 'listRetrait')->name('list_retrait');
+            Route::controller(RetraitController::class)->group(function () {
+
+                #ROUTES RETRAITS
+                Route::get('list_retrait', 'listRetrait')->name('list_retrait');
+            });
         });
 });

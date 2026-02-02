@@ -236,7 +236,7 @@
                                                     <span>
                                                         @foreach($paymentMethods as $method)
                                                         @if($method->value === $compte->payment_methode)
-                                                        <img src="{{ asset(env('IMAGES_PATH') . '/' . $method->icon()) }}" alt="{{ $method->label() }}" class="me-2" style="width:50px; height:50px;">
+                                                        <img src="{{ asset(env('IMAGES_PAYMENT') . '/' . $method->icon()) }}" alt="{{ $method->label() }}" class="me-2" style="width:50px; height:50px;">
                                                         @endif
                                                         @endforeach
 

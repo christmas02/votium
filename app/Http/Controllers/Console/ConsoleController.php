@@ -19,6 +19,7 @@ use Illuminate\Support\Facades\Hash;
 use App\Models\User;
 use App\Models\Customer;
 use PhpParser\Node\Stmt\TryCatch;
+use Carbon\Carbon;
 
 use App\Http\Requests\CampagneRequest;
 use App\Http\Requests\CandidatRequest;
@@ -55,7 +56,18 @@ class ConsoleController  extends Controller
             $title_back = "Tableau de bord";
             $link_back = "back_office_console";
             $title = "Console d'administration";
-            return view('console.index', compact('title', 'title_back', 'link_back'));
+
+            $title_back = "Tableau de bord";
+            $link_back = "back_office_business";
+            $title = "Paramètre du compte";
+            $user = auth()->user();
+            $customer = $this->CustomerService->customerByIdUser($user->user_id);
+
+            $paymentMethods = PaymentMethod::cases();
+
+            //Liste des comptes de retrait
+            $compteRetraits = $this->CustomerService->listWithdrawalAccountByCustomer($customer->customer_id);
+            return view('console.index', compact('title', 'title_back', 'link_back', 'user', 'customer', 'paymentMethods', 'compteRetraits'));
         } catch (\Exception $th) {
             Log::error("Erreur lors de l'affichage de la console : " . $th->getMessage(), [
                 'stack_trace' => $th->getTraceAsString(),
@@ -332,14 +344,17 @@ class ConsoleController  extends Controller
     public function listCampagne()
     {
         try {
+            $title_back = "Tableau de bord";
+            $link_back = "list_campagne";
+            $title = "Liste Campagnes";
+
             $campagnes = $this->CampagneService->listCampagnes()->sortByDesc('created_at');
+
 
             $customers = $this->CustomerService->listCustmer()
                 ->pluck('entreprise', 'customer_id')
                 ->toArray();
-            $title_back = "Tableau de bord";
-            $link_back = "list_campagne";
-            $title = "Liste Campagnes";
+
             return view('console.listCampagnes', compact('title', 'title_back', 'link_back', 'campagnes', 'customers'));
         } catch (\Exception $th) {
             Log::error("Erreur lors de la récupération des campagnes : " . $th->getMessage(), [
@@ -530,26 +545,77 @@ class ConsoleController  extends Controller
         }
     }
 
-    #DETAIL CAMPAGNE
-    public function detailCampagne($idCampagne)
+    #SITE CAMPAGNE
+    public function siteCampagne($idCampagne)
     {
-        try {
-            $campagne = $this->CampagneService->detailCampagne($idCampagne);
-            $customer = $this->CustomerService->Customer($campagne->customer_id);
-            if (!$campagne) {
-                return redirect()->back()->with('error', 'Campagne non trouvée.');
+        $campagne = $this->CampagneService->detailCampagne($idCampagne);
+        $customer = $this->CustomerService->Customer($campagne->customer_id);
+
+        $etapes = $this->CampagneService->listEtapesByCampagneId($idCampagne);
+        $categories = $this->CampagneService->listCategoriesByCampagneId($idCampagne);
+
+        $assignments = DB::table('candidat_etap_category_campagnes')
+            ->join('candidats', 'candidat_etap_category_campagnes.candidat_id', '=', 'candidats.candidat_id')
+            ->where('candidat_etap_category_campagnes.campagne_id', $idCampagne)
+            ->select('candidats.*', 'candidat_etap_category_campagnes.etape_id', 'candidat_etap_category_campagnes.category_id')
+            ->get();
+
+        $now = Carbon::now(); // Date et heure actuelle du système
+
+        foreach ($etapes as $etape) {
+            // 1. Créer des objets Carbon pour le début et la fin
+            $debut = Carbon::parse($etape->date_debut . ' ' . $etape->heure_debut);
+            $fin = Carbon::parse($etape->date_fin . ' ' . $etape->heure_fin);
+
+            // 2. Variable pour savoir si l'étape est en cours (ouverte)
+            $etape->is_active_now = $now->between($debut, $fin);
+
+            // 3. Variable pour savoir si l'étape est future (pas encore commencée)
+            $etape->is_upcoming = $now->lt($debut);
+
+            // 4. Calcul du compte à rebours si l'étape n'a pas encore commencé
+            if ($etape->is_upcoming) {
+                $diff = $now->diff($debut);
+                $etape->countdown = [
+                    'days'    => $diff->d,
+                    'hours'   => $diff->h,
+                    'minutes' => $diff->i,
+                    'label'   => "Ouverture dans {$diff->d}j {$diff->h}h {$diff->i}min"
+                ];
+            } else {
+                $etape->countdown = null;
             }
-            $title_back = "Tableau de bord";
-            $link_back = "detail_campagne";
-            $title = $campagne->name;
-            return view('console.detailCampagne', compact('title', 'title_back', 'link_back', 'campagne', 'customer'));
-        } catch (\Exception $th) {
-            Log::error("Erreur lors de l'affichage de la detail page de la campagne : " . $th->getMessage(), [
-                'stack_trace' => $th->getTraceAsString(),
-            ]);
-            return redirect()->back()
-                ->withInput()
-                ->with('error', __('messages.server_error'));
+
+            // Filtrage des candidats par étape
+            $etape->candidats = $assignments->where('etape_id', $etape->etape_id)->values();
         }
+
+        foreach ($categories as $category) {
+            $category->candidats = $assignments->where('category_id', $category->category_id)->values();
+        }
+
+        $campagne->etapes = $etapes;
+        $campagne->categories = $categories;
+
+        // Dans votre contrôleur, avant le return view :
+        $selectedEtapeId = request('etape_id', $campagne->etapes->first()->etape_id ?? null);
+        $selectedCategoryId = request('category_id');
+        $selectedEtape = $campagne->etapes->firstWhere('etape_id', $selectedEtapeId);
+
+        $title_back = "Tableau de bord";
+        $link_back = "detail_campagne";
+        $title = $campagne->name;
+
+        // dd($campagne);
+        return view('siteCampagne.index', compact(
+            'title',
+            'title_back',
+            'link_back',
+            'campagne',
+            'customer',
+            'selectedEtape',
+            'selectedEtapeId',
+            'selectedCategoryId'
+        ));
     }
 }

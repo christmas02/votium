@@ -131,16 +131,16 @@
                         </div>
                     </div>
 
-                    <!-- User Dropdown -->
+                   <!-- User Dropdown -->
                     <div class="dropdown profile-dropdown d-flex align-items-center justify-content-center">
                         <a href="javascript:void(0);" class="topbar-link dropdown-toggle drop-arrow-none position-relative" data-bs-toggle="dropdown" data-bs-offset="0,22" aria-haspopup="false" aria-expanded="false">
-                            <img src="{{ asset('assets/img/users/user-40.jpg') }}" width="38" class="rounded-1 d-flex" alt="user-image">
+                            <img src="{{ asset(env('IMAGES_PATH') . '/' . (Auth::user()->customer->logo ?? 'default-logo.png')) }}" width="38" class="rounded-1 d-flex" alt="user-image">
                             <span class="online text-success"><i class="ti ti-circle-filled d-flex bg-white rounded-circle border border-1 border-white"></i></span>
                         </a>
                         <div class="dropdown-menu dropdown-menu-end dropdown-menu-md p-2">
 
                             <div class="d-flex align-items-center bg-light rounded-3 p-2 mb-2">
-                                <img src="{{ asset('assets/img/users/user-40.jpg') }}" class="rounded-circle" width="42" height="42" alt="Img">
+                                <img src="{{ asset(env('IMAGES_PATH') . '/' . (Auth::user()->customer->logo ?? 'default-logo.png')) }}" class="rounded-circle" width="42" height="42" alt="Img">
                                 <div class="ms-2">
                                     <p class="fw-medium text-dark mb-0">{{ Auth::user()->name }}</p>
                                     <span class="d-block fs-13">{{ Auth::user()->role }}</span>
@@ -148,7 +148,7 @@
                             </div>
 
                             <!-- Item-->
-                            <a href="{{ route('console.profile') }}" class="dropdown-item">
+                            <a href="{{ route('business.profile') }}" class="dropdown-item">
                                 <i class="ti ti-user-circle me-1 align-middle"></i>
                                 <span class="align-middle">Profile</span>
                             </a>
