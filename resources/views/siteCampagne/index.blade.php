@@ -1035,7 +1035,7 @@
                                 // B. Configuration de la boucle
                                 const maxAttempts = 3;
                                 const intervalTime =
-                                    5000; // 5 secondes entre chaque vérification (Total ~15s)
+                                    30000; // 5 secondes entre chaque vérification (Total ~15s)
 
                                 let attempts = 0;
                                 const transactionId = data.transaction_id;
