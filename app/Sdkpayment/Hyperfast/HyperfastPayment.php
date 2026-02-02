@@ -16,7 +16,7 @@ class HyperfastPayment
     public function processPayment(array $paramPayment): array
     {
         try {
-            $CALLBACK_URL = 'http://votium.net/api/webhook/hyperfast';
+            $CALLBACK_URL = config('sdkpayment.HYPERFAST_CALLBACK_URL', 'http://votium.net/api/webhook/hyperfast');
             $HYPERFAST_BASE_URL = config('sdkpayment.HYPERFAST_BASE_URL');
             $HYPERFAST_PAYMENT_URL = config('sdkpayment.HYPERFAST_PAYMENT_URL');
 
