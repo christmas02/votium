@@ -31,8 +31,7 @@ class HyperfastWebhook
 
             if (! $transaction) {
                 Log::warning('Hyperfast webhook: transaction not found', ['reference' => $reference, 'payload' => $payload]);
-                DB::rollBack();
-                return false;
+                //DB::rollBack();
             }
             // Mise à jour des champs s'ils sont fournis
             $status = $payload['status'] ?? null;
@@ -58,14 +57,17 @@ class HyperfastWebhook
 
             $response = $transaction->toArray();
 
-            DB::commit();
+            //DB::commit();
             Log::info('Hyperfast webhook: transaction updated', ['id' => $transaction->transaction_id, 'reference' => $reference]);
             return $response;
 
         } catch (\Throwable $e) {
             //DB::rollBack();
             Log::error('Hyperfast webhook error: ' . $e->getMessage(), ['payload' => $payload]);
-            return false;
+            return [
+                'status' => 'error',
+                'message' => $e->getMessage()
+            ];
         }
     }
 }

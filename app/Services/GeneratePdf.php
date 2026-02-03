@@ -23,7 +23,7 @@ class GeneratePdf
 
             $options = new Options();
             $options->set('isHtml5ParserEnabled', true);
-            $options->set('isRemoteEnabled', false); // ✅ Désactiver les ressources externes
+            $options->set('isRemoteEnabled', true); // ✅ Désactiver les ressources externes
             $options->set('defaultFont', 'Arial');
             $dompdf = new Dompdf($options);
 
@@ -33,7 +33,7 @@ class GeneratePdf
             $dompdf->render();
 
             $pdfContent = $dompdf->output();
-            $name_file = $data['transaction_id'] . '.pdf';
+            $name_file = $data['invoice_number'] . '.pdf';
             $filePath = "{$directory}/{$name_file}";
 
             file_put_contents($filePath, $pdfContent);

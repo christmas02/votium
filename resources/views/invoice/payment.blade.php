@@ -36,9 +36,14 @@
             border: 1px solid rgba(0, 0, 0, .125);
             border-radius: .25rem;
         }
-
-
-
+        .footer {
+            border-top: 1px solid #dee2e6;
+            font-size: 0.9rem;
+            color: #6c757d;
+            max-width: 940px;
+            margin: 0 auto;
+            padding: 20px;
+        }
         .container {
             max-width: 940px;
             margin: 0 auto;
@@ -71,7 +76,7 @@
             <table width="100%">
                 <tr>
                     <td>
-                        <img src="file://{{ public_path('assets/img/logos/votium_V.png') }}" alt="Logo" height="100">
+                        <img src="http://votium.net/assets/img/logos/votium_V.png" alt="Logo" height="100">
                         <h3>Invoice No : {{$data["invoice_number"] ?? 'Non disponible' }}</h3>
                     </td>
                 </tr>
@@ -121,29 +126,33 @@
                     <tr>
                         <td>Candidat</td>
                         <td></td>
-                        <td> xxxxx xxxxxxxx</td>
+                        <td> {{$data["candidat"] ?? 'Non disponible' }}</td>
                     </tr>
                     <tr>
                         <td>Nombre de vote(s)</td>
                         <td></td>
-                        <td> xxxxx xxxxxxxx</td>
+                        <td> {{$data["quantity"] ?? 'Non disponible' }}</td>
                     </tr>
-                    </tbody>
-                </table>
-            </div>
-
-            <div class="">
-                <table width="100%" cellspacing="0" cellpadding="5">
-                    <tbody>
-                    <tr>
-                        <td></td>
-                        <td></td>
-                    </tr>
-
                     </tbody>
                 </table>
             </div>
         </div>
+    </div>
+    <div class="footer">
+        <table width="100%" cellspacing="0" cellpadding="5">
+            <tbody>
+            <tr>
+                <td></td>
+                <td tesxt-align="center">
+                    Siège social : ABIDJAN COCODY ABATTA,  Lot 201, Ilot 20 - 07 BP 993 ABJ 07
+                    Cel : +225 0565121084 - R/C :CI-ABJ-03-2023-B13-04012
+                    Site web: www.impactafric.com
+                </td>
+                <td></td>
+            </tr>
+
+            </tbody>
+        </table>
     </div>
 </body>
 
