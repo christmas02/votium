@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Candidat;
+use App\Repository\CandidatRepository;
 use App\Sdkpayment\Hyperfast\HyperfastWebhook;
 use App\Services\GeneratePdf;
 use App\Services\Setting;
@@ -14,12 +16,14 @@ class WebhookController
     protected $hyperfastWebhook;
     protected $voteService;
     protected $setting;
+    protected $candidat;
 
-    public function __construct(HyperfastWebhook $hyperfastWebhook, VoteService $voteService, Setting $setting)
+    public function __construct(HyperfastWebhook $hyperfastWebhook, VoteService $voteService, Setting $setting, CandidatRepository $candidat)
     {
         $this->hyperfastWebhook = $hyperfastWebhook;
         $this->voteService = $voteService;
         $this->setting = $setting;
+        $this->candidat = $candidat;
     }
     public function handleWebhookHyperfast(Request $request)
     {
@@ -59,7 +63,8 @@ class WebhookController
                 ];
                 $this->voteService->saveInvoiceAfterPayment($dataInvoice);
                 // Génération du PDF de reçu de paiement
-                // $candidat = ;
+                $vote->candidat_id;
+                $candidat = $this->candidat->getCandidat($vote->candidat_id) ;
                 $pdfGenerator = new GeneratePdf();
                 $pdfData = [
                     'transaction_id' => $transaction['transaction_id'],
@@ -72,6 +77,7 @@ class WebhookController
                     'email' => $vote->email,
                     'quantity' => $vote->quantity,
                     'amount' => $transaction['amount_paid'],
+                    'candidat' => $candidat->name,
                 ];
                 $invoice_name = $pdfGenerator->generatePaymentReceipt($pdfData);
                 $link_pdf = rtrim(env('INVOICE_PATH'), '/') . '/' . $invoice_name;
