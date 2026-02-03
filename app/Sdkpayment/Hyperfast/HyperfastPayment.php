@@ -23,7 +23,7 @@ class HyperfastPayment
             $payload = [
                 'phone' => $paramPayment['phone'],
                 'amount' => $paramPayment['amount'],
-                'metadata' => json_encode($paramPayment['metadata']),
+                //'metadata' => $paramPayment['metadata'],
                 'callback' => $CALLBACK_URL,
                 //'email' => $paramPayment['email']
             ];
