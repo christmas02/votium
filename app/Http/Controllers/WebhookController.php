@@ -18,7 +18,8 @@ class WebhookController
     protected $setting;
     protected $candidat;
 
-    public function __construct(HyperfastWebhook $hyperfastWebhook, VoteService $voteService, Setting $setting, CandidatRepository $candidat)
+    public function __construct(HyperfastWebhook $hyperfastWebhook, VoteService $voteService, Setting $setting,
+                                CandidatRepository $candidat)
     {
         $this->hyperfastWebhook = $hyperfastWebhook;
         $this->voteService = $voteService;
@@ -92,7 +93,7 @@ class WebhookController
             return 'operation effectuere avec succes';
 
         } catch (\Exception $e) {
-            \Log::error('Erreur lors du traitement du vote : ' . $e->getMessage());
+            \Log::error('Erreur webhookController handleWebhookHyperfast : ' . $e->getMessage());
             throw $e; // Rejeter l'exception pour gestion en amont
         }
     }

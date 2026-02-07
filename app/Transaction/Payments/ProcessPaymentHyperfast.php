@@ -43,8 +43,9 @@ class ProcessPaymentHyperfast
             $paymentParams = [
                 'amount' => $paymentData['amount'],
                 'phone' => $paymentData['phoneNumber'],
-                'metadata' => json_encode(['customer' => 'dupont', 'Id_transaction' => $paymentData['transaction_id']]),
+                'metadata' => json_encode(['customer' => 'dupont', 'transaction_id' => $paymentData['transaction_id']]),
                 'access_token' => $token,
+                'payment_method' => $paymentData['provider']
             ];
             $paymentResponse = $this->hyperfastPayment->processPayment($paymentParams);
             logger()->info('Hyperfast response after processPayment', [$paymentResponse]);
@@ -70,6 +71,15 @@ class ProcessPaymentHyperfast
                     'message' => $paymentResponse['message'],
                 ];
                 //throw new \RuntimeException('Aucun payment_id retourné par le provider');
+            }
+
+            if ($paymentData['provider'] == 'wave') {
+                // On retourne directement le status initié pour Wave
+                return [
+                    'status' => 'processing',
+                    'message' => 'Payment initiated, pending confirmation',
+                    'response' => $paymentResponse,
+                ];
             }
 
             if ($paymentData['provider'] == 'orange' || $paymentData['provider'] == 'orange_money') {

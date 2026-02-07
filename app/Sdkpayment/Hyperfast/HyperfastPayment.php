@@ -13,6 +13,56 @@ class HyperfastPayment
         $this->client = ClientHttpInstance::getInstance();
     }
 
+    public function processWavePayment(array $paramPayment): array
+    {
+        try {
+            $CALLBACK_URL = config('sdkpayment.HYPERFAST_CALLBACK_URL', 'https://webhook.site/ca2cae3a-3f29-4b3d-bba0-b31527592ba1');
+            $HYPERFAST_BASE_URL = config('sdkpayment.HYPERFAST_BASE_URL');
+            $HYPERFAST_PAYMENT_WAVE_URL = config('sdkpayment.HYPERFAST_PAYMENT_WAVE_URL');
+
+            $payload = [
+                'phone' => $paramPayment['phone'],
+                'amount' => $paramPayment['amount'],
+                //'metadata' => $paramPayment['metadata'],
+                'callback' => 'https://webhook.site/6cd2b75c-2dde-41c2-9276-4dc92cd76d58',
+                'payment_method' => $paramPayment['payment_method']
+                //'email' => $paramPayment['email']
+            ];
+
+            logger()->info('Hyperfast payment creation request', [
+                'url' => $HYPERFAST_BASE_URL . $HYPERFAST_PAYMENT_WAVE_URL,
+                'payload' => $payload
+            ]);
+
+            $response = $this->client->request('POST', $HYPERFAST_BASE_URL . $HYPERFAST_PAYMENT_WAVE_URL, [
+                'headers' => [
+                    'Accept' => 'application/json',
+                    'Content-Type' => 'application/json',
+                    'Authorization' => 'Bearer ' . $paramPayment['access_token']
+                ],
+                'json' => $payload
+            ]);
+
+            $statusCode = $response->getStatusCode();
+            $body = json_decode($response->getBody()->getContents(), true);
+
+            if ($statusCode >= 200 && $statusCode < 300) {
+                logger()->info('Hyperfast execute payment wave successful', ['response' => $body]);
+                return $this->computeResponse($body);
+            }
+
+            logger()->error('Hyperfast execute payment wave failed', [
+                'status' => $statusCode,
+                'response' => $body
+            ]);
+
+            throw new \Exception("Hyperfast API returned error: " . ($body['message'] ?? 'Unknown error'));
+
+        } catch (\Exception $e) {
+            throw new \Exception("Wave payment processing failed: " . $e->getMessage());
+        }
+    }
+
     public function processPayment(array $paramPayment): array
     {
         try {
