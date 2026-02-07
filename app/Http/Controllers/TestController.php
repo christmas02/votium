@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Sdkpayment\Hub2\Hub2authenticate;
+use App\Sdkpayment\Hub2\Hub2Verification;
 use App\Sdkpayment\Hyperfast\HyperfastAuthenticate;
 use App\Sdkpayment\Hyperfast\HyperfastPayment;
 use App\Sdkpayment\Hyperfast\HyperfastVerification;
@@ -44,7 +46,6 @@ class TestController extends Controller
         $data = '415c767b-4210-49ef-9158-25b505a3e6ac';
         return $this->voteService->checkStatusTransaction($data);
     }
-
     public function testHyperfast()
     {
         try {
@@ -57,13 +58,16 @@ class TestController extends Controller
 //              "expiresAt": "2026-01-30T02:31:22.000000Z"
 //            }
             $paramTransaction = [
-                'amount' => 100,
+                'amount' => 500,
                 'phone' => '0748997945',
                 //'email' => 'custoner@gmail.com',
                 'metadata' => ['customer' => 'dupont', 'order_id' => '1234'],
                 'access_token' => $token,
+                'payment_method' => 'wave'
+
             ];
-            $payment = $this->hyperfastPayment->processPayment($paramTransaction);
+            $payment = $this->hyperfastPayment->processWavePayment($paramTransaction);
+            return $payment;
 //            {
 //              "success": true,
 //              "status": "pending",
@@ -72,12 +76,12 @@ class TestController extends Controller
 //              "totalAmount": 100,
 //              "fee": 0
 //            }
-            $paramOtp = [
-                'otp' => '0974',
-                'reference' => $payment['transactionId'],
-                'access_token' => $token,
-            ];
-            $confirmPayment = $this->hyperfastPayment->confirmPaymentOtp($paramOtp);
+//            $paramOtp = [
+//                'otp' => '0974',
+//                'reference' => $payment['transactionId'],
+//                'access_token' => $token,
+//            ];
+//            $confirmPayment = $this->hyperfastPayment->confirmPaymentOtp($paramOtp);
 //            {
 //                "success": false,
 //              "status": "failed",
@@ -85,12 +89,12 @@ class TestController extends Controller
 //              "description": "Code is incorrect.Your payment cannot be processed.",
 //              "transactionId": "RAM.1769733560.3055"
 //            }
-            $data = [
-                'transactionId' => $confirmPayment['transactionId'],
-                'access_token' => $token,
-            ];
-
-            return $this->hyperfastVerification->processVerifcation($data);
+//            $data = [
+//                'transactionId' => $confirmPayment['transactionId'],
+//                'access_token' => $token,
+//            ];
+//
+//            return $this->hyperfastVerification->processVerifcation($data);
 //            {
 //                "success": true,
 //  "transaction": {
@@ -115,11 +119,6 @@ class TestController extends Controller
         }
 
     }
-
-
-
-
-
     public function testPaystackpayment()
     {
 //        $paramTransaction = [
@@ -155,19 +154,25 @@ class TestController extends Controller
         return $this->voteService->processVote($data);
     }
 
+
     public function testHub2payment()
     {
         try {
-            $paramTransaction = [
-                'transaction_id' => '719577b7-cd07-4257-b5c1-c491830fb5da',
+            $authParam = [
+                'customerReference' => '719577b7-cd07-4257-b5c1-c491830fb5da',
+                'purchaseReference' => 'ORD98' . date('YmdHis'),
                 'amount' => 200,
                 'currency' => 'XOF',
-                'country' => 'CI',
-                'provider' => 'orange',
-                'phoneNumber' => '00000001',
-                'otpCode' => '0000',
+                //'apiKey' => 'sk_h6kcGFQzOjMQC3JhrnvYDCqCdaDItRTT', //sandbox
+                'apiKey' => 'sk_K1G6d363pIJkDfvqzUHVao0QT3LFRqga', //production
+                'merchantId' => 'yQJMWLhAYs1lANhN513PX',
+                'environment' => 'live',
             ];
-            return $this->payment->execute($paramTransaction);
+            $hub2auth = new Hub2authenticate();
+            return $authResponse = $hub2auth->authenticate($authParam);
+
+
+            //return $this->payment->execute($paramTransaction);
             //return ['payment_id' => $transaction['payment']['payment_id']];
                 //'payment_id' => $transaction
 

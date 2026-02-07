@@ -1,4 +1,5 @@
 vendor/
+app/Http/Controllers/TestController.php
 .env
 .idea/
 node_modules/

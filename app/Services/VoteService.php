@@ -218,4 +218,52 @@ class VoteService
         }
     }
 
+    public function searchVote(array $filters)
+    {
+        try {
+            $query = Vote::join('campagnes', 'votes.campagne_id', '=', 'campagnes.campagne_id')
+                ->join('etapes', 'votes.etape_id', '=', 'etapes.etape_id')
+                ->join('candidats', 'votes.candidat_id', '=', 'candidats.candidat_id')
+                ->where('votes.campagne_id', $filters['campagne_id'])
+                ->select(
+                    'votes.vote_id',
+                    'votes.candidat_id',
+                    'votes.campagne_id',
+                    'votes.etape_id',
+                    'candidats.nom as candidat_nom',
+                    'candidats.prenom as candidat_prenom',
+                    'candidats.email',
+                    'candidats.telephone',
+                    'campagnes.nom as campagne_nom',
+                    'etapes.nom as etape_nom'
+                );
+
+            if ($filters['etape_id'] !== null) {
+                $query->where('votes.etape_id', $filters['etape_id']);
+            }
+
+            $votes = $query->get();
+
+            // Agrégations
+            $totalQuantity = $votes->sum('quantity');
+            $totalMontant = $votes->sum('montant');
+
+            return [
+                'results' => $votes,
+                'total_quantity' => $totalQuantity,
+                'total_montant' => $totalMontant,
+                'count' => $votes->count()
+            ];
+
+        } catch (\Exception $e) {
+            \Log::error('Erreur lors de la recherche des votes : ' . $e->getMessage());
+            return [
+                'results' => collect(),
+                'total_quantity' => 0,
+                'total_montant' => 0,
+                'count' => 0
+            ];
+        }
+    }
+
 }
