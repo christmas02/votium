@@ -55,13 +55,14 @@ class VoteService
                 'transaction_id' => $this->setting->generateUuid(),
                 'vote_id' => $data['vote_id'],
                 'provider' => $data['provider'],
+                'campagne_id' => $data['campagne_id'],
                 'amount' => $data['amount'],
                 'currency' => 'XOF',
                 'country' => 'CI',
                 'phoneNumber' => $data['phoneNumber'],
                 'api_processing' => 'hyperfast',
                 'comment' => 'creat payment for vote',
-                'otpCode' => $data['otpCode'],
+                'otpCode' => $data['otpCode'] ?? null,
             ];
             $transaction = $this->transactionRepository->createTransaction($dataTransaction);
             if ($transaction) {\Log::info('Transaction créée avec succès pour le vote ID ' . $dataTransaction['transaction_id']);}
