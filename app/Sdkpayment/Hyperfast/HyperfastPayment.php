@@ -16,17 +16,18 @@ class HyperfastPayment
     public function processWavePayment(array $paramPayment): array
     {
         try {
-            $CALLBACK_URL = config('sdkpayment.HYPERFAST_CALLBACK_URL', 'https://webhook.site/ca2cae3a-3f29-4b3d-bba0-b31527592ba1');
+
+            //$CALLBACK_URL = config('sdkpayment.HYPERFAST_CALLBACK_URL', 'https://webhook.site/ca2cae3a-3f29-4b3d-bba0-b31527592ba1');
+            $CALLBACK_URL = config('sdkpayment.HYPERFAST_CALLBACK_URL', 'http://votium.net/api/webhook/hyperfast');
             $HYPERFAST_BASE_URL = config('sdkpayment.HYPERFAST_BASE_URL');
             $HYPERFAST_PAYMENT_WAVE_URL = config('sdkpayment.HYPERFAST_PAYMENT_WAVE_URL');
+            $RETURN_URL = 'http://votium.net/business/wave_rollback/' . $paramPayment['campagne_id'] . '/' . $paramPayment['transaction_id'];
 
             $payload = [
-                'phone' => $paramPayment['phone'],
                 'amount' => $paramPayment['amount'],
                 //'metadata' => $paramPayment['metadata'],
-                'callback' => 'https://webhook.site/6cd2b75c-2dde-41c2-9276-4dc92cd76d58',
-                'payment_method' => $paramPayment['payment_method']
-                //'email' => $paramPayment['email']
+                'callback' => $CALLBACK_URL,
+                'return_url' => $RETURN_URL
             ];
 
             logger()->info('Hyperfast payment creation request', [
