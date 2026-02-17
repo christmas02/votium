@@ -142,6 +142,117 @@ class VoteController extends Controller
     }
 
     #TRANSACTIONS PAYMENTS VOTES
+    // public function initiatePaymentVote(Request $request)
+    // {
+    //     // 1. Validation
+    //     $validated = $request->validate([
+    //         'candidat_id' => 'required',
+    //         'campagne_id' => 'required',
+    //         'etate_id'    => 'required',
+    //         'quantity'    => 'required|integer|min:1',
+    //         'amount'      => 'required|numeric',
+    //         'name'        => 'required|string',
+    //         'email'       => 'nullable|email',
+    //         'phoneNumber' => 'required|string',
+    //         'provider'    => 'required|string',
+    //         'otpCode'     => 'nullable|string',
+    //     ]);
+
+    //     try {
+    //         // 2. Vérification Spécifique (OTP Orange) avant d'appeler le service
+    //         if (in_array($validated['provider'], ['orange', 'orange_money'])) {
+    //             if (empty($request->input('otpCode')) || $request->input('otpCode') === '0000') {
+    //                 return response()->json([
+    //                     'success' => false,
+    //                     'status' => 'validation_error',
+    //                     'message' => 'Le code OTP est obligatoire pour Orange Money.'
+    //                 ], 422);
+    //             }
+    //         }
+
+    //         // 3. Construction des données pour le service
+    //         $data = [
+    //             'vote_id' => $this->setting->generateUuid(),
+    //             'candidat_id'    => $validated['candidat_id'],
+    //             'campagne_id'    => $validated['campagne_id'],
+    //             'etate_id'       => $validated['etate_id'],
+    //             'quantity'       => $validated['quantity'],
+    //             'amount'         => $validated['amount'],
+    //             'currency'       => 'XOF',
+    //             'name'     => $validated['name'],
+    //             'email'    => $validated['email'],
+    //             'phoneNumber'    => $validated['phoneNumber'],
+    //             'provider'       => $validated['provider'],
+    //             'otpCode'       => $request->input('otpCode'),
+    //             'description'    => "Achat de {$validated['quantity']} votes",
+    //         ];
+
+    //         //4. Appel du Service: Le service gère l'appel API (CinetPay, Wave, etc.) et l'enregistrement DB
+    //         $result = $this->VoteService->processVote($data);
+
+    //         // 5. Gestion de la réponse du Service Rappel du format retourné par processVote : ['status', 'message', 'transactions_id', 'api_processing', 'api_response']
+    //         $httpCode = 200;
+    //         $success = true;
+
+    //         // On analyse le statut retourné par le service
+    //         switch ($result['status']) {
+    //             case 'approved':
+    //             case 'successful':
+    //             case 'success':
+    //                 $icon = 'success';
+    //                 break;
+
+    //             case 'pending':
+    //             case 'pending_validation':
+    //                 $icon = 'info';
+    //                 break;
+
+    //             case 'failed':
+    //             case 'declined':
+    //             case 'error':
+    //                 $success = false;
+    //                 $httpCode = 400;
+    //                 $icon = 'error';
+    //                 break;
+
+    //             default:
+    //                 $success = false;
+    //                 $httpCode = 500;
+    //                 $icon = 'warning';
+    //                 break;
+    //         }
+
+    //         // 7. Extraction sécurisée de l'URL de redirection
+    //         // On cherche l'URL à plusieurs endroits possibles selon l'opérateur
+    //         $redirectUrl = null;
+    //         if (!empty($result['api_response'])) {
+    //             $redirectUrl = $result['api_response']['data']['payment_url'] // Standard CinetPay/Hub2
+    //                 ?? $result['api_response']['wave_launch_url'] // Standard Wave direct
+    //                 ?? $result['api_response']['url'] // Autre standard
+    //                 ?? null;
+    //         }
+
+    //         // 6. Retour JSON
+    //         return response()->json([
+    //             'success' => $success,
+    //             'status'  => $result['status'], // pending, failed
+    //             'icon'    => $icon,
+    //             'message' => $result['message'],
+    //             'transaction_id' => $result['transactions_id'],
+    //             'redirect_url' => $redirectUrl
+    //         ], $httpCode);
+    //     } catch (\Exception $e) {
+    //         Log::error("Erreur Controller initiatePaymentVote: " . $e->getMessage());
+
+    //         return response()->json([
+    //             'success' => false,
+    //             'status'  => 'error',
+    //             'icon'    => 'error',
+    //             'message' => __('messages.server_error')
+    //         ], 500);
+    //     }
+    // }
+
     public function initiatePaymentVote(Request $request)
     {
         // 1. Validation
@@ -159,7 +270,7 @@ class VoteController extends Controller
         ]);
 
         try {
-            // 2. Vérification Spécifique (OTP Orange) avant d'appeler le service
+            // 2. Vérification Spécifique (OTP Orange)
             if (in_array($validated['provider'], ['orange', 'orange_money'])) {
                 if (empty($request->input('otpCode')) || $request->input('otpCode') === '0000') {
                     return response()->json([
@@ -170,76 +281,82 @@ class VoteController extends Controller
                 }
             }
 
-            // 3. Construction des données pour le service
+            // 3. Construction des données
             $data = [
-                'vote_id' => $this->setting->generateUuid(),
-                'candidat_id'    => $validated['candidat_id'],
-                'campagne_id'    => $validated['campagne_id'],
-                'etate_id'       => $validated['etate_id'],
-                'quantity'       => $validated['quantity'],
-                'amount'         => $validated['amount'],
-                'currency'       => 'XOF',
-                'name'     => $validated['name'],
-                'email'    => $validated['email'],
-                'phoneNumber'    => $validated['phoneNumber'],
-                'provider'       => $validated['provider'],
-                'otpCode'       => $request->input('otpCode'),
-                'description'    => "Achat de {$validated['quantity']} votes",
+                'vote_id'     => $this->setting->generateUuid(),
+                'candidat_id' => $validated['candidat_id'],
+                'campagne_id' => $validated['campagne_id'],
+                'etate_id'    => $validated['etate_id'],
+                'quantity'    => $validated['quantity'],
+                'amount'      => $validated['amount'],
+                'currency'    => 'XOF',
+                'name'        => $validated['name'],
+                'email'       => $validated['email'],
+                'phoneNumber' => $validated['phoneNumber'],
+                'provider'    => $validated['provider'],
+                'otpCode'     => $request->input('otpCode'),
+                'description' => "Achat de {$validated['quantity']} votes",
             ];
 
-            //4. Appel du Service: Le service gère l'appel API (CinetPay, Wave, etc.) et l'enregistrement DB
+            // 4. Appel du Service
             $result = $this->VoteService->processVote($data);
 
-            // 5. Gestion de la réponse du Service Rappel du format retourné par processVote : ['status', 'message', 'transactions_id', 'api_processing', 'api_response']
+            // 5. Gestion de la réponse
             $httpCode = 200;
             $success = true;
+            $icon = 'success';
 
-            // On analyse le statut retourné par le service
-            switch ($result['status']) {
+            // Normalisation du statut
+            $status = $result['status'] ?? 'failed';
+
+            switch ($status) {
                 case 'approved':
                 case 'successful':
                 case 'success':
+                case 'completed': // Ajouté car présent dans votre service
                     $icon = 'success';
                     break;
 
                 case 'pending':
                 case 'pending_validation':
+                case 'processing': // Ajouté
                     $icon = 'info';
                     break;
 
                 case 'failed':
                 case 'declined':
                 case 'error':
-                    $success = false;
-                    $httpCode = 400;
-                    $icon = 'error';
-                    break;
-
                 default:
                     $success = false;
-                    $httpCode = 500;
-                    $icon = 'warning';
+                    $httpCode = 400; // Ou 422 selon votre logique
+                    $icon = 'error';
                     break;
             }
 
-            // 7. Extraction sécurisée de l'URL de redirection
-            // On cherche l'URL à plusieurs endroits possibles selon l'opérateur
+            // 6. Extraction intelligente de l'URL de redirection
             $redirectUrl = null;
-            if (!empty($result['api_response'])) {
-                $redirectUrl = $result['api_response']['data']['payment_url'] // Standard CinetPay/Hub2
-                    ?? $result['api_response']['wave_launch_url'] // Standard Wave direct
-                    ?? $result['api_response']['url'] // Autre standard
+
+            // Priorité 1 : Lien direct retourné par le service (Cas Wave dans votre code)
+            if (!empty($result['link'])) {
+                $redirectUrl = $result['link'];
+            }
+            // Priorité 2 : Extraction depuis api_response (Cas Standards)
+            elseif (!empty($result['api_response'])) {
+                $redirectUrl = $result['api_response']['data']['payment_url']     // CinetPay / Hub2
+                    ?? $result['api_response']['wave_launch_url']         // Wave (si structure différente)
+                    ?? $result['api_response']['url']                     // Autres
                     ?? null;
             }
 
-            // 6. Retour JSON
+            // 7. Retour JSON
             return response()->json([
-                'success' => $success,
-                'status'  => $result['status'], // pending, failed
-                'icon'    => $icon,
-                'message' => $result['message'],
-                'transaction_id' => $result['transactions_id'],
-                'redirect_url' => $redirectUrl
+                'success'        => $success,
+                'status'         => $status,
+                'icon'           => $icon,
+                'message'        => $result['message'] ?? 'Traitement en cours',
+                // Utilisation de ?? null car en cas d'erreur le service ne renvoie pas toujours l'ID
+                'transaction_id' => $result['transactions_id'] ?? $result['transaction_id'] ?? null,
+                'redirect_url'   => $redirectUrl
             ], $httpCode);
         } catch (\Exception $e) {
             Log::error("Erreur Controller initiatePaymentVote: " . $e->getMessage());
@@ -252,6 +369,7 @@ class VoteController extends Controller
             ], 500);
         }
     }
+
     // Version de test pour Wave (Simule une réponse d'initiation sans appeler l'API)
     public function TestInitiatePaymentVote(Request $request)
     {
