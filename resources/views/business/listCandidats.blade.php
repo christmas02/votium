@@ -652,9 +652,10 @@
                                         </div>
                                         <div>
                                             <h6 class="fs-14 mb-0"><a href="#" class="fw-medium text-dark">${candidat.name}</a></h6>
-                                            <p class="text-muted mb-0 small">Num: ${String(orderNum).padStart(3, '0')}</p>
+                                             <p class="text-muted mb-0 small">Num: ${String(orderNum).padStart(3, '0')}</p>
                                             <p class="text-muted mb-0 small">Âge: ${calculerAge(candidat.date_naissance)}</p>
-                                            <p class="text-muted mb-0 small">${candidat.profession || ''}</p>
+                                            <p class="text-muted mb-0 small">Profession: ${candidat.profession || ''}</p>
+                                            <p class="text-muted mb-0 small">Vote: ${candidat.votes_count || 0}</p>
                                         </div>
                                     </div>
                                     <div class="dropdown">
@@ -828,7 +829,7 @@
                             </div>
                         `;
 
-                                    // 📍 Placement intelligent
+                                    // Placement intelligent
                                     if ($input.closest('.input-group').length) {
                                         $input.closest('.input-group').after(errorHtml);
                                     } else if ($input.attr('type') === 'file' && $input
@@ -841,7 +842,7 @@
                                 }
                             });
 
-                            // 🎯 Focus premier champ invalide
+                            // Focus premier champ invalide
                             $form.find('.is-invalid').first().focus();
 
                         } else {

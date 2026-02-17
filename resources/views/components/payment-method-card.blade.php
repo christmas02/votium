@@ -1,7 +1,7 @@
 @props(['method', 'instruction'])
 
 <div class="col-4">
-   @if ($method->value === 'orange_money')  {{-- // Exemple de méthode nécessitant une instruction spécifique orange --}}
+   @if ($method->value === 'orange_money' || $method->value === 'wave')  {{-- // Exemple de méthode nécessitant une instruction spécifique orange --}}
     <button type="button" 
             class="btn btn-outline-light text-dark border w-100 py-3 payment-btn js-select-method position-relative"
             {{-- Données pour le JS --}}
