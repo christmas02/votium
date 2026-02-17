@@ -122,16 +122,22 @@ class CandidatureService
     public function searchCandidat(array $filters)
     {
         try {
-
             // Construire la requête (SANS get)
             $query = DB::table('candidat_etap_category_campagnes as cecc')
                 ->join('candidats as c', 'c.candidat_id', '=', 'cecc.candidat_id')
                 ->leftJoin('votes as v', function ($join) {
                     $join->on('v.candidat_id', '=', 'c.candidat_id')
-                        ->on('v.campagne_id', '=', 'cecc.campagne_id');
+                        ->on('v.campagne_id', '=', 'cecc.campagne_id')
+                        ->where('v.status', '=', 'confirmed');
                 })
                 ->select(
-                    'c.*',
+                    'c.candidat_id',
+                    'c.name',
+                    'c.email',
+                    'c.phonenumber as telephone',
+                    'c.photo',
+                    'c.created_at',
+                    'c.updated_at',
                     'cecc.campagne_id',
                     'cecc.etape_id',
                     'cecc.category_id',
@@ -140,6 +146,12 @@ class CandidatureService
                 )
                 ->groupBy(
                     'c.candidat_id',
+                    'c.name',
+                    'c.email',
+                    'c.phonenumber',
+                    'c.photo',
+                    'c.created_at',
+                    'c.updated_at',
                     'cecc.campagne_id',
                     'cecc.etape_id',
                     'cecc.category_id'

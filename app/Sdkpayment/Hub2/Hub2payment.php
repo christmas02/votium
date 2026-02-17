@@ -50,6 +50,7 @@ class  Hub2payment
                 'provider' => $param['provider'],
                 'mobileMoney' => [
                     'msisdn' => $param['phoneNumber'],
+                    'otp' => $param['otpCode'] ?? null
                 ],
             ];
 
@@ -83,7 +84,12 @@ class  Hub2payment
                 'response' => $body
             ]);
 
-            throw new \Exception("Hub2 API returned error (HTTP {$statusCode}): " . ($body['message'] ?? 'Unknown error'));
+            return [
+                'error' => true,
+                'status' => $statusCode,
+                'response' => $body,
+                'message' => $body['message'] ?? 'Unknown error'
+            ];
 
         } catch (\Exception $e) {
             logger()->error('Hub2 execute payment exception', [
