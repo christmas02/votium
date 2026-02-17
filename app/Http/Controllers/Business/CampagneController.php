@@ -273,26 +273,9 @@ class CampagneController extends Controller
         $etapes = $this->CampagneService->listEtapesByCampagneId($idCampagne);
         $categories = $this->CampagneService->listCategoriesByCampagneId($idCampagne);
 
-        $assignments = DB::table('candidat_etap_category_campagnes as cecc')
-            ->join('candidats as c', 'cecc.candidat_id', '=', 'c.candidat_id')
-            ->leftJoin('votes as v', function ($join) use ($idCampagne) {
-                $join->on('v.candidat_id', '=', 'c.candidat_id')
-                    ->where('v.campagne_id', '=', $idCampagne);
-            })
-            ->where('cecc.campagne_id', $idCampagne)
-            ->select(
-                'c.*',
-                'cecc.etape_id',
-                'cecc.category_id',
-                DB::raw('COUNT(v.vote_id) as votes_count'),
-                DB::raw('COALESCE(SUM(v.quantity), 0) as total_quantity')
-            )
-            ->groupBy(
-                'c.candidat_id',
-                'cecc.etape_id',
-                'cecc.category_id'
-            )
-            ->get();
+        //Récupération des Candidats via le SERVICE
+        $assignments = $this->CandidatureService->searchCandidat(['campagne_id' => $idCampagne]);
+
         //Calculer le total global de la campagne
         $totalCampagne = $assignments->sum('total_quantity');
 
