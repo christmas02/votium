@@ -273,6 +273,7 @@ class VoteService
         try {
             $query = Vote::leftJoin('campagnes', 'votes.campagne_id', '=', 'campagnes.campagne_id')
                 ->leftJoin('etapes', 'votes.etate_id', '=', 'etapes.etape_id')
+                ->where('votes.status', 'confirmed')
                 ->leftJoin('candidats', 'votes.candidat_id', '=', 'candidats.candidat_id')
                 ->select(
                     'votes.vote_id',
