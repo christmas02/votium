@@ -142,117 +142,6 @@ class VoteController extends Controller
     }
 
     #TRANSACTIONS PAYMENTS VOTES
-    // public function initiatePaymentVote(Request $request)
-    // {
-    //     // 1. Validation
-    //     $validated = $request->validate([
-    //         'candidat_id' => 'required',
-    //         'campagne_id' => 'required',
-    //         'etate_id'    => 'required',
-    //         'quantity'    => 'required|integer|min:1',
-    //         'amount'      => 'required|numeric',
-    //         'name'        => 'required|string',
-    //         'email'       => 'nullable|email',
-    //         'phoneNumber' => 'required|string',
-    //         'provider'    => 'required|string',
-    //         'otpCode'     => 'nullable|string',
-    //     ]);
-
-    //     try {
-    //         // 2. Vérification Spécifique (OTP Orange) avant d'appeler le service
-    //         if (in_array($validated['provider'], ['orange', 'orange_money'])) {
-    //             if (empty($request->input('otpCode')) || $request->input('otpCode') === '0000') {
-    //                 return response()->json([
-    //                     'success' => false,
-    //                     'status' => 'validation_error',
-    //                     'message' => 'Le code OTP est obligatoire pour Orange Money.'
-    //                 ], 422);
-    //             }
-    //         }
-
-    //         // 3. Construction des données pour le service
-    //         $data = [
-    //             'vote_id' => $this->setting->generateUuid(),
-    //             'candidat_id'    => $validated['candidat_id'],
-    //             'campagne_id'    => $validated['campagne_id'],
-    //             'etate_id'       => $validated['etate_id'],
-    //             'quantity'       => $validated['quantity'],
-    //             'amount'         => $validated['amount'],
-    //             'currency'       => 'XOF',
-    //             'name'     => $validated['name'],
-    //             'email'    => $validated['email'],
-    //             'phoneNumber'    => $validated['phoneNumber'],
-    //             'provider'       => $validated['provider'],
-    //             'otpCode'       => $request->input('otpCode'),
-    //             'description'    => "Achat de {$validated['quantity']} votes",
-    //         ];
-
-    //         //4. Appel du Service: Le service gère l'appel API (CinetPay, Wave, etc.) et l'enregistrement DB
-    //         $result = $this->VoteService->processVote($data);
-
-    //         // 5. Gestion de la réponse du Service Rappel du format retourné par processVote : ['status', 'message', 'transactions_id', 'api_processing', 'api_response']
-    //         $httpCode = 200;
-    //         $success = true;
-
-    //         // On analyse le statut retourné par le service
-    //         switch ($result['status']) {
-    //             case 'approved':
-    //             case 'successful':
-    //             case 'success':
-    //                 $icon = 'success';
-    //                 break;
-
-    //             case 'pending':
-    //             case 'pending_validation':
-    //                 $icon = 'info';
-    //                 break;
-
-    //             case 'failed':
-    //             case 'declined':
-    //             case 'error':
-    //                 $success = false;
-    //                 $httpCode = 400;
-    //                 $icon = 'error';
-    //                 break;
-
-    //             default:
-    //                 $success = false;
-    //                 $httpCode = 500;
-    //                 $icon = 'warning';
-    //                 break;
-    //         }
-
-    //         // 7. Extraction sécurisée de l'URL de redirection
-    //         // On cherche l'URL à plusieurs endroits possibles selon l'opérateur
-    //         $redirectUrl = null;
-    //         if (!empty($result['api_response'])) {
-    //             $redirectUrl = $result['api_response']['data']['payment_url'] // Standard CinetPay/Hub2
-    //                 ?? $result['api_response']['wave_launch_url'] // Standard Wave direct
-    //                 ?? $result['api_response']['url'] // Autre standard
-    //                 ?? null;
-    //         }
-
-    //         // 6. Retour JSON
-    //         return response()->json([
-    //             'success' => $success,
-    //             'status'  => $result['status'], // pending, failed
-    //             'icon'    => $icon,
-    //             'message' => $result['message'],
-    //             'transaction_id' => $result['transactions_id'],
-    //             'redirect_url' => $redirectUrl
-    //         ], $httpCode);
-    //     } catch (\Exception $e) {
-    //         Log::error("Erreur Controller initiatePaymentVote: " . $e->getMessage());
-
-    //         return response()->json([
-    //             'success' => false,
-    //             'status'  => 'error',
-    //             'icon'    => 'error',
-    //             'message' => __('messages.server_error')
-    //         ], 500);
-    //     }
-    // }
-
     public function initiatePaymentVote(Request $request)
     {
         // 1. Validation
@@ -354,7 +243,6 @@ class VoteController extends Controller
                 'status'         => $status,
                 'icon'           => $icon,
                 'message'        => $result['message'] ?? 'Traitement en cours',
-                // Utilisation de ?? null car en cas d'erreur le service ne renvoie pas toujours l'ID
                 'transaction_id' => $result['transactions_id'] ?? $result['transaction_id'] ?? null,
                 'redirect_url'   => $redirectUrl
             ], $httpCode);
@@ -381,8 +269,8 @@ class VoteController extends Controller
             // Utilisation du helper route() pour générer l'URL correcte
             // Attention aux noms des clés qui doivent matcher ceux de la route web.php
             // C'est le lien que vous avez reçu dans votre exemple
-            // $waveLink = "https://pay.wave.com/c/cos-230jab3hr242p?a=100.00&c=XOF&m=TSIL%20%2A%20Paystack";
-            $waveLink = "/business/wave_rollback/{$idCampagne}/{$transactionId}";
+            $waveLink = "https://pay.wave.com/c/cos-230jab3hr242p?a=100.00&c=XOF&m=TSIL%20%2A%20Paystack";
+            // $waveLink = "/business/wave_rollback/{$idCampagne}/{$transactionId}";
 
             return response()->json([
                 'success' => true,

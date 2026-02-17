@@ -383,17 +383,17 @@
                             if (data.redirect_url && currentTransaction.providerSlug === 'wave') {
 
                                 // Afficher un petit message avant de partir (Optionnel mais sympa)
-                                const overlay = document.getElementById('processing-overlay');
-                                if (overlay) {
-                                    overlay.style.display = 'flex';
-                                    document.getElementById('processing-message').innerHTML =
-                                        "Redirection vers Wave...<br>Veuillez scanner le QR Code.";
-                                }
+                                // const overlay = document.getElementById('processing-overlay');
+                                // if (overlay) {
+                                //     overlay.style.display = 'flex';
+                                //     document.getElementById('processing-message').innerHTML =
+                                //         "Redirection vers Wave...<br>Veuillez scanner le QR Code.";
+                                // }
 
                                 // REDIRECTION VERS L'URL EXTERNE WAVE
-                                setTimeout(() => {
+                                // setTimeout(() => {
                                     window.location.href = data.redirect_url;
-                                }, 1000); // Petit délai d'1 seconde
+                                // }, 1000); // Petit délai d'1 seconde
 
                                 return; 
                             }// --- FIN NOUVELLE LOGIQUE WAVE ---
