@@ -1,12 +1,12 @@
 @forelse($votes as $vote)
     <tr>
-        <td>{{ $vote->campagne_nom ?? 'N/A' }}</td>
-        <td>{{ $vote->etape_nom ?? 'Global' }}</td>
+        <td>{{ $vote->campagne_nom }}</td>
+        <td>{{ $vote->etape_nom }}</td>
         
         <td>{{ $vote->quantity ?? 1 }}</td> 
         <td>{{ number_format($vote->montant, 0, ',', ' ') }}</td>
         
-        <td>{{ $vote->candidat_nom }} {{ $vote->candidat_prenom }}</td>
+        <td>{{ $vote->candidat_nom }}</td>
         
         <td>{{ \Carbon\Carbon::parse($vote->created_at ?? now())->format('d/m/Y') }}</td>
         

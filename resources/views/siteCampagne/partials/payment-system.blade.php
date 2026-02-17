@@ -382,21 +382,10 @@
                             // Si on a une URL de redirection ET que le provider est Wave
                             if (data.redirect_url && currentTransaction.providerSlug === 'wave') {
 
-                                // Afficher un petit message avant de partir (Optionnel mais sympa)
-                                // const overlay = document.getElementById('processing-overlay');
-                                // if (overlay) {
-                                //     overlay.style.display = 'flex';
-                                //     document.getElementById('processing-message').innerHTML =
-                                //         "Redirection vers Wave...<br>Veuillez scanner le QR Code.";
-                                // }
+                                window.location.href = data.redirect_url;
 
-                                // REDIRECTION VERS L'URL EXTERNE WAVE
-                                // setTimeout(() => {
-                                    window.location.href = data.redirect_url;
-                                // }, 1000); // Petit délai d'1 seconde
-
-                                return; 
-                            }// --- FIN NOUVELLE LOGIQUE WAVE ---
+                                return;
+                            } // --- FIN NOUVELLE LOGIQUE WAVE ---
 
                             const overlay = document.getElementById('processing-overlay');
                             const processingMsg = document.getElementById('processing-message');
