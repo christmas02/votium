@@ -142,8 +142,8 @@ Route::group(['middleware' => 'auth'], function () {
                 Route::get('recherche_vote', 'rechercheVote')->name('recherche_vote');
 
                 #ROUTE POUR INITIER PAIEMENT VOTE
-                Route::post('/paiement/initier', 'initiatePaymentVote')->name('paiementVote');
-                // Route::post('/paiement/initier_test', 'TestInitiatePaymentVote')->name('paiementVote'); // Pour tests
+                // Route::post('/paiement/initier', 'initiatePaymentVote')->name('paiementVote');
+                Route::post('/paiement/initier_test', 'TestInitiatePaymentVote')->name('paiementVote'); // Pour tests
 
                 #ROUTE POUR VERIFIER LE STATUT DU PAIEMENT VOTE
                 Route::get('/paiement/verifier_statut/{transactionId}', 'verifyPaymentVote')->name('paymentVerify');
