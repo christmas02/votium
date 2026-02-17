@@ -1,0 +1,488 @@
+:root {
+  --primary-yellow: #fce300;
+  /* Le jaune vif de Chooz */
+  --dark-header: #0b0f19;
+  /* Le fond sombre du header */
+  --hero-bg: #000000;
+  /* Fond noir du Hero */
+  --text-grey: #a0a0a0;
+}
+
+body {
+  font-family: "Poppins", sans-serif;
+  background-color: #f8f9fa;
+  color: #333;
+}
+
+/* --- Navbar --- */
+.navbar-chooz {
+  background-color: var(--dark-header);
+  padding: 15px 0;
+}
+
+.navbar-brand {
+  background-color: #e63946;
+  /* Fond rouge/orange du logo */
+  color: white !important;
+  font-weight: 800;
+  padding: 5px 15px;
+  font-size: 1.5rem;
+  text-transform: uppercase;
+}
+
+.etape {
+  color: #000 !important;
+}
+
+.nav-link {
+  /* color: white !important; */
+  margin-left: 20px;
+  font-weight: 500;
+}
+
+.nav-link:hover {
+  color: var(--primary-yellow) !important;
+}
+
+/* --- Hero Section --- */
+.hero-section {
+  background-color: var(--hero-bg);
+  color: white;
+  padding: 80px 0;
+  position: relative;
+  overflow: hidden;
+  min-height: 500px;
+  display: flex;
+  align-items: center;
+}
+
+.hero-title {
+  color: var(--primary-yellow);
+  font-weight: 800;
+  font-size: 3.5rem;
+  margin-bottom: 20px;
+}
+
+.hero-text {
+  color: #fff;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  max-width: 600px;
+}
+
+/* Simulation de l'image de Zenitsu en background à droite */
+/* .hero-image-container {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 70%;
+  height: 100%;
+  background-image: url("{{ $campagne->image_couverture ? asset("uploads/" . $campagne->image_couverture) : "" }}");
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: bottom right;
+  opacity: 1;
+  mask-image: linear-gradient(to right, transparent, black 20%);
+  -webkit-mask-image: linear-gradient(to right, transparent, black 20%);
+} */
+
+/* hero-image-container */
+.hero-image-container {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 70%;
+  height: 100%;
+  background-image: var(--campagne-bg);
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: bottom right;
+  opacity: 1;
+  mask-image: linear-gradient(to right, transparent, black 20%);
+  -webkit-mask-image: linear-gradient(to right, transparent, black 20%);
+}
+
+/* --- Search Bar Section --- */
+.search-section {
+  background: white;
+  padding: 20px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.search-input-group {
+  position: relative;
+}
+
+.search-input-group input {
+  border-radius: 50px;
+  padding-left: 40px;
+  border: 1px solid #ddd;
+}
+
+.search-input-group .fa-search {
+  position: absolute;
+  left: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #aaa;
+  z-index: 5;
+}
+
+/* --- Categories --- */
+.section-title {
+  font-weight: 700;
+  margin: 40px 0 20px;
+  color: #2c3e50;
+}
+
+.category-card {
+  background: white;
+  border: 1px solid #eee;
+  border-radius: 8px;
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  transition: transform 0.2s;
+  margin-bottom: 20px;
+}
+
+.category-icon {
+  width: 50px;
+  height: 50px;
+  background-color: #e8e638;
+  /* Jaune sombre */
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 15px;
+  color: white;
+  font-size: 1.2rem;
+}
+
+.category-info h5 {
+  margin: 0;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+.category-info small {
+  color: #888;
+}
+
+/* --- Candidate Card (Capture 2) --- */
+.candidate-card {
+  background: white;
+  border: none;
+  border-radius: 15px;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+  margin-bottom: 30px;
+}
+
+.candidate-img-wrapper {
+  height: 250px;
+  overflow: hidden;
+  position: relative;
+  background: #f0f0f0;
+}
+
+.candidate-img-wrapper img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  /* ou 'contain' selon le besoin */
+}
+
+.card-body-custom {
+  padding: 20px;
+}
+
+.candidate-title {
+  font-weight: 700;
+  font-size: 1.1rem;
+  margin-bottom: 5px;
+}
+
+.candidate-subtitle {
+  color: #888;
+  font-size: 0.85rem;
+  margin-bottom: 20px;
+}
+
+.vote-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.candidate-number {
+  font-weight: 700;
+  font-size: 1.2rem;
+  color: #333;
+}
+
+.candidate-number small {
+  font-size: 0.7rem;
+  font-weight: 400;
+  color: #888;
+  display: block;
+}
+
+.vote-percent {
+  color: var(--primary-yellow);
+  font-weight: 800;
+  font-size: 1.2rem;
+  text-align: right;
+}
+
+.vote-percent small {
+  color: #ccc;
+  font-size: 0.7rem;
+  display: block;
+  font-weight: 400;
+}
+
+.action-row {
+  display: flex;
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.btn-share {
+  background: #ff5722;
+  /* Orange share button */
+  color: white;
+  border: none;
+  width: 45px;
+  height: 45px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-vote {
+  background-color: var(--primary-yellow);
+  color: white;
+  /* ou noir selon préférence */
+  border: none;
+  flex-grow: 1;
+  border-radius: 8px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.btn-vote:hover {
+  background-color: #e6ce00;
+  color: white;
+}
+
+/* Style du conteneur d'unité */
+.countdown-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Le Cercle */
+.countdown-circle {
+  width: 85px;
+  height: 85px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #fff;
+  position: relative;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+  /* Ombre légère pour le relief */
+  transition: transform 0.3s ease;
+}
+
+.countdown-circle:hover {
+  transform: translateY(-5px);
+}
+
+/* Effet de bordure partielle (Ring effect) */
+.countdown-circle::before {
+  content: "";
+  position: absolute;
+  inset: -2px;
+  /* Épaisseur de la bordure */
+  border-radius: 50%;
+  padding: 2px;
+  background: linear-gradient(135deg, var(--circle-color) 70%, transparent 30%);
+  -webkit-mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+}
+
+/* Couleurs personnalisées */
+.countdown-circle.primary {
+  --circle-color: #fce300;
+}
+
+/* Jaune vif */
+.countdown-circle.secondary {
+  --circle-color: #dee2e6;
+}
+
+/* Gris doux */
+
+/* Style du chiffre (La valeur) */
+.countdown-value {
+  font-family: "Inter", sans-serif;
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: #2d3436;
+  letter-spacing: -1px;
+}
+
+/* Style du texte (Le label) */
+.countdown-label {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  font-weight: 600;
+  color: #636e72;
+  letter-spacing: 1px;
+}
+
+/* Flag Icon */
+.flag-icon {
+  width: 20px;
+  margin-left: 15px;
+}
+
+/* Conteneur de sélection */
+.vote-selection-wrapper {
+  display: none;
+  /* Masqué par défaut */
+  border-top: 1px solid #eee;
+  margin-bottom: 10px;
+  max-height: 200px;
+  overflow-y: auto;
+  animation: slideIn 0.3s ease-out;
+}
+
+/* Classe ajoutée par JS pour afficher */
+.vote-selection-wrapper.show {
+  display: block;
+}
+
+.vote-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 5px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: background 0.2s;
+  border-bottom: 1px solid #f9f9f9;
+}
+
+.vote-item:hover {
+  background-color: #f8f9fa;
+  color: #f37021;
+  /* Orange au survol */
+}
+
+.vote-item .price {
+  color: #888;
+  font-size: 0.85rem;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Styles pour vos boutons existants (rappel) */
+.action-row {
+  display: flex;
+  gap: 5px;
+}
+
+.btn-vote {
+  background: #000;
+  color: #fff;
+  flex-grow: 1;
+  border: none;
+  padding: 10px;
+  border-radius: 5px;
+}
+
+.btn-share {
+  background: #f37021;
+  color: #fff;
+  border: none;
+  padding: 10px;
+  border-radius: 5px;
+  width: 45px;
+}
+
+.is-invalid {
+  border: 1px solid #dc3545 !important;
+  background-image: none !important;
+  /* Enlève l'icône par défaut de bootstrap si gênant */
+}
+
+@keyframes shake {
+  0% {
+    transform: translateX(0);
+  }
+
+  25% {
+    transform: translateX(-5px);
+  }
+
+  50% {
+    transform: translateX(5px);
+  }
+
+  75% {
+    transform: translateX(-5px);
+  }
+
+  100% {
+    transform: translateX(0);
+  }
+}
+
+.shake-animation {
+  animation: shake 0.3s;
+}
+
+/* Animation Professionnelle */
+.spinner-ring {
+  width: 60px;
+  height: 60px;
+  border: 5px solid #f3f3f3;
+  border-top: 5px solid #ff9900;
+  /* Votre couleur Orange */
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 0 auto;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}

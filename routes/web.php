@@ -139,12 +139,17 @@ Route::group(['middleware' => 'auth'], function () {
                 #ROUTES VOTES
                 Route::get('list_vote', 'listVote')->name('list_vote');
 
+                Route::get('recherche_vote', 'rechercheVote')->name('recherche_vote');
+
                 #ROUTE POUR INITIER PAIEMENT VOTE
                 Route::post('/paiement/initier', 'initiatePaymentVote')->name('paiementVote');
                 // Route::post('/paiement/initier_test', 'TestInitiatePaymentVote')->name('paiementVote'); // Pour tests
 
                 #ROUTE POUR VERIFIER LE STATUT DU PAIEMENT VOTE
                 Route::get('/paiement/verifier_statut/{transactionId}', 'verifyPaymentVote')->name('paymentVerify');
+
+                // NOUVELLE ROUTE : Retour paiement Wave (Rollback)
+                Route::get('/wave_rollback/{idCampagne}/{idTransaction}', 'waveRollback')->name('waveRollback');
             });
 
             #ROUTES RETRAITS
