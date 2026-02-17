@@ -23,9 +23,7 @@ class HyperfastWebhook
             }
 
             $reference = $payload['id'];
-
             //DB::beginTransaction();
-
             // Cherche la transaction par plusieurs colonnes possibles
             $transaction = Transaction::where('transaction_id_partner', $reference)->first();
 

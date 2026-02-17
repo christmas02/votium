@@ -43,9 +43,58 @@ class ProcessPaymentHyperfast
             $paymentParams = [
                 'amount' => $paymentData['amount'],
                 'phone' => $paymentData['phoneNumber'],
-                'metadata' => json_encode(['customer' => 'dupont', 'Id_transaction' => $paymentData['transaction_id']]),
+                'metadata' => json_encode(['customer' => 'dupont', 'transaction_id' => $paymentData['transaction_id']]),
                 'access_token' => $token,
+                'payment_method' => $paymentData['provider'],
+                'campagne_id' => $paymentData['campagne_id'],
+                'transaction_id' => $paymentData['transaction_id'],
             ];
+
+            // si le provider est wave, on ne fait pas le processPayment mais on retourne directement le status initié
+            if ($paymentData['provider'] == 'wave') {
+                //dd($paymentParams);
+                // On retourne directement le status initié pour Wave
+                $paymentResponse = $this->hyperfastPayment->processWavePayment($paymentParams);
+                logger()->info('Hyperfast response after processPayment - WAVE ', [$paymentResponse]);
+
+                //dd($paymentResponse['transactionId']);
+                $reference = $paymentResponse['transactionId']?? null;
+                if (! $reference) {
+                    return [
+                        'status' => $paymentResponse['status'],
+                        'message' => $paymentResponse['message'],
+                    ];
+                }
+
+                if (!$paymentResponse['success']) {
+                    // Mise à jour initiale
+                    $transaction->response_init_payment = is_array($paymentResponse) ? json_encode($paymentResponse) : $paymentResponse;
+                    $transaction->transaction_id_partner = $paymentResponse['transactionId'] ?? null;
+                    $transaction->status = 'failed';
+                    $transaction->comment = 'Payment failed - WAVE';
+                    $transaction->save();
+                    return [
+                        'status' => $paymentResponse['status'],
+                        'message' => $paymentResponse['message'],
+                    ];
+                    //throw new \RuntimeException('Aucun payment_id retourné par le provider');
+                }
+
+                // Mise à jour initiale
+                $transaction->response_init_payment = is_array($paymentResponse) ? json_encode($paymentResponse) : $paymentResponse;
+                $transaction->transaction_id_partner = $paymentResponse['transactionId'] ?? null;
+                $transaction->status = 'pending';
+                $transaction->comment = 'Payment pending - WAVE';
+                $transaction->save();
+
+                return [
+                    'status' => $paymentResponse['status'],
+                    'message' => $paymentResponse['message'],
+                    'transactions_id' => $transaction['transaction_id'],
+                    'link' => $paymentResponse['link'],
+                ];
+            }
+
             $paymentResponse = $this->hyperfastPayment->processPayment($paymentParams);
             logger()->info('Hyperfast response after processPayment', [$paymentResponse]);
             //dd($paymentResponse['transactionId']);

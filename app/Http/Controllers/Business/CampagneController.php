@@ -273,11 +273,20 @@ class CampagneController extends Controller
         $etapes = $this->CampagneService->listEtapesByCampagneId($idCampagne);
         $categories = $this->CampagneService->listCategoriesByCampagneId($idCampagne);
 
-        $assignments = DB::table('candidat_etap_category_campagnes')
-            ->join('candidats', 'candidat_etap_category_campagnes.candidat_id', '=', 'candidats.candidat_id')
-            ->where('candidat_etap_category_campagnes.campagne_id', $idCampagne)
-            ->select('candidats.*', 'candidat_etap_category_campagnes.etape_id', 'candidat_etap_category_campagnes.category_id')
-            ->get();
+        //Récupération des Candidats via le SERVICE
+        $assignments = $this->CandidatureService->searchCandidat(['campagne_id' => $idCampagne]);
+
+        //Calculer le total global de la campagne
+        $totalCampagne = $assignments->sum('total_quantity');
+
+        //Ajouter le pourcentage dans PHP
+        $assignments = $assignments->map(function ($candidat) use ($totalCampagne) {
+            $candidat->vote_percentage = $totalCampagne > 0
+                ? round(($candidat->total_quantity / $totalCampagne) * 100, 2)
+                : 0;
+            return $candidat;
+        });
+
 
         $now = Carbon::now(); // Date et heure actuelle du système
 

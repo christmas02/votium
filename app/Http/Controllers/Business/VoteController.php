@@ -66,16 +66,79 @@ class VoteController extends Controller
         $title_back = "Tableau de bord";
         $link_back = "list_vote";
         $title = "Liste votes";
-        return view('business.listVotes', compact('title', 'title_back', 'link_back'));
+
+        $user = auth()->user();
+        $customer = $this->CustomerService->customerByIdUser($user->user_id);
+
+        $campagnes = $this->CampagneService->listCampagnesByCustomerId($customer->customer_id);
+
+        // Récupération de toutes les étapes pour les campagnes du client
+        $etapes = collect();
+        foreach ($campagnes as $item) {
+            // $item est un tableau avec la clé 'campagne' qui contient le modèle Campagne
+            $campagne = $item['campagne'] ?? null;
+            if (!$campagne) {
+                continue;
+            }
+
+            $etapesForCampagne = $this->CampagneService->listEtapesByCampagneId($campagne->campagne_id);
+            $etapes = $etapes->merge($etapesForCampagne);
+        }
+
+        // Récupération de toutes les catégories pour les campagnes du client
+        $categories = collect();
+        foreach ($campagnes as $item) {
+            $campagne = $item['campagne'] ?? null;
+            if (!$campagne) {
+                continue;
+            }
+
+            $categoriesForCampagne = $this->CampagneService->listCategoriesByCampagneId($campagne->campagne_id);
+            $categories = $categories->merge($categoriesForCampagne);
+        }
+
+        return view('business.listVotes', compact('title', 'title_back', 'link_back', 'campagnes', 'etapes', 'categories'));
     }
 
-    #RETRAITS
-    public function listRetrait()
+    #Méthode pour l'AJAX de recherche et filtrage des votes
+    public function rechercheVote(Request $request)
     {
-        $title_back = "Tableau de bord";
-        $link_back = "list_retrait";
-        $title = "Liste retraits";
-        return view('business.listRetraits', compact('title', 'title_back', 'link_back'));
+        try {
+            // 1. Récupération et préparation des filtres
+            $filters = [
+                'campagne_id' => $request->input('campagne_id'),
+                'etape_id'    => $request->input('etape_id'),
+                'date_debut'  => $request->input('date_debut'),
+                'date_fin'    => $request->input('date_fin'),
+                'status'      => $request->input('status'),
+            ];
+
+            // 2. Appel de votre Service
+            $data = $this->VoteService->searchVote($filters);
+
+            // 3. Rendu de la vue partielle HTML
+            // Le render() peut échouer si la vue n'existe pas ou si $data['results'] est mal formé
+            $html = view('components.votes_table_rows', [
+                'votes' => $data['results'] ?? collect()
+            ])->render();
+
+            // 4. Retour de la réponse JSON pour l'AJAX
+            return response()->json([
+                'html' => $html,
+                'total_votes' => number_format($data['total_quantity'] ?? 0, 0, ',', ' '),
+                'total_montant' => number_format($data['total_montant'] ?? 0, 0, ',', ' ')
+            ], 200);
+        } catch (\Exception $e) {
+            Log::error('Erreur AJAX rechercheVote : ' . $e->getMessage());
+            Log::error($e->getTraceAsString());
+
+            // 2. On renvoie une réponse JSON d'erreur
+            return response()->json([
+                'error' => true,
+                'message' => 'Une erreur est survenue lors du traitement.',
+                'details' => config('app.debug') ? $e->getMessage() : null
+            ], 500);
+        }
     }
 
     #TRANSACTIONS PAYMENTS VOTES
@@ -96,8 +159,7 @@ class VoteController extends Controller
         ]);
 
         try {
-            // 2. Vérification Spécifique (OTP Orange) avant d'appeler le service
-
+            // 2. Vérification Spécifique (OTP Orange)
             if (in_array($validated['provider'], ['orange', 'orange_money'])) {
                 if (empty($request->input('otpCode')) || $request->input('otpCode') === '0000') {
                     return response()->json([
@@ -108,67 +170,81 @@ class VoteController extends Controller
                 }
             }
 
-            // 3. Construction des données pour le service
+            // 3. Construction des données
             $data = [
-                'vote_id' => $this->setting->generateUuid(),
-                'candidat_id'    => $validated['candidat_id'],
-                'campagne_id'    => $validated['campagne_id'],
-                'etate_id'       => $validated['etate_id'],
-                'quantity'       => $validated['quantity'],
-                'amount'         => $validated['amount'],
-                'currency'       => 'XOF',
-                'name'     => $validated['name'],
-                'email'    => $validated['email'],
-                'phoneNumber'    => $validated['phoneNumber'],
-                'provider'       => $validated['provider'],
-                'otpCode'       => $request->input('otpCode'),
-                'description'    => "Achat de {$validated['quantity']} votes",
+                'vote_id'     => $this->setting->generateUuid(),
+                'candidat_id' => $validated['candidat_id'],
+                'campagne_id' => $validated['campagne_id'],
+                'etate_id'    => $validated['etate_id'],
+                'quantity'    => $validated['quantity'],
+                'amount'      => $validated['amount'],
+                'currency'    => 'XOF',
+                'name'        => $validated['name'],
+                'email'       => $validated['email'],
+                'phoneNumber' => $validated['phoneNumber'],
+                'provider'    => $validated['provider'],
+                'otpCode'     => $request->input('otpCode'),
+                'description' => "Achat de {$validated['quantity']} votes",
             ];
 
-            //4. Appel du Service: Le service gère l'appel API (CinetPay, Wave, etc.) et l'enregistrement DB
+            // 4. Appel du Service
             $result = $this->VoteService->processVote($data);
 
-            // 5. Gestion de la réponse du Service Rappel du format retourné par processVote : ['status', 'message', 'transactions_id', 'api_processing', 'api_response']
-
+            // 5. Gestion de la réponse
             $httpCode = 200;
             $success = true;
+            $icon = 'success';
 
-            // On analyse le statut retourné par le service
-            switch ($result['status']) {
+            // Normalisation du statut
+            $status = $result['status'] ?? 'failed';
+
+            switch ($status) {
                 case 'approved':
                 case 'successful':
                 case 'success':
+                case 'completed': // Ajouté car présent dans votre service
                     $icon = 'success';
                     break;
 
                 case 'pending':
                 case 'pending_validation':
+                case 'processing': // Ajouté
                     $icon = 'info';
                     break;
 
                 case 'failed':
                 case 'declined':
                 case 'error':
-                    $success = false;
-                    $httpCode = 400;
-                    $icon = 'error';
-                    break;
-
                 default:
                     $success = false;
-                    $httpCode = 500;
-                    $icon = 'warning';
+                    $httpCode = 400; // Ou 422 selon votre logique
+                    $icon = 'error';
                     break;
             }
 
-            // 6. Retour JSON
+            // 6. Extraction intelligente de l'URL de redirection
+            $redirectUrl = null;
+
+            // Priorité 1 : Lien direct retourné par le service (Cas Wave dans votre code)
+            if (!empty($result['link'])) {
+                $redirectUrl = $result['link'];
+            }
+            // Priorité 2 : Extraction depuis api_response (Cas Standards)
+            elseif (!empty($result['api_response'])) {
+                $redirectUrl = $result['api_response']['data']['payment_url']     // CinetPay / Hub2
+                    ?? $result['api_response']['wave_launch_url']         // Wave (si structure différente)
+                    ?? $result['api_response']['url']                     // Autres
+                    ?? null;
+            }
+
+            // 7. Retour JSON
             return response()->json([
-                'success' => $success,
-                'status'  => $result['status'], // pending, failed
-                'icon'    => $icon,            
-                'message' => $result['message'],
-                'transaction_id' => $result['transactions_id'],
-                'redirect_url' => $result['api_response']['data']['payment_url'] ?? null
+                'success'        => $success,
+                'status'         => $status,
+                'icon'           => $icon,
+                'message'        => $result['message'] ?? 'Traitement en cours',
+                'transaction_id' => $result['transactions_id'] ?? $result['transaction_id'] ?? null,
+                'redirect_url'   => $redirectUrl
             ], $httpCode);
         } catch (\Exception $e) {
             Log::error("Erreur Controller initiatePaymentVote: " . $e->getMessage());
@@ -182,30 +258,57 @@ class VoteController extends Controller
         }
     }
 
+    // Version de test pour Wave (Simule une réponse d'initiation sans appeler l'API)
     public function TestInitiatePaymentVote(Request $request)
     {
-
         try {
-           
-            $result = [
-                'status' => 'pending',
-                'message' => 'Simulation Locale : Initiation validée',
-                'transactions_id' => '415c767b-4210-49ef-9158-25b505a3e6ac', // Ton ID existant
-                'api_response' => ['data' => ['payment_url' => null]]
-            ];
+            // ID de transaction existant en BDD pour vos tests
+            $transactionId = '493b578e-d357-4e3f-b86f-c94a80627029';
+            $idCampagne = '29a4779e-5f0e-4539-8014-cbfcac327de5';
+
+            // Utilisation du helper route() pour générer l'URL correcte
+            // Attention aux noms des clés qui doivent matcher ceux de la route web.php
+            // C'est le lien que vous avez reçu dans votre exemple
+            $waveLink = "https://pay.wave.com/c/cos-230jab3hr242p?a=100.00&c=XOF&m=TSIL%20%2A%20Paystack";
+            // $waveLink = "/business/wave_rollback/{$idCampagne}/{$transactionId}";
 
             return response()->json([
-                'success' => true, // On force true pour que le JS lance le polling
-                'status'  => $result['status'],
+                'success' => true,
+                'status'  => 'pending',
                 'icon'    => 'info',
-                'message' => $result['message'],
-                'transaction_id' => $result['transactions_id'],
-                'redirect_url' => null
+                'message' => 'Simulation Wave : Redirection...',
+                'transaction_id' => $transactionId,
+                'redirect_url' => $waveLink
             ], 200);
         } catch (\Exception $e) {
-            // ...
+            return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
         }
     }
+    //povider Orange Money (avec OTP)
+    // public function TestInitiatePaymentVote(Request $request)
+    // {
+
+    //     try {
+
+    //         $result = [
+    //             'status' => 'pending',
+    //             'message' => 'Simulation Locale : Initiation validée',
+    //             'transactions_id' => '415c767b-4210-49ef-9158-25b505a3e6ac', // Ton ID existant
+    //             'api_response' => ['data' => ['payment_url' => null]]
+    //         ];
+
+    //         return response()->json([
+    //             'success' => true, // On force true pour que le JS lance le polling
+    //             'status'  => $result['status'],
+    //             'icon'    => 'info',
+    //             'message' => $result['message'],
+    //             'transaction_id' => $result['transactions_id'],
+    //             'redirect_url' => null
+    //         ], 200);
+    //     } catch (\Exception $e) {
+    //         // ...
+    //     }
+    // }
 
     #VERIFIER LE STATUS DE LA TRANSACTION(Polling)
     public function verifyPaymentVote($transactionId)
@@ -244,6 +347,23 @@ class VoteController extends Controller
         } catch (\Exception $e) {
             Log::error("Erreur CheckStatus: " . $e->getMessage());
             return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
+        }
+    }
+
+
+
+    /**
+     * PAGE DE RETOUR WAVE (ROLLBACK)
+     * Correction des noms de variables pour compact()
+     */
+    public function waveRollback($idCampagne, $transactionId)
+    {
+        try {
+            // compact() cherche des variables portant ces noms exacts ($idCampagne et $transactionId)
+            return view('siteCampagne.partials.wave-return', compact('idCampagne', 'transactionId'));
+        } catch (\Exception $e) {
+            Log::error("Erreur Wave Rollback: " . $e->getMessage());
+            abort(500, "Erreur lors du chargement de la page de retour.");
         }
     }
 }

@@ -24,7 +24,6 @@ class CandidatureService
             $this->candidatRepository->candidatWithEtapAndCategoriByCampagne($data, true);
             DB::commit();
             return true;
-
         } catch (\Exception $e) {
             DB::rollBack();
             \Log::error('Erreur lors de la sauvegarde du candidat : ' . $e->getMessage());
@@ -40,7 +39,6 @@ class CandidatureService
             $this->candidatRepository->update($data);
             DB::commit();
             return true;
-
         } catch (\Exception $e) {
             \Log::error('Erreur lors de la mise à jour du candidat : ' . $e->getMessage());
             return false;
@@ -78,12 +76,11 @@ class CandidatureService
                 $this->candidatRepository->candidatWithEtapAndCategoriByCampagne($data, true);
                 \Log::info('Candidat trouvé pour cette campagne avec l\'ID : ' . $data['candidat_id']);
                 return true;
-            }else {
+            } else {
                 \Log::info('Aucun candidat trouvé pour cette campagne avec l\'ID : ' . $data['candidat_id'] . '. Création d\'un nouveau candidat.');
             }
             DB::commit();
             return true;
-
         } catch (\Exception $e) {
             \Log::error('Erreur lors de l\'ajout du candidat dans l\'étape et la catégorie pur une campagme: ' . $e->getMessage());
             return false;
@@ -101,12 +98,11 @@ class CandidatureService
                 $this->candidatRepository->candidatWithEtapAndCategoriByCampagne($data, false);
                 \Log::info('Candidat trouvé pour cette campagne avec l\'ID : ' . $data['candidat_id']);
                 return false;
-            }else {
+            } else {
                 \Log::info('Aucun candidat trouvé pour cette campagne avec l\'ID : ' . $data['candidat_id'] . '. Création d\'un nouveau candidat.');
             }
             DB::commit();
             return true;
-
         } catch (\Exception $e) {
             \Log::error('Erreur lors de la suppression du candidat dans l\'étape et la catégorie pour une campagne : ' . $e->getMessage());
             return false;
@@ -122,26 +118,102 @@ class CandidatureService
      *  - category_id (uuid|int|null)
      * @return \Illuminate\Support\Collection
      */
+
     public function searchCandidat(array $filters)
     {
-        $query = DB::table('candidat_etap_category_campagnes as cecc')
-            ->join('candidats as c', 'c.candidat_id', '=', 'cecc.candidat_id')
-            ->select('c.*')
-            ->distinct();
+        try {
+            // Construire la requête (SANS get)
+            $query = DB::table('candidat_etap_category_campagnes as cecc')
+                ->join('candidats as c', 'c.candidat_id', '=', 'cecc.candidat_id')
+                ->leftJoin('votes as v', function ($join) {
+                    $join->on('v.candidat_id', '=', 'c.candidat_id')
+                        ->on('v.campagne_id', '=', 'cecc.campagne_id')
+                        ->where('v.status', '=', 'confirmed');
+                })
+                ->select(
+                    'c.candidat_id',
+                    'c.name',
+                    'c.email',
+                    'c.phonenumber as telephone',
+                    'c.photo',
+                    'c.created_at',
+                    'c.updated_at',
+                    'cecc.campagne_id',
+                    'cecc.etape_id',
+                    'cecc.category_id',
+                    DB::raw('COUNT(v.vote_id) as votes_count'),
+                    DB::raw('COALESCE(SUM(v.quantity), 0) as total_quantity')
+                )
+                ->groupBy(
+                    'c.candidat_id',
+                    'c.name',
+                    'c.email',
+                    'c.phonenumber',
+                    'c.photo',
+                    'c.created_at',
+                    'c.updated_at',
+                    'cecc.campagne_id',
+                    'cecc.etape_id',
+                    'cecc.category_id'
+                );
 
-        if (!empty($filters['campagne_id'])) {
-            $query->where('cecc.campagne_id', $filters['campagne_id']);
+            //Appliquer les filtres
+            if (!empty($filters['campagne_id'])) {
+                $query->where('cecc.campagne_id', $filters['campagne_id']);
+            }
+
+            if (!empty($filters['etape_id'])) {
+                $query->where('cecc.etape_id', $filters['etape_id']);
+            }
+
+            if (!empty($filters['category_id'])) {
+                $query->where('cecc.category_id', $filters['category_id']);
+            }
+
+            // Exécuter la requête UNE SEULE FOIS
+            return $query->get();
+        } catch (\Exception $e) {
+            \Log::error('Erreur lors de la recherche des candidats : ' . $e->getMessage());
+            return collect();
         }
-
-        if (!empty($filters['etape_id'])) {
-            $query->where('cecc.etape_id', $filters['etape_id']);
-        }
-
-        if (!empty($filters['category_id'])) {
-            $query->where('cecc.category_id', $filters['category_id']);
-        }
-
-        return $query->get();
     }
+
+    // public function searchCandidat(array $filters)
+    // {
+    //     try {
+    //         // $query = DB::table('candidat_etap_category_campagnes as cecc')
+    //         //     ->join('candidats as c', 'c.candidat_id', '=', 'cecc.candidat_id')
+    //         //     ->join('votes as v', function ($join) {
+    //         //         $join->on('v.candidat_id', '=', 'c.candidat_id')
+    //         //             ->on('v.campagne_id', '=', 'cecc.campagne_id');
+    //         //     })
+    //         //     ->select(
+    //         //         'c.*',
+    //         //         'cecc.campagne_id',
+    //         //         'cecc.etape_id',
+    //         //         'cecc.category_id',
+    //         //         DB::raw('COUNT(v.vote_id) as votes_count'),
+    //         //         DB::raw('COALESCE(SUM(v.quantity), 0) as total_quantity')
+    //         //     )
+    //         //     ->groupBy('c.candidat_id', 'cecc.campagne_id');
+
+    //         if (!empty($filters['campagne_id'])) {
+    //             $query->where('cecc.campagne_id', $filters['campagne_id']);
+    //         }
+
+    //         if (!empty($filters['etape_id'])) {
+    //             $query->where('cecc.etape_id', $filters['etape_id']);
+    //         }
+
+    //         if (!empty($filters['category_id'])) {
+    //             $query->where('cecc.category_id', $filters['category_id']);
+    //         }
+
+    //         return $query->get();
+    //     } catch (\Exception $e) {
+    //         \Log::error('Erreur lors de la recherche des candidats : ' . $e->getMessage());
+    //         return collect();
+    //     }
+    // }
 
 }

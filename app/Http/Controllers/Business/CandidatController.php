@@ -104,6 +104,51 @@ class CandidatController extends Controller
     }
 
     #RECHERCHE CANDIDAT
+    // public function rechercheCandidat(Request $request)
+    // {
+    //     try {
+    //         $filters = [
+    //             'campagne_id' => $request->campagne_id,
+    //             'etape_id'    => $request->etape_id,
+    //             'category_id' => $request->category_id,
+    //         ];
+
+    //         $candidats = $this->CandidatureService->searchCandidat($filters);
+    //         // dd($candidats);
+    //         //Transformer en Collection
+    //         $collection = collect($candidats);
+
+    //         //Appliquer la recherche (si le champ search est rempli)
+    //         if ($request->filled('search')) {
+    //             $searchTerm = strtolower($request->search);
+    //             $collection = $collection->filter(function ($candidat) use ($searchTerm) {
+    //                 return str_contains(strtolower($candidat->name ?? ''), $searchTerm) ||
+    //                     str_contains(strtolower($candidat->email ?? ''), $searchTerm);
+    //             });
+    //         }
+
+    //         //Gérer la pagination manuelle
+    //         $perPage = 12;
+    //         $page = (int) $request->get('page', 1);
+    //         $total = $collection->count();
+
+    //         // On découpe la collection pour n'avoir que les 12 éléments de la page demandée
+    //         $pagedData = $collection->slice(($page - 1) * $perPage, $perPage)->values();
+
+    //         return response()->json([
+    //             'data'         => $pagedData,
+    //             'current_page' => $page,
+    //             'last_page'    => ceil($total / $perPage),
+    //             'total'        => $total
+    //         ]);
+    //     } catch (\Exception $th) {
+    //         Log::error("Erreur lors de la recherche des candidats : " . $th->getMessage(), [
+    //             'stack_trace' => $th->getTraceAsString(),
+    //         ]);
+    //         return response()->json(['error' => 'Erreur lors de la recherche des candidats'], 500);
+    //     }
+    // }
+
     public function rechercheCandidat(Request $request)
     {
         try {
@@ -113,39 +158,43 @@ class CandidatController extends Controller
                 'category_id' => $request->category_id,
             ];
 
-            $candidats = $this->CandidatureService->searchCandidat($filters);
-
-            //Transformer en Collection
-            $collection = collect($candidats);
-
-            //Appliquer la recherche (si le champ search est rempli)
+            // Le service retourne déjà une Collection
+            $collection = $this->CandidatureService->searchCandidat($filters);
+            
+            // Recherche texte
             if ($request->filled('search')) {
-                $searchTerm = strtolower($request->search);
+                $searchTerm = strtolower(trim($request->search));
+
                 $collection = $collection->filter(function ($candidat) use ($searchTerm) {
-                    return str_contains(strtolower($candidat->name ?? ''), $searchTerm) ||
-                        str_contains(strtolower($candidat->email ?? ''), $searchTerm);
-                });
+                    return str_contains(strtolower($candidat->name ?? ''), $searchTerm)
+                        || str_contains(strtolower($candidat->email ?? ''), $searchTerm)
+                        || str_contains(strtolower($candidat->phonenumber ?? ''), $searchTerm);
+                })->values(); // <- important
             }
 
-            //Gérer la pagination manuelle
+            // Pagination
             $perPage = 12;
-            $page = (int) $request->get('page', 1);
+            $page = max((int) $request->get('page', 1), 1);
             $total = $collection->count();
 
-            // On découpe la collection pour n'avoir que les 12 éléments de la page demandée
-            $pagedData = $collection->slice(($page - 1) * $perPage, $perPage)->values();
+            $pagedData = $collection
+                ->slice(($page - 1) * $perPage, $perPage)
+                ->values();
 
             return response()->json([
                 'data'         => $pagedData,
                 'current_page' => $page,
-                'last_page'    => ceil($total / $perPage),
+                'last_page'    => max(ceil($total / $perPage), 1),
                 'total'        => $total
             ]);
         } catch (\Exception $th) {
             Log::error("Erreur lors de la recherche des candidats : " . $th->getMessage(), [
                 'stack_trace' => $th->getTraceAsString(),
             ]);
-            return response()->json(['error' => 'Erreur lors de la recherche des candidats'], 500);
+
+            return response()->json([
+                'error' => 'Erreur lors de la recherche des candidats'
+            ], 500);
         }
     }
 
