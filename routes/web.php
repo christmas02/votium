@@ -47,6 +47,19 @@ Route::controller(SiteCampagneController::class)->group(function () {
     Route::get('site_campagne/{idCampagne}', 'siteCampagne')->name('business.site_campagne');
 });
 
+#ROUTES VOTES
+Route::controller(VoteController::class)->group(function () {
+    #ROUTE POUR INITIER PAIEMENT VOTE
+    Route::post('/paiement/initier', 'initiatePaymentVote')->name('business.paiementVote');
+    // Route::post('/paiement/initier_test', 'TestInitiatePaymentVote')->name('paiementVote'); // Pour tests
+
+    #ROUTE POUR VERIFIER LE STATUT DU PAIEMENT VOTE
+    Route::get('/paiement/verifier_statut/{transactionId}', 'verifyPaymentVote')->name('business.paymentVerify');
+
+    // NOUVELLE ROUTE : Retour paiement Wave (Rollback)
+    Route::get('/wave_rollback/{idCampagne}/{idTransaction}', 'waveRollback')->name('business.waveRollback');
+});
+
 Route::group(['middleware' => 'auth'], function () {
 
     // ==========================================
@@ -148,15 +161,15 @@ Route::group(['middleware' => 'auth'], function () {
 
                 Route::get('recherche_vote', 'rechercheVote')->name('recherche_vote');
 
-                #ROUTE POUR INITIER PAIEMENT VOTE
-                Route::post('/paiement/initier', 'initiatePaymentVote')->name('paiementVote');
-                // Route::post('/paiement/initier_test', 'TestInitiatePaymentVote')->name('paiementVote'); // Pour tests
+                // #ROUTE POUR INITIER PAIEMENT VOTE
+                // Route::post('/paiement/initier', 'initiatePaymentVote')->name('paiementVote');
+                // // Route::post('/paiement/initier_test', 'TestInitiatePaymentVote')->name('paiementVote'); // Pour tests
 
-                #ROUTE POUR VERIFIER LE STATUT DU PAIEMENT VOTE
-                Route::get('/paiement/verifier_statut/{transactionId}', 'verifyPaymentVote')->name('paymentVerify');
+                // #ROUTE POUR VERIFIER LE STATUT DU PAIEMENT VOTE
+                // Route::get('/paiement/verifier_statut/{transactionId}', 'verifyPaymentVote')->name('paymentVerify');
 
-                // NOUVELLE ROUTE : Retour paiement Wave (Rollback)
-                Route::get('/wave_rollback/{idCampagne}/{idTransaction}', 'waveRollback')->name('waveRollback');
+                // // NOUVELLE ROUTE : Retour paiement Wave (Rollback)
+                // Route::get('/wave_rollback/{idCampagne}/{idTransaction}', 'waveRollback')->name('waveRollback');
             });
 
             #ROUTES RETRAITS
