@@ -8,6 +8,7 @@ use App\Http\Controllers\Business\BusinessController;
 use App\Http\Controllers\Business\CampagneController;
 use App\Http\Controllers\Business\CandidatController;
 use App\Http\Controllers\Business\RetraitController;
+use App\Http\Controllers\Business\SiteCampagneController;
 use App\Http\Controllers\Business\VoteController;
 
 /*
@@ -39,6 +40,12 @@ Route::controller(AuthController::class)->group(function () {
     Route::get('logout', 'logout')->name('logout');
 });
 
+// ---Site CAMPAGNES ---
+Route::controller(SiteCampagneController::class)->group(function () {
+
+    #ROUTES SITE CAMPAGNES
+    Route::get('site_campagne/{idCampagne}', 'siteCampagne')->name('business.site_campagne');
+});
 
 Route::group(['middleware' => 'auth'], function () {
 
@@ -102,7 +109,7 @@ Route::group(['middleware' => 'auth'], function () {
 
                 #ROUTES CAMPAGNES
                 Route::get('list_campagne', 'listCampagne')->name('list_campagne');
-                Route::get('site_campagne/{idCampagne}', 'siteCampagne')->name('site_campagne');
+                // Route::get('site_campagne/{idCampagne}', 'siteCampagne')->name('site_campagne');
                 Route::post('save_campagne', 'saveCampagne')->name('save_campagne');
                 Route::post('update_campagne', 'updateCampagne')->name('update_campagne');
                 Route::delete('delete_campagne', 'deleteCampagne')->name('delete_campagne');
