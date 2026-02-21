@@ -8,6 +8,7 @@ use App\Http\Controllers\Business\BusinessController;
 use App\Http\Controllers\Business\CampagneController;
 use App\Http\Controllers\Business\CandidatController;
 use App\Http\Controllers\Business\RetraitController;
+use App\Http\Controllers\Business\SiteCampagneController;
 use App\Http\Controllers\Business\VoteController;
 
 /*
@@ -39,6 +40,25 @@ Route::controller(AuthController::class)->group(function () {
     Route::get('logout', 'logout')->name('logout');
 });
 
+// ---Site CAMPAGNES ---
+Route::controller(SiteCampagneController::class)->group(function () {
+
+    #ROUTES SITE CAMPAGNES
+    Route::get('site_campagne/{idCampagne}', 'siteCampagne')->name('business.site_campagne');
+});
+
+#ROUTES VOTES
+Route::controller(VoteController::class)->group(function () {
+    #ROUTE POUR INITIER PAIEMENT VOTE
+    Route::post('/paiement/initier', 'initiatePaymentVote')->name('business.paiementVote');
+    // Route::post('/paiement/initier_test', 'TestInitiatePaymentVote')->name('paiementVote'); // Pour tests
+
+    #ROUTE POUR VERIFIER LE STATUT DU PAIEMENT VOTE
+    Route::get('/paiement/verifier_statut/{transactionId}', 'verifyPaymentVote')->name('business.paymentVerify');
+
+    // NOUVELLE ROUTE : Retour paiement Wave (Rollback)
+    Route::get('/wave_rollback/{idCampagne}/{idTransaction}', 'waveRollback')->name('business.waveRollback');
+});
 
 Route::group(['middleware' => 'auth'], function () {
 
@@ -102,7 +122,7 @@ Route::group(['middleware' => 'auth'], function () {
 
                 #ROUTES CAMPAGNES
                 Route::get('list_campagne', 'listCampagne')->name('list_campagne');
-                Route::get('site_campagne/{idCampagne}', 'siteCampagne')->name('site_campagne');
+                // Route::get('site_campagne/{idCampagne}', 'siteCampagne')->name('site_campagne');
                 Route::post('save_campagne', 'saveCampagne')->name('save_campagne');
                 Route::post('update_campagne', 'updateCampagne')->name('update_campagne');
                 Route::delete('delete_campagne', 'deleteCampagne')->name('delete_campagne');
@@ -141,15 +161,15 @@ Route::group(['middleware' => 'auth'], function () {
 
                 Route::get('recherche_vote', 'rechercheVote')->name('recherche_vote');
 
-                #ROUTE POUR INITIER PAIEMENT VOTE
-                Route::post('/paiement/initier', 'initiatePaymentVote')->name('paiementVote');
-                // Route::post('/paiement/initier_test', 'TestInitiatePaymentVote')->name('paiementVote'); // Pour tests
+                // #ROUTE POUR INITIER PAIEMENT VOTE
+                // Route::post('/paiement/initier', 'initiatePaymentVote')->name('paiementVote');
+                // // Route::post('/paiement/initier_test', 'TestInitiatePaymentVote')->name('paiementVote'); // Pour tests
 
-                #ROUTE POUR VERIFIER LE STATUT DU PAIEMENT VOTE
-                Route::get('/paiement/verifier_statut/{transactionId}', 'verifyPaymentVote')->name('paymentVerify');
+                // #ROUTE POUR VERIFIER LE STATUT DU PAIEMENT VOTE
+                // Route::get('/paiement/verifier_statut/{transactionId}', 'verifyPaymentVote')->name('paymentVerify');
 
-                // NOUVELLE ROUTE : Retour paiement Wave (Rollback)
-                Route::get('/wave_rollback/{idCampagne}/{idTransaction}', 'waveRollback')->name('waveRollback');
+                // // NOUVELLE ROUTE : Retour paiement Wave (Rollback)
+                // Route::get('/wave_rollback/{idCampagne}/{idTransaction}', 'waveRollback')->name('waveRollback');
             });
 
             #ROUTES RETRAITS
