@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Console\ConsoleController;
@@ -32,10 +33,15 @@ Route::get('/', function () {
 Route::get('/invoice_template', function () {
     return view('invoice.payment');
 });
+
+Route::controller(HomeController::class)->group(function () {
+    Route::get('/home', 'home')->name('home');
+});
+
 Route::controller(AuthController::class)->group(function () {
     Route::get('/', 'screenLogin')->name('screenLogin');
-    Route::post('registered', 'register');
-    Route::post('login', 'login');
+    Route::post('registered', 'register')->name('register');
+    Route::post('login', 'login')->name('login');
     Route::get('/confirm/{id}/{token}', 'confirm')->name('confirm');
     Route::get('logout', 'logout')->name('logout');
 });
@@ -57,7 +63,7 @@ Route::controller(VoteController::class)->group(function () {
     Route::get('/paiement/verifier_statut/{transactionId}', 'verifyPaymentVote')->name('business.paymentVerify');
 
     // NOUVELLE ROUTE : Retour paiement Wave (Rollback)
-    Route::get('/wave_rollback/{idCampagne}/{idTransaction}', 'waveRollback')->name('business.waveRollback');
+    Route::prefix('business')->get('/wave_rollback/{idCampagne}/{idTransaction}', 'waveRollback')->name('business.waveRollback');
 });
 
 Route::group(['middleware' => 'auth'], function () {
