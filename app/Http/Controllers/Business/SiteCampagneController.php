@@ -130,7 +130,7 @@ class SiteCampagneController extends Controller
         $link_back = "detail_campagne";
         $title = $campagne->name;
 
-        // dd($campagne);
+        // dd($customer);
         return view('siteCampagne.index', compact(
             'title',
             'title_back',
