@@ -51,7 +51,7 @@ Route::controller(SiteCampagneController::class)->group(function () {
 Route::controller(VoteController::class)->group(function () {
     #ROUTE POUR INITIER PAIEMENT VOTE
     Route::post('/paiement/initier', 'initiatePaymentVote')->name('business.paiementVote');
-    // Route::post('/paiement/initier_test', 'TestInitiatePaymentVote')->name('paiementVote'); // Pour tests
+    // Route::post('/paiement/initier_test', 'TestInitiatePaymentVote')->name('business.paiementVote'); // Pour tests
 
     #ROUTE POUR VERIFIER LE STATUT DU PAIEMENT VOTE
     Route::get('/paiement/verifier_statut/{transactionId}', 'verifyPaymentVote')->name('business.paymentVerify');
