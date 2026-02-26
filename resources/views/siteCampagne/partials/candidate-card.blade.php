@@ -46,7 +46,7 @@
 
 {{-- 2. LA MODALE SPÉCIFIQUE AU CANDIDAT (Générée par Blade) --}}
 <div aria-hidden="true" class="modal" id="{{ $modalId }}">
-    <div class="modal__overlay" onclick="closeSpecificModal('{{ $modalId }}')"></div>
+    <div class="modal__overlay"></div>
     <div class="modal__panel" role="dialog">
         <button class="modal__close" onclick="closeSpecificModal('{{ $modalId }}')">✕</button>
 

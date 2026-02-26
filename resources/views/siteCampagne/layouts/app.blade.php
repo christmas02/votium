@@ -989,7 +989,7 @@
             display: flex;
             flex-direction: column;
             gap: 14px;
-                flex-wrap: wrap;
+            flex-wrap: wrap;
         }
 
         .checkout__head {
@@ -1135,7 +1135,7 @@
         .field input {
             border-radius: 12px;
             border: 1px solid rgba(1, 35, 63, .16);
-            padding: 10px 12px;
+            /* padding: 10px 12px; */
             outline: none;
         }
 
@@ -1384,7 +1384,8 @@
         /* Messages d'état */
         .state-message {
             text-align: center;
-            padding: 60px 20px;
+            margin: 60px;
+            padding: 10px 10px;
             background: #fff;
             border-radius: var(--radius2);
             border: 1px solid var(--stroke);
