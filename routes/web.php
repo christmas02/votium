@@ -57,7 +57,7 @@ Route::controller(VoteController::class)->group(function () {
     Route::get('/paiement/verifier_statut/{transactionId}', 'verifyPaymentVote')->name('business.paymentVerify');
 
     // NOUVELLE ROUTE : Retour paiement Wave (Rollback)
-    Route::get('/wave_rollback/{idCampagne}/{idTransaction}', 'waveRollback')->name('business.waveRollback');
+    Route::get('/business/wave_rollback/{idCampagne}/{idTransaction}', 'waveRollback')->name('business.waveRollback');
 });
 
 Route::group(['middleware' => 'auth'], function () {

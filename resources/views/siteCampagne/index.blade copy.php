@@ -184,7 +184,7 @@
                         @else
                             {{-- Message si aucune catégorie sélectionnée --}}
                             <div class="state-message">
-                                
+                                <div class="state-icon">👆</div>
                                 <h3>Sélectionnez une catégorie</h3>
                                 <p>Veuillez choisir une catégorie ci-dessus pour voir les candidats.</p>
                             </div>
@@ -240,7 +240,7 @@
 @endsection
 
 @push('scripts')
-    {{-- <script>
+    <script>
         // 1. Ouvrir une modale spécifique
         function openSpecificModal(modalId) {
             const modal = document.getElementById(modalId);
@@ -307,86 +307,6 @@
 
             // Appel à ta fonction de paiement existante
             openCheckoutModal(target, pack);
-        }
-    </script> --}}
-
-    <script>
-        // 1. Ouvrir une modale spécifique
-        function openSpecificModal(modalId) {
-            const modal = document.getElementById(modalId);
-            if (modal) {
-                modal.classList.add("is-open");
-                modal.setAttribute("aria-hidden", "false");
-                document.body.classList.add("modal-open");
-            }
-        }
-
-        // 2. Fermer une modale spécifique
-        function closeSpecificModal(modalId) {
-            const modal = document.getElementById(modalId);
-            if (modal) {
-                modal.classList.remove("is-open");
-                modal.setAttribute("aria-hidden", "true");
-                document.body.classList.remove("modal-open");
-            }
-        }
-
-        // 3. Sélectionner un pack (Optimisé avec querySelector scoped)
-        function selectPackInModal(modalId, votes, montant, clickedBtn) {
-            const modal = document.getElementById(modalId);
-            if (!modal) return;
-
-            // On ne cherche que les boutons À L'INTÉRIEUR de cette modale précise
-            const allPacks = modal.querySelectorAll('.packRow');
-            allPacks.forEach(btn => btn.classList.remove('is-selected'));
-
-            // On active celui cliqué
-            clickedBtn.classList.add('is-selected');
-
-            // Mise à jour du bouton Valider
-            const submitBtn = document.getElementById('btn-' + modalId);
-            if (submitBtn) {
-                // Formatage propre du prix (1000 -> 1 000)
-                const formattedPrice = String(montant).replace(/\B(?=(\d{3})+(?!\d))/g, " ");
-                submitBtn.textContent = `Voter • ${formattedPrice} Fcfa`;
-
-                // Mise à jour des données pour le checkout
-                submitBtn.dataset.packVotes = votes;
-                submitBtn.dataset.packMontant = montant;
-            }
-        }
-
-        // 4. Passer au checkout (Transition entre modales)
-        function proceedToCheckout(btn) {
-            // Récupération sécurisée des données
-            const data = btn.dataset;
-
-            // 1. Fermer la modale actuelle
-            const currentModal = btn.closest('.modal');
-            if (currentModal) {
-                closeSpecificModal(currentModal.id);
-            }
-
-            // 2. Préparer les données cible
-            const target = {
-                id: data.candidatId,
-                name: data.candidatNom,
-                num: data.candidatNum,
-                campagneId: data.campagneId,
-                etapeId: data.etapeId
-            };
-
-            const pack = {
-                vote: parseInt(data.packVotes) || 0,
-                montant: parseInt(data.packMontant) || 0
-            };
-
-            // 3. Ouvrir le checkout (si la fonction existe)
-            if (typeof openCheckoutModal === 'function') {
-                openCheckoutModal(target, pack);
-            } else {
-                console.error("Erreur : La fonction openCheckoutModal n'est pas chargée.");
-            }
         }
     </script>
 @endpush

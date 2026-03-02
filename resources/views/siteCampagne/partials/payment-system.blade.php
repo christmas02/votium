@@ -1,6 +1,6 @@
 <!-- Checkout modal -->
 <div aria-hidden="true" class="modal" id="checkoutModal">
-    <div class="modal__overlay" data-close="1"></div>
+    <div class="modal__overlay"></div>
     <div aria-labelledby="checkoutTitle" aria-modal="true" class="modal__panel modal__panel--wide" role="dialog">
         <button aria-label="Fermer" class="modal__close" data-close="1">✕</button>
 
@@ -109,8 +109,8 @@
 
                 {{-- ÉTAPE 3 : VALIDATION (Numéro + OTP) --}}
                 <div id="step-validation" style="display: none;">
-                    <div class="text-center mb-4">
-                        <img id="selected-method-icon" src="" style="height: 50px; margin-bottom: 10px;">
+                    <div class="text-center mb-0">
+                        <img id="selected-method-icon" src="" style="height: 50px; margin-bottom: 5px;">
                         <h4 id="selected-method-name">Moyen de paiement</h4>
                         <p class="small text-muted" id="selected-method-instruction"></p>
                     </div>
@@ -128,7 +128,7 @@
                                 maxlength="4" style="letter-spacing: 3px; font-size: 1.2rem;">
                         </div>
 
-                        <div class="actions mt-4">
+                        <div class="actions mt-0">
                             <button class="btn btn--ghost" id="btn-back-details">Retour</button>
                             <button class="btn btn--primary" id="btn-confirm-payment">Payer</button>
                         </div>
@@ -165,7 +165,7 @@
     }
 </style>
 
-<!-- SCRIPT DE PAIEMENT -->
+
 <!-- SCRIPT DE PAIEMENT -->
 <script>
     document.addEventListener('DOMContentLoaded', function() {
@@ -521,3 +521,4 @@
 
     });
 </script>
+
