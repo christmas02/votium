@@ -421,9 +421,13 @@
                             const transactionId = data.transaction_id;
 
                             // Fonction Polling
+                            const paymentVerifyUrlTemplate = "{{ route('business.paymentVerify', ['transactionId' => ':id']) }}";
+
                             const checkStatus = () => {
                                 attempts++;
-                                fetch(`/business/paiement/verifier_statut/${transactionId}`)
+                                // use named route and replace placeholder
+                                const url = paymentVerifyUrlTemplate.replace(':id', transactionId);
+                                fetch(url)
                                     .then(res => res.json())
                                     .then(statusData => {
                                         if (statusData.status === 'completed') {
