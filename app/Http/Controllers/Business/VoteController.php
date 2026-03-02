@@ -259,57 +259,57 @@ class VoteController extends Controller
     }
 
     // Version de test pour Wave (Simule une réponse d'initiation sans appeler l'API)
-    // public function TestInitiatePaymentVote(Request $request)
-    // {
-    //     try {
-    //         // ID de transaction existant en BDD pour vos tests
-    //         $transactionId = '493b578e-d357-4e3f-b86f-c94a80627029';
-    //         $idCampagne = '29a4779e-5f0e-4539-8014-cbfcac327de5';
-
-    //         // Utilisation du helper route() pour générer l'URL correcte
-    //         // Attention aux noms des clés qui doivent matcher ceux de la route web.php
-    //         // C'est le lien que vous avez reçu dans votre exemple
-    //         // $waveLink = "https://pay.wave.com/c/cos-230jab3hr242p?a=100.00&c=XOF&m=TSIL%20%2A%20Paystack";
-    //         $waveLink = route('business.waveRollback', ['idCampagne' => $idCampagne, 'idTransaction' => $transactionId]);
-
-    //         return response()->json([
-    //             'success' => true,
-    //             'status'  => 'pending',
-    //             'icon'    => 'info',
-    //             'message' => 'Simulation Wave : Redirection...',
-    //             'transaction_id' => $transactionId,
-    //             'redirect_url' => $waveLink
-    //         ], 200);
-    //     } catch (\Exception $e) {
-    //         return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
-    //     }
-    // }
-    // povider Orange Money (avec OTP)
     public function TestInitiatePaymentVote(Request $request)
     {
-
         try {
-            dd($request->all()); // DEBUG: Voir les données reçues
+            // ID de transaction existant en BDD pour vos tests
+            $transactionId = '493b578e-d357-4e3f-b86f-c94a80627029';
+            $idCampagne = '29a4779e-5f0e-4539-8014-cbfcac327de5';
 
-            $result = [
-                'status' => 'pending',
-                'message' => 'Simulation Locale : Initiation validée',
-                'transactions_id' => '415c767b-4210-49ef-9158-25b505a3e6ac', // Ton ID existant
-                'api_response' => ['data' => ['payment_url' => null]]
-            ];
+            // Utilisation du helper route() pour générer l'URL correcte
+            // Attention aux noms des clés qui doivent matcher ceux de la route web.php
+            // C'est le lien que vous avez reçu dans votre exemple
+            // $waveLink = "https://pay.wave.com/c/cos-230jab3hr242p?a=100.00&c=XOF&m=TSIL%20%2A%20Paystack";
+            $waveLink = route('business.waveRollback', ['idCampagne' => $idCampagne, 'idTransaction' => $transactionId]);
 
             return response()->json([
-                'success' => true, // On force true pour que le JS lance le polling
-                'status'  => $result['status'],
+                'success' => true,
+                'status'  => 'pending',
                 'icon'    => 'info',
-                'message' => $result['message'],
-                'transaction_id' => $result['transactions_id'],
-                'redirect_url' => null
+                'message' => 'Simulation Wave : Redirection...',
+                'transaction_id' => $transactionId,
+                'redirect_url' => $waveLink
             ], 200);
         } catch (\Exception $e) {
-            // ...
+            return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
         }
     }
+    // povider Orange Money (avec OTP)
+    // public function TestInitiatePaymentVote(Request $request)
+    // {
+
+    //     try {
+    //         dd($request->all()); // DEBUG: Voir les données reçues
+
+    //         $result = [
+    //             'status' => 'pending',
+    //             'message' => 'Simulation Locale : Initiation validée',
+    //             'transactions_id' => '415c767b-4210-49ef-9158-25b505a3e6ac', // Ton ID existant
+    //             'api_response' => ['data' => ['payment_url' => null]]
+    //         ];
+
+    //         return response()->json([
+    //             'success' => true, // On force true pour que le JS lance le polling
+    //             'status'  => $result['status'],
+    //             'icon'    => 'info',
+    //             'message' => $result['message'],
+    //             'transaction_id' => $result['transactions_id'],
+    //             'redirect_url' => null
+    //         ], 200);
+    //     } catch (\Exception $e) {
+    //         // ...
+    //     }
+    // }
 
     #VERIFIER LE STATUS DE LA TRANSACTION(Polling)
     public function verifyPaymentVote($transactionId)
