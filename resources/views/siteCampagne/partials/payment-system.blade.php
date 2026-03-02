@@ -460,12 +460,19 @@
                                             }
                                         }
                                     })
-                                    .catch(() => {
-                                        if (attempts < maxAttempts) setTimeout(checkStatus,
-                                            intervalTime);
-                                        else handleFailure(
-                                            "Erreur de connexion lors de la vérification."
-                                        );
+                                    .catch(error => {
+
+                                        console.error(
+                                            "Erreur lors de la vérification du paiement :",
+                                            error);
+
+                                        if (attempts < maxAttempts) {
+                                            setTimeout(checkStatus, intervalTime);
+                                        } else {
+                                            handleFailure(
+                                                "Erreur de connexion lors de la vérification."
+                                            );
+                                        }
                                     });
                             };
 
@@ -521,4 +528,3 @@
 
     });
 </script>
-
