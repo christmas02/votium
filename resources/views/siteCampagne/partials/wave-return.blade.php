@@ -1,4 +1,4 @@
-@extends('siteCampagne.layouts.app')
+@extends('siteCampagne.layouts.app-wave-return')
 
 @section('content')
 <div class="container d-flex flex-column align-items-center justify-content-center" style="min-height: 80vh;">
