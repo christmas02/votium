@@ -1,4 +1,4 @@
-@extends('siteCampagne.layouts.app')
+@extends('siteCampagne.layouts.app-wave-return')
 
 @section('content')
 <div class="container d-flex flex-column align-items-center justify-content-center" style="min-height: 80vh;">
@@ -18,7 +18,7 @@
             <a id="btn-receipt" href="#" target="_blank" class="btn btn-outline-primary btn-lg d-none">
                 <i class="fas fa-file-pdf me-2"></i> Télécharger le reçu
             </a>
-            <a id="btn-back" href="{{ url('/business/site_campagne/'.$idCampagne) }}" class="btn btn-dark btn-lg">
+            <a id="btn-back" href="{{ route('business.site_campagne', ['idCampagne' => $idCampagne]) }}" class="btn btn-dark btn-lg">
                 Retour à la campagne
             </a>
         </div>
@@ -100,7 +100,7 @@ document.addEventListener('DOMContentLoaded', function() {
         msgDiv.textContent = message;
         
         btnContainer.classList.remove('d-none');
-        btnBack.href = "{{ url('/business/site_campagne/'.$idCampagne) }}"; 
+        btnBack.href = "{{ route('business.site_campagne', ['idCampagne' => $idCampagne]) }}"; 
         btnBack.textContent = "Retour à la campagne";
     }
 

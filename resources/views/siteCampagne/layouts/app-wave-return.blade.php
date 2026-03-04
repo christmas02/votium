@@ -161,8 +161,7 @@
         }
 
         /* Cover */
-        /* .cover {
-            background-image: url("{{ $campagne->image_couverture ? asset('uploads/' . $campagne->image_couverture) : '' }}");
+        .cover {
             background:
                 radial-gradient(1200px 420px at 20% 10%, rgba(255, 127, 0, .18), transparent 55%),
                 radial-gradient(900px 420px at 70% 30%, rgba(255, 255, 255, .12), transparent 60%),
@@ -172,25 +171,9 @@
             border-bottom: 1px solid rgba(15, 23, 42, .12);
             position: relative;
             overflow: hidden;
-        } */
-
-        .cover {
-            background:
-                radial-gradient(1200px 420px at 20% 10%, rgba(255, 127, 0, .18), transparent 55%),
-                radial-gradient(900px 420px at 70% 30%, rgba(255, 255, 255, .12), transparent 60%),
-                linear-gradient(160deg, rgba(1, 35, 63, .96), rgba(1, 35, 63, .78)),
-                linear-gradient(90deg, rgba(0, 0, 0, .0), rgba(0, 0, 0, .0)),
-                url("{{ $campagne->image_couverture ? asset('uploads/' . $campagne->image_couverture) : '' }}");
-
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-
-            color: #fff;
-            border-bottom: 1px solid rgba(15, 23, 42, .12);
-            position: relative;
-            overflow: hidden;
         }
+
+        
 
         .cover:before {
             content: "";

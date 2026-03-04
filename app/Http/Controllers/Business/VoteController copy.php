@@ -26,7 +26,6 @@ use App\Models\Vote;
 use Carbon\Carbon;
 use App\Services\CandidatureService;
 use PhpParser\Node\Stmt\TryCatch;
-use Illuminate\Http\JsonResponse;
 
 use App\Http\Requests\CampagneRequest;
 use App\Http\Requests\CandidatRequest;
@@ -312,110 +311,48 @@ class VoteController extends Controller
     //     }
     // }
 
-    # VERIFIER LE STATUS DE LA TRANSACTION (Polling)
-    public function verifyPaymentVote(string $transactionId): JsonResponse
+    #VERIFIER LE STATUS DE LA TRANSACTION(Polling)
+    public function verifyPaymentVote($transactionId)
     {
-
-        Log::info('Début vérification transaction vote', [
-            'transaction_id' => $transactionId
-        ]);
-
         try {
-
-            //Vérification du paramètre
-            if (empty($transactionId)) {
-                Log::warning('Transaction ID vide lors de la vérification');
-
-                return response()->json([
-                    'status' => 'error',
-                    'message' => 'Transaction ID invalide'
-                ], 400);
-            }
-
-            //Appel du service
+            // 1. Appel Réel (pour avoir la structure de données correcte)
             $result = $this->VoteService->checkStatusTransaction($transactionId);
 
-            Log::info('Réponse du service VoteService', [
-                'transaction_id' => $transactionId,
-                'result' => $result
-            ]);
-
-            if (!is_array($result)) {
-                Log::error('Structure inattendue retournée par VoteService', [
-                    'transaction_id' => $transactionId,
-                    'result' => $result
-                ]);
-
+            // 2. Gestion des erreurs internes du service
+            if (isset($result['status']) && $result['status'] === 'error') {
                 return response()->json([
                     'status' => 'error',
-                    'message' => 'Réponse service invalide'
+                    'message' => $result['message']
                 ], 500);
             }
 
-            // Gestion erreur métier du service
-            if (isset($result['status']) && $result['status'] === 'error') {
-
-                Log::warning('Erreur métier retournée par VoteService', [
-                    'transaction_id' => $transactionId,
-                    'message' => $result['message'] ?? 'Message non fourni'
-                ]);
-
-                return response()->json([
-                    'status' => 'error',
-                    'message' => $result['message'] ?? 'Erreur lors de la vérification'
-                ], 422);
-            }
-
-            //Détermination de l’URL de campagne
+            // 3. Récupération de l'URL de redirection
             $campagneUrl = url('/');
 
-            if (!empty($result['vote_id'])) {
+            if (isset($result['vote_id'])) {
                 $vote = Vote::find($result['vote_id']);
-
                 if ($vote) {
-                    $campagneUrl = url("/business/site_campagne/{$vote->campagne_id}");
-
-                    Log::info('Vote trouvé', [
-                        'vote_id' => $vote->id,
-                        'campagne_id' => $vote->campagne_id
-                    ]);
-                } else {
-                    Log::warning('Vote introuvable', [
-                        'vote_id' => $result['vote_id']
-                    ]);
+                    $campagneUrl = "/business/site_campagne/" . $vote->campagne_id;
                 }
             }
 
-            //Construction réponse finale
+            // 4. Construction de la réponse
             $response = [
-                'status'       => $result['status'] ?? 'unknown',
-                'receipt_url'  => $result['linkInvoice'] ?? null,
+                'status' => $result['status'],
+                'receipt_url' => $result['linkInvoice'] ?? null,
                 'campagne_url' => $campagneUrl
             ];
+            // dd($response);
 
-            Log::info('Fin vérification transaction vote', [
-                'transaction_id' => $transactionId,
-                'response' => $response
-            ]);
-
-            return response()->json($response, 200);
-        } catch (\Throwable $e) {
-
-            Log::critical('Exception lors de la vérification transaction', [
-                'transaction_id' => $transactionId,
-                'error_message'  => $e->getMessage(),
-                'file'           => $e->getFile(),
-                'line'           => $e->getLine(),
-            ]);
-
-            return response()->json([
-                'status' => 'error',
-                'message' => 'Erreur interne du serveur'
-            ], 500);
+            return response()->json($response);
+        } catch (\Exception $e) {
+            Log::error("Erreur CheckStatus: " . $e->getMessage());
+            return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
         }
     }
 
-    
+
+
     /**
      * PAGE DE RETOUR WAVE (ROLLBACK)
      * Correction des noms de variables pour compact()
