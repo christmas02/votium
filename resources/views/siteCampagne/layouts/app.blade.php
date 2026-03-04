@@ -161,12 +161,31 @@
         }
 
         /* Cover */
-        .cover {
+        /* .cover {
+            background-image: url("{{ $campagne->image_couverture ? asset('uploads/' . $campagne->image_couverture) : '' }}");
             background:
                 radial-gradient(1200px 420px at 20% 10%, rgba(255, 127, 0, .18), transparent 55%),
                 radial-gradient(900px 420px at 70% 30%, rgba(255, 255, 255, .12), transparent 60%),
                 linear-gradient(160deg, rgba(1, 35, 63, .96), rgba(1, 35, 63, .78)),
                 linear-gradient(90deg, rgba(0, 0, 0, .0), rgba(0, 0, 0, .0));
+            color: #fff;
+            border-bottom: 1px solid rgba(15, 23, 42, .12);
+            position: relative;
+            overflow: hidden;
+        } */
+
+        .cover {
+            background:
+                radial-gradient(1200px 420px at 20% 10%, rgba(255, 127, 0, .18), transparent 55%),
+                radial-gradient(900px 420px at 70% 30%, rgba(255, 255, 255, .12), transparent 60%),
+                linear-gradient(160deg, rgba(1, 35, 63, .96), rgba(1, 35, 63, .78)),
+                linear-gradient(90deg, rgba(0, 0, 0, .0), rgba(0, 0, 0, .0)),
+                url("{{ $campagne->image_couverture ? asset('uploads/' . $campagne->image_couverture) : '' }}");
+
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+
             color: #fff;
             border-bottom: 1px solid rgba(15, 23, 42, .12);
             position: relative;
@@ -564,7 +583,7 @@
             background: rgba(15, 23, 42, .04);
             border: 1px solid rgba(15, 23, 42, .08);
             border-radius: 12px;
-            padding: 10px;
+            padding: 0px 10px 0px 10px;
             font-weight: 900;
             display: flex;
             justify-content: space-between;
@@ -582,7 +601,7 @@
             background: rgba(255, 127, 0, .12);
             border: 1px solid rgba(255, 127, 0, .22);
             border-radius: 12px;
-            padding: 10px;
+            padding: 0px 10px 0px 10px;
             font-weight: 900;
             color: #7a2f00;
             display: flex;
@@ -873,7 +892,7 @@
             align-items: center;
             justify-content: space-between;
             gap: 10px;
-            padding: 14px 14px;
+            padding: 0px 14px;
             border-radius: 14px;
             border: 1px solid transparent;
             background: transparent;
@@ -1058,7 +1077,7 @@
             border-radius: 14px;
             border: 1px solid rgba(207, 103, 5, 0.14);
             /* background: rgba(255, 255, 255, .92); */
-            padding: 12px 12px;
+            padding: 5px 12px;
             cursor: pointer;
             transition: transform .12s ease, border-color .12s ease, box-shadow .12s ease;
         }
