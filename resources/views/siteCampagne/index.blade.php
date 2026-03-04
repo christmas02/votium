@@ -78,14 +78,14 @@
             <div class="toolbar">
 
                 <div class="lefttools">
-                    @if (!empty($showBackButton))
+                    {{-- @if (!empty($showBackButton))
                         <button aria-label="Retour" class="backbtn" onclick="history.back()" type="button">
                             <svg aria-hidden="true" fill="none" viewbox="0 0 24 24">
                                 <path d="M14.5 6.5L9 12l5.5 5.5" stroke="var(--primary)" stroke-linecap="round"
                                     stroke-linejoin="round" stroke-width="2"></path>
                             </svg>
                         </button>
-                    @endif
+                    @endif --}}
                     <div class="catpill" title="Contexte">
                         <span class="mini"></span>
                         <span>{{ $selectedEtape->name }}</span>
