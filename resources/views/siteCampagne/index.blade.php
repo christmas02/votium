@@ -76,18 +76,22 @@
         <div class="container">
             <!-- Toolbar (Toujours visible pour le bouton retour) -->
             <div class="toolbar">
+
                 <div class="lefttools">
-                    <button aria-label="Retour" class="backbtn" onclick="history.back()" type="button">
-                        <svg aria-hidden="true" fill="none" viewbox="0 0 24 24">
-                            <path d="M14.5 6.5L9 12l5.5 5.5" stroke="var(--primary)" stroke-linecap="round"
-                                stroke-linejoin="round" stroke-width="2"></path>
-                        </svg>
-                    </button>
+                    @if (!empty($showBackButton))
+                        <button aria-label="Retour" class="backbtn" onclick="history.back()" type="button">
+                            <svg aria-hidden="true" fill="none" viewbox="0 0 24 24">
+                                <path d="M14.5 6.5L9 12l5.5 5.5" stroke="var(--primary)" stroke-linecap="round"
+                                    stroke-linejoin="round" stroke-width="2"></path>
+                            </svg>
+                        </button>
+                    @endif
                     <div class="catpill" title="Contexte">
                         <span class="mini"></span>
-                        <span>{{ $selectedEtape->name ?? 'Étape' }}</span>
+                        <span>{{ $selectedEtape->name }}</span>
                     </div>
                 </div>
+
 
                 <!-- La recherche ne s'affiche que si l'étape est active -->
                 @if ($selectedEtape && $selectedEtape->is_active_now)
@@ -184,7 +188,7 @@
                         @else
                             {{-- Message si aucune catégorie sélectionnée --}}
                             <div class="state-message">
-                                
+
                                 <h3>Sélectionnez une catégorie</h3>
                                 <p>Veuillez choisir une catégorie ci-dessus pour voir les candidats.</p>
                             </div>
@@ -240,75 +244,6 @@
 @endsection
 
 @push('scripts')
-    {{-- <script>
-        // 1. Ouvrir une modale spécifique
-        function openSpecificModal(modalId) {
-            const modal = document.getElementById(modalId);
-            if (modal) {
-                modal.classList.add("is-open");
-                modal.setAttribute("aria-hidden", "false");
-                document.body.classList.add("modal-open");
-            }
-        }
-
-        // 2. Fermer une modale spécifique
-        function closeSpecificModal(modalId) {
-            const modal = document.getElementById(modalId);
-            if (modal) {
-                modal.classList.remove("is-open");
-                modal.setAttribute("aria-hidden", "true");
-                document.body.classList.remove("modal-open");
-            }
-        }
-
-        // 3. Sélectionner un pack (Style visuel + Mise à jour des data du bouton valider)
-        function selectPackInModal(modalId, votes, montant, clickedBtn) {
-            const modal = document.getElementById(modalId);
-
-            // Gestion classe visuelle .is-selected
-            const allPacks = modal.querySelectorAll('.packRow');
-            allPacks.forEach(btn => btn.classList.remove('is-selected'));
-            clickedBtn.classList.add('is-selected');
-
-            // Mise à jour du bouton Valider
-            const submitBtn = document.getElementById('btn-' + modalId);
-            if (submitBtn) {
-                // On met à jour le texte
-                const formattedPrice = String(montant).replace(/\B(?=(\d{3})+(?!\d))/g, " ");
-                submitBtn.textContent = `Voter • ${formattedPrice} Fcfa`;
-
-                // On met à jour les données data- pour le checkout
-                submitBtn.dataset.packVotes = votes;
-                submitBtn.dataset.packMontant = montant;
-            }
-        }
-
-        // 4. Passer au checkout (appelé par le bouton Valider de la modale)
-        function proceedToCheckout(btn) {
-            const data = btn.dataset;
-
-            // On ferme la modale actuelle (on remonte au parent .modal)
-            const currentModal = btn.closest('.modal');
-            closeSpecificModal(currentModal.id);
-
-            // On prépare l'objet cible pour ta fonction de paiement existante
-            const target = {
-                id: data.candidatId,
-                name: data.candidatNom,
-                num: data.candidatNum,
-                campagneId: data.campagneId,
-                etapeId: data.etapeId
-            };
-
-            const pack = {
-                vote: parseInt(data.packVotes),
-                montant: parseInt(data.packMontant)
-            };
-
-            // Appel à ta fonction de paiement existante
-            openCheckoutModal(target, pack);
-        }
-    </script> --}}
 
     <script>
         // 1. Ouvrir une modale spécifique
