@@ -315,6 +315,7 @@ class VoteController extends Controller
     public function verifyPaymentVote($transactionId)
     {
         try {
+
             // 1. Appel Réel (pour avoir la structure de données correcte)
             $result = $this->VoteService->checkStatusTransaction($transactionId);
 
@@ -345,6 +346,7 @@ class VoteController extends Controller
             // dd($response);
 
             return response()->json($response);
+
         } catch (\Exception $e) {
             Log::error("Erreur CheckStatus: " . $e->getMessage());
             return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);

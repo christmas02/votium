@@ -3,6 +3,7 @@
 namespace App\Sdkpayment\Hub2;
 
 use App\Sdkpayment\ClientHttpInstance;
+use Illuminate\Support\Facades\Log;
 
 class Hub2webhook
 {
@@ -15,27 +16,6 @@ class Hub2webhook
 
     public function createLinkWebhook()
     {
-//        postman request POST 'https://api.hub2.io/webhooks/' \
-//          --header 'Environment: {{environment}}' \
-//          --header 'MerchantId: {{merchantId}}' \
-//          --header 'Content-Type: application/json' \
-//          --header 'ApiKey: ••••••' \
-//          --body '{
-//        "url":"",
-//        "events": [
-//            "transfer.created",
-//            "transfer.processing",
-//            "transfer.succeeded",
-//            "transfer.failed"
-//        ],
-//        "description": "This is a webhook trigger upon transfer, payment & payment_intent creation",
-//        "metadata": { }
-//        }
-//        ' \
-//          --auth-apikey-key 'ApiKey' \
-//          --auth-apikey-value '{{apiKey}}' \
-//          --auth-apikey-in 'header'
-
         try {
             $HUB2_BASE_URL = config('sdkpayment.HUB2_BASE_URL');
             $response = $this->client->request('POST', $HUB2_BASE_URL.'webhooks/', [
@@ -46,12 +26,16 @@ class Hub2webhook
                     'Content-Type' => 'application/json'
                 ],
                 'json' => [
-                    "url" => config('sdkpayment.HUB2_WEBHOOK_URL'),
+                    "url" => "https://webhook.site/1e3b7f56-c38c-41df-a5c4-a2c43440b4c2",
                     "events" => [
                         "transfer.created",
                         "transfer.processing",
                         "transfer.succeeded",
-                        "transfer.failed"
+                        "transfer.failed",
+                        "payment.created",
+                        "payment.pending",
+                        "payment.succeeded",
+                        "payment.failed",
                     ],
                     "description" => "This is a webhook trigger upon transfer, payment & payment_intent creation",
                     "metadata" => new \stdClass()
@@ -78,40 +62,62 @@ class Hub2webhook
             logger()->error('Hub2 create link webhook error: '.$e->getMessage());
             throw new \Exception('Hub2 create link webhook error: '.$e->getMessage());
         }
-
-
+        
     }
 
-
-    public function computeResponse(array $response): array
-    {
-        return [
-            'transaction_id' => $response['id'] ?? null,
-            'status' => $response['status'] ?? null,
-            // Ajoutez d'autres champs pertinents si nécessaire
-        ];
-    }
-
-    public function handleWebhook(array $response): array
+    public function handleWebhook(array $payload): array
     {
         try {
-            logger()->info('Hub2 webhook received', ['response' => $response]);
+            logger()->info('Hub2 webhook received', ['payload' => $payload]);
             // Traiter la réponse du webhook et mettre à jour la transaction en conséquence
-            // Vous pouvez extraire les données nécessaires du tableau $response et les utiliser pour mettre à jour votre base de données
-            // Par exemple :
-            $transactionId = $response['id'] ?? null;
-            $status = $response['status'] ?? null;
-            // Mettez à jour votre transaction dans la base de données en fonction de l'ID et du statut
-            // ...
+    
+            $datas = $payload['data'] ?? null;
+            $status = $datas['status'] ?? null;
+            $reference = $datas['id'] ?? null;
 
-            return [
-                'transaction_id' => $transactionId,
-                'status' => $status,
-                // Ajoutez d'autres champs pertinents si nécessaire
-            ];
+            // Cherche la transaction par plusieurs colonnes possibles
+            $transaction = Transaction::where('transaction_id_partner', $reference)->first();
+
+            if (! $transaction) {
+                Log::warning('Hub2 webhook: transaction not found', ['reference' => $reference, 'payload' => $payload]);
+                //DB::rollBack();
+            }
+            // Mise à jour des champs s'ils sont fournis
+            $status = $payload['status'] ?? null;
+            if ($status === 'success') {
+                $tr_status = 'completed';
+                $comment = 'Payment successful';
+            } elseif ($status === 'failed') {
+                $tr_status = 'failed';
+                $comment = 'Payment failed';
+            } elseif ($status === 'pending') {
+                $tr_status = 'pending';
+                $comment = 'Payment pending';
+            } else {
+                $tr_status = 'processing';
+                $comment = 'Payment processing';
+            }
+
+            if (isset($payload['status'])) {
+                $transaction->status = $tr_status;
+            }
+            $transaction->response_init_payment = is_array($payload) ? json_encode($payload) : $payload;
+            $transaction->comment = $comment;
+            $transaction->save();
+
+            $response = $transaction->toArray();
+
+            //DB::commit();
+            Log::info('Hyperfast webhook: transaction updated', ['id' => $transaction->transaction_id, 'reference' => $reference]);
+            return $response;
+            
         } catch (\Exception $e) {
-            logger()->error('Hub2 webhook handling error: '.$e->getMessage());
-            throw new \Exception('Hub2 webhook handling error: '.$e->getMessage());
+            logger()->error('Hub2 webhook handling error: ' . $e->getMessage(), ['payload' => $payload]);
+            return [
+                'status' => 'error',
+                'message' => $e->getMessage()
+            ];
         }
     }
+
 }
