@@ -315,7 +315,7 @@ class VoteController extends Controller
     # VERIFIER LE STATUS DE LA TRANSACTION (Polling)
     public function verifyPaymentVote(string $transactionId): JsonResponse
     {
-        
+
         Log::info('Début vérification transaction vote', [
             'transaction_id' => $transactionId
         ]);
@@ -415,8 +415,7 @@ class VoteController extends Controller
         }
     }
 
-
-
+    
     /**
      * PAGE DE RETOUR WAVE (ROLLBACK)
      * Correction des noms de variables pour compact()

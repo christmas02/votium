@@ -1,148 +1,169 @@
 <!DOCTYPE html>
-<html lang="en">
-
-
-<!-- Mirrored from crms.dreamstechnologies.com/html/template/login.html by HTTrack Website Copier/3.x [XR&CO'2014], Mon, 24 Nov 2025 09:59:19 GMT -->
-
+<html lang="fr">
 <head>
-
-    <!-- Meta Tags -->
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Login | CRMS - Advanced Bootstrap 5 Admin Template for Customer Management</title>
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Streamline your business with our advanced CRM template. Easily integrate and customize to manage sales, support, and customer interactions efficiently. Perfect for any business size">
-    <meta name="keywords" content="Advanced CRM template, customer relationship management, business CRM, sales optimization, customer support software, CRM integration, customizable CRM, business tools, enterprise CRM solutions">
-    <meta name="author" content="Dreams Technologies">
-    <meta name="robots" content="index, follow">
+    <meta name="description" content="VOTIUM vous aide à créer, gérer et suivre vos campagnes de votes en toute simplicité.">
+    <title>VOTIUM — Connexion</title>
 
-    <!-- Favicon -->
-    <link rel="shortcut icon" href="assets/img/favicon.png">
+    <link rel="icon" type="image/png" href="{{ asset('assets/favicon.png') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
-    <!-- Apple Icon -->
-    <link rel="apple-touch-icon" href="assets/img/apple-icon.png">
-
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="assets/css/bootstrap.min.css">
-
-    <!-- Tabler Icon CSS -->
-    <link rel="stylesheet" href="assets/plugins/tabler-icons/tabler-icons.min.css">
-
-    <!-- Main CSS -->
-    <link rel="stylesheet" href="assets/css/style.css" id="app-style">
-
+    <link rel="stylesheet" href="{{ asset('asset/app.css') }}">
+    <link rel="stylesheet" href="{{ asset('asset/css/login.css') }}">
 </head>
+<body class="public auth-page">
+<header class="topbar" role="banner">
+    <div class="topbar-inner container">
+        <a class="brand" href="{{ route('home') }}">
+            <div aria-hidden="true" class="brandmark"><svg fill="none" viewbox="0 0 24 24">
+                    <path d="M5 6.2c4.6-5 14-3.2 14 4.2 0 6.8-6.6 10.7-7 10.9-.4-.2-7-4.1-7-10.9 0-1.6.4-3.1 1-4.2z"
+                          fill="rgba(255,255,255,.16)"></path>
+                    <path d="M9 8.5l3.1 7.5L15 9.7" stroke="white" stroke-linecap="round" stroke-linejoin="round"
+                          stroke-width="2.2"></path>
+                </svg></div>
+            <div class="brandtext">
+                <strong>VOTIUM</strong>
+                <span>Vote & Campagne</span>
+            </div>
+        </a>
 
-<body class="account-page bg-white">
+        <nav class="public-links" aria-label="Navigation publique">
+            <a href="{{ route('home') }}#pourquoi">Pourquoi VOTIUM</a>
+            <a href="{{ route('home') }}#confiance">Ils nous font confiance</a>
+            <a href="{{ route('home') }}#contacts">Contacts</a>
+        </nav>
 
-    <!-- Begin Wrapper -->
-    <div class="main-wrapper">
+        <div class="topbar-right">
+            <button class="pill role-pill" id="rolePill" type="button" aria-haspopup="menu" aria-expanded="false">
+                <span class="pill-label">Espace membre</span>
+                <span class="dot" aria-hidden="true"></span>
+            </button>
 
-        <div class="overflow-hidden p-3 acc-vh">
+            <div class="menu" id="roleMenu" role="menu" aria-label="Menu Promoteur" hidden>
+                <div class="menu-inner" id="roleMenuInner">
+                    <!-- rempli par app.js -->
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
 
-            <!-- start row -->
-            <div class="row vh-100 w-100 g-0">
+<main class="auth-main">
+    <div class="container auth-grid">
+        <section class="auth-left">
+            <div class="auth-badge">Espace promoteur</div>
+            <h1>Connexion</h1>
+            <p class="muted">Accédez à votre espace promoteur VOTIUM.</p>
 
-                <div class="col-lg-6 vh-100 overflow-y-auto overflow-x-hidden">
-
-                    <!-- start row -->
-                    <div class="row">
-
-                        <div class="col-md-10 mx-auto">
-                            <form method="post" action="login" class=" vh-100 d-flex justify-content-between flex-column p-4 pb-0">
-                                @csrf
-                                <div class="text-center mb-4 auth-logo">
-                                    <img src="assets/img/logos/votium.png" class="img-fluid" alt="Logo">
-                                </div>
-                                <div>
-                                    <div class="mb-3">
-                                        <h3 class="mb-2">Se connecter</h3>
-                                        <p class="mb-0">Nous somme contents de vous voir parmis nous. Montez à bord !</p>
-                                    </div>
-                                    <div class="mb-3">
-                                        @if(session('success'))
-                                        <div class="alert alert-success">
-                                            {{ session('success') }}
-                                        </div>
-                                        @endif
-
-                                        @if(session('error'))
-                                        <div class="alert alert-danger">
-                                            {{ session('error') }}
-                                        </div>
-                                        @endif
-                                    </div>
-                                    <div class="mb-3">
-                                        <label class="form-label">Adresse email <span class="text-danger">*</span></label>
-                                        <div class="input-group input-group-flat">
-                                            <input type="email" name="email" class="form-control" style="padding: 3%" required>
-                                            <span class="input-group-text"><i class="ti ti-mail"></i></span>
-                                        </div>
-                                    </div>
-                                    <div class="mb-3">
-                                        <label class="form-label">Mot de passe <span class="text-danger">*</span></label>
-                                        <div class="input-group input-group-flat pass-group">
-                                            <input type="password" name="password" class="form-control pass-input" style="padding: 3%" required>
-                                            <span class="input-group-text toggle-password "><i class="ti ti-eye-off"></i></span>
-                                        </div>
-                                    </div>
-                                    <div class="d-flex align-items-center justify-content-between mb-3">
-                                        <div class="form-check form-check-md d-flex align-items-center">
-                                            <input class="form-check-input mt-0" type="checkbox" value="" id="checkebox-md" checked="">
-                                            <label class="form-check-label text-dark ms-1" for="checkebox-md">
-                                                Se souvenir de moi
-                                            </label>
-                                        </div>
-                                        <div class="text-end">
-                                            <a href="#" class="link-danger fw-medium link-hover">Mot de passe oublier ?</a>
-                                        </div>
-                                    </div>
-                                    <div class="mb-3">
-                                        <button type="submit" class="btn btn-primary w-100">Connexion</button>
-                                    </div>
-                                    <div class="mb-3">
-                                        <p class="mb-0">Pas encore inscrit ? <a href="#" class="link-indigo fw-bold link-hover"> Cliquez ici</a></p>
-                                    </div>
-
-
-                                </div>
-                                <div class="text-center pb-4">
-                                    <p class="text-dark mb-0">Copyright &copy; <script type="b135dffc5896e74b0ec0117e-text/javascript">
-                                            document.write(new Date().getFullYear())
-                                        </script> - VOTIUM</p>
-                                </div>
-                            </form>
-                        </div> <!-- end col -->
-
+            <div class="auth-perks">
+                <div class="perk">
+                    <span class="perk-ico">⚡</span>
+                    <div>
+                        <strong>Rapide</strong>
+                        <small>Créez une session en quelques minutes.</small>
                     </div>
-                    <!-- end row -->
+                </div>
+                <div class="perk">
+                    <span class="perk-ico">🧾</span>
+                    <div>
+                        <strong>Packs & billetterie</strong>
+                        <small>Votes et tickets, selon vos règles.</small>
+                    </div>
+                </div>
+                <div class="perk">
+                    <span class="perk-ico">🔒</span>
+                    <div>
+                        <strong>Sécurisé</strong>
+                        <small>Suivi clair, retraits organisés.</small>
+                    </div>
+                </div>
+            </div>
 
+            <div class="auth-back">
+                <a class="link" href="{{ route('home') }}">← Retour au site</a>
+            </div>
+        </section>
+
+        <section class="auth-card">
+            <div class="card">
+                <h2>Connexion</h2>
+                <p class="muted">Accédez à votre espace promoteur VOTIUM.</p>
+
+                <div class="mb-3">
+                    @if(session('success'))
+                    <div class="alert alert-success">
+                        {{ session('success') }}
+                    </div>
+                    @endif
+
+                    @if(session('error'))
+                    <div class="alert alert-danger">
+                        {{ session('error') }}
+                    </div>
+                    @endif
                 </div>
 
-                <div class="col-lg-6 account-bg-01"></div> <!-- end col -->
+                @if ($errors->any())
+                    <div class="alert alert-danger">
+                        <strong>Erreurs :</strong>
+                        <ul>
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
 
+                <form class="form" action="{{ route('login') }}" method="POST" autocomplete="on">
+
+                    @csrf
+
+                    <label class="field">
+                        <span>Email</span>
+                        <input
+                            type="email"
+                            name="email"
+                            placeholder="ex: contact@domaine.com"
+                            value="{{ old('email') }}"
+                            required
+                            autofocus>
+                        @error('email')
+                            <span class="text-danger">{{ $message }}</span>
+                        @enderror
+                    </label>
+
+                    <label class="field">
+                        <span>Mot de passe</span>
+                        <input
+                            type="password"
+                            name="password"
+                            placeholder="••••••••"
+                            required>
+                        @error('password')
+                            <span class="text-danger">{{ $message }}</span>
+                        @enderror
+                    </label>
+
+                    <button class="btn primary w100" type="submit">Se connecter</button>
+
+                    <div class="form-row">
+                        <a class="muted link" href=" ">Mot de passe oublié ?</a>
+                    </div>
+                </form>
+
+                <p class="small muted" style="margin-top: 14px;">
+                    Pas encore de compte ?
+                    <a class="link" href="{{ route('register') }}">Créer un compte</a>
+                </p>
             </div>
-            <!-- end row -->
-
-        </div>
-
+        </section>
     </div>
-    <!-- End Wrapper -->
+</main>
 
-    <!-- jQuery -->
-    <script src="assets/js/jquery-3.7.1.min.js" type="b135dffc5896e74b0ec0117e-text/javascript"></script>
-
-    <!-- Bootstrap Core JS -->
-    <script src="assets/js/bootstrap.bundle.min.js" type="b135dffc5896e74b0ec0117e-text/javascript"></script>
-
-    <!-- Main JS -->
-    <script src="assets/js/script.js" type="b135dffc5896e74b0ec0117e-text/javascript"></script>
-
-    <script src="https://crms.dreamstechnologies.com/cdn-cgi/scripts/7d0fa10a/cloudflare-static/rocket-loader.min.js" data-cf-settings="b135dffc5896e74b0ec0117e-|49" defer></script>
-    <script defer src="https://static.cloudflareinsights.com/beacon.min.js/vcd15cbe7772f49c399c6a5babf22c1241717689176015" integrity="sha512-ZpsOmlRQV6y907TI0dKBHq9Md29nnaEIPlkf84rnaERnq6zvWvPUqr2ft8M1aS28oN72PdrCzSjY4U6VaAw1EQ==" data-cf-beacon='{"version":"2024.11.0","token":"3ca157e612a14eccbb30cf6db6691c29","server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
+<script src="{{ asset('asset/app.js') }}"></script>
 </body>
-
-
-<!-- Mirrored from crms.dreamstechnologies.com/html/template/login.html by HTTrack Website Copier/3.x [XR&CO'2014], Mon, 24 Nov 2025 09:59:22 GMT -->
 
 </html>

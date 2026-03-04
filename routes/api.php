@@ -22,10 +22,12 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::controller(WebhookController::class)->group(function () {
     Route::post('/webhook/hyperfast', 'handleWebhookHyperfast')->name('handleWebhookHyperfast');
+    Route::post('/webhook/hub2', 'handleWebhookHub2')->name('handleWebhookHub2');
 });
 
 Route::controller(TestController::class)->group(function () {
     Route::get('/test_hub2_payment', 'testHub2payment')->name('testHub2payment');
+    Route::get('/test_hub2_webhook', 'testHub2webhook')->name('testHub2webhook');
     Route::get('/test_process_vote', 'testProcessVote')->name('testProcessVote');
     Route::get('/test_paystack_payment', 'testPaystackpayment')->name('testPaystackpayment');
     Route::get('/test_hyperfast_payment', 'testHyperfast')->name('testHyperfast');
