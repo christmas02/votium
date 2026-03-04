@@ -5,7 +5,7 @@
 <head>
     <meta charset="utf-8" />
     <meta content="width=device-width, initial-scale=1" name="viewport" />
-    <title>VOTIUM — Campagne | {{$title}}</title>
+    <title>VOTIUM — Campagne | {{ $title ?? '' }}</title>
     <link rel="icon" href="{{ asset('asset/favicon.ico') }}">
     <link rel="apple-touch-icon" href="{{ asset('asset/favicon.png') }}">
     <meta content="#01233f" name="theme-color" />
