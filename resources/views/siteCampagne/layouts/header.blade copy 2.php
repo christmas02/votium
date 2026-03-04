@@ -13,20 +13,14 @@
             </div>
         </div>
         <nav aria-label="Navigation principale" class="nav">
-            <a href="#">Pourquoi VOTIUM</a>
-            <a href="#">Ils nous font confiance</a>
-            <a href="#">Contacts</a>
-
+            <a href="#">>Pourquoi VOTIUM</a>
+            <a href="sessions.html">Ils nous font confiance</a>
+            <a href="candidats.html">Contacts</a>
+            
         </nav>
-        <div class="topbar-right">
-            <div class="pill role-pill" id="rolePill" type="button" aria-haspopup="menu" aria-expanded="false">
-                <span class="pill-label">Promoteur</span>
+        <div class="right">
+            <div class="pill" id="rolePill"><span>Promoteur</span>
                 <div aria-hidden="true" class="dot"></div>
-            </div>
-            <div class="menu" id="roleMenu" role="menu" aria-label="Menu Promoteur" hidden>
-                <div class="menu-inner" id="roleMenuInner">
-                    <!-- rempli par app.js -->
-                </div>
             </div>
         </div>
     </div>

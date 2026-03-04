@@ -122,9 +122,20 @@ class SiteCampagneController extends Controller
         $campagne->categories = $categories;
 
         // Dans votre contrôleur, avant le return view :
+        // selected step id: default to first if none provided so page content still shows
         $selectedEtapeId = request('etape_id', $campagne->etapes->first()->etape_id ?? null);
         $selectedCategoryId = request('category_id');
         $selectedEtape = $campagne->etapes->firstWhere('etape_id', $selectedEtapeId);
+
+        // flag indicating the user explicitly passed an etape_id (used only for header display)
+        $etapeWasSelected = request()->has('etape_id');
+
+        // Indique si le bouton de retour de la barre d'outils doit être affiché
+        // Uniquement lorsqu'une étape est sélectionnée, qu'elle est active et qu'elle contient des candidats
+        $showBackButton = false;
+        if ($selectedEtape && $selectedEtape->is_active_now && $selectedEtape->candidats->count() > 0) {
+            $showBackButton = true;
+        }
 
         $title_back = "Tableau de bord";
         $link_back = "detail_campagne";
@@ -140,6 +151,8 @@ class SiteCampagneController extends Controller
             'selectedEtape',
             'selectedEtapeId',
             'selectedCategoryId',
+            'etapeWasSelected',
+            'showBackButton',
             'paymentMethods',
             'compteRetraits'
         ));
