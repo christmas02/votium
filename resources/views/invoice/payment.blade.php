@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -88,23 +88,27 @@
                 <table width="100%" cellspacing="0" cellpadding="5">
                     <tbody>
                         <tr>
-                            <td>Nom et prènom du payeur</td>
+                            <td>Nom et prénom :</td>
                             <td>{{$data["name"] ?? 'Non disponible' }}</td>
                         </tr>
                         <tr>
-                            <td>Numero de telephone</td>
+                            <td>Numéro de téléphone :</td>
                             <td>{{$data["phoneNumber"] ?? 'Non disponible' }}</td>
                         </tr>
                         <tr>
-                            <td>Adresse èlêctronique</td>
+                            <td>Adresse électronique : </td>
                             <td>{{$data["email"] ?? 'Non disponible' }}</td>
                         </tr>
                         <tr>
-                            <td>Montant payee </td>
+                            <td>Montant :</td>
                             <td>{{$data["amount"] ?? 'Non disponible' }}</td>
                         </tr>
                         <tr>
-                            <td>Date de transaction</td>
+                            <td>Moyen de paiement :</td>
+                            <td>{{$data["moyen_paiement"] ?? 'Non disponible' }}</td>
+                        </tr>
+                        <tr>
+                            <td>Date :</td>
                             <td>{{$data["date"] ?? 'Non disponible' }}</td>
                         </tr>
                         <tr>
@@ -124,12 +128,12 @@
                 <table width="100%" cellspacing="0" cellpadding="5">
                     <tbody>
                     <tr>
-                        <td>Candidat</td>
+                        <td>Nom du candidat :</td>
                         <td></td>
                         <td> {{$data["candidat"] ?? 'Non disponible' }}</td>
                     </tr>
                     <tr>
-                        <td>Nombre de vote(s)</td>
+                        <td>Nombre de vote(s) :</td>
                         <td></td>
                         <td> {{$data["quantity"] ?? 'Non disponible' }}</td>
                     </tr>
@@ -145,7 +149,7 @@
                 <td></td>
                 <td tesxt-align="center">
                     Siège social : ABIDJAN COCODY ABATTA,  Lot 201, Ilot 20 - 07 BP 993 ABJ 07
-                    Cel : +225 0565121084 - R/C :CI-ABJ-03-2023-B13-04012
+                    - R/C :CI-ABJ-03-2023-B13-04012
                     Site web: www.impactafric.com
                 </td>
                 <td></td>
