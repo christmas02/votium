@@ -124,6 +124,7 @@ class WebhookController
             'quantity' => $vote->quantity,
             'amount' => $transaction['amount_paid'],
             'candidat' => $candidat->name,
+            'moyen_paiement' => $transaction['payment_method']
         ];
         $invoice_name = $pdfGenerator->generatePaymentReceipt($pdfData);
         $link_pdf = rtrim(env('INVOICE_PATH'), '/') . '/' . $invoice_name;

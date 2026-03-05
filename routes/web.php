@@ -34,10 +34,16 @@ Route::get('/invoice_template', function () {
 });
 Route::controller(AuthController::class)->group(function () {
     Route::get('/', 'screenLogin')->name('screenLogin');
-    Route::post('registered', 'register');
-    Route::post('login', 'login');
+    Route::post('registered', 'register')->name('register');
+    Route::post('login', 'login')->name('login');
     Route::get('/confirm/{id}/{token}', 'confirm')->name('confirm');
     Route::get('logout', 'logout')->name('logout');
+});
+
+Route::controller(HomeController::class)->group(function () {
+
+    #ROUTES SITE CAMPAGNES
+    Route::get('home', 'index')->name('home');
 });
 
 // ---Site CAMPAGNES ---
