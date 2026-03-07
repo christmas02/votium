@@ -1,192 +1,160 @@
-@extends('layout.header.business')
+@push('styles')
+    @include('layout.css.business')
+@endpush
+@extends('layout.app.business')
 
 @section('content')
+    <main class="shell">
+        <div class="breadcrumb">🏠 <span>Accueil</span> <span>›</span> <b>Tableau de bord</b></div>
 
-<!-- Start Content -->
-<div class="content pb-0">
+        <!-- Start Content -->
+        <div class="grid">
+            <!-- LEFT FILTER -->
+            <section class="card">
+                <div class="hd">
+                    <h3>FILTRER</h3>
+                    <span class="tag"><span class="live"></span>LIVE</span>
+                </div>
+                <div class="bd filter-box">
+                    <div class="stack">
+                        <div>
+                            <label>Choisir la session</label>
+                            <select id="sessionSelect">
+                                <option value="">— Aucune session —</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label>Choisir l'étape</label>
+                            <select id="stepSelect">
+                                <option value="">— Étape —</option>
+                            </select>
+                        </div>
+                        <div class="note">
+                            <b>Rappel :</b><br />
+                            Commission : <b><span id="remCommission">—</span></b><br />
+                            Prix unitaire : <b><span id="remUnitPrice">—</span></b>
+                        </div>
+                    </div>
+                </div>
+                <aside class="stack">
+                    <section class="card">
+                        <div class="right-top">
 
-    <!-- Page Header -->
-    <div class="d-flex align-items-center justify-content-between gap-2 mb-4 flex-wrap">
-        <div class="row col-12">
-            <div class="col-sm-6">
-                <h4 class="mb-0">{{ $title }}</h4>
-                <nav aria-label="breadcrumb">
-                    <ol class="breadcrumb mb-0 p-0">
-                        <li class="breadcrumb-item"><a href="{{ $link_back }}">{{ $title_back }}</a></li>
-                        <li class="breadcrumb-item active" aria-current="page">{{ $title }}</li>
-                    </ol>
-                </nav>
-            </div>
-            <div class="col-sm-6">@include('layout.status')</div>
-        </div>
-    </div>
-    <!-- End Page Header -->
-
-    <!-- row start -->
-    <div class="row">
-        <div class="col-xl-3 col-md-6">
-            <div class="card shadow">
-                <div class="card-body">
-                    <div class="d-flex align-items-center justify-content-between">
-                        <div class="d-flex align-items-center gap-2">
-                            <span class="avatar avatar-lg rounded-circle bg-secondary fs-24 flex-shrink-0"><i class="ti ti-brand-campaignmonitor"></i></span>
-                            <div>
-                                <p class="mb-1 text-truncate">Campagnes</p>
-                                <h6 class="mb-0">474</h6>
+                            <div class="balance">
+                                <div>
+                                    <div class="t muted">Votre solde</div>
+                                    <div class="v"><span id="balanceValue">0</span><span>FCFA</span></div>
+                                </div>
+                                <div class="money-ico">S</div>
                             </div>
                         </div>
-                        <!-- <span class="badge badge-soft-success">+5.62%</span> -->
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-xl-3 col-md-6">
-            <div class="card shadow">
-                <div class="card-body">
-                    <div class="d-flex align-items-center justify-content-between">
-                        <div class="d-flex align-items-center gap-2">
-                            <span class="avatar avatar-lg rounded-circle bg-info fs-24 flex-shrink-0"><i class="ti ti-send"></i></span>
-                            <div>
-                                <p class="mb-1 text-truncate">Campagnes active</p>
-                                <h6 class="mb-0">454</h6>
-                            </div>
-                        </div>
-                        <!-- <span class="badge badge-soft-success">+4.12%</span> -->
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-xl-3 col-md-6">
-            <div class="card shadow">
-                <div class="card-body">
-                    <div class="d-flex align-items-center justify-content-between">
-                        <div class="d-flex align-items-center gap-2">
-                            <span class="avatar avatar-lg rounded-circle bg-danger fs-24 flex-shrink-0"><i class="ti ti-brand-feedly"></i></span>
-                            <div>
-                                <p class="mb-1 text-truncate">Etapes</p>
-                                <h6 class="mb-0">650</h6>
-                            </div>
-                        </div>
-                        <!-- <span class="badge badge-soft-success">+3.14%</span> -->
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-xl-3 col-md-6">
-            <div class="card shadow">
-                <div class="card-body">
-                    <div class="d-flex align-items-center justify-content-between">
-                        <div class="d-flex align-items-center gap-2">
-                            <span class="avatar avatar-lg rounded-circle bg-success fs-24 flex-shrink-0"><i class="ti ti-checks"></i></span>
-                            <div>
-                                <p class="mb-1 text-truncate">Ctégories</p>
-                                <h6 class="mb-0">650</h6>
-                            </div>
-                        </div>
-                        <!-- <span class="badge badge-soft-success">+6.27%</span> -->
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- row end -->
+                    </section>
 
-    <!-- start row -->
-    <!-- <div class="col-md-6 d-flex">
-            <div class="card flex-fill">
-                <div class="card-header d-flex align-items-center justify-content-between flex-wrap row-gap-3">
-                    <h6 class="mb-0">Recently Created Deals</h6>
-                    <div class="dropdown">
-                        <a class="dropdown-toggle btn btn-outline-light shadow" data-bs-toggle="dropdown" href="javascript:void(0);">
-                            Last 30 days
-                        </a>
-                        <div class="dropdown-menu dropdown-menu-end">
-                            <a href="javascript:void(0);" class="dropdown-item">
-                                Last 15 days
-                            </a>
-                            <a href="javascript:void(0);" class="dropdown-item">
-                                Last 30 days
-                            </a>
+                </aside>
+            </section>
+            <!-- CENTER MAIN -->
+            <section class="stack">
+                <div class="card">
+                    <div class="bd">
+                        <div class="page-title">
+                            <div>
+                                <h1>Tableau de bord</h1>
+                                <div class="subtitle">Synthèse • performance • activité récente.</div>
+                            </div>
+                            <div
+                                style="display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end;flex-direction: row-reverse;">
+                                <button class="btn primary">Nouvelle session</button>
+                                <button class="btn ghost">Gérer les sessions</button>
+                            </div>
+                        </div>
+                        <div class="kpi-grid" role="list">
+                            <div class="kpi" role="listitem">
+                                <div class="label"><span class="dot"></span> N. d'étape</div>
+                                <div class="value"><span id="kpiStep">—</span></div>
+                            </div>
+                            <div class="kpi" role="listitem">
+                                <div class="label"><span class="dot"></span> N. de candidats</div>
+                                <div class="value"><span id="kpiCandidates">0</span></div>
+                            </div>
+                            <div class="kpi" role="listitem">
+                                <div class="label"><span class="dot"></span> N. de votants*</div>
+                                <div class="value"><span id="kpiVoters">0</span></div>
+                            </div>
+                            <div class="kpi" role="listitem">
+                                <div class="label"><span class="dot"></span> Montant des votes*</div>
+                                <div class="value"><span id="kpiAmount">0</span><span class="unit">FCFA</span>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
-                <div class="card-body">
-                    <div class="table-responsive custom-table">
-                        <table class="table dataTable table-nowrap" id="deals-project">
-                            <thead class="table-light">
-                            <tr>
-                                <th>Deal Name</th>
-                                <th>Stage</th>
-                                <th>Deal Value</th>
-                                <th>Status</th>
-                            </tr>
+                <div class="charts" style="grid-template-columns: 1fr;">
+                    <div class="card">
+                        <div class="hd">
+                            <h3>Votes par jour</h3>
+                            <span class="pill">Sur 7 jours</span>
+                        </div>
+                        <div class="bd">
+                            <div class="chart-wrap">
+                                <canvas id="barChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="charts">
+
+                    <div class="card">
+                        <div class="hd">
+                            <h3>Montant des votes par jour*</h3>
+                            <span class="pill">Auto</span>
+                        </div>
+                        <div class="bd">
+                            <div class="chart-wrap">
+                                <canvas id="lineChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="hd">
+                            <h3>Votes par étapes</h3>
+                            <span class="pill">ONE</span>
+                        </div>
+                        <div class="bd">
+                            <div class="chart-wrap">
+                                <canvas id="donutChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="hd">
+                        <h3>Derniers votes</h3>
+                        <a class="pill" href="#">Voir la liste</a>
+                    </div>
+                    <div class="bd" style="padding:0;">
+                        <table aria-label="Derniers votes" class="table">
+                            <thead>
+                                <tr>
+                                    <th style="width:30%;">Session</th>
+                                    <th style="width:18%;">Étape</th>
+                                    <th style="width:8%;">Qté</th>
+                                    <th style="width:14%;">Montant</th>
+                                    <th style="width:18%;">Candidat</th>
+                                    <th style="width:10%;">Date</th>
+                                    <th style="width:10%;">Status</th>
+                                </tr>
                             </thead>
-                            <tbody>
-                            </tbody>
+                            <tbody id="recentVotes"></tbody>
                         </table>
                     </div>
-                </div> 
-            </div>
-        </div> -->
-
-    <!-- <div class="col-md-6 d-flex">
-            <div class="card flex-fill">
-                <div class="card-header">
-                    <div class="d-flex align-items-center justify-content-between flex-wrap row-gap-3">
-                        <h6 class="mb-0">Deals By Stage</h6>
-                        <div class="d-flex align-items-center flex-wrap row-gap-3">
-                            <div class="dropdown me-2">
-                                <a class="dropdown-toggle btn btn-outline-light shadow" data-bs-toggle="dropdown" href="javascript:void(0);">
-                                    Sales Pipeline
-                                </a>
-                                <div class="dropdown-menu dropdown-menu-end">
-                                    <a href="javascript:void(0);" class="dropdown-item">
-                                        Marketing Pipeline
-                                    </a>
-                                    <a href="javascript:void(0);" class="dropdown-item">
-                                        Sales Pipeline
-                                    </a>
-                                    <a href="javascript:void(0);" class="dropdown-item">
-                                        Email
-                                    </a>
-                                    <a href="javascript:void(0);" class="dropdown-item">
-                                        Chats
-                                    </a>
-                                    <a href="javascript:void(0);" class="dropdown-item">
-                                        Operational
-                                    </a>
-                                </div>
-                            </div>
-                            <div class="dropdown">
-                                <a class="dropdown-toggle btn btn-outline-light shadow" data-bs-toggle="dropdown" href="javascript:void(0);">
-                                    Last 30 Days
-                                </a>
-                                <div class="dropdown-menu dropdown-menu-end">
-                                    <a href="javascript:void(0);" class="dropdown-item">
-                                        Last 30 Days
-                                    </a>
-                                    <a href="javascript:void(0);" class="dropdown-item">
-                                        Last 15 Days
-                                    </a>
-                                    <a href="javascript:void(0);" class="dropdown-item">
-                                        Last 7 Days
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
                 </div>
-                <div class="card-body py-0">
-                    <div id="deals-chart"></div>
-                </div> 
-            </div>
-        </div> -->
-    <!-- end row -->
+            </section>
 
-</div>
-<!-- End Content -->
+        </div>
+        <!-- End Content -->
+    </main>
 @endsection
 <!-- section js -->
 @section('extra-js')
-
 @endsection
