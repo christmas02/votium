@@ -1077,7 +1077,7 @@
             border-radius: 14px;
             border: 1px solid rgba(207, 103, 5, 0.14);
             /* background: rgba(255, 255, 255, .92); */
-            padding: 12px 12px;
+            padding: 20px 20px;
             cursor: pointer;
             transition: transform .12s ease, border-color .12s ease, box-shadow .12s ease;
         }

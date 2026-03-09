@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="VOTIUM vous aide à créer, gérer et suivre vos campagnes de votes en toute simplicité.">
-    <title>VOTIUM — Connexion</title>
+    <title>VOTIUM — Réinitialisation</title>
 
     <link rel="icon" type="image/png" href="{{ asset('assets/favicon.png') }}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -55,8 +55,8 @@
     <div class="container auth-grid">
         <section class="auth-left">
             <div class="auth-badge">Espace promoteur</div>
-            <h1>Connexion</h1>
-            <p class="muted">Accédez à votre espace promoteur VOTIUM.</p>
+            <h1>Réinitialisation</h1>
+            <p class="muted">Veuillez entrer votre nouveau mot de passe.</p>
 
             <div class="auth-perks">
                 <div class="perk">
@@ -89,8 +89,8 @@
 
         <section class="auth-card">
             <div class="card">
-                <h2>Connexion</h2>
-                <p class="muted">Accédez à votre espace promoteur VOTIUM.</p>
+                <h2>Réinitialisation</h2>
+                <p class="muted">Veuillez entrer votre nouveau mot de passe.</p>
 
                 <div class="mb-3">
                     @if(session('success'))
@@ -122,20 +122,6 @@
                     @csrf
 
                     <label class="field">
-                        <span>Email</span>
-                        <input
-                            type="email"
-                            name="email"
-                            placeholder="ex: contact@domaine.com"
-                            value="{{ old('email') }}"
-                            required
-                            autofocus>
-                        @error('email')
-                            <span class="text-danger">{{ $message }}</span>
-                        @enderror
-                    </label>
-
-                    <label class="field">
                         <span>Mot de passe</span>
                         <input
                             type="password"
@@ -146,18 +132,24 @@
                             <span class="text-danger">{{ $message }}</span>
                         @enderror
                     </label>
+                    <label class="field">
+                        <span>Confirmer le mot de passe</span>
+                        <input
+                            type="password"
+                            name="password_confirmation"
+                            placeholder="••••••••"
+                            required>
+                        @error('password_confirmation')
+                            <span class="text-danger">{{ $message }}</span>
+                        @enderror
+                  
+                    <button class="btn primary w100" type="submit">Réinitialiser le mot de passe</button>
 
-                    <button class="btn primary w100" type="submit">Se connecter</button>
+                    
 
-                    <div class="form-row">
-                        <a class="muted link" href="{{ route('screenForgot') }}">Mot de passe oublié ?</a>
-                    </div>
                 </form>
 
-                <p class="small muted" style="margin-top: 14px;">
-                    Pas encore de compte ?
-                    <a class="link" href="{{ route('screenRegister') }}">Créer un compte</a>
-                </p>
+               
             </div>
         </section>
     </div>
