@@ -1,521 +1,790 @@
-@extends('layout.header.business')
+@extends('refont.layout.app')
 
+@section('title', 'Paramètres du compte')
+
+{{-- ===== BREADCRUMB ===== --}}
+@section('breadcrumb')
+    <li><a href="{{ route('business.espace') }}"><i class="ti ti-home" style="font-size:13px;"></i>&nbsp;Accueil</a></li>
+    <li class="vt-breadcrumb-sep"><i class="ti ti-chevron-right" style="font-size:11px;"></i></li>
+    <li><a href="{{ route('business.list_retrait') }}">Retraits</a></li>
+    <li class="vt-breadcrumb-sep"><i class="ti ti-chevron-right" style="font-size:11px;"></i></li>
+    <li class="active">Paramètres</li>
+@endsection
+
+{{-- ===== CSS SPÉCIFIQUE ===== --}}
+@section('extra-css')
+<style>
+    /* ---- En-tête page ---- */
+    .vt-profile-header {
+        display: flex; align-items: flex-start;
+        justify-content: space-between;
+        gap: 12px; margin-bottom: 22px; flex-wrap: wrap;
+    }
+    .vt-profile-title {
+        font-size: 28px; font-weight: 800;
+        color: var(--vt-text-main); margin: 0 0 4px;
+        letter-spacing: -.4px;
+    }
+    .vt-profile-subtitle { font-size: 13px; color: var(--vt-text-muted); margin: 0; }
+    .vt-btn-accueil {
+        display: inline-flex; align-items: center; gap: 6px;
+        border: 1.5px solid var(--vt-border);
+        border-radius: 50px; padding: 7px 16px;
+        background: #fff; color: var(--vt-text-main);
+        font-size: 12.5px; font-weight: 600;
+        text-decoration: none; white-space: nowrap;
+        transition: all .15s; flex-shrink: 0;
+    }
+    .vt-btn-accueil:hover { border-color: #94a3b8; color: var(--vt-text-main); }
+
+    /* ---- Conteneur principal (tabs + content) ---- */
+    .vt-profile-container {
+        background: #fff;
+        border-radius: var(--vt-radius);
+        box-shadow: var(--vt-shadow);
+        display: flex;
+        overflow: hidden;
+        min-height: 500px;
+    }
+
+    /* ---- Sidebar tabs ---- */
+    .vt-profile-tabs {
+        width: 190px; flex-shrink: 0;
+        padding: 18px 12px;
+        border-right: 1px solid var(--vt-border);
+        display: flex; flex-direction: column; gap: 4px;
+    }
+    .vt-tab-btn {
+        display: flex; align-items: center; gap: 10px;
+        padding: 10px 14px;
+        border-radius: var(--vt-radius-sm);
+        border: none; background: transparent;
+        color: var(--vt-text-muted);
+        font-size: 13px; font-weight: 500;
+        cursor: pointer; text-align: left; width: 100%;
+        transition: all .15s;
+    }
+    .vt-tab-btn i { font-size: 16px; flex-shrink: 0; }
+    .vt-tab-btn:hover { background: var(--vt-page-bg); color: var(--vt-text-main); }
+    .vt-tab-btn.active {
+        background: var(--vt-orange-light);
+        color: var(--vt-orange);
+        font-weight: 600;
+    }
+    .vt-tab-btn.active i { color: var(--vt-orange); }
+
+    /* ---- Contenu de l'onglet ---- */
+    .vt-profile-content {
+        flex: 1; padding: 28px 32px;
+        display: none;
+    }
+    .vt-profile-content.active { display: block; }
+
+    /* ---- En-tête de section ---- */
+    .vt-section-title {
+        font-size: 20px; font-weight: 700;
+        color: var(--vt-text-main); margin: 0 0 4px;
+    }
+    .vt-section-desc { font-size: 13px; color: var(--vt-text-muted); margin: 0 0 24px; }
+
+    /* ---- Séparateur de groupe ---- */
+    .vt-field-group-label {
+        font-size: 11px; font-weight: 700;
+        letter-spacing: .7px; text-transform: uppercase;
+        color: var(--vt-text-muted);
+        margin-bottom: 14px; margin-top: 4px;
+    }
+
+    /* ---- Champs de formulaire custom ---- */
+    .vt-field { margin-bottom: 16px; }
+    .vt-field label {
+        display: block;
+        font-size: 12px; font-weight: 500;
+        color: var(--vt-text-muted);
+        margin-bottom: 5px;
+    }
+    .vt-input-wrap { position: relative; }
+    .vt-input-wrap .vt-inp-icon {
+        position: absolute; left: 12px; top: 50%; transform: translateY(-50%);
+        color: #94a3b8; font-size: 14px; pointer-events: none;
+        z-index: 1;
+    }
+    .vt-input-wrap .vt-inp-icon-select {
+        /* pour les selects on laisse la place à droite aussi */
+    }
+    .vt-input {
+        width: 100%;
+        padding: 9px 12px 9px 36px;
+        border: 1px solid var(--vt-border);
+        border-radius: var(--vt-radius-sm);
+        font-size: 13px; color: var(--vt-text-main);
+        background: #fff;
+        transition: border-color .15s;
+    }
+    .vt-input:focus { outline: none; border-color: var(--vt-orange); }
+    .vt-select {
+        width: 100%;
+        padding: 9px 36px 9px 36px;
+        border: 1px solid var(--vt-border);
+        border-radius: var(--vt-radius-sm);
+        font-size: 13px; color: var(--vt-text-main);
+        background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E") no-repeat right 10px center / 15px;
+        appearance: none;
+        cursor: pointer;
+        transition: border-color .15s;
+    }
+    .vt-select:focus { outline: none; border-color: var(--vt-orange); }
+
+    /* ---- Logo upload (onglet Entreprise) ---- */
+    .vt-logo-row {
+        display: flex; align-items: center; gap: 16px;
+        margin-bottom: 20px;
+    }
+    .vt-logo-avatar {
+        width: 48px; height: 48px;
+        border-radius: 10px;
+        background: #fde8cc;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 20px; font-weight: 800; color: var(--vt-orange);
+        flex-shrink: 0; overflow: hidden;
+        position: relative;
+    }
+    .vt-logo-avatar img {
+        width: 100%; height: 100%; object-fit: cover;
+        position: absolute; top: 0; left: 0;
+    }
+    .vt-logo-info { flex: 1; }
+    .vt-logo-name { font-size: 13.5px; font-weight: 600; color: var(--vt-text-main); }
+    .vt-logo-hint { font-size: 11px; color: var(--vt-text-muted); }
+    .vt-logo-actions { display: flex; align-items: center; gap: 8px; }
+    .vt-btn-upload {
+        background: #7c3aed; color: #fff;
+        border: none; border-radius: var(--vt-radius-sm);
+        padding: 8px 16px;
+        font-size: 12.5px; font-weight: 600;
+        cursor: pointer; transition: background .15s;
+        white-space: nowrap;
+        display: inline-flex; align-items: center; gap: 5px;
+        position: relative; overflow: hidden;
+    }
+    .vt-btn-upload:hover { background: #6d28d9; }
+    .vt-btn-upload input[type="file"] {
+        position: absolute; top: 0; left: 0;
+        width: 100%; height: 100%;
+        opacity: 0; cursor: pointer;
+    }
+    .vt-btn-del-logo {
+        width: 34px; height: 34px;
+        border: 1px solid #fca5a5;
+        border-radius: var(--vt-radius-sm);
+        background: #fff;
+        display: flex; align-items: center; justify-content: center;
+        color: #dc2626; cursor: pointer;
+        transition: all .15s; flex-shrink: 0;
+    }
+    .vt-btn-del-logo:hover { background: #fff5f5; }
+
+    /* Bouton Enregistrer orange */
+    .vt-btn-save {
+        background: var(--vt-orange); color: #fff;
+        border: none; border-radius: var(--vt-radius-sm);
+        padding: 10px 24px;
+        font-size: 13.5px; font-weight: 700;
+        cursor: pointer; transition: background .15s;
+        display: inline-flex; align-items: center; gap: 6px;
+        margin-top: 8px;
+    }
+    .vt-btn-save:hover { background: var(--vt-orange-hover); }
+
+    /* ---- Comptes de retrait cards ---- */
+    .vt-retrait-header {
+        display: flex; align-items: center;
+        justify-content: space-between;
+        margin-bottom: 8px;
+    }
+    .vt-retrait-list-label {
+        font-size: 12.5px; font-weight: 600;
+        color: var(--vt-text-muted); margin-bottom: 14px;
+    }
+    .vt-comptes-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 10px;
+        margin-bottom: 16px;
+    }
+    .vt-compte-card {
+        border: 1px solid var(--vt-border);
+        border-radius: var(--vt-radius-sm);
+        padding: 12px 12px 10px;
+        background: #fff;
+        position: relative;
+        transition: box-shadow .15s;
+    }
+    .vt-compte-card:hover { box-shadow: var(--vt-shadow); }
+    .vt-compte-close {
+        position: absolute; top: 8px; right: 8px;
+        width: 20px; height: 20px;
+        font-size: 12px; color: #94a3b8;
+        cursor: pointer; border: none; background: none;
+        display: flex; align-items: center; justify-content: center;
+        transition: color .15s;
+    }
+    .vt-compte-close:hover { color: #dc2626; }
+    .vt-compte-top {
+        display: flex; align-items: center; gap: 8px;
+        margin-bottom: 6px;
+    }
+    .vt-compte-icon {
+        width: 32px; height: 32px;
+        border-radius: 6px; overflow: hidden;
+        flex-shrink: 0; background: #f1f5f9;
+        display: flex; align-items: center; justify-content: center;
+    }
+    .vt-compte-icon img { width: 100%; height: 100%; object-fit: contain; }
+    .vt-compte-name {
+        font-size: 12px; font-weight: 700;
+        color: var(--vt-text-main); text-transform: uppercase;
+    }
+    .vt-compte-number {
+        font-size: 13px; font-weight: 700;
+        color: var(--vt-text-main); letter-spacing: .5px;
+    }
+    .vt-retrait-astuce {
+        font-size: 12px; color: var(--vt-text-muted);
+        font-style: italic; margin-top: 4px;
+    }
+
+    /* ---- Profil note ---- */
+    .vt-profile-note {
+        font-size: 12px; color: var(--vt-orange);
+        margin: 8px 0 16px;
+    }
+
+    /* ---- Footer intérieur ---- */
+    .vt-profile-inner-footer {
+        border-top: 1px solid var(--vt-border);
+        margin-top: 28px; padding-top: 14px;
+        text-align: center;
+        font-size: 11px; color: #cbd5e1;
+    }
+
+    @media (max-width: 700px) {
+        .vt-profile-container { flex-direction: column; }
+        .vt-profile-tabs { width: 100%; flex-direction: row; border-right: none; border-bottom: 1px solid var(--vt-border); }
+        .vt-comptes-grid { grid-template-columns: repeat(2, 1fr); }
+        .vt-profile-content { padding: 20px 16px; }
+    }
+    @media (max-width: 480px) {
+        .vt-comptes-grid { grid-template-columns: 1fr; }
+    }
+</style>
+@endsection
+
+{{-- ===== CONTENU ===== --}}
 @section('content')
 
-<!-- Start Content -->
-<div class="content pb-0">
-
-    <!-- Page Header -->
-    <div class="d-flex align-items-center justify-content-between gap-2 mb-4 flex-wrap">
-        <div class="row col-12">
-            <div class="col-sm-6">
-                <h4 class="mb-0">{{ $title }}</h4>
-                <nav aria-label="breadcrumb">
-                    <ol class="breadcrumb mb-0 p-0">
-                        <li class="breadcrumb-item"><a href="{{ $link_back }}">{{ $title_back }}</a></li>
-                        <li class="breadcrumb-item active" aria-current="page">{{ $title }}</li>
-                    </ol>
-                </nav>
-            </div>
-            <div class="col-sm-6">@include('layout.status')</div>
+    {{-- En-tête --}}
+    <div class="vt-profile-header">
+        <div>
+            <h1 class="vt-profile-title">Paramètres du compte</h1>
+            <p class="vt-profile-subtitle">Gérez votre entreprise, vos comptes de retrait et votre profil.</p>
         </div>
+        <a href="{{ route('business.espace') }}" class="vt-btn-accueil">
+            <i class="ti ti-home" style="font-size:13px;"></i> Accueil
+        </a>
     </div>
-    <!-- End Page Header -->
 
-    <!-- start row -->
-    <div class="row">
+    {{-- Conteneur tabs + contenu --}}
+    <div class="vt-profile-container">
 
-        <!-- Contact Sidebar -->
-        <div class="col-xl-3">
-            <div class="card mb-3 mb-xl-0">
-                <div class="card-body">
-                    <div class="settings-sidebar" role="tablist" aria-orientation="vertical">
-                        <h5 class="mb-3 fs-17">Paramètres compte</h5>
-                        <div class="list-group list-group-flush settings-sidebar">
-                            <a href="#tab_1" data-bs-toggle="tab" aria-expanded="false" aria-selected="true" role="tab" class="d-block p-2 fw-medium active"> <i class="ti ti-wallet me-1"></i>Entreprise</a>
-                            <a href="#tab_5" data-bs-toggle="tab" aria-expanded="false" aria-selected="false" tabindex="-1" role="tab" class="d-block p-2 fw-medium"><i class="ti ti-wallet me-1"></i>Compte de retrait</a>
-                            <a href="#tab_2" data-bs-toggle="tab" aria-expanded="true" aria-selected="false" role="tab" tabindex="-1" class="d-block p-2 fw-medium"><i class="ti ti-user me-1"></i>Profil</a>
-                        </div>
+        {{-- =====================================================
+             SIDEBAR TABS
+             ===================================================== --}}
+        <nav class="vt-profile-tabs">
+            <button class="vt-tab-btn active" data-tab="tab-entreprise">
+                <i class="ti ti-building"></i> Entreprise
+            </button>
+            <button class="vt-tab-btn" data-tab="tab-retrait">
+                <i class="ti ti-credit-card"></i> Comptes de retrait
+            </button>
+            <button class="vt-tab-btn" data-tab="tab-profil">
+                <i class="ti ti-user"></i> Profil
+            </button>
+        </nav>
+
+        {{-- =====================================================
+             ONGLET 1 — ENTREPRISE
+             ===================================================== --}}
+        <div class="vt-profile-content active" id="tab-entreprise">
+
+            <h2 class="vt-section-title">Entreprise</h2>
+            <p class="vt-section-desc">Mettez à jour les informations concernant votre organisation.</p>
+
+            <form class="ajax-form" action="{{ route('business.update_customer') }}" method="POST" enctype="multipart/form-data">
+                @csrf
+                <input type="hidden" name="user_id"     value="{{ $user->user_id }}">
+                <input type="hidden" name="customer_id" value="{{ $customer->customer_id }}">
+                <input type="hidden" name="old_logo"    value="{{ $customer->logo }}">
+
+                {{-- Logo --}}
+                <p class="vt-field-group-label">Dénomination</p>
+                <div class="vt-logo-row">
+                    <div class="vt-logo-avatar" id="logo-avatar-wrap">
+                        @if($customer->logo)
+                            <img src="{{ asset(env('IMAGES_PATH').'/'.$customer->logo) }}"
+                                 id="logo-preview" alt="logo">
+                        @else
+                            <span id="logo-letter">{{ strtoupper(substr($customer->entreprise ?? 'V', 0, 1)) }}</span>
+                        @endif
                     </div>
-                </div> <!-- end card body -->
-            </div> <!-- end card -->
-        </div>
-        <!-- /Contact Sidebar -->
-
-        <!-- Contact Details -->
-        <div class="col-xl-9">
-
-            <!-- Tab Content -->
-            <div class="tab-content pt-0">
-
-                <!-- Activities -->
-                <div class="tab-pane active show" id="tab_1">
-                    <div class="card">
-                        <div
-                            class="card-header d-flex align-items-center justify-content-between flex-wrap row-gap-3">
-                            <h5 class="fw-semibold mb-0">Entreprise</h5>
-                            <div class="table-search" style="margin-bottom:0 !important;">
-                                <div class="search-input">
-                                    <a href="javascript:void(0);" class="btn-searchset"><i class="isax isax-search-normal fs-12"></i></a>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="card-body">
-
-                            <form class="ajax-form" action="{{ route('business.update_customer') }}" method="POST" enctype="multipart/form-data">
-                                @csrf
-                                <div class="modal-body">
-                                    <input type="hidden" name="user_id" value="{{ $user->user_id }}">
-                                    <input type="hidden" name="customer_id" value="{{ $customer->customer_id }}">
-                                    <input type="hidden" name="old_logo" value="{{ $customer->logo }}">
-                                    <!-- SECTION 2 : INFORMATIONS ENTREPRISE -->
-                                    <div>
-                                        <h6 class="mb-3 d-flex align-items-center text-dark">
-                                            <i class="ti ti-building-skyscraper fs-5 me-2"></i> Informations de l'Entreprise
-                                        </h6>
-
-                                        <div class="row">
-                                            <!-- Logo Upload avec Prévisualisation -->
-                                            <div class="col-md-12 mb-3 image-upload-group">
-                                                <div class="d-flex align-items-center bg-light p-2 rounded border {{ $customer->logo ? 'border-primary' : 'border-dashed' }}">
-
-                                                    <!-- Zone de l'image (L'avatar doit rester visible pour afficher soit l'icône, soit l'image) -->
-                                                    <div class="avatar avatar-xl border border-dashed me-3 flex-shrink-0 d-flex justify-content-center align-items-center bg-light position-relative overflow-hidden">
-
-                                                        <!-- Placeholder : Caché si le logo existe -->
-                                                        <i class="ti ti-photo text-muted fs-4 placeholder-target {{ $customer->logo ? 'd-none' : '' }}"></i>
-
-                                                        <!-- Preview : Visible si le logo existe, src configuré avec le chemin env -->
-                                                        <img src="{{ $customer->logo ? asset(env('IMAGES_PATH').'/'.$customer->logo) : '#' }}"
-                                                            alt="Aperçu"
-                                                            class="preview-target {{ $customer->logo ? '' : 'd-none' }} w-100 h-100 object-fit-cover">
-                                                    </div>
-
-                                                    <div class="d-flex flex-column">
-                                                        <label class="form-label mb-1">Logo de l'entreprise</label>
-                                                        <input type="file"
-                                                            class="form-control form-control-sm"
-                                                            name="logo"
-                                                            accept="image/*"
-                                                            onchange="handleImagePreview(this)">
-                                                        <small class="text-muted">JPG, GIF ou PNG. Max 800K</small>
-
-                                                        <!-- Bouton supprimer : Visible uniquement si un logo existe -->
-                                                        <button type="button"
-                                                            class="btn btn-sm btn-link text-danger p-0 remove-btn-target text-start {{ $customer->logo ? '' : 'd-none' }}"
-                                                            onclick="handleImageRemove(this)">
-                                                            Supprimer
-                                                        </button>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <!-- Nom Entreprise -->
-                                            <div class="col-md-6 mb-3">
-                                                <label class="form-label">Nom de l'organisation <span class="text-danger">*</span></label>
-                                                <input type="text" class="form-control" name="entreprise" value="{{ $customer->entreprise }}" required>
-                                            </div>
-
-                                            <!-- Pays -->
-                                            <div class="col-md-6 mb-4">
-                                                <label class="form-label">Pays siège <span class="text-danger">*</span></label>
-                                                <input type="text" class="form-control" name="pays_siege" value="{{ $customer->pays_siege }}" required>
-
-                                            </div>
-
-                                            <!-- NOUVEAU : Email de l'entreprise -->
-                                            <div class="col-md-6 mb-3">
-                                                <label class="form-label">Email de l'organisation</label>
-                                                <!-- Nommé 'company_email' pour ne pas écraser l'email du User -->
-                                                <input type="email" class="form-control" name="email" value="{{$customer->email}}">
-                                            </div>
-
-                                            <!-- Téléphone -->
-                                            <div class="col-md-6 mb-3">
-                                                <label class="form-label">Téléphone <span class="text-danger">*</span></label>
-                                                <input type="text" class="form-control phone" name="phonenumber" value="{{ $customer->phonenumber }}" required>
-                                            </div>
-
-                                            <!-- Adresse -->
-                                            <div class="col-md-12 mb-3">
-                                                <label class="form-label">Adresse <span class="text-danger">*</span></label>
-                                                <input type="text" class="form-control" name="adresse" value="{{ $customer->adresse }}" required>
-                                            </div>
-                                        </div>
-
-                                        <!-- SECTION : RÉSEAUX SOCIAUX -->
-                                        <div class="mt-3">
-
-                                            <div class="row">
-                                                <!-- Facebook -->
-                                                <div class="col-md-6 mb-3">
-                                                    <div class="input-group">
-                                                        <span class="input-group-text bg-light"><i class="ti ti-brand-facebook"></i></span>
-                                                        <input type="url" class="form-control" name="link_facebook" value="{{ $customer->link_facebook }}">
-                                                    </div>
-                                                </div>
-
-                                                <!-- Instagram -->
-                                                <div class="col-md-6 mb-3">
-                                                    <div class="input-group">
-                                                        <span class="input-group-text bg-light"><i class="ti ti-brand-instagram"></i></span>
-                                                        <input type="url" class="form-control" name="link_instagram" value="{{ $customer->link_instagram }}">
-                                                    </div>
-                                                </div>
-
-                                                <!-- LinkedIn -->
-                                                <div class="col-md-6 mb-3">
-                                                    <div class="input-group">
-                                                        <span class="input-group-text bg-light"><i class="ti ti-brand-linkedin"></i></span>
-                                                        <input type="url" class="form-control" name="link_linkedin" value="{{ $customer->link_linkedin }}">
-                                                    </div>
-                                                </div>
-
-                                                <!-- Lien youtube / X -->
-                                                <div class="col-md-6 mb-3">
-                                                    <div class="input-group">
-                                                        <span class="input-group-text bg-light"><i class="ti ti-brand-youtube"></i></span>
-                                                        <input type="url" class="form-control" name="link_youtube" value="{{ $customer->link_youtube }}">
-                                                    </div>
-                                                </div>
-
-                                                <!-- Lien Tiktok -->
-                                                <div class="col-md-6 mb-3">
-                                                    <div class="input-group">
-                                                        <span class="input-group-text bg-light"><i class="ti ti-brand-tiktok"></i></span>
-                                                        <input type="url" class="form-control" name="link_tiktok" value="{{ $customer->link_tiktok }}">
-                                                    </div>
-                                                </div>
-
-                                                <!-- Site Web -->
-                                                <div class="col-md-6 mb-3">
-                                                    <div class="input-group">
-                                                        <span class="input-group-text bg-light"><i class="ti ti-brand-telegram"></i></span>
-                                                        <input type="url" class="form-control" name="link_website" value="{{ $customer->link_website }}">
-                                                    </div>
-                                                </div>
-
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- Modal Footer (Actions) -->
-                                <div class="modal-footer border-top mt-4 pb-0 px-0">
-                                    <button type="button" class="btn btn-light" data-bs-dismiss="modal">Annuler</button>
-                                    <button type="submit" class="btn btn-primary"><i class="ti ti-device-floppy me-1"></i> Enregistrer</button>
-                                </div>
-                            </form>
-                        </div><!-- end card body -->
+                    <div class="vt-logo-info">
+                        <div class="vt-logo-name">Logo / Image</div>
+                        <div class="vt-logo-hint">PNG/JPG · recommandé 512×512</div>
+                    </div>
+                    <div class="vt-logo-actions">
+                        <label class="vt-btn-upload">
+                            <i class="ti ti-upload" style="font-size:13px;"></i>
+                            Charger une image
+                            <input type="file" name="logo" accept="image/*"
+                                   onchange="handleLogoPreview(this)">
+                        </label>
+                        <button type="button" class="vt-btn-del-logo"
+                                id="logo-del-btn"
+                                onclick="handleLogoRemove()"
+                                style="{{ $customer->logo ? '' : 'display:none;' }}">
+                            <i class="ti ti-trash" style="font-size:14px;"></i>
+                        </button>
                     </div>
                 </div>
-                <!-- /Activities -->
 
-                <!-- Email -->
-                <div class="tab-pane fade" id="tab_5">
-                    <!-- Settings Info -->
+                {{-- Champs principaux --}}
+                <div class="row g-3">
 
-                    <div class="card mb-0">
-                        <div class="card-body">
-
-                            <div class="border-bottom mb-3 pb-3 d-flex align-items-center justify-content-between flex-wrap gap-2">
-                                <h4 class="fs-17 mb-0">Compte de retrait</h4>
-                                <a href="javascript:void(0)" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#add_bank"><i class="ti ti-square-rounded-plus-filled me-1"></i>Créer Compte</a>
-                            </div>
-
-                            <div class="row">
-
-                                <!-- Email Wrap -->
-                                <div class="col-md-12">
-                                    @foreach($compteRetraits as $compte)
-                                    <!-- Payment -->
-                                    <div class="border rounded shadow p-3 mb-3">
-                                        <div class="row gy-3">
-                                            <div class="col-sm-5">
-                                                <div class="d-flex align-items-center">
-                                                    <span>
-                                                        @foreach($paymentMethods as $method)
-                                                        @if($method->value === $compte->payment_methode)
-                                                        <img src="{{ asset(env('IMAGES_PAYMENT') . '/' . $method->icon()) }}" alt="{{ $method->label() }}" class="me-2" style="width:50px; height:50px;">
-                                                        @endif
-                                                        @endforeach
-
-                                                    </span>
-                                                    <div class="ms-2">
-                                                        <label class="form-label text-uppercase mb-0">
-                                                            {{ $compte->account_name }}
-                                                        </label>
-                                                        <br>
-                                                        <label class="form-label mt-0">
-                                                            {{ $compte->phone_number }}
-                                                        </label>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-sm-7">
-                                                <div
-                                                    class="d-flex align-items-center justify-content-between flex-wrap gap-2">
-                                                    <div class="d-flex align-items-center">
-                                                        <a href="javascript:void(0);"
-                                                            data-bs-toggle="collapse"
-                                                            data-bs-target="#php-mail{{ $compte->withdrawal_account_id }}"
-                                                            class="text-default me-1 me-lg-3 me-md-3 me-sm-3 border-end pe-1 pe-lg-3 pe-md-3 pe-sm-3 fs-16"><i
-                                                                class="ti ti-info-circle-filled"></i></a>
-                                                        <a href="#" class="btn btn-light"
-                                                            data-bs-toggle="modal"
-                                                            data-bs-target="#add_paypal{{ $compte->withdrawal_account_id }}"><i
-                                                                class="ti ti-tool me-1"></i>Voir</a>
-                                                    </div>
-                                                    <div class="ms-2">
-                                                        <a href="javascript:void(0);"
-                                                            class="badge badge-tag ms-2 {{ $compte->is_active ? 'badge-soft-success' : 'badge-soft-danger' }}">
-                                                            {{ $compte->is_active ? 'Connecté' : 'Déconnecté' }}
-                                                        </a>
-                                                    </div>
-                                                    <div class="form-check form-switch p-0">
-                                                        <label class="form-check-label d-flex align-items-center gap-2 w-100">
-                                                            <input
-                                                                class="form-check-input switchCheckDefault ms-auto"
-                                                                type="checkbox"
-                                                                role="switch"
-                                                                data-id="{{ $compte->withdrawal_account_id }}"
-                                                                {{ $compte->is_active ? 'checked' : '' }}>
-                                                        </label>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="collapse pt-3 mt-3 border-top" id="php-mail{{ $compte->withdrawal_account_id }}">
-                                            <div>
-                                                <p class="mb-0">« Ce compte de retrait ne peut pas être supprimé. Vous pouvez toutefois le désactiver en cliquant sur le point rouge. »</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <!-- /Payment -->
-                                    @endforeach
-
-                                </div>
-                                <!-- /Email Wrap -->
-
+                    <div class="col-md-6">
+                        <div class="vt-field">
+                            <label>Nom de l'organisation</label>
+                            <div class="vt-input-wrap">
+                                <i class="ti ti-building vt-inp-icon"></i>
+                                <input type="text" class="vt-input" name="entreprise"
+                                       value="{{ $customer->entreprise }}" required>
                             </div>
                         </div>
                     </div>
-                    <!-- /Settings Info -->
-                </div>
-                <!-- /Email -->
 
-                <!-- Notes -->
-                <div class="tab-pane fade" id="tab_2">
-                    <div class="card">
-                        <div class="card-header d-flex align-items-center justify-content-between flex-wrap row-gap-3">
-                            <div class="mb-0">
-                                <h6 class="d-flex align-items-center text-primary">
-                                    <i class="ti ti-user-shield fs-5 me-2"></i> Informations Utilisateur (Customer)
-                                </h6>
+                    <div class="col-md-6">
+                        <div class="vt-field">
+                            <label>Pays siège</label>
+                            <div class="vt-input-wrap">
+                                <i class="ti ti-map-pin vt-inp-icon"></i>
+                                <input type="text" class="vt-input" name="pays_siege"
+                                       value="{{ $customer->pays_siege }}" required>
                             </div>
-
                         </div>
-                        <div class="card-body">
-
-                            <form class="ajax-form" action="{{ route('business.update_profile') }}" method="POST" enctype="multipart/form-data">
-                                @csrf
-                                <input type="hidden" name="user_id" value="{{ $user->user_id }}">
-                                <!-- SECTION 1 : INFORMATIONS UTILISATEUR (Compte de connexion) -->
-                                <div class="bg-light p-3 rounded mb-4">
-
-                                    <div class="row">
-                                        <!-- Mapping: name (Schema users) -->
-                                        <div class="col-md-6 mb-3">
-                                            <label class="form-label">Nom complet <span class="text-danger">*</span></label>
-                                            <input type="text" class="form-control" name="name" value="{{ $user->name }}" required>
-                                        </div>
-
-                                        <!-- Mapping: password (Schema users) -->
-                                        <div class="col-md-6 mb-3">
-                                            <label class="form-label">Numéro de téléphone <span class="text-danger">*</span></label>
-                                            <input type="text" class="form-control" name="phonenumber" value="{{ $user->phonenumber }}" required>
-                                        </div>
-
-                                        <!-- Mapping: email (Schema users) -->
-                                        <div class="col-md-6 mb-3">
-                                            <label class="form-label">Email (Identifiant) <span class="text-danger">*</span></label>
-                                            <input type="email" class="form-control" name="email" value="{{ $user->email }}" required>
-                                        </div>
-
-                                        <!-- Mapping: password (Schema users) -->
-                                        <div class="col-md-6 mb-3">
-                                            <label class="form-label">Mot de passe</label>
-                                            <input type="password" class="form-control" name="password" placeholder="Laisser vide pour conserver le mot de passe actuel">
-                                            <input type="hidden" name="old_password" value="{{ $user->password }}">
-                                        </div>
-                                    </div>
-                                </div>
-                                <!-- Bouton Soumettre -->
-                                <div class="d-flex align-items-center justify-content-end">
-                                    <button type="submit" class="btn btn-primary">Mettre à jour le profil</button>
-                                </div>
-                            </form>
-
-                        </div> <!-- end card body -->
                     </div>
-                </div>
-                <!-- /Notes -->
 
+                    <div class="col-md-6">
+                        <div class="vt-field">
+                            <label>Email de l'organisation</label>
+                            <div class="vt-input-wrap">
+                                <i class="ti ti-mail vt-inp-icon"></i>
+                                <input type="email" class="vt-input" name="email"
+                                       value="{{ $customer->email }}">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="vt-field">
+                            <label>Téléphone</label>
+                            <div class="vt-input-wrap">
+                                <i class="ti ti-phone vt-inp-icon"></i>
+                                <input type="text" class="vt-input phone" name="phonenumber"
+                                       value="{{ $customer->phonenumber }}" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-12">
+                        <div class="vt-field">
+                            <label>Adresse</label>
+                            <div class="vt-input-wrap">
+                                <i class="ti ti-map vt-inp-icon"></i>
+                                <input type="text" class="vt-input" name="adresse"
+                                       value="{{ $customer->adresse }}"
+                                       placeholder="Siège social" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    {{-- Réseaux sociaux --}}
+                    <div class="col-md-6">
+                        <div class="vt-field">
+                            <label>Lien Facebook</label>
+                            <div class="vt-input-wrap">
+                                <i class="ti ti-brand-facebook vt-inp-icon"></i>
+                                <input type="url" class="vt-input" name="link_facebook"
+                                       value="{{ $customer->link_facebook }}"
+                                       placeholder="Lien du profil facebook">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="vt-field">
+                            <label>Lien Twitter / X</label>
+                            <div class="vt-input-wrap">
+                                <i class="ti ti-brand-x vt-inp-icon"></i>
+                                <input type="url" class="vt-input" name="link_instagram"
+                                       value="{{ $customer->link_instagram }}"
+                                       placeholder="Lien du profil Twitter">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="vt-field">
+                            <label>Lien LinkedIn</label>
+                            <div class="vt-input-wrap">
+                                <i class="ti ti-brand-linkedin vt-inp-icon"></i>
+                                <input type="url" class="vt-input" name="link_linkedin"
+                                       value="{{ $customer->link_linkedin }}"
+                                       placeholder="Lien du profil LinkedIn">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="vt-field">
+                            <label>Lien Youtube</label>
+                            <div class="vt-input-wrap">
+                                <i class="ti ti-brand-youtube vt-inp-icon"></i>
+                                <input type="url" class="vt-input" name="link_youtube"
+                                       value="{{ $customer->link_youtube }}"
+                                       placeholder="Lien du profil Youtube">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="vt-field">
+                            <label>Lien Tiktok</label>
+                            <div class="vt-input-wrap">
+                                <i class="ti ti-brand-tiktok vt-inp-icon"></i>
+                                <input type="url" class="vt-input" name="link_tiktok"
+                                       value="{{ $customer->link_tiktok }}"
+                                       placeholder="Lien du profil Tiktok">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="vt-field">
+                            <label>Site internet</label>
+                            <div class="vt-input-wrap">
+                                <i class="ti ti-world vt-inp-icon"></i>
+                                <input type="url" class="vt-input" name="link_website"
+                                       value="{{ $customer->link_website }}"
+                                       placeholder="Lien du site web">
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <button type="submit" class="vt-btn-save">Enregistrer</button>
+            </form>
+
+            <div class="vt-profile-inner-footer">
+                © 2026 VOTIUM · Prototype front-only · Charte #01233f / #f17100
             </div>
-            <!-- /Tab Content -->
-
         </div>
-        <!-- /Contact Details -->
 
-    </div>
-    <!-- end row -->
+        {{-- =====================================================
+             ONGLET 2 — COMPTES DE RETRAIT
+             ===================================================== --}}
+        <div class="vt-profile-content" id="tab-retrait">
 
-</div>
-<!-- End Content -->
+            <h2 class="vt-section-title">Comptes de retrait</h2>
+            <p class="vt-section-desc">Ajoutez ou retirez des comptes sur lesquels effectuer vos futurs virements.</p>
 
-<!-- Paypal -->
-@foreach($compteRetraits as $compte)
-<div class="modal fade" id="add_paypal{{ $compte->withdrawal_account_id }}" data-bs-backdrop="static" data-bs-keyboard="false" role="dialog">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Voir compte</h5>
-                <button type="button"
-                    class="btn-close custom-btn-close border p-1 me-0 d-flex align-items-center justify-content-center rounded-circle"
-                    data-bs-dismiss="modal" aria-label="Close">
-                    <i class="ti ti-x"></i>
+            <div class="vt-retrait-header">
+                <span class="vt-retrait-list-label">Liste des comptes (démo)</span>
+                <button class="vt-btn-primary" style="border-radius: var(--vt-radius-sm); padding: 8px 16px; font-size:12.5px;"
+                        data-bs-toggle="modal" data-bs-target="#add_bank">
+                    <i class="ti ti-plus" style="font-size:13px;"></i> Ajouter
                 </button>
             </div>
-            <form action="#">
-                <div class="modal-body">
-                    <div class="mb-3 ">
-                        <label class="form-label">Type de compte <span class="text-danger">*</span></label>
-                        <select class="select" name="payment_methode" readonly>
-                            <option value="{{ $compte->payment_methode }}">
-                                @foreach($paymentMethods as $method)
+
+            <div class="vt-comptes-grid">
+                @foreach($compteRetraits as $compte)
+                <div class="vt-compte-card">
+                    <button class="vt-compte-close"
+                            data-bs-toggle="modal"
+                            data-bs-target="#add_paypal{{ $compte->withdrawal_account_id }}"
+                            title="Voir / gérer">×</button>
+                    <div class="vt-compte-top">
+                        <div class="vt-compte-icon">
+                            @foreach($paymentMethods as $method)
                                 @if($method->value === $compte->payment_methode)
-                                {{ $method->label() }}
+                                    <img src="{{ asset(env('IMAGES_PAYMENT') . '/' . $method->icon()) }}"
+                                         alt="{{ $method->label() }}">
                                 @endif
-                                @endforeach
-                            </option>
-                        </select>
+                            @endforeach
+                        </div>
+                        <span class="vt-compte-name">{{ $compte->account_name }}</span>
                     </div>
-                    <div class="mb-3">
-                        <label class="form-label">Nom du compte <span class="text-danger">*</span></label>
-                        <input type="text" name="account_name" value="{{ $compte->account_name }}" class="form-control" readonly>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Numéro du compte <span class="text-danger">*</span></label>
-                        <input type="text" class="form-control" name="phone_number" value="{{ $compte->phone_number }}" readonly>
+                    <div class="vt-compte-number">
+                        ••••••{{ substr($compte->phone_number, -4) }}
                     </div>
                 </div>
-                <!-- <div class="modal-footer">
-                    <div class="d-flex align-items-center justify-content-end m-0">
-                        <a href="#" class="btn btn-sm btn-light me-2" data-bs-dismiss="modal">Cancel</a>
-                        <button type="submit" class="btn btn-sm btn-primary">Enregistrer</button>
+                @endforeach
+            </div>
+
+            <p class="vt-retrait-astuce">
+                Astuce : en V1 (front-only) les comptes sont simulés. En PHP, on branchera la sauvegarde réelle.
+            </p>
+
+            <div class="vt-profile-inner-footer">
+                © 2026 VOTIUM · Prototype front-only · Charte #01233f / #f17100
+            </div>
+        </div>
+
+        {{-- =====================================================
+             ONGLET 3 — PROFIL UTILISATEUR
+             ===================================================== --}}
+        <div class="vt-profile-content" id="tab-profil">
+
+            <h2 class="vt-section-title">Profil</h2>
+            <p class="vt-section-desc">Gérez vos informations personnelles et la sécurité du compte.</p>
+
+            <form class="ajax-form" action="{{ route('business.update_profile') }}" method="POST">
+                @csrf
+                <input type="hidden" name="user_id"      value="{{ $user->user_id }}">
+                <input type="hidden" name="old_password" value="{{ $user->password }}">
+
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <div class="vt-field">
+                            <label>Nom</label>
+                            <div class="vt-input-wrap">
+                                <i class="ti ti-user vt-inp-icon"></i>
+                                <input type="text" class="vt-input" name="name"
+                                       value="{{ $user->name }}" required>
+                            </div>
+                        </div>
                     </div>
-                </div> -->
+                    <div class="col-md-6">
+                        <div class="vt-field">
+                            <label>Email</label>
+                            <div class="vt-input-wrap">
+                                <i class="ti ti-mail vt-inp-icon"></i>
+                                <input type="email" class="vt-input" name="email"
+                                       value="{{ $user->email }}" required>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="vt-field">
+                            <label>Sécurité</label>
+                            <div class="vt-input-wrap">
+                                <i class="ti ti-lock vt-inp-icon"></i>
+                                <input type="password" class="vt-input" name="password"
+                                       placeholder="••••••••••••"
+                                       autocomplete="new-password">
+                            </div>
+                        </div>
+                        <p class="vt-profile-note">
+                            En V1 (front-only) : pas de vrai changement de mot de passe. En PHP, on branchera l'API + hashing.
+                        </p>
+                    </div>
+                </div>
+
+                <button type="submit" class="vt-btn-save">Enregistrer</button>
             </form>
+
+            <div class="vt-profile-inner-footer">
+                © 2026 VOTIUM · Prototype front-only · Charte #01233f / #f17100
+            </div>
+        </div>
+
+    </div>
+    {{-- fin container --}}
+
+@endsection
+
+{{-- =====================================================
+     MODALES
+     ===================================================== --}}
+
+{{-- Voir compte retrait --}}
+@foreach($compteRetraits as $compte)
+<div class="modal fade" id="add_paypal{{ $compte->withdrawal_account_id }}" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header border-bottom">
+                <h5 class="modal-title">Détail du compte</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label class="form-label text-muted small">Type de compte</label>
+                    <div class="fw-semibold">
+                        @foreach($paymentMethods as $method)
+                            @if($method->value === $compte->payment_methode){{ $method->label() }}@endif
+                        @endforeach
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label text-muted small">Nom du compte</label>
+                    <div class="fw-semibold text-uppercase">{{ $compte->account_name }}</div>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label text-muted small">Numéro</label>
+                    <div class="fw-semibold">{{ $compte->phone_number }}</div>
+                </div>
+                <div class="form-check form-switch mt-3">
+                    <input class="form-check-input switchCheckDefault" type="checkbox"
+                           role="switch"
+                           data-id="{{ $compte->withdrawal_account_id }}"
+                           {{ $compte->is_active ? 'checked' : '' }}>
+                    <label class="form-check-label">
+                        {{ $compte->is_active ? 'Connecté' : 'Déconnecté' }}
+                    </label>
+                </div>
+            </div>
+            <div class="modal-footer border-top">
+                <button type="button" class="btn btn-light" data-bs-dismiss="modal">Fermer</button>
+            </div>
         </div>
     </div>
 </div>
 @endforeach
-<!-- /Paypal -->
 
-<!-- Add Bank Account -->
-<div class="modal fade" id="add_bank" data-bs-backdrop="static" data-bs-keyboard="false" role="dialog">
+{{-- Ajouter compte retrait --}}
+<div class="modal fade" id="add_bank" data-bs-backdrop="static" data-bs-keyboard="false">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
-            <div class="modal-header">
+            <div class="modal-header border-bottom">
                 <h5 class="modal-title">Ajouter un compte retrait</h5>
-                <button type="button"
-                    class="btn-close custom-btn-close border p-1 me-0 d-flex align-items-center justify-content-center rounded-circle"
-                    data-bs-dismiss="modal" aria-label="Close">
-                    <i class="ti ti-x"></i>
-                </button>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <form class="ajax-form" action="{{ route('business.save_compte_retrait') }}" method="POST">
                 @csrf
                 <input type="hidden" name="customer_id" value="{{ $customer->customer_id }}">
-
                 <div class="modal-body">
-                    <div class="mb-3 ">
+                    <div class="mb-3">
                         <label class="form-label">Type de compte <span class="text-danger">*</span></label>
-                        <select class="select" name="payment_methode" required>
-                            <option value="" disabled="disabled">Sélectionner</option>
+                        <select class="form-select" name="payment_methode" required>
+                            <option value="" disabled selected>Sélectionner</option>
                             @foreach($paymentMethods as $method)
-                            <option value="{{ $method->value }}">
-                                {{ $method->label() }}
-                            </option>
+                            <option value="{{ $method->value }}">{{ $method->label() }}</option>
                             @endforeach
                         </select>
                     </div>
-
                     <div class="mb-3">
                         <label class="form-label">Nom du compte <span class="text-danger">*</span></label>
-                        <input type="text" class="form-control" name="account_name">
+                        <input type="text" class="form-control" name="account_name" required>
                     </div>
                     <div class="mb-3">
                         <label class="form-label">Numéro du compte <span class="text-danger">*</span></label>
-                        <input type="text" class="form-control" name="phone_number">
+                        <input type="text" class="form-control" name="phone_number" required>
                     </div>
-
                 </div>
-                <div class="modal-footer">
-                    <div class="d-flex align-items-center justify-content-end m-0">
-                        <a href="#" class="btn btn-sm btn-light me-2" data-bs-dismiss="modal">Annuler</a>
-                        <button type="submit" class="btn btn-sm btn-primary">Enregistrer</button>
-                    </div>
+                <div class="modal-footer border-top">
+                    <button type="button" class="btn btn-light" data-bs-dismiss="modal">Annuler</button>
+                    <button type="submit" class="btn btn-primary"><i class="ti ti-device-floppy me-1"></i> Enregistrer</button>
                 </div>
             </form>
         </div>
     </div>
 </div>
-<!-- /Add Bank Account -->
 
-<!-- Script JavaScript pour gérer l'affichage -->
+{{-- ===== SCRIPTS ===== --}}
+@section('extra-js')
 <script>
-    $(document).ready(function() {
+$(document).ready(function () {
 
+    /* -------------------------------------------------------
+       Système de tabs custom
+       ------------------------------------------------------- */
+    $('.vt-tab-btn').on('click', function () {
+        const target = $(this).data('tab');
 
+        // Mettre à jour les boutons
+        $('.vt-tab-btn').removeClass('active');
+        $(this).addClass('active');
 
-        // Formulaire AJAX pour activer/désactiver un compte de retrait
-        $('.switchCheckDefault').change(function() {
-            let checkbox = $(this);
-            let accountId = checkbox.data('id');
-            let isActive = checkbox.is(':checked') ? 1 : 0;
+        // Afficher le bon panel
+        $('.vt-profile-content').removeClass('active');
+        $('#' + target).addClass('active');
+    });
 
-            $.ajax({
-                url: "{{ route('business.delete_compte_retrait') }}",
-                method: "POST",
-                data: {
-                    _token: "{{ csrf_token() }}",
-                    account_id: accountId,
-                    is_active: isActive
-                },
-                success: function(response) {
+    /* -------------------------------------------------------
+       Activer le bon onglet via hash URL (ex: #tab-retrait)
+       ------------------------------------------------------- */
+    const hash = window.location.hash.replace('#', '');
+    if (hash && $('#' + hash).length) {
+        $('.vt-tab-btn').removeClass('active');
+        $('[data-tab="' + hash + '"]').addClass('active');
+        $('.vt-profile-content').removeClass('active');
+        $('#' + hash).addClass('active');
+    }
+
+    /* -------------------------------------------------------
+       Toggle activation compte retrait
+       ------------------------------------------------------- */
+    $('.switchCheckDefault').on('change', function () {
+        const $cb      = $(this);
+        const accountId = $cb.data('id');
+        const isActive  = $cb.is(':checked') ? 1 : 0;
+
+        $.ajax({
+            url: "{{ route('business.delete_compte_retrait') }}",
+            method: 'POST',
+            data: {
+                _token:     "{{ csrf_token() }}",
+                account_id: accountId,
+                is_active:  isActive
+            },
+            success: function (response) {
+                if (typeof showAjaxAlert === 'function')
                     showAjaxAlert('success', response.message);
-                },
-                error: function(xhr) {
-                    let errorMessage = "Erreur lors de la mise à jour du compte";
-
-                    if (xhr.status === 422) {
-                        let errors = xhr.responseJSON.errors;
-                        errorMessage = Object.values(errors).flat().join("<br>");
-                    } else if (xhr.responseJSON && xhr.responseJSON.message) {
-                        errorMessage = xhr.responseJSON.message;
-                    }
-
-                    showAjaxAlert('danger', errorMessage);
-                    checkbox.prop('checked', !isActive); // revert en cas d'erreur
-                }
-            });
+            },
+            error: function (xhr) {
+                let msg = xhr.responseJSON?.message || 'Erreur lors de la mise à jour.';
+                if (typeof showAjaxAlert === 'function') showAjaxAlert('danger', msg);
+                $cb.prop('checked', !isActive);
+            }
         });
     });
+
+});
+
+/* -------------------------------------------------------
+   Prévisualisation du logo
+   ------------------------------------------------------- */
+function handleLogoPreview(input) {
+    if (!input.files || !input.files[0]) return;
+    const reader = new FileReader();
+    reader.onload = function (e) {
+        const $wrap = $('#logo-avatar-wrap');
+        $wrap.find('#logo-letter').hide();
+        let $img = $wrap.find('#logo-preview');
+        if (!$img.length) {
+            $img = $('<img id="logo-preview" alt="logo" style="width:100%;height:100%;object-fit:cover;position:absolute;top:0;left:0;">');
+            $wrap.append($img);
+        }
+        $img.attr('src', e.target.result).show();
+        $('#logo-del-btn').show();
+    };
+    reader.readAsDataURL(input.files[0]);
+}
+
+function handleLogoRemove() {
+    $('#logo-preview').attr('src', '#').hide();
+    $('#logo-letter').show();
+    $('#logo-del-btn').hide();
+    $('input[name="logo"]').val('');
+}
 </script>
-
-@endsection
-<!-- section js -->
-@section('extra-js')
-
 @endsection
