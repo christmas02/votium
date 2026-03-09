@@ -207,6 +207,121 @@
         box-shadow: var(--vt-shadow);
     }
 
+    /* =====================================================
+       CARTE CANDIDAT — design compact
+       ===================================================== */
+    .vt-cand-card {
+        background: #fff;
+        border: 1px solid var(--vt-border);
+        border-radius: var(--vt-radius);
+        overflow: hidden;
+        transition: box-shadow .15s, transform .15s;
+        height: 100%;
+        display: flex; flex-direction: column;
+    }
+    .vt-cand-card:hover {
+        box-shadow: var(--vt-shadow-md);
+        transform: translateY(-1px);
+    }
+
+    /* Bandeau photo */
+    .vt-cand-photo-wrap {
+        position: relative;
+        height: 250px;
+        background: linear-gradient(135deg, #f0f2f5 0%, #e2e8f0 100%);
+        overflow: hidden;
+        flex-shrink: 0;
+    }
+    .vt-cand-photo-wrap img {
+        width: 100%; height: 100%;
+        object-fit: cover; object-position: top;
+        display: block;
+    }
+    .vt-cand-photo-wrap .vt-cand-num {
+        position: absolute; top: 8px; left: 8px;
+        background: rgba(0,0,0,.45);
+        color: #fff; font-size: 10px; font-weight: 700;
+        padding: 2px 7px; border-radius: 50px;
+        letter-spacing: .3px;
+    }
+    .vt-cand-photo-wrap .vt-cand-menu {
+        position: absolute; top: 6px; right: 6px;
+    }
+    .vt-cand-menu-btn {
+        width: 26px; height: 26px;
+        border-radius: 50%;
+        background: rgba(255,255,255,.85);
+        border: none; cursor: pointer;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 14px; color: var(--vt-text-main);
+        transition: background .15s;
+    }
+    .vt-cand-menu-btn:hover { background: #fff; }
+
+    /* Avatar initiales (fallback sans photo) */
+    .vt-cand-no-photo {
+        width: 100%; height: 100%;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 32px; font-weight: 800;
+        color: var(--vt-text-muted);
+        background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+    }
+
+    /* Corps de la carte */
+    .vt-cand-body {
+        padding: 12px 14px;
+        flex: 1; display: flex; flex-direction: column; gap: 6px;
+    }
+    .vt-cand-name {
+        font-size: 13px; font-weight: 700;
+        color: var(--vt-text-main);
+        margin: 0;
+        white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+        text-transform: uppercase; letter-spacing: .2px;
+    }
+    .vt-cand-meta {
+        display: flex; flex-wrap: wrap; gap: 6px;
+        margin-top: 2px;
+    }
+    .vt-cand-meta-item {
+        display: flex; align-items: center; gap: 3px;
+        font-size: 11px; color: var(--vt-text-muted);
+        background: var(--vt-page-bg);
+        padding: 2px 8px; border-radius: 50px;
+    }
+    .vt-cand-meta-item i { font-size: 11px; }
+
+    /* Pied de carte : votes + actions */
+    .vt-cand-footer {
+        display: flex; align-items: center;
+        justify-content: space-between;
+        padding: 8px 14px 12px;
+        border-top: 1px solid var(--vt-border);
+        margin-top: auto;
+    }
+    .vt-cand-votes {
+        display: flex; align-items: center; gap: 4px;
+        font-size: 12px; font-weight: 700;
+        color: var(--vt-orange);
+    }
+    .vt-cand-votes i { font-size: 13px; }
+    .vt-cand-votes span.label {
+        font-size: 10.5px; font-weight: 500;
+        color: var(--vt-text-muted);
+    }
+    .vt-cand-actions { display: flex; gap: 5px; }
+    .vt-cand-action-btn {
+        width: 28px; height: 28px;
+        border-radius: 7px;
+        border: 1px solid var(--vt-border);
+        background: #fff; color: var(--vt-text-muted);
+        display: flex; align-items: center; justify-content: center;
+        font-size: 13px; cursor: pointer; text-decoration: none;
+        transition: all .15s;
+    }
+    .vt-cand-action-btn.edit:hover  { border-color: #93c5fd; color: #2563eb; background: #eff6ff; }
+    .vt-cand-action-btn.del:hover   { border-color: #fca5a5; color: #dc2626; background: #fff5f5; }
+
     @media (max-width: 860px) {
         .vt-candidat-layout { flex-direction: column; }
         .vt-candidat-sidebar { width: 100%; }
@@ -870,37 +985,68 @@ $(document).ready(function () {
             const photoUrl = candidat.photo ? APP_IMAGES_PATH + candidat.photo : 'assets/img/profiles/avatar-01.jpg';
             const orderNum = ((currentPage - 1) * 12) + (index + 1);
 
+            const age        = calculerAge(candidat.date_naissance);
+            const profession = candidat.profession ? candidat.profession : '';
+            const votes      = candidat.votes_count || 0;
+            const numLabel   = String(orderNum).padStart(3, '0');
+            const initiales  = candidat.name ? candidat.name.charAt(0).toUpperCase() : '?';
+            const photoHtml  = candidat.photo
+                ? `<img src="${photoUrl}" alt="${candidat.name}">`
+                : `<div class="vt-cand-no-photo">${initiales}</div>`;
+
             html += `
-            <div class="col-xxl-3 col-xl-4 col-md-6">
-                <div class="card border shadow-sm h-100">
-                    <div class="card-body">
-                        <div class="d-flex align-items-center justify-content-between mb-3">
-                            <div class="d-flex align-items-center">
-                                <div class="avatar avatar-xl flex-shrink-0 me-2">
-                                    <img src="${photoUrl}" class="rounded-1 object-fit-cover w-100 h-100">
-                                </div>
-                                <div>
-                                    <h6 class="fs-14 mb-0 fw-bold">${candidat.name}</h6>
-                                    <p class="text-muted mb-0 small">Num: ${String(orderNum).padStart(3, '0')}</p>
-                                    <p class="text-muted mb-0 small">Âge: ${calculerAge(candidat.date_naissance)}</p>
-                                    <p class="text-muted mb-0 small">Votes: ${candidat.votes_count || 0}</p>
-                                </div>
-                            </div>
-                            <div class="dropdown">
-                                <a href="#" class="btn btn-icon btn-sm btn-outline-light" data-bs-toggle="dropdown">
-                                    <i class="ti ti-dots-vertical"></i>
+            <div class="col-xxl-3 col-xl-4 col-md-6 col-sm-6">
+                <div class="vt-cand-card">
+
+                    {{-- Bandeau photo --}}
+                    <div class="vt-cand-photo-wrap">
+                        ${photoHtml}
+                        <span class="vt-cand-num"># ${numLabel}</span>
+                        <div class="vt-cand-menu dropdown">
+                            <button class="vt-cand-menu-btn" data-bs-toggle="dropdown">
+                                <i class="ti ti-dots-vertical"></i>
+                            </button>
+                            <div class="dropdown-menu dropdown-menu-end">
+                                <a class="dropdown-item js-btn-edit" href="javascript:void(0);" data-candidat="${data}">
+                                    <i class="ti ti-edit me-1"></i> Modifier
                                 </a>
-                                <div class="dropdown-menu dropdown-menu-end">
-                                    <a class="dropdown-item js-btn-edit" href="javascript:void(0);" data-candidat="${data}">
-                                        <i class="ti ti-edit me-1"></i> Modifier
-                                    </a>
-                                    <a class="dropdown-item text-danger js-btn-delete" href="javascript:void(0);" data-id="${candidat.candidat_id}">
-                                        <i class="ti ti-trash me-1"></i> Supprimer
-                                    </a>
-                                </div>
+                                <a class="dropdown-item text-danger js-btn-delete" href="javascript:void(0);" data-id="${candidat.candidat_id}">
+                                    <i class="ti ti-trash me-1"></i> Supprimer
+                                </a>
                             </div>
                         </div>
                     </div>
+
+                    {{-- Corps --}}
+                    <div class="vt-cand-body">
+                        <p class="vt-cand-name" title="${candidat.name}">${candidat.name}</p>
+                        <div class="vt-cand-meta">
+                            ${age ? `<span class="vt-cand-meta-item"><i class="ti ti-calendar"></i>${age} ans</span>` : ''}
+                            ${profession ? `<span class="vt-cand-meta-item"><i class="ti ti-briefcase"></i>${profession}</span>` : ''}
+                        </div>
+                    </div>
+
+                    {{-- Pied --}}
+                    <div class="vt-cand-footer">
+                        <div class="vt-cand-votes">
+                            <i class="ti ti-ticket"></i>
+                            <span>${votes}</span>
+                            <span class="label">vote${votes > 1 ? 's' : ''}</span>
+                        </div>
+                        <div class="vt-cand-actions">
+                            <a href="javascript:void(0);"
+                               class="vt-cand-action-btn edit js-btn-edit"
+                               data-candidat="${data}" title="Modifier">
+                                <i class="ti ti-pencil"></i>
+                            </a>
+                            <a href="javascript:void(0);"
+                               class="vt-cand-action-btn del js-btn-delete"
+                               data-id="${candidat.candidat_id}" title="Supprimer">
+                                <i class="ti ti-trash"></i>
+                            </a>
+                        </div>
+                    </div>
+
                 </div>
             </div>`;
         });
