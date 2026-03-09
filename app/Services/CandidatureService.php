@@ -155,12 +155,18 @@ class CandidatureService
                     'c.name',
                     'c.email',
                     'c.phonenumber',
+                    'c.sexe',
+                    'c.date_naissance',
+                    'c.ville',
+                    'c.pays',
+                    'c.profession',
                     'c.photo',
+                    'c.description',
                     'c.created_at',
                     'c.updated_at',
                     'cecc.campagne_id',
                     'cecc.etape_id',
-                    'cecc.category_id'
+                    'cecc.category_id',
                 );
 
             //Appliquer les filtres
