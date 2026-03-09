@@ -76,8 +76,26 @@ Template Name: CRMS - Bootstrap Admin Template
         }
     });
 
+	// Vérifier et afficher les alertes en attente (après rechargement)
+	function checkPendingAlert() {
+		const pendingAlert = sessionStorage.getItem('pendingAlert');
+		if (pendingAlert) {
+			const alertData = JSON.parse(pendingAlert);
+			sessionStorage.removeItem('pendingAlert');
+			// Petit délai pour s'assurer que le DOM est prêt
+			setTimeout(() => {
+				if (typeof showAjaxAlert === 'function') {
+					showAjaxAlert(alertData.type, alertData.message);
+				}
+			}, 300);
+		}
+	}
+
 	// Star Filled
 	$(document).ready(function() {
+		// Vérifier les alertes en attente après rechargement
+		checkPendingAlert();
+		
 		setTimeout(function() {
 			$(".rating-select").on('click', function() {
 				$(this).toggleClass("filled");
@@ -943,20 +961,31 @@ Template Name: CRMS - Bootstrap Admin Template
 	function showAjaxAlert(type, message) {
         const title = type === 'success' ? 'Succès' : (type === 'danger' ? 'Erreur' : 'Attention');
         const alertClass = 'alert-' + type;
+        const autoDismissTime = type === 'success' ? 5000 : 7000;
 
         const alertHtml = `
-            <div class="alert ${alertClass} alert-dismissible fade show" role="alert">
+            <div class="alert ${alertClass} alert-dismissible fade show" role="alert" style="box-shadow: 0 4px 12px rgba(0,0,0,0.15); font-weight: 500;">
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fermer"></button>
                 <strong>${title} — </strong> ${message}
             </div>
         `;
 
-        // Injecter l'alerte en haut du conteneur et scroller vers le haut
+        // Injecter l'alerte en haut du conteneur
         $('#ajax-alert-container').html(alertHtml);
 
-        // Optionnel : Scroller automatiquement vers le message pour être sûr que l'utilisateur le voit
+        // Scroller vers le message
         $('html, body').animate({
             scrollTop: 0
-        }, 'slow');
+        }, 'fast');
+
+        // Auto-fermeture après délai approprié
+        setTimeout(function() {
+            const $alert = $('#ajax-alert-container').find('.alert');
+            if ($alert.length) {
+                $alert.fadeOut('slow', function() {
+                    $(this).remove();
+                });
+            }
+        }, autoDismissTime);
 
     }

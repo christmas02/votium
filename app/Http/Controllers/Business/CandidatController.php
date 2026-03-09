@@ -20,6 +20,7 @@ use Illuminate\Support\Facades\Hash;
 use App\Models\User;
 use App\Models\Customer;
 use App\Models\Etape;
+use App\Models\CandidatEtapCategoryCampagne;
 use Carbon\Carbon;
 use App\Services\CandidatureService;
 use PhpParser\Node\Stmt\TryCatch;
@@ -91,6 +92,16 @@ class CandidatController extends Controller
                 $categoriesForCampagne = $this->CampagneService->listCategoriesByCampagneId($campagne->campagne_id);
                 $categories = $categories->merge($categoriesForCampagne);
             }
+            // Compter les candidats et injecter directement dans chaque catégorie
+            $counts = CandidatEtapCategoryCampagne::whereIn('category_id', $categories->pluck('category_id'))
+                ->groupBy('category_id')
+                ->selectRaw('category_id, count(DISTINCT candidat_id) as total')
+                ->pluck('total', 'category_id');
+
+            $categories = $categories->map(function ($cat) use ($counts) {
+                $cat->candidats_count = $counts[$cat->category_id] ?? 0;
+                return $cat;
+            });
 
             return view('business.listCandidats', compact('title', 'title_back', 'link_back', 'campagnes', 'etapes', 'categories'));
         } catch (\Exception $th) {
@@ -160,7 +171,7 @@ class CandidatController extends Controller
 
             // Le service retourne déjà une Collection
             $collection = $this->CandidatureService->searchCandidat($filters);
-            
+
             // Recherche texte
             if ($request->filled('search')) {
                 $searchTerm = strtolower(trim($request->search));

@@ -20,13 +20,13 @@
 <style>
     /* ---- Page header ---- */
     .vt-page-title {
-        font-size: 32px; font-weight: 800;
+        font-size: 28px; font-weight: 700;
         color: var(--vt-text-main); margin: 0 0 8px;
-        letter-spacing: -.5px;
+        letter-spacing: -.3px;
     }
     .vt-page-desc {
-        font-size: 13px; color: var(--vt-text-muted);
-        margin: 0 0 24px; max-width: 620px; line-height: 1.6;
+        font-size: 12.5px; color: var(--vt-text-muted);
+        margin: 0 0 20px; max-width: 620px; line-height: 1.6;
     }
 
     /* ---- Toolbar ---- */
@@ -34,57 +34,65 @@
         display: flex;
         align-items: center;
         gap: 12px;
-        margin-bottom: 20px;
+        margin-bottom: 18px;
         flex-wrap: wrap;
     }
     .vt-counter-pill {
-        display: flex; align-items: center; gap: 7px;
-        background: #fff;
+        display: inline-flex; align-items: center; gap: 7px;
+        background: var(--vt-card-bg);
         border: 1px solid var(--vt-border);
         border-radius: 50px;
-        padding: 8px 18px;
-        font-size: 14px; font-weight: 700;
+        padding: 7px 16px;
+        font-size: 12.5px; font-weight: 600;
         color: var(--vt-text-main);
         box-shadow: var(--vt-shadow);
         white-space: nowrap;
     }
     .vt-counter-num {
-        font-size: 14px; font-weight: 800;
-        color: #2563eb;
+        font-size: 13px; font-weight: 700;
+        color: var(--vt-orange);
     }
     .vt-search-wrap {
         position: relative;
         flex: 1;
         max-width: 340px;
+        min-width: 200px;
     }
     .vt-search-wrap .vt-search-icon {
-        position: absolute; left: 14px; top: 50%; transform: translateY(-50%);
-        color: #94a3b8; font-size: 15px; pointer-events: none;
+        position: absolute; left: 12px; top: 50%; transform: translateY(-50%);
+        color: var(--vt-text-muted); font-size: 14px; pointer-events: none;
     }
     .vt-search-input {
         width: 100%;
-        padding: 9px 16px 9px 38px;
+        padding: 8px 14px 8px 36px;
         border: 1px solid var(--vt-border);
-        border-radius: 50px;
-        background: #fff;
-        font-size: 13px; color: var(--vt-text-main);
+        border-radius: var(--vt-radius-sm);
+        background: var(--vt-card-bg);
+        font-size: 12.5px; color: var(--vt-text-main);
         box-shadow: var(--vt-shadow);
-        transition: border-color .15s;
+        transition: border-color .15s, box-shadow .15s;
+        font-family: inherit;
     }
-    .vt-search-input::placeholder { color: #94a3b8; }
-    .vt-search-input:focus { outline: none; border-color: #94a3b8; }
+    .vt-search-input::placeholder { color: var(--vt-text-muted); }
+    .vt-search-input:focus { 
+        outline: none; 
+        border-color: var(--vt-orange); 
+        box-shadow: 0 0 0 3px var(--vt-orange-light), var(--vt-shadow);
+    }
 
     .vt-btn-dark {
         display: inline-flex; align-items: center; gap: 6px;
         background: var(--vt-navy);
         color: #fff; border: none;
         border-radius: 50px;
-        padding: 9px 20px;
-        font-size: 13px; font-weight: 600;
+        padding: 8px 18px;
+        font-size: 12.5px; font-weight: 600;
         cursor: pointer; text-decoration: none;
-        transition: background .15s; white-space: nowrap;
+        transition: background .15s, box-shadow .15s;
+        white-space: nowrap;
+        box-shadow: var(--vt-shadow);
     }
-    .vt-btn-dark:hover { background: var(--vt-navy-dark); color: #fff; }
+    .vt-btn-dark:hover { background: var(--vt-navy-dark); color: #fff; box-shadow: var(--vt-shadow-md); }
 
     /* ---- Sessions table card ---- */
     .vt-sessions-card {
@@ -97,87 +105,107 @@
         width: 100%; border-collapse: collapse;
     }
     .vt-sessions-table thead th {
-        padding: 14px 20px;
-        font-size: 11px; font-weight: 700;
-        letter-spacing: .7px; text-transform: uppercase;
-        color: var(--vt-text-main);
+        padding: 12px 16px;
+        font-size: 10.5px; font-weight: 600;
+        letter-spacing: .5px; text-transform: uppercase;
+        color: var(--vt-text-muted);
         border-bottom: 1px solid var(--vt-border);
-        background: #fff;
+        background: var(--vt-card-bg);
         white-space: nowrap;
     }
     .vt-sessions-table tbody td {
-        padding: 14px 20px;
-        font-size: 13px; color: var(--vt-text-main);
+        padding: 12px 16px;
+        font-size: 12.5px; color: var(--vt-text-main);
         border-bottom: 1px solid var(--vt-border);
         vertical-align: middle;
     }
     .vt-sessions-table tbody tr:last-child td { border-bottom: none; }
-    .vt-sessions-table tbody tr:hover td { background: #fafbfc; }
+    .vt-sessions-table tbody tr:hover { background: #f8fafc; }
+    .vt-sessions-table tbody tr:hover td { background: transparent; }
 
     /* Lien nom de session */
     .vt-session-name {
         font-weight: 600; color: var(--vt-text-main);
-        text-decoration: none; font-size: 13.5px;
-        text-transform: uppercase;
+        text-decoration: none; font-size: 12.5px;
+        transition: color .15s;
     }
-    .vt-session-name:hover { color: var(--vt-orange); }
+    .vt-session-name:hover { color: var(--vt-orange); text-decoration: underline; }
 
     /* Badge inscription */
     .vt-badge-on {
-        display: inline-flex; align-items: center; gap: 5px;
+        display: inline-flex; align-items: center; gap: 4px;
         background: var(--vt-green-light); color: var(--vt-green);
         font-size: 11px; font-weight: 600;
         padding: 3px 10px; border-radius: 50px;
     }
+    .vt-badge-on i { font-size: 10px; }
     .vt-badge-off {
-        display: inline-flex; align-items: center; gap: 5px;
-        background: #f1f5f9; color: #64748b;
+        display: inline-flex; align-items: center; gap: 4px;
+        background: #f1f5f9; color: var(--vt-text-muted);
         font-size: 11px; font-weight: 600;
         padding: 3px 10px; border-radius: 50px;
     }
 
     /* Boutons actions */
-    .vt-action-btns { display: flex; align-items: center; gap: 6px; }
+    .vt-action-btns { display: flex; align-items: center; gap: 4px; }
     .vt-action-btn {
-        width: 30px; height: 30px;
-        border-radius: 7px; border: 1px solid var(--vt-border);
-        background: #fff; color: var(--vt-text-muted);
+        width: 32px; height: 32px;
+        border-radius: var(--vt-radius-sm); border: 1px solid var(--vt-border);
+        background: var(--vt-card-bg); color: var(--vt-text-muted);
         display: inline-flex; align-items: center; justify-content: center;
         font-size: 14px; cursor: pointer; text-decoration: none;
         transition: all .15s;
     }
-    .vt-action-btn:hover { border-color: #94a3b8; color: var(--vt-text-main); background: #f8fafc; }
-    .vt-action-btn.danger:hover  { border-color: #fca5a5; color: #dc2626; background: #fff5f5; }
-    .vt-action-btn.success:hover { border-color: #86efac; color: #16a34a; background: #f0fdf4; }
-    .vt-action-btn.info:hover    { border-color: #93c5fd; color: #2563eb; background: #eff6ff; }
+    .vt-action-btn:hover { 
+        border-color: var(--vt-text-muted); 
+        color: var(--vt-text-main); 
+        background: var(--vt-page-bg); 
+    }
+    .vt-action-btn.danger { color: #dc2626; }
+    .vt-action-btn.danger:hover  { border-color: #fca5a5; background: #fff5f5; box-shadow: var(--vt-shadow); }
+    .vt-action-btn.success { color: var(--vt-green); }
+    .vt-action-btn.success:hover { border-color: #86efac; background: #f0fdf4; box-shadow: var(--vt-shadow); }
+    .vt-action-btn.info { color: var(--vt-blue-chart); }
+    .vt-action-btn.info:hover { border-color: #93c5fd; background: #eff6ff; box-shadow: var(--vt-shadow); }
 
     /* ---- Pied de tableau ---- */
     .vt-table-footer {
         display: flex;
         align-items: center;
         justify-content: space-between;
-        padding: 12px 20px;
+        padding: 12px 16px;
         border-top: 1px solid var(--vt-border);
-        font-size: 12.5px;
+        font-size: 12px;
         color: var(--vt-text-muted);
         flex-wrap: wrap; gap: 8px;
+        background: var(--vt-card-bg);
     }
     .vt-pagination {
-        display: flex; align-items: center; gap: 4px;
+        display: flex; align-items: center; gap: 3px;
     }
     .vt-pagination-btn {
         width: 28px; height: 28px;
-        border-radius: 7px; border: 1px solid var(--vt-border);
-        background: #fff; color: var(--vt-text-muted);
+        border-radius: var(--vt-radius-sm); border: 1px solid var(--vt-border);
+        background: var(--vt-card-bg); color: var(--vt-text-muted);
         display: inline-flex; align-items: center; justify-content: center;
-        font-size: 13px; cursor: pointer;
+        font-size: 12px; cursor: pointer;
         transition: all .15s; text-decoration: none;
     }
-    .vt-pagination-btn:hover  { border-color: #94a3b8; color: var(--vt-text-main); }
+    .vt-pagination-btn:hover { border-color: var(--vt-orange); color: var(--vt-orange); background: var(--vt-orange-light); }
     .vt-pagination-btn:disabled { opacity: .4; cursor: not-allowed; }
     .vt-pagination-label {
-        padding: 0 10px;
-        font-size: 12px; color: var(--vt-text-muted); font-weight: 500;
+        padding: 0 8px;
+        font-size: 11.5px; color: var(--vt-text-muted); font-weight: 500;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+        .vt-toolbar { gap: 10px; margin-bottom: 16px; }
+        .vt-search-wrap { min-width: 120px; }
+        .vt-sessions-table { font-size: 11.5px; }
+        .vt-sessions-table thead th,
+        .vt-sessions-table tbody td { padding: 10px 12px; }
+        .vt-action-btns { gap: 3px; }
     }
 </style>
 @endsection
@@ -191,6 +219,8 @@
         Gérez vos campagnes : étapes, candidats, inscriptions, packs de votes et affichage (pourcentage / clair).
         Tout est modifiable par session.
     </p>
+
+    <div class="col-sm-12">@include('layout.status')</div>
 
     {{-- Toolbar --}}
     <div class="vt-toolbar">

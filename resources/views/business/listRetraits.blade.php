@@ -309,6 +309,7 @@
             <i class="ti ti-plus" style="font-size:14px;"></i> Retirer de l'argent
         </button>
     </div>
+    <div class="col-sm-12">@include('layout.status')</div>
 
     {{-- Layout deux colonnes --}}
     <div class="vt-ret-layout">
