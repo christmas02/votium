@@ -60,7 +60,6 @@ class WebhookController
             if ($vote->status === 'confirmed') {
                 $this->generatePdf($vote, $transaction);
             }
-
             return 'operation effectuere avec succes';
 
         } catch (\Exception $e) {

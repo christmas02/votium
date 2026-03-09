@@ -5,7 +5,7 @@ namespace App\Sdkpayment\Hub2;
 use App\Sdkpayment\ClientHttpInstance;
 use Illuminate\Support\Facades\Log;
 
-class Hub2webhook
+class Hub2Webhook
 {
     private $client;
 
