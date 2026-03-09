@@ -117,7 +117,7 @@
                     </div>
                 @endif
 
-                <form class="form" action="{{ route('login') }}" method="POST" autocomplete="on">
+                <form class="form" action="{{ route('reset') }}" method="POST" autocomplete="on">
 
                     @csrf
 
@@ -132,7 +132,7 @@
                             <span class="text-danger">{{ $message }}</span>
                         @enderror
                     </label>
-                    <label class="field">
+                    <label class="field"> 
                         <span>Confirmer le mot de passe</span>
                         <input
                             type="password"
