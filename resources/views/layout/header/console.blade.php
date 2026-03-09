@@ -302,26 +302,24 @@
                         'Accept': 'application/json' // FORCE Laravel à répondre en JSON et à respecter le FormRequest
                     },
                     success: function(response) {
-                        // Utilisation de ton système d'alerte existant
-                        if (typeof showAjaxAlert === 'function') {
-                            showAjaxAlert('success', response.message || 'Action réussie !');
-                        }
+                        // Stocker le message dans sessionStorage et recharger
+                        const alertData = {
+                            type: 'success',
+                            message: response.message || 'Action réussie !'
+                        };
+                        sessionStorage.setItem('pendingAlert', JSON.stringify(alertData));
 
-                        // Si le formulaire est dans une modale, on la ferme après un court délai
+                        // Si le formulaire est dans une modale, on la ferme
                         const $modal = $form.closest('.modal');
                         if ($modal.length) {
-                            setTimeout(() => {
-                                $modal.modal('hide');
-                            }, 1000);
+                            $modal.modal('hide');
                         }
 
-                        // Redirection ou Refresh selon le besoin (défini dans la réponse JSON ou par défaut)
+                        // Redirection ou Refresh selon le besoin
                         if (response.redirect) {
                             window.location.href = response.redirect;
                         } else {
-                            setTimeout(() => {
-                                location.reload();
-                            }, 1500);
+                            location.reload();
                         }
                     },
                     error: function(xhr) {

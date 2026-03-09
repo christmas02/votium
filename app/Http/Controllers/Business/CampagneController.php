@@ -326,6 +326,7 @@ class CampagneController extends Controller
     public function updateCategorie(CategoryCampagneRequest $request)
     {
         try {
+        // dd($request->all());
             #Formatage des données
             $dateCategorie = [
                 'category_id' => $request->category_id,

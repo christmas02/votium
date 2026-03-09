@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Console\ConsoleController;
+use App\Http\Controllers\HomeController;
 
 use App\Http\Controllers\Business\BusinessController;
 use App\Http\Controllers\Business\CampagneController;
@@ -34,11 +35,24 @@ Route::get('/invoice_template', function () {
 });
 Route::controller(AuthController::class)->group(function () {
     Route::get('/', 'screenLogin')->name('screenLogin');
-    Route::post('registered', 'register');
-    Route::post('login', 'login');
+    Route::get('inscription', 'screenRegister')->name('screenRegister');
+    Route::post('registered', 'register')->name('register');
+    Route::post('login', 'login')->name('login');
     Route::get('/confirm/{id}/{token}', 'confirm')->name('confirm');
     Route::get('logout', 'logout')->name('logout');
+
+    Route::get('forgot_password', 'screenForgot')->name('screenForgot');
+    Route::post('forgot_password', 'forgot')->name('forgot');
+    
+    Route::get('reset_password/{token}', 'screenReset')->name('screenReset');
+    Route::post('reset_password', 'reset')->name('reset');
 });
+
+// Route::controller(HomeController::class)->group(function () {
+
+//     #ROUTES SITE CAMPAGNES
+//     Route::get('/', 'index')->name('home');
+// });
 
 // ---Site CAMPAGNES ---
 Route::controller(SiteCampagneController::class)->group(function () {

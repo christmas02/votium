@@ -39,7 +39,7 @@ class UserRequest extends FormRequest
             ],
 
             'password' => $userId
-                ? 'nullable|confirmed|min:8'
+                ? 'nullable|min:8'
                 : 'required|confirmed|min:8',
 
             // 'role' => 'nullable|in:admin,customer,manager',
