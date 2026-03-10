@@ -620,6 +620,104 @@
         .image-upload-group .ti-photo {
             font-size: 48px !important;
         }
+
+    /* ================================================
+       MODAL CANDIDAT — Design "Demande de retrait"
+       ================================================ */
+    .vt-cand-modal .modal-content { border-radius: 16px; border: none; overflow: hidden; }
+    .vt-cand-modal-header {
+        background: linear-gradient(to bottom, #fff7ed 0%, #ffffff 100%);
+        border-bottom: 1px solid var(--vt-orange-border);
+        padding: 18px 22px 14px;
+        display: flex; align-items: center; gap: 12px;
+    }
+    .vt-cand-modal-icon {
+        width: 36px; height: 36px;
+        background: var(--vt-orange-light); border: 1.5px solid var(--vt-orange-border);
+        border-radius: 10px; display: flex; align-items: center; justify-content: center;
+        font-size: 17px; color: var(--vt-orange); flex-shrink: 0;
+    }
+    .vt-cand-modal-title { font-size: 17px; font-weight: 700; color: var(--vt-text-main); flex: 1; margin: 0; }
+    .vt-cand-modal-close {
+        width: 28px; height: 28px; border-radius: 50%;
+        border: 1.5px solid var(--vt-border); background: #fff; color: var(--vt-text-muted);
+        display: flex; align-items: center; justify-content: center;
+        font-size: 13px; cursor: pointer; transition: all .15s; flex-shrink: 0;
+    }
+    .vt-cand-modal-close:hover { border-color: #94a3b8; color: var(--vt-text-main); }
+    .vt-cand-modal .modal-body { padding: 20px 22px 8px; }
+    .vt-cm-section {
+        font-size: 10px; font-weight: 700; letter-spacing: 1.2px;
+        text-transform: uppercase; color: var(--vt-text-muted);
+        margin: 16px 0 10px; display: flex; align-items: center; gap: 8px;
+    }
+    .vt-cm-section::after { content: ''; flex: 1; height: 1px; background: var(--vt-border); }
+    .vt-cm-photo-zone {
+        display: flex; align-items: center; gap: 14px; padding: 12px 14px;
+        border: 1.5px dashed var(--vt-border); border-radius: var(--vt-radius-sm);
+        background: #fafafa; margin-bottom: 16px; transition: border-color .15s;
+    }
+    .vt-cm-photo-zone:hover { border-color: #94a3b8; }
+    .vt-cm-avatar {
+        width: 52px; height: 52px; border-radius: 10px; background: #f1f5f9; flex-shrink: 0;
+        display: flex; align-items: center; justify-content: center; overflow: hidden; position: relative;
+    }
+    .vt-cm-avatar .placeholder-target { font-size: 22px; color: #94a3b8; }
+    .vt-cm-avatar .preview-target { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+    .vt-cm-photo-info { flex: 1; }
+    .vt-cm-photo-label { font-size: 12.5px; font-weight: 600; color: var(--vt-text-main); margin-bottom: 2px; }
+    .vt-cm-photo-hint  { font-size: 11px; color: var(--vt-text-muted); }
+    .vt-cm-photo-btn {
+        border: 1.5px solid var(--vt-border); border-radius: 6px; background: #fff; color: var(--vt-text-muted);
+        font-size: 11.5px; font-weight: 600; padding: 6px 13px;
+        cursor: pointer; transition: all .15s; position: relative; overflow: hidden;
+    }
+    .vt-cm-photo-btn:hover { border-color: var(--vt-orange); color: var(--vt-orange); }
+    .vt-cm-photo-btn input[type="file"] { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
+    .vt-cm-field { margin-bottom: 12px; }
+    .vt-cm-label { font-size: 12px; font-weight: 500; color: var(--vt-text-muted); display: block; margin-bottom: 5px; }
+    .vt-cm-input-wrap { position: relative; }
+    .vt-cm-input-wrap .vt-cm-icon {
+        position: absolute; left: 11px; top: 50%; transform: translateY(-50%);
+        color: #94a3b8; font-size: 14px; pointer-events: none;
+    }
+    .vt-cm-input-wrap.top .vt-cm-icon { top: 13px; transform: none; }
+    .vt-cm-input {
+        width: 100%; padding: 9px 12px 9px 34px;
+        border: 1.5px solid var(--vt-border); border-radius: var(--vt-radius-sm);
+        font-size: 13px; color: var(--vt-text-main); background: #fff;
+        transition: border-color .15s; font-family: inherit;
+    }
+    .vt-cm-input:focus { outline: none; border-color: var(--vt-orange); }
+    .vt-cm-input::placeholder { color: #94a3b8; }
+    textarea.vt-cm-input { resize: vertical; min-height: 80px; padding-top: 10px; }
+    .vt-cm-select {
+        width: 100%; padding: 9px 30px 9px 34px;
+        border: 1.5px solid var(--vt-border); border-radius: var(--vt-radius-sm);
+        background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E") no-repeat right 9px center / 14px;
+        appearance: none; font-size: 13px; color: var(--vt-text-main);
+        cursor: pointer; transition: border-color .15s; font-family: inherit;
+    }
+    .vt-cm-select:focus { outline: none; border-color: var(--vt-orange); }
+    .vt-cm-select:disabled { opacity: .5; cursor: not-allowed; background-color: #f8fafc; }
+    .vt-cm-hint { font-size: 11px; color: var(--vt-orange); margin: 3px 0 0; font-style: italic; }
+    .vt-cand-modal-footer {
+        display: flex; align-items: center; justify-content: flex-end;
+        gap: 10px; padding: 14px 22px; border-top: 1px solid var(--vt-border); background: #fff;
+    }
+    .vt-cm-btn-cancel {
+        padding: 9px 22px; border-radius: 8px;
+        border: 1.5px solid var(--vt-border); background: #fff; color: var(--vt-text-main);
+        font-size: 13px; font-weight: 600; cursor: pointer; transition: all .15s;
+    }
+    .vt-cm-btn-cancel:hover { border-color: #94a3b8; }
+    .vt-cm-btn-submit {
+        padding: 9px 22px; border-radius: 8px;
+        background: var(--vt-orange); color: #fff; border: none;
+        font-size: 13px; font-weight: 700; cursor: pointer; transition: background .15s;
+        display: inline-flex; align-items: center; gap: 7px;
+    }
+    .vt-cm-btn-submit:hover { background: var(--vt-orange-hover); }
     </style>
 @endsection
 
@@ -793,124 +891,221 @@
      ===================================================== --}}
 
 {{-- Ajout candidat --}}
-<div class="modal fade" id="modal_add_candidat" tabindex="-1" aria-hidden="true" data-bs-backdrop="static"
-    data-bs-keyboard="false">
-    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+<div class="modal fade vt-cand-modal" id="modal_add_candidat" tabindex="-1" aria-hidden="true"
+     data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" style="max-width:560px;">
         <div class="modal-content">
-            <div class="modal-header border-bottom">
-                <h5 class="modal-title">Ajouter candidat</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+
+            {{-- Header gradient --}}
+            <div class="vt-cand-modal-header">
+                <div class="vt-cand-modal-icon">
+                    <i class="ti ti-plus"></i>
+                </div>
+                <h5 class="vt-cand-modal-title">Ajouter un candidat</h5>
+                <button type="button" class="vt-cand-modal-close" data-bs-dismiss="modal" aria-label="Close">
+                    <i class="ti ti-x" style="font-size:12px;"></i>
+                </button>
             </div>
+
             <div class="modal-body">
                 <form class="ajax-form" action="{{ route('business.save_candidat') }}" method="POST"
-                    enctype="multipart/form-data">
+                      enctype="multipart/form-data" id="form-add-candidat">
                     @csrf
-                    <div class="row">
-                        <div class="col-md-12 mb-3 image-upload-group">
-                            <div class="d-flex align-items-center bg-light p-2 rounded">
-                                <div
-                                    class="avatar avatar-xl border border-dashed me-3 flex-shrink-0 d-flex justify-content-center align-items-center bg-light position-relative overflow-hidden">
-                                    <i class="ti ti-photo text-muted fs-4 placeholder-target"></i>
-                                    <img src="#" alt="Aperçu"
-                                        class="preview-target d-none w-100 h-100 object-fit-cover">
-                                </div>
-                                <div class="d-flex flex-column">
-                                    <label class="form-label mb-1">Photo du candidat</label>
-                                    <input type="file" class="form-control form-control-sm" name="photo"
-                                        accept="image/*" onchange="handleImagePreview(this)">
-                                    <small class="text-muted">JPG, GIF ou PNG. Max 800K</small>
-                                    <button type="button"
-                                        class="btn btn-sm btn-link text-danger p-0 d-none remove-btn-target text-start"
-                                        onclick="handleImageRemove(this)">Supprimer</button>
+
+                    {{-- Zone photo --}}
+                    <div class="vt-cm-photo-zone image-upload-group">
+                        <div class="vt-cm-avatar">
+                            <i class="ti ti-user placeholder-target" style="font-size:20px; color:#94a3b8;"></i>
+                            <img src="#" alt="" class="preview-target d-none">
+                        </div>
+                        <div class="vt-cm-photo-info">
+                            <p class="vt-cm-photo-label">Photo du candidat</p>
+                            <p class="vt-cm-photo-hint">JPG, PNG · Max 800K</p>
+                        </div>
+                        <label class="vt-cm-photo-btn">
+                            <i class="ti ti-upload" style="font-size:12px;"></i> Choisir
+                            <input type="file" name="photo" accept="image/*" onchange="handleImagePreview(this)">
+                        </label>
+                        <button type="button"
+                                class="btn btn-sm btn-link text-danger p-0 d-none remove-btn-target"
+                                onclick="handleImageRemove(this)" style="font-size:11.5px;">
+                            Supprimer
+                        </button>
+                    </div>
+
+                    {{-- Section Identité --}}
+                    <p class="vt-cm-section">Identité</p>
+                    <div class="row g-3">
+                        <div class="col-12">
+                            <div class="vt-cm-field">
+                                <label class="vt-cm-label">Nom complet <span class="text-danger">*</span></label>
+                                <div class="vt-cm-input-wrap">
+                                    <i class="ti ti-user vt-cm-icon"></i>
+                                    <input type="text" class="vt-cm-input" name="name"
+                                           placeholder="Ex : Marie Dupont" required>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-12 mb-3">
-                            <label class="form-label">Nom complet <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control" name="name" required>
+                        <div class="col-6">
+                            <div class="vt-cm-field">
+                                <label class="vt-cm-label">Sexe <span class="text-danger">*</span></label>
+                                <div class="vt-cm-input-wrap">
+                                    <i class="ti ti-gender-bigender vt-cm-icon"></i>
+                                    <select class="vt-cm-select" name="sexe" required>
+                                        <option value="">Choisir</option>
+                                        <option value="M">Masculin</option>
+                                        <option value="F">Féminin</option>
+                                    </select>
+                                </div>
+                            </div>
                         </div>
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label">Sexe <span class="text-danger">*</span></label>
-                            <select class="form-select" name="sexe" required>
-                                <option value="">Choisir</option>
-                                <option value="M">Masculin</option>
-                                <option value="F">Féminin</option>
-                            </select>
+                        <div class="col-6">
+                            <div class="vt-cm-field">
+                                <label class="vt-cm-label">Date de naissance <span class="text-danger">*</span></label>
+                                <div class="vt-cm-input-wrap">
+                                    <i class="ti ti-calendar vt-cm-icon"></i>
+                                    <input type="date" class="vt-cm-input" name="date_naissance" required>
+                                </div>
+                            </div>
                         </div>
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label">Date de naissance <span class="text-danger">*</span></label>
-                            <input type="date" class="form-control" name="date_naissance" required>
-                        </div>
-                        <div class="col-md-12 mb-3">
-                            <label class="form-label">Profession <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control" name="profession" required>
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label">Téléphone <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control" name="telephone" required>
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label">Email <span class="text-danger">*</span></label>
-                            <input type="email" class="form-control" name="email"
-                                placeholder="candidat@exemple.com" required>
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label">Pays <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control" name="pays" required>
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label">Ville <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control" name="ville" required>
-                        </div>
-                        <div class="col-md-12 mb-3">
-                            <label class="form-label">Campagne <span class="text-danger">*</span></label>
-                            <select name="campagne_id" class="form-select js-add-campagne" required>
-                                <option value="">Sélectionner une campagne</option>
-                                @foreach ($campagnes as $item)
-                                    @php($campagne = $item['campagne'] ?? null)
-                                    @if ($campagne)
-                                        <option value="{{ $campagne->campagne_id }}">{{ $campagne->name }}</option>
-                                    @endif
-                                @endforeach
-                            </select>
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label">Étape <span class="text-danger">*</span></label>
-                            <select name="etape_id" class="form-select js-add-etape" required disabled>
-                                <option value="">Sélectionner</option>
-                                @foreach ($etapes as $etape)
-                                    <option value="{{ $etape->etape_id }}"
-                                        data-campagne-id="{{ $etape->campagne_id }}">{{ $etape->name }}</option>
-                                @endforeach
-                            </select>
-                            <small class="text-danger d-none js-msg-no-etape mt-1"><i class="ti ti-info-circle"></i>
-                                Aucune étape disponible.</small>
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label">Catégorie</label>
-                            <select name="category_id" class="form-select js-add-categorie" disabled>
-                                <option value="">Sélectionner</option>
-                                @foreach ($categories as $category)
-                                    <option value="{{ $category->category_id }}"
-                                        data-campagne-id="{{ $category->campagne_id }}">{{ $category->name }}
-                                    </option>
-                                @endforeach
-                            </select>
-                        </div>
-                        <div class="col-md-12 mb-3">
-                            <label class="form-label">Présentation du candidat <span
-                                    class="text-danger">*</span></label>
-                            <textarea class="form-control" name="description" rows="4" required
-                                placeholder="Parlez brièvement de lui, son parcours, ses ambitions..."></textarea>
+                        <div class="col-12">
+                            <div class="vt-cm-field">
+                                <label class="vt-cm-label">Profession <span class="text-danger">*</span></label>
+                                <div class="vt-cm-input-wrap">
+                                    <i class="ti ti-briefcase vt-cm-icon"></i>
+                                    <input type="text" class="vt-cm-input" name="profession"
+                                           placeholder="Ex : Styliste" required>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    <div class="modal-footer border-top mt-4 pb-0 px-0">
-                        <button type="button" class="btn btn-light" data-bs-dismiss="modal">Annuler</button>
-                        <button type="submit" class="btn btn-primary js-btn-save-candidat"><i
-                                class="ti ti-device-floppy me-1"></i> Enregistrer</button>
+
+                    {{-- Section Contact --}}
+                    <p class="vt-cm-section">Contact</p>
+                    <div class="row g-3">
+                        <div class="col-6">
+                            <div class="vt-cm-field">
+                                <label class="vt-cm-label">Téléphone <span class="text-danger">*</span></label>
+                                <div class="vt-cm-input-wrap">
+                                    <i class="ti ti-phone vt-cm-icon"></i>
+                                    <input type="text" class="vt-cm-input" name="telephone"
+                                           placeholder="+225 ..." required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="vt-cm-field">
+                                <label class="vt-cm-label">Email <span class="text-danger">*</span></label>
+                                <div class="vt-cm-input-wrap">
+                                    <i class="ti ti-mail vt-cm-icon"></i>
+                                    <input type="email" class="vt-cm-input" name="email"
+                                           placeholder="candidat@..." required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="vt-cm-field">
+                                <label class="vt-cm-label">Pays <span class="text-danger">*</span></label>
+                                <div class="vt-cm-input-wrap">
+                                    <i class="ti ti-map-pin vt-cm-icon"></i>
+                                    <input type="text" class="vt-cm-input" name="pays"
+                                           placeholder="Ex : Côte d'Ivoire" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="vt-cm-field">
+                                <label class="vt-cm-label">Ville <span class="text-danger">*</span></label>
+                                <div class="vt-cm-input-wrap">
+                                    <i class="ti ti-building-community vt-cm-icon"></i>
+                                    <input type="text" class="vt-cm-input" name="ville"
+                                           placeholder="Ex : Abidjan" required>
+                                </div>
+                            </div>
+                        </div>
                     </div>
+
+                    {{-- Section Candidature --}}
+                    <p class="vt-cm-section">Candidature</p>
+                    <div class="row g-3">
+                        <div class="col-12">
+                            <div class="vt-cm-field">
+                                <label class="vt-cm-label">Session <span class="text-danger">*</span></label>
+                                <div class="vt-cm-input-wrap">
+                                    <i class="ti ti-calendar-event vt-cm-icon"></i>
+                                    <select name="campagne_id" class="vt-cm-select js-add-campagne" required>
+                                        <option value="">Sélectionner une session</option>
+                                        @foreach ($campagnes as $item)
+                                            @php($campagne = $item['campagne'] ?? null)
+                                            @if ($campagne)
+                                                <option value="{{ $campagne->campagne_id }}">{{ $campagne->name }}</option>
+                                            @endif
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="vt-cm-field">
+                                <label class="vt-cm-label">Étape <span class="text-danger">*</span></label>
+                                <div class="vt-cm-input-wrap">
+                                    <i class="ti ti-flag vt-cm-icon"></i>
+                                    <select name="etape_id" class="vt-cm-select js-add-etape" required disabled>
+                                        <option value="">Sélectionner</option>
+                                        @foreach ($etapes as $etape)
+                                            <option value="{{ $etape->etape_id }}"
+                                                    data-campagne-id="{{ $etape->campagne_id }}">
+                                                {{ $etape->name }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <p class="vt-cm-hint d-none js-msg-no-etape">
+                                    <i class="ti ti-info-circle"></i> Aucune étape disponible.
+                                </p>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="vt-cm-field">
+                                <label class="vt-cm-label">Catégorie</label>
+                                <div class="vt-cm-input-wrap">
+                                    <i class="ti ti-tag vt-cm-icon"></i>
+                                    <select name="category_id" class="vt-cm-select js-add-categorie" disabled>
+                                        <option value="">Toutes</option>
+                                        @foreach ($categories as $category)
+                                            <option value="{{ $category->category_id }}"
+                                                    data-campagne-id="{{ $category->campagne_id }}">
+                                                {{ $category->name }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="vt-cm-field">
+                                <label class="vt-cm-label">Présentation <span class="text-danger">*</span></label>
+                                <div class="vt-cm-input-wrap top">
+                                    <i class="ti ti-pencil vt-cm-icon"></i>
+                                    <textarea class="vt-cm-input" name="description" rows="3" required
+                                              placeholder="Parcours, ambitions, points forts..."></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                 </form>
             </div>
+
+            {{-- Footer --}}
+            <div class="vt-cand-modal-footer">
+                <button type="button" class="vt-cm-btn-cancel" data-bs-dismiss="modal">Annuler</button>
+                <button type="submit" form="form-add-candidat"
+                        class="vt-cm-btn-submit js-btn-save-candidat">
+                    <i class="ti ti-check" style="font-size:13px;"></i> Confirmer
+                </button>
+            </div>
+
         </div>
     </div>
 </div>
