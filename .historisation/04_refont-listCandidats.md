@@ -114,15 +114,59 @@ Candidats                    [+ Créer]  [Importer ▾]  [Exporter]
 
 ---
 
-## Modales
-| ID | Action |
+## Modal ajout candidat — Design v2 (2026-03-10)
+
+> Inspiré du modal "Demande de retrait" de `listRetraits`
+
+### Structure
+```
+┌──────────────────────────────────────────────┐
+│ [+]  Ajouter un candidat               [×]   │ ← gradient crème + icône orange
+├──────────────────────────────────────────────┤
+│  [photo 52px]  Photo du candidat  [Choisir]  │ ← zone dashed
+│ ─── IDENTITÉ ──────────────────────────────  │
+│  [👤 Nom] [⚥ Sexe] [📅 Naissance] [💼 Prof] │
+│ ─── CONTACT ────────────────────────────────  │
+│  [📞 Tel] [✉ Email] [📍 Pays] [🏙 Ville]   │
+│ ─── CANDIDATURE ────────────────────────────  │
+│  [📅 Session] [🚩 Étape] [🏷 Catégorie]     │
+│  [✏ Présentation]                            │
+│                    [Annuler] [✓ Confirmer]   │
+└──────────────────────────────────────────────┘
+```
+
+### Classes CSS modal
+| Classe | Description |
 |---|---|
-| `#modal_add_candidat` | Créer candidat (AJAX form) |
-| `#modal_edit_candidat` | Modifier candidat (AJAX form, rempli dynamiquement) |
-| `#delete_contact` | Supprimer candidat |
-| `#modal_add_categorie` | Créer catégorie |
-| `#modal_edit_categorie` | Modifier catégorie |
-| `#modal_delete_categorie` | Supprimer catégorie |
+| `.vt-cand-modal` | Classe sur `.modal` (border-radius 16px) |
+| `.vt-cand-modal-header` | Header gradient crème → blanc |
+| `.vt-cand-modal-icon` | Carré orange arrondi avec "+" |
+| `.vt-cand-modal-title` | Titre bold |
+| `.vt-cand-modal-close` | Bouton × circulaire |
+| `.vt-cm-photo-zone` | Zone upload dashed |
+| `.vt-cm-avatar` | Avatar 52×52px arrondi |
+| `.vt-cm-photo-btn` | Bouton "Choisir" (contient input file) |
+| `.vt-cm-section` | Séparateur de section (tiret + texte uppercase) |
+| `.vt-cm-field` | Groupe champ + label |
+| `.vt-cm-label` | Label muted 12px |
+| `.vt-cm-input-wrap` | Wrapper avec icône positionnée |
+| `.vt-cm-icon` | Icône à gauche de l'input |
+| `.vt-cm-input` | Input stylisé (border orange au focus) |
+| `.vt-cm-select` | Select stylisé avec chevron |
+| `.vt-cm-hint` | Texte hint orange (remplace `<small>`) |
+| `.vt-cand-modal-footer` | Footer avec boutons |
+| `.vt-cm-btn-cancel` | Bouton Annuler outline |
+| `.vt-cm-btn-submit` | Bouton Confirmer orange |
+
+## Modales
+| ID | Statut design | Action |
+|---|---|---|
+| `#modal_add_candidat` | ✅ v2 (2026-03-10) | Créer candidat (AJAX form) |
+| `#modal_edit_candidat` | ⏳ À refaire | Modifier candidat (AJAX form, rempli dynamiquement) |
+| `#delete_contact` | — Bootstrap | Supprimer candidat |
+| `#modal_add_categorie` | — Bootstrap | Créer catégorie |
+| `#modal_edit_categorie` | — Bootstrap | Modifier catégorie |
+| `#modal_delete_categorie` | — Bootstrap | Supprimer catégorie |
 
 ## Routes utilisées
 | Route | Usage |

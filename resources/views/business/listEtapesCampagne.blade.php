@@ -193,6 +193,112 @@
         .vt-etapes-filter { width: 100%; }
         .vt-stat-pill { min-width: auto; flex: 1; }
     }
+
+    /* ================================================================
+       MODAL NOUVELLE ÉTAPE — design "Demande de retrait"
+       ================================================================ */
+    #modal_add_step_ .modal-content,
+    #modal_update_step .modal-content {
+        border: none; border-radius: 16px; overflow: hidden;
+        box-shadow: 0 20px 60px rgba(0,0,0,.18);
+    }
+    .vt-ae-header {
+        display: flex; align-items: center; gap: 14px;
+        padding: 22px 24px 18px;
+        background: linear-gradient(135deg, #fff8f0 0%, #ffffff 100%);
+        border-bottom: 1px solid #f0e6d8;
+        position: relative;
+    }
+    .vt-ae-icon {
+        width: 40px; height: 40px; flex-shrink: 0;
+        background: var(--vt-orange-light); border: 1.5px solid var(--vt-orange-border);
+        border-radius: 10px;
+        display: flex; align-items: center; justify-content: center;
+        color: var(--vt-orange); font-size: 18px;
+    }
+    .vt-ae-title {
+        font-size: 17px; font-weight: 700; color: var(--vt-text-main);
+        margin: 0; flex: 1;
+    }
+    .vt-ae-close {
+        width: 30px; height: 30px; border-radius: 50%;
+        border: 1.5px solid var(--vt-border); background: #fff;
+        display: flex; align-items: center; justify-content: center;
+        color: var(--vt-text-muted); font-size: 13px;
+        cursor: pointer; transition: all .15s; flex-shrink: 0;
+    }
+    .vt-ae-close:hover { background: #f1f5f9; border-color: #94a3b8; color: var(--vt-text-main); }
+
+    /* Body */
+    #modal_add_step_ .modal-body,
+    #modal_update_step .modal-body { padding: 20px 24px 4px; }
+
+    /* Séparateur de section */
+    .vt-ae-section {
+        display: flex; align-items: center; gap: 10px;
+        margin: 18px 0 14px;
+    }
+    .vt-ae-section::before,
+    .vt-ae-section::after {
+        content: ''; flex: 1; height: 1px; background: var(--vt-border);
+    }
+    .vt-ae-section span {
+        font-size: 10px; font-weight: 700; letter-spacing: .8px;
+        text-transform: uppercase; color: var(--vt-text-muted);
+        white-space: nowrap;
+    }
+
+    /* Champ générique */
+    .vt-ae-field { margin-bottom: 12px; }
+    .vt-ae-label {
+        font-size: 11px; font-weight: 600; color: var(--vt-text-muted);
+        margin-bottom: 5px; display: block; letter-spacing: .3px;
+    }
+    .vt-ae-input-wrap { position: relative; }
+    .vt-ae-field-icon {
+        position: absolute; left: 11px; top: 50%; transform: translateY(-50%);
+        color: #94a3b8; font-size: 14px; pointer-events: none; z-index: 1;
+    }
+    .vt-ae-input {
+        width: 100%; padding: 9px 12px 9px 34px;
+        border: 1.5px solid var(--vt-border); border-radius: var(--vt-radius-sm);
+        font-size: 13px; color: var(--vt-text-main); background: #fafafa;
+        transition: border-color .15s, background .15s;
+    }
+    .vt-ae-input:focus {
+        outline: none; border-color: var(--vt-orange);
+        background: #fff; box-shadow: 0 0 0 3px rgba(234,88,12,.07);
+    }
+    .vt-ae-input::placeholder { color: #b0bec5; }
+    textarea.vt-ae-input { padding-top: 9px; resize: vertical; min-height: 72px; }
+
+    /* Grille 2 colonnes */
+    .vt-ae-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    @media (max-width: 480px) { .vt-ae-row { grid-template-columns: 1fr; } }
+
+    /* Footer */
+    .vt-ae-footer {
+        display: flex; align-items: center; justify-content: flex-end;
+        gap: 10px; padding: 16px 24px 20px;
+        border-top: 1px solid var(--vt-border); margin-top: 8px;
+        position: sticky; bottom: 0; background: #fff; z-index: 10;
+    }
+    .vt-ae-btn-cancel {
+        padding: 9px 22px; border-radius: var(--vt-radius-sm);
+        border: 1.5px solid var(--vt-border); background: #fff;
+        color: var(--vt-text-main); font-size: 13px; font-weight: 600;
+        cursor: pointer; transition: all .15s;
+    }
+    .vt-ae-btn-cancel:hover { border-color: #94a3b8; background: #f8fafc; }
+    .vt-ae-btn-submit {
+        padding: 9px 22px; border-radius: var(--vt-radius-sm);
+        background: var(--vt-orange); border: none;
+        color: #fff; font-size: 13px; font-weight: 700;
+        cursor: pointer; display: inline-flex; align-items: center;
+        gap: 6px; transition: background .15s;
+    }
+    .vt-ae-btn-submit:hover { background: #c2560a; }
+    .vt-ae-btn-submit:disabled { opacity: .65; cursor: not-allowed; }
 </style>
 @endsection
 
@@ -309,59 +415,104 @@
      data-bs-backdrop="static" data-bs-keyboard="false">
     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content">
-            <div class="modal-header border-bottom">
-                <h5 class="modal-title">Nouvelle étape</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+
+            {{-- Header gradient --}}
+            <div class="vt-ae-header">
+                <div class="vt-ae-icon">
+                    <i class="ti ti-plus"></i>
+                </div>
+                <h5 class="vt-ae-title">Nouvelle étape</h5>
+                <button type="button" class="vt-ae-close" data-bs-dismiss="modal" aria-label="Close">
+                    <i class="ti ti-x"></i>
+                </button>
             </div>
+
             <div class="modal-body">
                 <form id="form_add_step" action="{{ route('business.save_etape') }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     <input type="hidden" id="modal_add_campagne_id" name="campagne_id" value="">
 
-                    <div class="mb-3">
-                        <label class="form-label">Nom de l'étape <span class="text-danger">*</span></label>
-                        <input type="text" class="form-control" name="name" placeholder="Ex: Phase 1 — Demi-finale" required>
-                    </div>
+                    {{-- SECTION : INFORMATIONS --}}
+                    <div class="vt-ae-section"><span>Informations</span></div>
 
-                    <div class="row g-3 mb-3">
-                        <div class="col-6">
-                            <label class="form-label">Date de début <span class="text-danger">*</span></label>
-                            <input type="date" class="form-control" name="date_debut" required>
-                        </div>
-                        <div class="col-6">
-                            <label class="form-label">Heure de début <span class="text-danger">*</span></label>
-                            <input type="time" class="form-control" name="heure_debut" required>
+                    <div class="vt-ae-field">
+                        <label class="vt-ae-label">Nom de l'étape <span style="color:#ef4444;">*</span></label>
+                        <div class="vt-ae-input-wrap">
+                            <i class="ti ti-flag vt-ae-field-icon"></i>
+                            <input type="text" class="vt-ae-input" name="name"
+                                   placeholder="Ex : Phase 1 — Demi-finale" required>
                         </div>
                     </div>
 
-                    <div class="row g-3 mb-3">
-                        <div class="col-6">
-                            <label class="form-label">Date de fin <span class="text-danger">*</span></label>
-                            <input type="date" class="form-control" name="date_fin" required>
-                        </div>
-                        <div class="col-6">
-                            <label class="form-label">Heure de fin <span class="text-danger">*</span></label>
-                            <input type="time" class="form-control" name="heure_fin" required>
+                    <div class="vt-ae-field">
+                        <label class="vt-ae-label">Description <span style="color:#ef4444;">*</span></label>
+                        <div class="vt-ae-input-wrap">
+                            <i class="ti ti-align-left vt-ae-field-icon" style="top:14px; transform:none;"></i>
+                            <textarea class="vt-ae-input" name="description"
+                                      placeholder="Décrivez cette étape..." rows="3" required></textarea>
                         </div>
                     </div>
 
-                    <div class="mb-3">
-                        <label class="form-label">Description <span class="text-danger">*</span></label>
-                        <textarea class="form-control" rows="3" name="description" placeholder="Décrivez cette étape..." required></textarea>
+                    {{-- SECTION : PÉRIODE --}}
+                    <div class="vt-ae-section"><span>Période</span></div>
+
+                    <div class="vt-ae-row">
+                        <div class="vt-ae-field">
+                            <label class="vt-ae-label">Date de début <span style="color:#ef4444;">*</span></label>
+                            <div class="vt-ae-input-wrap">
+                                <i class="ti ti-calendar vt-ae-field-icon"></i>
+                                <input type="date" class="vt-ae-input" name="date_debut" required>
+                            </div>
+                        </div>
+                        <div class="vt-ae-field">
+                            <label class="vt-ae-label">Heure de début <span style="color:#ef4444;">*</span></label>
+                            <div class="vt-ae-input-wrap">
+                                <i class="ti ti-clock vt-ae-field-icon"></i>
+                                <input type="time" class="vt-ae-input" name="heure_debut" required>
+                            </div>
+                        </div>
                     </div>
 
-                    <div class="mb-3">
-                        <label class="form-label">Prix d'un vote (FCFA) <span class="text-danger">*</span></label>
-                        <input type="number" class="form-control js-prix-unitaire" name="prix_vote" placeholder="Ex: 500" required>
+                    <div class="vt-ae-row">
+                        <div class="vt-ae-field">
+                            <label class="vt-ae-label">Date de fin <span style="color:#ef4444;">*</span></label>
+                            <div class="vt-ae-input-wrap">
+                                <i class="ti ti-calendar-off vt-ae-field-icon"></i>
+                                <input type="date" class="vt-ae-input" name="date_fin" required>
+                            </div>
+                        </div>
+                        <div class="vt-ae-field">
+                            <label class="vt-ae-label">Heure de fin <span style="color:#ef4444;">*</span></label>
+                            <div class="vt-ae-input-wrap">
+                                <i class="ti ti-clock-off vt-ae-field-icon"></i>
+                                <input type="time" class="vt-ae-input" name="heure_fin" required>
+                            </div>
+                        </div>
                     </div>
 
-                    <div class="mb-3">
-                        <label class="form-label">Packages de vote <span class="text-danger">*</span></label>
+                    {{-- SECTION : VOTE --}}
+                    <div class="vt-ae-section"><span>Vote</span></div>
+
+                    <div class="vt-ae-field">
+                        <label class="vt-ae-label">Prix d'un vote (FCFA) <span style="color:#ef4444;">*</span></label>
+                        <div class="vt-ae-input-wrap">
+                            <i class="ti ti-currency-franc vt-ae-field-icon"></i>
+                            <input type="number" class="vt-ae-input js-prix-unitaire"
+                                   name="prix_vote" placeholder="Ex : 500" required>
+                        </div>
+                    </div>
+
+                    <div class="vt-ae-field">
+                        <label class="vt-ae-label">Packages de vote <span style="color:#ef4444;">*</span></label>
                         <div class="packages-wrapper">
                             <div class="packages-container" data-index="1" id="packages_container">
                                 <div class="vt-pkg-row package-item package-itemadd">
-                                    <input type="number" name="packages[0][votes]" class="vt-pkg-input js-package-votes" placeholder="Nombre de votes" required>
-                                    <input type="number" name="packages[0][montant]" class="vt-pkg-input js-package-amount" placeholder="Prix (FCFA)" readonly required>
+                                    <input type="number" name="packages[0][votes]"
+                                           class="vt-pkg-input js-package-votes"
+                                           placeholder="Nombre de votes" required>
+                                    <input type="number" name="packages[0][montant]"
+                                           class="vt-pkg-input js-package-amount"
+                                           placeholder="Prix (FCFA)" readonly required>
                                     <button type="button" class="vt-pkg-del remove-package d-none">✕</button>
                                 </div>
                             </div>
@@ -371,14 +522,17 @@
                         </div>
                     </div>
 
-                    <div class="modal-footer border-top px-0 pb-0 mt-3">
-                        <button type="button" class="btn btn-light" data-bs-dismiss="modal">Annuler</button>
-                        <button type="submit" class="btn btn-primary">
-                            <i class="ti ti-device-floppy me-1"></i> Enregistrer l'étape
-                        </button>
-                    </div>
                 </form>
             </div>
+
+            {{-- Footer sticky --}}
+            <div class="vt-ae-footer">
+                <button type="button" class="vt-ae-btn-cancel" data-bs-dismiss="modal">Annuler</button>
+                <button type="submit" form="form_add_step" class="vt-ae-btn-submit">
+                    <i class="ti ti-check" style="font-size:13px;"></i> Confirmer
+                </button>
+            </div>
+
         </div>
     </div>
 </div>
@@ -390,55 +544,93 @@
      data-bs-backdrop="static" data-bs-keyboard="false">
     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content">
-            <div class="modal-header border-bottom">
-                <h5 class="modal-title">Modifier l'étape</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+
+            {{-- Header gradient --}}
+            <div class="vt-ae-header">
+                <div class="vt-ae-icon">
+                    <i class="ti ti-pencil"></i>
+                </div>
+                <h5 class="vt-ae-title">Modifier l'étape</h5>
+                <button type="button" class="vt-ae-close" data-bs-dismiss="modal" aria-label="Close">
+                    <i class="ti ti-x"></i>
+                </button>
             </div>
+
             <div class="modal-body">
                 <form id="form_update_step" action="{{ route('business.update_etape') }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     <input type="hidden" name="etape_id" id="upd_etape_id">
                     <input type="hidden" name="campagne_id" id="upd_campagne_id">
 
-                    <div class="mb-3">
-                        <label class="form-label">Nom de l'étape</label>
-                        <input type="text" class="form-control" name="name" id="upd_name" required>
-                    </div>
+                    {{-- SECTION : INFORMATIONS --}}
+                    <div class="vt-ae-section"><span>Informations</span></div>
 
-                    <div class="row g-3 mb-3">
-                        <div class="col-6">
-                            <label class="form-label">Date de début</label>
-                            <input type="date" class="form-control" name="date_debut" id="upd_date_debut">
-                        </div>
-                        <div class="col-6">
-                            <label class="form-label">Heure de début</label>
-                            <input type="time" class="form-control" name="heure_debut" id="upd_heure_debut">
+                    <div class="vt-ae-field">
+                        <label class="vt-ae-label">Nom de l'étape</label>
+                        <div class="vt-ae-input-wrap">
+                            <i class="ti ti-flag vt-ae-field-icon"></i>
+                            <input type="text" class="vt-ae-input" name="name" id="upd_name" required>
                         </div>
                     </div>
 
-                    <div class="row g-3 mb-3">
-                        <div class="col-6">
-                            <label class="form-label">Date de fin</label>
-                            <input type="date" class="form-control" name="date_fin" id="upd_date_fin">
-                        </div>
-                        <div class="col-6">
-                            <label class="form-label">Heure de fin</label>
-                            <input type="time" class="form-control" name="heure_fin" id="upd_heure_fin">
+                    <div class="vt-ae-field">
+                        <label class="vt-ae-label">Description</label>
+                        <div class="vt-ae-input-wrap">
+                            <i class="ti ti-align-left vt-ae-field-icon" style="top:14px; transform:none;"></i>
+                            <textarea class="vt-ae-input" name="description" id="upd_description" rows="3"></textarea>
                         </div>
                     </div>
 
-                    <div class="mb-3">
-                        <label class="form-label">Description</label>
-                        <textarea class="form-control" rows="3" name="description" id="upd_description"></textarea>
+                    {{-- SECTION : PÉRIODE --}}
+                    <div class="vt-ae-section"><span>Période</span></div>
+
+                    <div class="vt-ae-row">
+                        <div class="vt-ae-field">
+                            <label class="vt-ae-label">Date de début</label>
+                            <div class="vt-ae-input-wrap">
+                                <i class="ti ti-calendar vt-ae-field-icon"></i>
+                                <input type="date" class="vt-ae-input" name="date_debut" id="upd_date_debut">
+                            </div>
+                        </div>
+                        <div class="vt-ae-field">
+                            <label class="vt-ae-label">Heure de début</label>
+                            <div class="vt-ae-input-wrap">
+                                <i class="ti ti-clock vt-ae-field-icon"></i>
+                                <input type="time" class="vt-ae-input" name="heure_debut" id="upd_heure_debut">
+                            </div>
+                        </div>
                     </div>
 
-                    <div class="mb-3">
-                        <label class="form-label">Prix d'un vote (FCFA)</label>
-                        <input type="number" class="form-control js-prix-unitaire" name="prix_vote" id="upd_prix_vote">
+                    <div class="vt-ae-row">
+                        <div class="vt-ae-field">
+                            <label class="vt-ae-label">Date de fin</label>
+                            <div class="vt-ae-input-wrap">
+                                <i class="ti ti-calendar-off vt-ae-field-icon"></i>
+                                <input type="date" class="vt-ae-input" name="date_fin" id="upd_date_fin">
+                            </div>
+                        </div>
+                        <div class="vt-ae-field">
+                            <label class="vt-ae-label">Heure de fin</label>
+                            <div class="vt-ae-input-wrap">
+                                <i class="ti ti-clock-off vt-ae-field-icon"></i>
+                                <input type="time" class="vt-ae-input" name="heure_fin" id="upd_heure_fin">
+                            </div>
+                        </div>
                     </div>
 
-                    <div class="mb-3">
-                        <label class="form-label">Packages de vote</label>
+                    {{-- SECTION : VOTE --}}
+                    <div class="vt-ae-section"><span>Vote</span></div>
+
+                    <div class="vt-ae-field">
+                        <label class="vt-ae-label">Prix d'un vote (FCFA)</label>
+                        <div class="vt-ae-input-wrap">
+                            <i class="ti ti-currency-franc vt-ae-field-icon"></i>
+                            <input type="number" class="vt-ae-input js-prix-unitaire" name="prix_vote" id="upd_prix_vote">
+                        </div>
+                    </div>
+
+                    <div class="vt-ae-field">
+                        <label class="vt-ae-label">Packages de vote</label>
                         <div class="packages-wrapper">
                             <div class="packages-container js-upd-packages-container"></div>
                             <button type="button" class="vt-pkg-add-btn js-add-package-upd mt-2">
@@ -447,14 +639,17 @@
                         </div>
                     </div>
 
-                    <div class="modal-footer border-top px-0 pb-0 mt-3">
-                        <button type="button" class="btn btn-light" data-bs-dismiss="modal">Annuler</button>
-                        <button type="submit" class="btn btn-primary">
-                            <i class="ti ti-check me-1"></i> Mettre à jour
-                        </button>
-                    </div>
                 </form>
             </div>
+
+            {{-- Footer sticky --}}
+            <div class="vt-ae-footer">
+                <button type="button" class="vt-ae-btn-cancel" data-bs-dismiss="modal">Annuler</button>
+                <button type="submit" form="form_update_step" class="vt-ae-btn-submit">
+                    <i class="ti ti-check" style="font-size:13px;"></i> Mettre à jour
+                </button>
+            </div>
+
         </div>
     </div>
 </div>
