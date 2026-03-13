@@ -506,6 +506,98 @@
                 grid-template-columns: 1fr;
             }
         }
+
+        /* ================================================================
+           MODAL AJOUTER UN COMPTE RETRAIT — design "Demande de retrait"
+           ================================================================ */
+        #add_bank .modal-content {
+            border: none; border-radius: 16px; overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0,0,0,.18);
+        }
+        .vt-acr-header {
+            display: flex; align-items: center; gap: 14px;
+            padding: 22px 24px 18px;
+            background: linear-gradient(135deg, #fff8f0 0%, #ffffff 100%);
+            border-bottom: 1px solid #f0e6d8;
+        }
+        .vt-acr-icon {
+            width: 40px; height: 40px; flex-shrink: 0;
+            background: var(--vt-orange-light); border: 1.5px solid var(--vt-orange-border);
+            border-radius: 10px;
+            display: flex; align-items: center; justify-content: center;
+            color: var(--vt-orange); font-size: 18px;
+        }
+        .vt-acr-title {
+            font-size: 17px; font-weight: 700; color: var(--vt-text-main);
+            margin: 0; flex: 1;
+        }
+        .vt-acr-close {
+            width: 30px; height: 30px; border-radius: 50%;
+            border: 1.5px solid var(--vt-border); background: #fff;
+            display: flex; align-items: center; justify-content: center;
+            color: var(--vt-text-muted); font-size: 13px;
+            cursor: pointer; transition: all .15s; flex-shrink: 0;
+        }
+        .vt-acr-close:hover { background: #f1f5f9; border-color: #94a3b8; color: var(--vt-text-main); }
+
+        #add_bank .modal-body { padding: 20px 24px 4px; }
+
+        .vt-acr-field { margin-bottom: 14px; }
+        .vt-acr-label {
+            font-size: 11px; font-weight: 600; color: var(--vt-text-muted);
+            margin-bottom: 5px; display: block; letter-spacing: .3px;
+        }
+        .vt-acr-input-wrap { position: relative; }
+        .vt-acr-field-icon {
+            position: absolute; left: 11px; top: 50%; transform: translateY(-50%);
+            color: #94a3b8; font-size: 14px; pointer-events: none; z-index: 1;
+        }
+        .vt-acr-input {
+            width: 100%; padding: 9px 12px 9px 34px;
+            border: 1.5px solid var(--vt-border); border-radius: var(--vt-radius-sm);
+            font-size: 13px; color: var(--vt-text-main); background: #fafafa;
+            transition: border-color .15s, background .15s;
+        }
+        .vt-acr-input:focus {
+            outline: none; border-color: var(--vt-orange);
+            background: #fff; box-shadow: 0 0 0 3px rgba(234,88,12,.07);
+        }
+        .vt-acr-input::placeholder { color: #b0bec5; }
+        .vt-acr-select {
+            width: 100%; padding: 9px 34px 9px 34px;
+            border: 1.5px solid var(--vt-border); border-radius: var(--vt-radius-sm);
+            font-size: 13px; color: var(--vt-text-main); background: #fafafa;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+            background-repeat: no-repeat; background-position: right 10px center; background-size: 15px;
+            appearance: none; cursor: pointer;
+            transition: border-color .15s, background-color .15s;
+        }
+        .vt-acr-select:focus {
+            outline: none; border-color: var(--vt-orange);
+            background-color: #fff; box-shadow: 0 0 0 3px rgba(234,88,12,.07);
+        }
+
+        .vt-acr-footer {
+            display: flex; align-items: center; justify-content: flex-end;
+            gap: 10px; padding: 16px 24px 20px;
+            border-top: 1px solid var(--vt-border); margin-top: 8px;
+        }
+        .vt-acr-btn-cancel {
+            padding: 9px 22px; border-radius: var(--vt-radius-sm);
+            border: 1.5px solid var(--vt-border); background: #fff;
+            color: var(--vt-text-main); font-size: 13px; font-weight: 600;
+            cursor: pointer; transition: all .15s;
+        }
+        .vt-acr-btn-cancel:hover { border-color: #94a3b8; background: #f8fafc; }
+        .vt-acr-btn-submit {
+            padding: 9px 22px; border-radius: var(--vt-radius-sm);
+            background: var(--vt-orange); border: none;
+            color: #fff; font-size: 13px; font-weight: 700;
+            cursor: pointer; display: inline-flex; align-items: center;
+            gap: 6px; transition: background .15s;
+        }
+        .vt-acr-btn-submit:hover { background: #c2560a; }
+        .vt-acr-btn-submit:disabled { opacity: .65; cursor: not-allowed; }
     </style>
 @endsection
 
@@ -888,37 +980,65 @@
 <div class="modal fade" id="add_bank" data-bs-backdrop="static" data-bs-keyboard="false">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
-            <div class="modal-header border-bottom">
-                <h5 class="modal-title">Ajouter un compte retrait</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+
+            {{-- Header gradient --}}
+            <div class="vt-acr-header">
+                <div class="vt-acr-icon">
+                    <i class="ti ti-plus"></i>
+                </div>
+                <h5 class="vt-acr-title">Ajouter un compte retrait</h5>
+                <button type="button" class="vt-acr-close" data-bs-dismiss="modal" aria-label="Close">
+                    <i class="ti ti-x"></i>
+                </button>
             </div>
-            <form class="ajax-form" action="{{ route('business.save_compte_retrait') }}" method="POST">
+
+            <form class="ajax-form" action="{{ route('business.save_compte_retrait') }}" method="POST" id="form_add_bank">
                 @csrf
                 <input type="hidden" name="customer_id" value="{{ $customer->customer_id }}">
+
                 <div class="modal-body">
-                    <div class="mb-3">
-                        <label class="form-label">Type de compte <span class="text-danger">*</span></label>
-                        <select class="form-select" name="payment_methode" required>
-                            <option value="" disabled selected>Sélectionner</option>
-                            @foreach ($paymentMethods as $method)
-                                <option value="{{ $method->value }}">{{ $method->label() }}</option>
-                            @endforeach
-                        </select>
+
+                    <div class="vt-acr-field">
+                        <label class="vt-acr-label">Type de compte <span style="color:#ef4444;">*</span></label>
+                        <div class="vt-acr-input-wrap">
+                            <i class="ti ti-credit-card vt-acr-field-icon"></i>
+                            <select class="vt-acr-select" name="payment_methode" required>
+                                <option value="" disabled selected>Sélectionner un type</option>
+                                @foreach ($paymentMethods as $method)
+                                    <option value="{{ $method->value }}">{{ $method->label() }}</option>
+                                @endforeach
+                            </select>
+                        </div>
                     </div>
-                    <div class="mb-3">
-                        <label class="form-label">Nom du compte <span class="text-danger">*</span></label>
-                        <input type="text" class="form-control" name="account_name" required>
+
+                    <div class="vt-acr-field">
+                        <label class="vt-acr-label">Nom du compte <span style="color:#ef4444;">*</span></label>
+                        <div class="vt-acr-input-wrap">
+                            <i class="ti ti-user vt-acr-field-icon"></i>
+                            <input type="text" class="vt-acr-input" name="account_name"
+                                   placeholder="Ex : Jean Dupont" required>
+                        </div>
                     </div>
-                    <div class="mb-3">
-                        <label class="form-label">Numéro du compte <span class="text-danger">*</span></label>
-                        <input type="text" class="form-control" name="phone_number" required>
+
+                    <div class="vt-acr-field">
+                        <label class="vt-acr-label">Numéro du compte <span style="color:#ef4444;">*</span></label>
+                        <div class="vt-acr-input-wrap">
+                            <i class="ti ti-phone vt-acr-field-icon"></i>
+                            <input type="text" class="vt-acr-input" name="phone_number"
+                                   placeholder="Ex : +225 07 00 00 00 00" required>
+                        </div>
                     </div>
+
                 </div>
-                <div class="modal-footer border-top">
-                    <button type="button" class="btn btn-light" data-bs-dismiss="modal">Annuler</button>
-                    <button type="submit" class="btn btn-primary"><i class="ti ti-device-floppy me-1"></i>
-                        Enregistrer</button>
+
+                {{-- Footer --}}
+                <div class="vt-acr-footer">
+                    <button type="button" class="vt-acr-btn-cancel" data-bs-dismiss="modal">Annuler</button>
+                    <button type="submit" class="vt-acr-btn-submit">
+                        <i class="ti ti-check" style="font-size:13px;"></i> Confirmer
+                    </button>
                 </div>
+
             </form>
         </div>
     </div>
