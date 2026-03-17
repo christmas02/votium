@@ -9,6 +9,8 @@ class Transaction extends Model
 {
     use HasFactory;
     protected $primaryKey = 'transaction_id';
-    public $incrementing = false; // si ce n’est pas un int
-    protected $keyType = 'string'; // si c’est un UUID
+    public $incrementing = false;
+    protected $keyType = 'string';
+
+
 }

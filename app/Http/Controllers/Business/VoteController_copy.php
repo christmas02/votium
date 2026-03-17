@@ -71,6 +71,13 @@ class VoteController extends Controller
         $user = auth()->user();
         $customer = $this->CustomerService->customerByIdUser($user->user_id);
 
+        // Vérifier que le client existe
+        if (!$customer) {
+            Log::error("Erreur : Aucun client trouvé pour l'utilisateur : " . $user->user_id);
+            return redirect()->back()
+                ->with('error', __('messages.server_error'));
+        }
+
         $campagnes = $this->CampagneService->listCampagnesByCustomerId($customer->customer_id);
 
         // Récupération de toutes les étapes pour les campagnes du client

@@ -1,121 +1,228 @@
-@extends('layout.header.console')
+@extends('refont.layout.console')
 
+@section('title', 'Paramètres')
+
+{{-- ===== BREADCRUMB ===== --}}
+@section('breadcrumb')
+    <li>
+        <a href="{{ route('console.espace') }}"><i class="ti ti-home" style="font-size:13px;"></i>&nbsp;Accueil</a>
+    </li>
+    <li class="vt-breadcrumb-sep"><i class="ti ti-chevron-right" style="font-size:11px;"></i></li>
+    <li class="active">Paramètres</li>
+@endsection
+
+{{-- ===== CSS ===== --}}
+@section('extra-css')
+<style>
+    /* ================================================================
+       LAYOUT PAGE
+       ================================================================ */
+    .vt-prof-header {
+        display: flex; align-items: center; justify-content: space-between;
+        gap: 16px; margin-bottom: 22px; flex-wrap: wrap;
+    }
+    .vt-prof-title {
+        font-size: 34px; font-weight: 800; color: var(--vt-text-main);
+        margin: 0; letter-spacing: -.5px;
+    }
+
+    .vt-prof-layout {
+        display: grid; grid-template-columns: 220px 1fr; gap: 18px;
+        align-items: flex-start;
+    }
+    @media (max-width: 768px) { .vt-prof-layout { grid-template-columns: 1fr; } }
+
+    /* ================================================================
+       SIDEBAR TABS
+       ================================================================ */
+    .vt-tabs-card { overflow: hidden; }
+    .vt-tab-item {
+        display: flex; align-items: center; gap: 10px;
+        padding: 11px 16px; font-size: 13px; font-weight: 500;
+        color: var(--vt-text-muted); text-decoration: none;
+        border-left: 3px solid transparent; cursor: pointer;
+        transition: all .15s; background: none; border-top: none;
+        border-right: none; border-bottom: 1px solid var(--vt-border);
+        width: 100%; text-align: left;
+    }
+    .vt-tab-item:last-child { border-bottom: none; }
+    .vt-tab-item:hover { background: #fafbfc; color: var(--vt-text-main); }
+    .vt-tab-item.active {
+        border-left-color: var(--vt-orange); color: var(--vt-orange);
+        background: var(--vt-orange-light); font-weight: 600;
+    }
+    .vt-tab-item i { font-size: 16px; flex-shrink: 0; }
+
+    /* ================================================================
+       CONTENU
+       ================================================================ */
+    .vt-tab-pane { display: none; }
+    .vt-tab-pane.active { display: block; }
+
+    /* Section card header */
+    .vt-section-head {
+        display: flex; align-items: center; gap: 12px;
+        padding: 18px 22px 16px; border-bottom: 1px solid var(--vt-border);
+    }
+    .vt-section-icon {
+        width: 36px; height: 36px; border-radius: 9px; flex-shrink: 0;
+        background: var(--vt-orange-light); border: 1.5px solid var(--vt-orange-border);
+        display: flex; align-items: center; justify-content: center;
+        color: var(--vt-orange); font-size: 16px;
+    }
+    .vt-section-title { font-size: 14.5px; font-weight: 700; color: var(--vt-text-main); margin: 0; }
+    .vt-section-sub { font-size: 11.5px; color: var(--vt-text-muted); margin: 0; }
+
+    /* Champs formulaire */
+    .vt-form-body { padding: 20px 22px; }
+    .vt-form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px; }
+    @media (max-width: 600px) { .vt-form-row { grid-template-columns: 1fr; } }
+    .vt-form-group { margin-bottom: 0; }
+    .vt-form-label {
+        font-size: 11px; font-weight: 700; color: var(--vt-text-muted);
+        letter-spacing: .5px; text-transform: uppercase; margin-bottom: 5px; display: block;
+    }
+    .vt-form-wrap { position: relative; }
+    .vt-form-icon {
+        position: absolute; left: 11px; top: 50%; transform: translateY(-50%);
+        color: #94a3b8; font-size: 14px; pointer-events: none;
+    }
+    .vt-form-input {
+        width: 100%; padding: 9px 12px 9px 34px;
+        border: 1.5px solid var(--vt-border); border-radius: var(--vt-radius-sm);
+        font-size: 13px; color: var(--vt-text-main); background: #fafafa;
+        transition: border-color .15s;
+    }
+    .vt-form-input:focus { outline: none; border-color: var(--vt-orange); background: #fff; box-shadow: 0 0 0 3px rgba(249,115,22,.07); }
+    .vt-form-input::placeholder { color: #b0bec5; }
+    .vt-form-hint { font-size: 11px; color: var(--vt-text-muted); margin-top: 4px; }
+
+    /* Footer formulaire */
+    .vt-form-footer {
+        display: flex; justify-content: flex-end;
+        padding: 14px 22px 18px; border-top: 1px solid var(--vt-border); margin-top: 4px;
+    }
+    .vt-form-submit {
+        padding: 9px 24px; border-radius: var(--vt-radius-sm);
+        background: var(--vt-orange); border: none; color: #fff;
+        font-size: 13px; font-weight: 700; cursor: pointer;
+        display: inline-flex; align-items: center; gap: 6px; transition: background .15s;
+    }
+    .vt-form-submit:hover { background: #c2560a; }
+</style>
+@endsection
+
+{{-- ===== CONTENU ===== --}}
 @section('content')
 
-<!-- Start Content -->
-<div class="content pb-0">
-
-    <!-- Page Header -->
-    <div class="d-flex align-items-center justify-content-between gap-2 mb-4 flex-wrap">
-        <div class="row col-12">
-            <div class="col-sm-6">
-                <h4 class="mb-0">{{ $title }}</h4>
-                <nav aria-label="breadcrumb">
-                    <ol class="breadcrumb mb-0 p-0">
-                        <li class="breadcrumb-item"><a href="{{ $link_back }}">{{ $title_back }}</a></li>
-                        <li class="breadcrumb-item active" aria-current="page">{{ $title }}</li>
-                    </ol>
-                </nav>
-            </div>
-            <div class="col-sm-6">@include('layout.status')</div>
-        </div>
+    <div class="vt-prof-header">
+        <h1 class="vt-prof-title">Paramètres</h1>
     </div>
-    <!-- End Page Header -->
 
-    <!-- start row -->
-    <div class="row">
+    <div class="col-sm-12">@include('layout.status')</div>
 
-        <!-- Contact Sidebar -->
-        <div class="col-xl-3">
-            <div class="card mb-3 mb-xl-0">
-                <div class="card-body">
-                    <div class="settings-sidebar" role="tablist" aria-orientation="vertical">
-                        <h5 class="mb-3 fs-17">Paramètres compte</h5>
-                        <div class="list-group list-group-flush settings-sidebar">
-                            <a href="#tab_2" data-bs-toggle="tab" aria-expanded="true" aria-selected="true" role="tab" tabindex="-1" class="d-block p-2 fw-medium active"><i class="ti ti-user me-1"></i>Profil</a>
-                        </div>
-                    </div>
-                </div> <!-- end card body -->
-            </div> <!-- end card -->
+    <div class="vt-prof-layout">
+
+        {{-- ========================
+             SIDEBAR TABS
+             ======================== --}}
+        <div class="vt-card vt-tabs-card">
+            <button type="button" class="vt-tab-item active" data-tab="tab-profil">
+                <i class="ti ti-user-circle"></i> Profil admin
+            </button>
         </div>
-        <!-- /Contact Sidebar -->
 
-        <!-- Contact Details -->
-        <div class="col-xl-9">
+        {{-- ========================
+             CONTENU TABS
+             ======================== --}}
+        <div>
 
-            <!-- Tab Content -->
-            <div class="tab-content pt-0">
+            {{-- TAB : PROFIL --}}
+            <div class="vt-tab-pane active vt-card" id="tab-profil" style="overflow:hidden;">
 
-                <!-- Notes -->
-                <div class="tab-pane active show" id="tab_2">
-                    <div class="card">
-                        <div class="card-header d-flex align-items-center justify-content-between flex-wrap row-gap-3">
-                            <div class="mb-0">
-                                <h6 class="d-flex align-items-center text-primary">
-                                    <i class="ti ti-user-shield fs-5 me-2"></i> Informations Utilisateur (Customer)
-                                </h6>
-                            </div>
-
-                        </div>
-                        <div class="card-body">
-
-                            <form class="ajax-form" action="{{ route('console.update_profile') }}" method="POST" enctype="multipart/form-data">
-                                @csrf
-                                <input type="hidden" name="user_id" value="{{ $user->user_id }}">
-                                <!-- SECTION 1 : INFORMATIONS UTILISATEUR (Compte de connexion) -->
-                                <div class="bg-light p-3 rounded mb-4">
-
-                                    <div class="row">
-                                        <!-- Mapping: name (Schema users) -->
-                                        <div class="col-md-6 mb-3">
-                                            <label class="form-label">Nom complet <span class="text-danger">*</span></label>
-                                            <input type="text" class="form-control" name="name" value="{{ $user->name }}" required>
-                                        </div>
-
-                                        <!-- Mapping: password (Schema users) -->
-                                        <div class="col-md-6 mb-3">
-                                            <label class="form-label">Numéro de téléphone <span class="text-danger">*</span></label>
-                                            <input type="text" class="form-control" name="phonenumber" value="{{ $user->phonenumber }}" required>
-                                        </div>
-
-                                        <!-- Mapping: email (Schema users) -->
-                                        <div class="col-md-6 mb-3">
-                                            <label class="form-label">Email (Identifiant) <span class="text-danger">*</span></label>
-                                            <input type="email" class="form-control" name="email" value="{{ $user->email }}" required>
-                                        </div>
-
-                                        <!-- Mapping: password (Schema users) -->
-                                        <div class="col-md-6 mb-3">
-                                            <label class="form-label">Mot de passe</label>
-                                            <input type="password" class="form-control" name="password" placeholder="Laisser vide pour conserver le mot de passe actuel">
-                                        </div>
-                                    </div>
-                                </div>
-                                <!-- Bouton Soumettre -->
-                                <div class="d-flex align-items-center justify-content-end">
-                                    <button type="submit" class="btn btn-primary">Mettre à jour le profil</button>
-                                </div>
-                            </form>
-
-                        </div> <!-- end card body -->
+                <div class="vt-section-head">
+                    <div class="vt-section-icon"><i class="ti ti-user-shield"></i></div>
+                    <div>
+                        <p class="vt-section-title">Informations du compte admin</p>
+                        <p class="vt-section-sub">Nom, email, téléphone et mot de passe</p>
                     </div>
                 </div>
-                <!-- /Notes -->
 
+                <form class="ajax-form" action="{{ route('console.update_profile') }}" method="POST" enctype="multipart/form-data">
+                    @csrf
+                    <input type="hidden" name="user_id" value="{{ $user->user_id }}">
+
+                    <div class="vt-form-body">
+
+                        <div class="vt-form-row">
+                            <div class="vt-form-group">
+                                <label class="vt-form-label">Nom complet <span style="color:#ef4444;">*</span></label>
+                                <div class="vt-form-wrap">
+                                    <i class="ti ti-user vt-form-icon"></i>
+                                    <input type="text" class="vt-form-input" name="name"
+                                           value="{{ $user->name }}" required>
+                                </div>
+                            </div>
+                            <div class="vt-form-group">
+                                <label class="vt-form-label">Téléphone <span style="color:#ef4444;">*</span></label>
+                                <div class="vt-form-wrap">
+                                    <i class="ti ti-phone vt-form-icon"></i>
+                                    <input type="text" class="vt-form-input" name="phonenumber"
+                                           value="{{ $user->phonenumber }}" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="vt-form-row">
+                            <div class="vt-form-group">
+                                <label class="vt-form-label">Email — identifiant <span style="color:#ef4444;">*</span></label>
+                                <div class="vt-form-wrap">
+                                    <i class="ti ti-mail vt-form-icon"></i>
+                                    <input type="email" class="vt-form-input" name="email"
+                                           value="{{ $user->email }}" required>
+                                </div>
+                            </div>
+                            <div class="vt-form-group">
+                                <label class="vt-form-label">Nouveau mot de passe</label>
+                                <div class="vt-form-wrap">
+                                    <i class="ti ti-lock vt-form-icon"></i>
+                                    <input type="password" class="vt-form-input" name="password"
+                                           placeholder="Laisser vide pour conserver">
+                                </div>
+                                <p class="vt-form-hint">Laisser vide pour ne pas modifier.</p>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="vt-form-footer">
+                        <button type="submit" class="vt-form-submit">
+                            <i class="ti ti-device-floppy" style="font-size:13px;"></i> Mettre à jour
+                        </button>
+                    </div>
+
+                </form>
             </div>
-            <!-- /Tab Content -->
 
         </div>
-        <!-- /Contact Details -->
+        {{-- fin contenu tabs --}}
 
     </div>
-    <!-- end row -->
-
-</div>
-<!-- End Content -->
 
 @endsection
-<!-- section js -->
-@section('extra-js')
 
+{{-- ===== SCRIPTS ===== --}}
+@section('extra-js')
+<script>
+/* Tabs sidebar */
+document.querySelectorAll('.vt-tab-item').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+        document.querySelectorAll('.vt-tab-item').forEach(function (b) { b.classList.remove('active'); });
+        document.querySelectorAll('.vt-tab-pane').forEach(function (p) { p.classList.remove('active'); });
+        this.classList.add('active');
+        var target = document.getElementById(this.dataset.tab);
+        if (target) target.classList.add('active');
+    });
+});
+</script>
 @endsection

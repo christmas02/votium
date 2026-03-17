@@ -143,6 +143,40 @@
 
 ---
 
+## Session 6 — 2026-03-15
+
+### ✅ Refonte espace admin — Console (`console/index.blade.php`)
+- **Avant** : `@extends('layout.header.console')`, contenu quasi vide (code commenté), layout Bootstrap sidebar
+- **Après** : Même design system que l'espace promoteur
+  - Nouveau layout `refont/layout/console.blade.php` (copie de `refont/layout/app.blade.php` avec `navbar_console`)
+  - Nouveau partial `refont/partials/navbar_console.blade.php` : liens Accueil / Clients / Sessions / Paramètres + dropdown admin (initiale à la place du logo)
+  - Dashboard deux colonnes (filtre gauche + contenu droit) identique au pattern business/index
+  - 4 stats : Clients / Sessions / Candidats / Votes
+  - 3 graphiques ApexCharts : Sessions par mois (barres orange), Clients actifs/inactifs (donut vert), Votes par session (barres bleues)
+  - Tableau "Derniers clients enregistrés" avec avatar initiale, statut badge, lien détail
+- **Bugfix inclus** : `ConsoleController::index()` plantait en cherchant `$customer` pour l'admin (n'existe pas) — lignes supprimées
+
+### ✅ Refonte liste clients (`console/listCustomer.blade.php`)
+- **Avant** : `@extends('layout.header.console')`, tableau DataTables Bootstrap, modales Bootstrap standard
+- **Après** : Layout `refont.layout.console`, tableau custom `.vt-lc-table`, toolbar (compteur + recherche + CTA), badges statut
+  - Modal `#modal_add_client` : header gradient, 3 sections (Compte / Entreprise / Réseaux sociaux), zone logo upload `.vt-ac-logo-zone`, grille sociale `.vt-social-grid`
+  - Modales `@foreach` suppression : `.vt-delete-modal`, icône danger centrée
+  - Modales `@foreach` création session par client : `.vt-campaign-modal`, 5 sections (Informations / Couverture / Options / Apparence / Document)
+  - JS : recherche client-side, toggle inscription, preview logo/couverture, sync couleurs
+
+### ✅ Refonte liste sessions (`console/listCampagnes.blade.php`)
+- **Avant** : `@extends('layout.header.console')`, tableau DataTables Bootstrap, modales Bootstrap standard
+- **Après** : Layout `refont.layout.console`, même pattern `.vt-lc-*` que listCustomer
+  - Colonnes : Session / Promoteur / Étapes / Candidats / Créée le / Inscription / Actions
+  - Modal `#modal_add_campaign` (unique) : header gradient icône `ti-calendar-plus`, 5 sections (Informations / Couverture / Options / Apparence / Document)
+  - Modales `@foreach` édition `.vt-edit-campaign` : même design, icône crayon, pré-remplissage complet
+  - Modales `@foreach` suppression `.vt-delete-modal` : design danger centré
+  - JS : recherche client-side, toggle inscription/dates, preview couverture, sync couleurs swatch↔texte
+- **Classes CSS conservées** : `.inscriptionSwitch`, `.blocDates`
+- **Routes conservées** : `console.save_campagne`, `console.update_campagne`, `console.delete_campagne`, `console.site_campagne`
+
+---
+
 ## État actuel des vues refontées
 
 | Vue | Statut | Layout | Notes |
@@ -154,17 +188,23 @@
 | `business/listEtapesCampagne` | ✅ Done | refont.layout.app | Stat pills, packages redessinés, modal ajout v2 (2026-03-13) |
 | `business/profile` | ✅ Done | refont.layout.app | 3 onglets, tabs custom JS, modal ajout compte v2 (2026-03-13) |
 | `business/listRetraits` | ✅ Done | refont.layout.app | Données statiques (TODO API) |
+| `console/index` | ✅ Done | refont.layout.console | Dashboard admin, graphiques ApexCharts |
+| `console/listCustomer` | ✅ Done | refont.layout.console | Tableau clients, 3 types de modales |
+| `console/listCampagnes` | ✅ Done | refont.layout.console | Tableau sessions, modales create+edit+delete |
 
 ## Composants CSS transversaux créés
 
 | Préfixe | Fichier source | Usage |
 |---|---|---|
 | `.vt-*` | `refont/layout/app.blade.php` | Design system global |
-| `.vt-ns-*` | `listCampagnes @section('extra-css')` | Modales sessions (create + edit) |
+| `.vt-ns-*` | `business/listCampagnes @section('extra-css')` | Modales sessions business (create + edit) |
 | `.vt-cand-*` / `.vt-cm-*` | `listCandidats @section('extra-css')` | Cartes candidats + modal ajout |
 | `.vt-pkg-*` | `listEtapesCampagne @section('extra-css')` | Packages de vote |
 | `.vt-ret-*` | `listRetraits @section('extra-css')` | Retraits (filtre + tableau) |
 | `.vt-modal-retrait` | `listRetraits @section('extra-css')` | Modal demande retrait |
+| `.vt-lc-*` | `console/listCustomer + listCampagnes` | Tableau + toolbar console (partagé) |
+| `.vt-mhg-*` / `.vt-mf-*` / `.vt-mfooter-*` | `console/*` | Modales console (header gradient, champs, footer) |
+| `.vt-del-*` | `console/*` | Modales de suppression |
 
 ## Vues non refontées (hors scope actuel)
 
@@ -172,6 +212,9 @@
 |---|---|
 | `auth/*` | Pages de connexion/inscription |
 | `siteCampagne/*` | Site public de vote |
-| `console/*` | Espace admin console |
+| `console/detailCustomer` | Détail d'un client |
+| `console/profile` | Profil admin |
+| `console/editpasswordCustomer` | Changement MDP client |
+| `console/detailCampagne` | Détail d'une session |
 | `invoice/*` | Factures |
-| Modal edit candidat | `listCandidats` — même design à appliquer |
+| Modal edit candidat | `business/listCandidats` — même design à appliquer |

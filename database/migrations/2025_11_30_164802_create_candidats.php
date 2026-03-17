@@ -13,6 +13,7 @@ class CreateCandidats extends Migration
      */
     public function up()
     {
+        if (Schema::hasTable('candidats')) return;
         Schema::create('candidats', function (Blueprint $table) {
             $table->uuid('candidat_id')->primary();
             $table->string('name');

@@ -13,6 +13,7 @@ class CreateNomTable extends Migration
      */
     public function up()
     {
+        if (Schema::hasTable('customers')) return;
         Schema::create('customers', function (Blueprint $table) {
             $table->uuid('customer_id')->primary();
             $table->string('user_id');

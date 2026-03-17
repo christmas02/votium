@@ -13,6 +13,7 @@ class CreateEcritureComptableTransactionsTable extends Migration
      */
     public function up()
     {
+        if (Schema::hasTable('ecriture_comptable_transactions')) return;
         Schema::create('ecriture_comptable_transactions', function (Blueprint $table) {
             $table->uuid('ecriture_comptable_id')->primary();
             $table->string('transaction_id');
