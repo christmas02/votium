@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Notification\SendMail;
 use App\Repository\CustomerRepository;
 use App\Repository\AuhRepository;
+use App\Repository\AccountRepository;
 use Illuminate\Support\Facades\DB;
 
 class CustomerService
@@ -12,15 +13,18 @@ class CustomerService
     protected $customerRepository;
     protected $authRepository;
     protected $sendMail;
+    protected $accountRepository;
 
     public function __construct(
         CustomerRepository $customerRepository,
         AuhRepository $authRepository,
-        SendMail $sendMail)
+        SendMail $sendMail,
+        AccountRepository $accountRepository )
     {
         $this->customerRepository = $customerRepository;
         $this->authRepository = $authRepository;
         $this->sendMail = $sendMail;
+        $this->accountRepository = $accountRepository;
     }
 
     public function Customer($idCustomer)
@@ -41,6 +45,8 @@ class CustomerService
             $this->authRepository->saveUser($dataNewCustomer);
             // TO BO SAVE INFO PROFIL CUSTOMER
             $this->customerRepository->save($dataNewCustomer);
+            // SAVE ACCOUNT CUSTOMER
+            $this->accountRepository->createAccount($dataNewCustomer);
             // SEND EMAIL CUSTOMER
             $email = $dataNewCustomer['email'];
             $data = $dataNewCustomer;

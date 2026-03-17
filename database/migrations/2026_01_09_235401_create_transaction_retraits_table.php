@@ -13,6 +13,7 @@ class CreateTransactionRetraitsTable extends Migration
      */
     public function up()
     {
+        if (Schema::hasTable('transaction_retraits')) return;
         Schema::create('transaction_retraits', function (Blueprint $table) {
             $table->uuid('transactions_retraits_id')->primary();
             $table->string('withdrawal_account_id');

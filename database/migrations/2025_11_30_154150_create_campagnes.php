@@ -13,6 +13,7 @@ class CreateCampagnes extends Migration
      */
     public function up()
     {
+        if (Schema::hasTable('campagnes')) return;
         Schema::create('campagnes', function (Blueprint $table) {
             $table->uuid('campagne_id')->primary();
             $table->string('name');

@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+g<!DOCTYPE html>
 <html lang="fr">
 
 <head>
@@ -851,6 +851,8 @@
             });
         });
     </script>
+
+    @yield('modals')
 
     @yield('extra-js')
 </body>

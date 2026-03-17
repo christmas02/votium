@@ -25,6 +25,7 @@
 | Session 3 | 2026-03-10 | Modal ajout candidat redessiné (design "Demande de retrait") |
 | Session 4 | 2026-03-13 | Modal "Nouvelle étape" redessiné (design "Demande de retrait") |
 | Session 5 | 2026-03-13 | Modal "Ajouter un compte retrait" redessiné (design "Demande de retrait") |
+| Session 6 | 2026-03-15 | Refonte espace admin — layout console + navbar + dashboard |
 
 ---
 

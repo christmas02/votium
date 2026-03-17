@@ -13,6 +13,7 @@ class CreateInvoicesTable extends Migration
      */
     public function up()
     {
+        if (Schema::hasTable('invoices')) return;
         Schema::create('invoices', function (Blueprint $table) {
             $table->uuid('invoice_id')->primary();
             $table->uuid('transaction_id');

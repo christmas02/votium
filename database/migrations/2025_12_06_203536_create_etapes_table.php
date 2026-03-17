@@ -13,6 +13,7 @@ class CreateEtapesTable extends Migration
      */
     public function up()
     {
+        if (Schema::hasTable('etapes')) return;
         Schema::create('etapes', function (Blueprint $table) {
             $table->uuid('etape_id')->primary();
             $table->string('campagne_id');
