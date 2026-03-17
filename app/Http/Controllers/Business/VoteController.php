@@ -232,17 +232,27 @@ class VoteController extends Controller
 
             // 6. Extraction intelligente de l'URL de redirection
             $redirectUrl = null;
+            $transactionId = $result['transactions_id'] ?? $result['transaction_id'] ?? null;
 
-            // Priorité 1 : Lien direct retourné par le service (Cas Wave dans votre code)
+            // Priorité 1 : Lien direct retourné par le service (Cas Wave)
             if (!empty($result['link'])) {
                 $redirectUrl = $result['link'];
             }
             // Priorité 2 : Extraction depuis api_response (Cas Standards)
             elseif (!empty($result['api_response'])) {
-                $redirectUrl = $result['api_response']['data']['payment_url']     // CinetPay / Hub2
-                    ?? $result['api_response']['wave_launch_url']         // Wave (si structure différente)
-                    ?? $result['api_response']['url']                     // Autres
+                $redirectUrl = $result['api_response']['data']['payment_url']  // CinetPay / Hub2
+                    ?? $result['api_response']['wave_launch_url']              // Wave (si structure différente)
+                    ?? $result['api_response']['url']                          // Autres
                     ?? null;
+            }
+
+            // Priorité 3 : Fallback — page de retour unifiée si aucune URL externe trouvée
+            // (providers qui ne redirigent pas, ou en attendant l'unification Wave)
+            if (empty($redirectUrl) && $transactionId && $success) {
+                $redirectUrl = route('business.paymentReturn', [
+                    'idCampagne'    => $validated['campagne_id'],
+                    'transactionId' => $transactionId,
+                ]);
             }
 
             // 7. Retour JSON
@@ -251,9 +261,10 @@ class VoteController extends Controller
                 'status'         => $status,
                 'icon'           => $icon,
                 'message'        => $result['message'] ?? 'Traitement en cours',
-                'transaction_id' => $result['transactions_id'] ?? $result['transaction_id'] ?? null,
+                'transaction_id' => $transactionId,
                 'redirect_url'   => $redirectUrl
             ], $httpCode);
+
         } catch (\Exception $e) {
             Log::error("Erreur Controller initiatePaymentVote: " . $e->getMessage());
 
@@ -422,7 +433,7 @@ class VoteController extends Controller
         }
     }
 
-    
+
     /**
      * PAGE DE RETOUR WAVE (ROLLBACK)
      * Correction des noms de variables pour compact()
@@ -434,6 +445,16 @@ class VoteController extends Controller
             return view('siteCampagne.partials.wave-return', compact('idCampagne', 'transactionId'));
         } catch (\Exception $e) {
             Log::error("Erreur Wave Rollback: " . $e->getMessage());
+            abort(500, "Erreur lors du chargement de la page de retour.");
+        }
+    }
+
+    public function paymentReturn($idCampagne, $transactionId)
+    {
+        try {
+            return view('siteCampagne.partials.payment-return', compact('idCampagne', 'transactionId'));
+        } catch (\Exception $e) {
+            Log::error("Erreur payment return: " . $e->getMessage());
             abort(500, "Erreur lors du chargement de la page de retour.");
         }
     }

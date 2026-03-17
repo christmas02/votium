@@ -18,7 +18,7 @@
             <a href="#">Contacts</a>
 
         </nav>
-        <div class="topbar-right">
+        {{-- <div class="topbar-right">
             <div class="pill role-pill" id="rolePill" type="button" aria-haspopup="menu" aria-expanded="false">
                 <span class="pill-label">Promoteur</span>
                 <div aria-hidden="true" class="dot"></div>
@@ -28,6 +28,6 @@
                     <!-- rempli par app.js -->
                 </div>
             </div>
-        </div>
+        </div> --}}
     </div>
 </div>

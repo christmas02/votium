@@ -407,7 +407,7 @@ class CampagneController extends Controller
             $title = "Liste des Étapes";
 
             $campagnes = $this->CampagneService->listCampagnesByCustomerId($customer_id);
-
+// dd($campagnes);
             return view('business.listEtapesCampagne', compact('title', 'title_back', 'link_back', 'campagnes', 'customer_id', 'campagne_id'));
         } catch (\Exception $th) {
             Log::error("Erreur lors de la récupération des étapes : " . $th->getMessage(), [
@@ -425,6 +425,7 @@ class CampagneController extends Controller
         try {
 
             $etapes = $this->CampagneService->listEtapesByCampagneId($campagne_id);
+            
             return response()->json($etapes);
         } catch (\Exception $th) {
             Log::error("Erreur lors de la recherche des étapes : " . $th->getMessage(), [

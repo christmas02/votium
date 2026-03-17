@@ -764,70 +764,34 @@ g<!DOCTYPE html>
                                     `[name="${fieldName}"], [name="${fieldName}[]"]`
                                 ).first();
 
-                                // if ($input.length > 0) {
-                                //     $input.addClass('is-invalid');
-                                //     let errorMsg =
-                                //         `<div class="invalid-feedback d-block">${messages[0]}</div>`;
-
-                                //     // Placement intelligent de l'erreur
-                                //     if ($input.closest('.input-group').length) {
-                                //         // Si c'est un input group (réseaux sociaux), on met l'erreur après le groupe
-                                //         $input.closest('.input-group').after(errorMsg);
-                                //     } else if ($input.attr('type') === 'file' && $input
-                                //         .closest('.image-upload-group').length) {
-                                //         // Cas spécifique de ton upload de logo
-                                //         $input.closest('.image-upload-group').after(
-                                //             errorMsg);
-                                //     } else {
-                                //         // Cas standard
-                                //         $input.after(errorMsg);
-                                //     }
-                                // }
-
-
-                                // if ($input.length > 0) {
-                                //     $input.addClass('is-invalid');
-                                //     let errorMsg =
-                                //         `<div class="invalid-feedback d-block">${messages[0]}</div>`;
-
-                                //     if ($input.closest('.input-group').length) {
-                                //         $input.closest('.input-group').after(errorMsg);
-                                //     } else if ($input.closest('.vt-input-wrap')
-                                //         .length) {
-                                //         // ← Ajouter ce cas pour vos formulaires custom
-                                //         $input.closest('.vt-input-wrap').after(
-                                //         errorMsg);
-                                //     } else if ($input.attr('type') === 'file' && $input
-                                //         .closest('.image-upload-group').length) {
-                                //         $input.closest('.image-upload-group').after(
-                                //             errorMsg);
-                                //     } else {
-                                //         $input.after(errorMsg);
-                                //     }
-                                // }
-
-                                
-
                                     if ($input.length > 0) {
                                         $input.addClass('is-invalid');
                                         let errorMsg =
                                             `<div class="invalid-feedback d-block" style="color:#dc3545;font-size:11.5px;margin-top:5px;">${messages[0]}</div>`;
 
                                         // Priorité : vt-input-wrap → input-group → image-upload-group → défaut
-                                        if ($input.closest('.vt-input-wrap')
-                                            .length) {
-                                            $input.closest('.vt-input-wrap')
-                                                .after(errorMsg);
-                                        } else if ($input.closest(
-                                                '.input-group').length) {
-                                            $input.closest('.input-group')
-                                                .after(errorMsg);
-                                        } else if ($input.attr('type') ===
-                                            'file' && $input.closest(
-                                                '.image-upload-group').length) {
-                                            $input.closest(
-                                                    '.image-upload-group')
-                                                .after(errorMsg);
+                                        if ($input.closest('.vt-input-wrap').length) {
+                                            $input.closest('.vt-input-wrap').after(errorMsg);
+
+                                        } else if ($input.closest('.input-group').length) {
+                                            $input.closest('.input-group').after(errorMsg);
+
+                                        }else if ($input.closest('.vt-ae-input-wrap').length) {
+                                            $input.closest('.vt-ae-input-wrap').after(errorMsg);
+
+                                        }else if ($input.closest('.vt-ns-option').length) {
+                                            $input.closest('.vt-ns-option').after(errorMsg);
+
+                                        }else if ($input.closest('.vt-ns-label').length) {
+                                            $input.closest('.vt-ns-label').after(errorMsg);
+
+                                        } else if ($input.attr('type') === 'file' && $input.closest('.vt-logo-row').length) {
+                                            // Nouveau cas : upload avec actions logo
+                                            $input.closest('.vt-logo-row').after(errorMsg);
+
+                                        } else if ($input.attr('type') === 'file' && $input.closest('.image-upload-group').length) {
+                                            $input.closest('.image-upload-group').after(errorMsg);
+
                                         } else {
                                             $input.after(errorMsg);
                                         }

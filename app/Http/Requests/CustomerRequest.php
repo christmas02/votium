@@ -2,10 +2,9 @@
 
 namespace App\Http\Requests;
 
-use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class CustomerRequest extends FormRequest
+class CustomerRequest extends BaseRequest
 {
     public function authorize(): bool
     {
@@ -86,7 +85,10 @@ class CustomerRequest extends FormRequest
             // Logo
             'logo.image'           => 'Le logo doit être un fichier image.',
             'logo.mimes'           => 'Le logo doit être au format : jpeg, png, jpg, gif ou svg.',
-            'logo.max'             => 'Le logo est trop lourd (maximum 2 Mo).',
+            'logo.max'             => 'la taille du logo est trop lourde (maximum 2 Mo).',
+            'logo.uploaded'        => 'Le logo n\'a pas pu être envoyé. Vérifiez que sa taille ne dépasse pas 2 Mo.',
         ];
     }
+
+    
 }
