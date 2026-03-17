@@ -24,62 +24,10 @@
                 <div id="step-cgu">
                     <div class="bg-light border rounded p-3 mb-3"
                         style="max-height: 200px; overflow-y: auto; font-size: 0.85rem; background-color: #f8f9fa;">
-                        <strong>VOTIUM – Conditions Générales de Participation et de Vote</strong><br><br>
-                        <p>Version de test — à ne pas utiliser en production
-
-                            Article 1 — Objet
-                            Les présentes conditions générales régissent la participation aux campagnes de vote
-                            organisées sur la plateforme. En participant, l'utilisateur accepte sans réserve l'ensemble
-                            des présentes conditions.
-                            Article 2 — Participation
-
-                            La participation est ouverte à toute personne physique majeure disposant d'un moyen de
-                            paiement valide.
-                            Chaque participant peut voter autant de fois qu'il le souhaite dans la limite des votes
-                            disponibles à l'achat.
-                            Toute tentative de fraude, de manipulation ou d'utilisation de moyens automatisés est
-                            strictement interdite et entraîne la disqualification immédiate.
-
-                            Article 3 — Paiement
-
-                            Les votes sont payants. Le prix par vote est affiché clairement avant toute confirmation
-                            d'achat.
-                            Le paiement est effectué via les opérateurs de paiement mobile disponibles sur la plateforme
-                            (Wave, Orange Money, MTN Money, etc.).
-                            Tout paiement validé est définitif et ne peut faire l'objet d'aucun remboursement, sauf en
-                            cas d'erreur technique avérée imputable à la plateforme.
-
-                            Article 4 — Résultats
-
-                            Les votes sont comptabilisés en temps réel. Les résultats affichés sont indicatifs et
-                            peuvent faire l'objet d'une vérification finale par l'organisateur.
-                            L'organisateur se réserve le droit d'annuler des votes en cas de fraude détectée, sans
-                            préavis ni remboursement.
-                            Les résultats définitifs sont proclamés par l'organisateur à l'issue de la campagne selon
-                            les modalités prévues.
-
-                            Article 5 — Données personnelles
-
-                            Les données collectées (nom, téléphone, email) sont utilisées uniquement dans le cadre du
-                            traitement du paiement et de la participation au vote.
-                            Elles ne sont ni revendues ni transmises à des tiers en dehors des prestataires de paiement
-                            nécessaires à l'exécution de la transaction.
-                            Conformément à la réglementation en vigueur, l'utilisateur dispose d'un droit d'accès, de
-                            rectification et de suppression de ses données.
-
-                            Article 6 — Responsabilité
-
-                            La plateforme ne saurait être tenue responsable des interruptions de service liées aux
-                            opérateurs de paiement tiers.
-                            En cas d'incident technique, la plateforme s'engage à faire ses meilleurs efforts pour
-                            rétablir le service dans les meilleurs délais.
-
-                            Article 7 — Acceptation
-                            En cochant la case d'acceptation lors du paiement, le participant reconnaît avoir lu,
-                            compris et accepté l'intégralité des présentes conditions générales.
-
-                            Ces conditions sont fournies à titre de test. Elles devront être adaptées et validées par un
-                            juriste avant toute mise en production.</p>
+                        <strong>VOTIUM – Conditions Générales d’Utilisation</strong><br><br>
+                        En utilisant la plateforme VOTIUM, l’Utilisateur reconnaît avoir lu, compris et accepté les
+                        présentes Conditions Générales d’Utilisation.
+                        {{-- (Texte raccourci pour l'exemple) --}}
                     </div>
                     <div class="form-check p-2 rounded d-flex align-items-center gap-2"
                         style="background-color: rgba(0,0,0,0.03);">
@@ -450,23 +398,116 @@
                         return response.json();
                     })
                     .then(data => {
+                        // On ferme la modale de formulaire pour laisser place à l'overlay ou redirection
                         if (data.success) {
                             window.closeCheckoutModal();
-                            //Toujours rediriger vers la page de vérification, peu importe le provider
-                            window.location.href = data.redirect_url;
+
+                            // --- LOGIQUE WAVE ---
+                            if (data.redirect_url && checkoutState.providerSlug === 'wave') {
+                                console.log("Redirection Wave vers:", data.redirect_url);
+                                window.location.href = data.redirect_url;
+                                return;
+                            }
+
+                            // --- LOGIQUE STANDARD (Polling) ---
+                            // Affichage Overlay
+                            const overlay = document.getElementById('processing-overlay');
+                            const processingMsg = document.getElementById('processing-message');
+                            if (overlay) overlay.style.display = 'flex';
+
+                            const maxAttempts = 3; // Nombre tentatives polling
+                            const intervalTime = 15000; // 15 secondes
+                            let attempts = 0;
+                            const transactionId = data.transaction_id;
+
+                            // Fonction Polling
+                            const paymentVerifyUrlTemplate = "{{ route('business.paymentVerify', ['transactionId' => ':id']) }}";
+
+                            const checkStatus = () => {
+                                attempts++;
+                                // use named route and replace placeholder
+                                const url = paymentVerifyUrlTemplate.replace(':id', transactionId);
+                                fetch(url)
+                                    .then(res => res.json())
+                                    .then(statusData => {
+                                        if (statusData.status === 'completed') {
+                                            // SUCCÈS
+                                            const downloadBtn = statusData.receipt_url ?
+                                                `<a href="${statusData.receipt_url}" target="_blank" class="btn btn-outline-primary mb-2 w-100" download>Reçu PDF</a>` :
+                                                '';
+
+                                            overlay.innerHTML = `
+                                                <div class="text-success mb-3 animate__animated animate__bounceIn" style="font-size: 4rem;">✓</div>
+                                                <h3 class="fw-bold text-dark mb-4">Paiement Réussi !</h3>
+                                                <div class="d-flex flex-column align-items-center justify-content-center" style="max-width: 300px; margin: 0 auto;">
+                                                    ${downloadBtn}
+                                                    <button id="btn-reload-page" class="btn btn-light border w-100 fw-bold mt-2">Retour au site</button>
+                                                </div>`;
+
+                                            document.getElementById('btn-reload-page')
+                                                ?.addEventListener('click', () => window
+                                                    .location.reload());
+
+                                        } else if (statusData.status === 'failed') {
+                                            // ÉCHEC
+                                            handleFailure(
+                                                "La transaction a été refusée par l'opérateur."
+                                            );
+                                        } else {
+                                            // EN COURS -> On réessaie
+                                            if (attempts < maxAttempts) {
+                                                setTimeout(checkStatus, intervalTime);
+                                            } else {
+                                                handleFailure(
+                                                    "Délai d'attente dépassé. Vérifiez votre solde ou contactez le support."
+                                                );
+                                            }
+                                        }
+                                    })
+                                    .catch(error => {
+
+                                        console.error(
+                                            "Erreur lors de la vérification du paiement :",
+                                            error);
+
+                                        if (attempts < maxAttempts) {
+                                            setTimeout(checkStatus, intervalTime);
+                                        } else {
+                                            handleFailure(
+                                                "Erreur de connexion lors de la vérification."
+                                            );
+                                        }
+                                    });
+                            };
+
+                            const handleFailure = (message) => {
+                                overlay.innerHTML = `
+                                    <div class="text-danger mb-4 animate__animated animate__shakeX" style="font-size: 4rem;">✕</div>
+                                    <h3 class="fw-bold text-dark">Échec</h3>
+                                    <p class="text-muted px-3 mx-auto">${message}</p>
+                                    <button class="btn btn-dark mt-4 px-4 py-2 rounded-pill" onclick="window.location.reload()">Fermer</button>
+                                `;
+                            };
+
+                            // Lancement du polling
+                            checkStatus();
+
                         } else {
+                            // Erreur retournée par le backend immédiatement
                             swal.fire({
                                 icon: 'error',
                                 title: 'Erreur',
                                 text: data.message ||
                                     'Une erreur est survenue lors du paiement. Veuillez réessayer.',
                             });
+                            // alert(data.message || "Erreur lors de l'initialisation du paiement.");
                             btnConfirmPay.disabled = false;
                             btnConfirmPay.innerHTML = originalBtnText;
                         }
                     })
                     .catch(error => {
                         console.error(error);
+
                         swal.fire({
                             icon: 'error',
                             title: 'Erreur',

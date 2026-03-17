@@ -408,8 +408,8 @@
                 <select id="filter-status" class="vt-filter-select-icon filter-input">
                     <option value="">Tous les statuts</option>
                     <option value="confirmed">Confirmé</option>
-                    <option value="created">En attente (Créé)</option>
-                    <option value="rejected">Rejeté</option>
+                    <option value="pending">En attente (Créé)</option>
+                    <option value="failed">Rejeté</option>
                 </select>
             </div>
 

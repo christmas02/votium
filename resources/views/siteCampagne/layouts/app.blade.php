@@ -551,7 +551,7 @@
         }
 
         .body {
-            padding: 12px 12px 10px;
+            padding: 10px 0px 0px;
             display: flex;
             flex-direction: column;
             gap: 8px;
@@ -1424,6 +1424,25 @@
             letter-spacing: 0.5px;
             color: var(--muted);
             margin: 30px 0 14px;
+        }
+
+          .vt-cand-votes {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--vt-orange);
+        }
+
+        .vt-cand-votes i {
+            font-size: 13px;
+        }
+
+        .vt-cand-votes span.label {
+            font-size: 10.5px;
+            font-weight: 500;
+            color: var(--vt-text-muted);
         }
     </style>
     <link href="{{ asset('asset/app.css') }}" rel="stylesheet" />

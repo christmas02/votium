@@ -324,8 +324,9 @@
                 <span class="vt-stat-pill-badge blue">SESSION</span>
             </div>
         </div>
+        
     </div>
-
+<div class="col-sm-12">@include('layout.status')</div>
     {{-- Layout deux colonnes --}}
     <div class="vt-etapes-layout">
 
@@ -386,14 +387,14 @@
                                 <th>Date début</th>
                                 <th>Date fin</th>
                                 <th>Prix du vote</th>
-                                <th>Nbre votes</th>
+                                
                                 <th>État</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody class="js-etape-table-body">
                             <tr>
-                                <td colspan="7" class="vt-etapes-empty">
+                                <td colspan="6" class="vt-etapes-empty">
                                     Sélectionnez une session pour afficher les étapes.
                                 </td>
                             </tr>
@@ -752,12 +753,12 @@
 
             /* Chargement AJAX */
             $('.js-etape-table-body').html(
-                '<tr><td colspan="7" class="vt-etapes-empty"><div class="spinner-border spinner-border-sm text-primary me-2"></div> Chargement...</td></tr>'
+                '<tr><td colspan="6" class="vt-etapes-empty"><div class="spinner-border spinner-border-sm text-primary me-2"></div> Chargement...</td></tr>'
             );
 
             if (!id) {
                 $('.js-etape-table-body').html(
-                    '<tr><td colspan="7" class="vt-etapes-empty">Sélectionnez une session pour afficher les étapes.</td></tr>'
+                    '<tr><td colspan="6" class="vt-etapes-empty">Sélectionnez une session pour afficher les étapes.</td></tr>'
                 );
                 $('#stat-nbre-etapes').text('0');
                 return;
@@ -772,7 +773,7 @@
                 },
                 error: function () {
                     $('.js-etape-table-body').html(
-                        '<tr><td colspan="7" class="vt-etapes-empty" style="color:#dc2626;">Erreur de chargement.</td></tr>'
+                        '<tr><td colspan="6" class="vt-etapes-empty" style="color:#dc2626;">Erreur de chargement.</td></tr>'
                     );
                 }
             });
@@ -782,14 +783,14 @@
         function renderEtapeTable(etapes) {
             if (etapes.length === 0) {
                 $('.js-etape-table-body').html(
-                    '<tr><td colspan="7" class="vt-etapes-empty">Aucune étape pour cette session.</td></tr>'
+                    '<tr><td colspan="6" class="vt-etapes-empty">Aucune étape pour cette session.</td></tr>'
                 );
                 return;
             }
             let html = '';
             etapes.forEach(etape => {
                 const data     = encodeURIComponent(JSON.stringify(etape));
-                const actif    = etape.is_active == 0;
+                const actif    = etape.is_active == 1;
                 const badgeCls = actif ? 'vt-badge-actif' : 'vt-badge-inactif';
                 const badgeTxt = actif ? '<i class="ti ti-check" style="font-size:10px;"></i> Actif' : 'Inactif';
 
@@ -799,7 +800,7 @@
                     <td>${etape.date_debut || '—'}</td>
                     <td>${etape.date_fin || '—'}</td>
                     <td class="cell-prix">${Number(etape.prix_vote).toLocaleString('fr-FR')} FCFA</td>
-                    <td>—</td>
+                    
                     <td><span class="${badgeCls}">${badgeTxt}</span></td>
                     <td>
                         <div class="vt-etape-actions">
