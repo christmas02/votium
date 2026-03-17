@@ -3,8 +3,9 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
-class CampagneRequest extends FormRequest
+class CampagneRequest extends BaseRequest
 {
     public function authorize(): bool
     {

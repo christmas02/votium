@@ -3,8 +3,8 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-
-class WithdrawalAccountRequest extends FormRequest
+use Illuminate\Validation\Rule;
+class WithdrawalAccountRequest extends BaseRequest
 {
     public function authorize(): bool
     {

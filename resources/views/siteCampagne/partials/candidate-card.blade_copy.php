@@ -13,40 +13,20 @@
         @else
             <div class="thumb" style="background: linear-gradient(135deg, var(--primary), #000);"></div>
         @endif
-        <div class="tag"><span class="dot"></span>#{{ sprintf('%03d', $loop->iteration) }}</div>
+        <div class="tag"><span class="dot"></span> Candidat</div>
     </div>
 
     <div class="body">
         <div class="name">{{ $candidat->name }}</div>
         <div class="sub">Candidat(e) / Nominé(e)</div>
-        {{-- <div class="stats">
-            <div class="pct">
-                <span>Vote{{ $candidat->votes_count > 1 ? 's' : '' }}</span><br>
-                @if ($campagne->afficher_montant_pourcentage == 'pourcentage')
-                    {{ $candidat->vote_percentage }}%
-                @elseif($campagne->afficher_montant_pourcentage == 'claire')
-                    {{ number_format($candidat->total_votes, 0, ',', ' ') }}
-                @else
-                    {{ $candidat->votes_count }} vote{{ $candidat->votes_count > 1 ? 's' : '' }} =>
-                    {{ $candidat->vote_percentage }}%
-                @endif
-
+        <div class="stats">
+            <div class="num">
+                <div><span>Numéro</span><br>{{ sprintf('%03d', $loop->iteration) }}</div>
             </div>
-        </div> --}}
-        <div class="sub">Vote{{ $candidat->votes_count > 1 ? 's' : '' }}</div>
-        <div class="form-check p-2 rounded d-flex align-items-center gap-2" style="background-color: rgba(0,0,0,0.03);">
-            @if ($campagne->afficher_montant_pourcentage == 'pourcentage')
-                {{ $candidat->vote_percentage }}%
-            @elseif($campagne->afficher_montant_pourcentage == 'clair')
-                {{ $candidat->votes_count }} vote{{ $candidat->votes_count > 1 ? 's' : '' }}
-            @else
-                {{ $candidat->votes_count }} vote{{ $candidat->votes_count > 1 ? 's' : '' }} /
-                {{ $candidat->vote_percentage }}%
-            @endif
-
-
+            <div class="pct">
+                <div><span>Votes</span><br>{{ $candidat->vote_percentage }}%</div>
+            </div>
         </div>
-
     </div>
 
     <div class="actions">
@@ -122,8 +102,10 @@
                 {{-- Le bouton stocke les infos du pack par défaut (le premier) --}}
                 @php $firstPack = $packages[0] ?? null; @endphp
                 <button class="primaryBtn btn-validate-vote" type="button" id="btn-{{ $modalId }}"
-                    data-candidat-id="{{ $candidat->candidat_id }}" data-campagne-id="{{ $candidat->campagne_id }}"
-                    data-etape-id="{{ $candidat->etape_id }}" data-candidat-nom="{{ $candidat->name }}"
+                    data-candidat-id="{{ $candidat->candidat_id }}"
+                    data-campagne-id="{{ $candidat->campagne_id }}"
+                    data-etape-id="{{ $candidat->etape_id }}"
+                    data-candidat-nom="{{ $candidat->name }}"
                     data-candidat-num="{{ sprintf('%03d', $loop->iteration) }}"
                     data-pack-votes="{{ $firstPack ? $firstPack->vote : 0 }}"
                     data-pack-montant="{{ $firstPack ? $firstPack->montant : 0 }}" onclick="proceedToCheckout(this)"

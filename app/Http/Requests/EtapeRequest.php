@@ -3,8 +3,9 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
-class EtapeRequest extends FormRequest
+class EtapeRequest extends BaseRequest
 {
     public function authorize(): bool
     {
