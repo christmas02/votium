@@ -103,7 +103,7 @@ class CampagneRequest extends BaseRequest
     {
         $this->merge([
             'text_cover_isActive' => $this->has('text_cover_isActive') ? 1 : 0,
-            'inscription_isActive' => $this->has('inscription_isActive') ? 1 : 0,
+            'inscription_isActive' => $this->input('inscription_isActive') ? 1 : 0,
             'is_active' => $this->has('is_active') ? 1 : 0,
         ]);
     }
