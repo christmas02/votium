@@ -187,7 +187,6 @@ class ConsoleController  extends Controller
                 'link_tiktok' => $request->link_tiktok,
                 'is_active' => false,
             ];
-            dd($dateCustomer);
 
             // Sauvegarde des données via le service
             $saved = $this->CustomerService->createNewCustomer($dateCustomer);
