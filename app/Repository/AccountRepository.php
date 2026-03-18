@@ -24,7 +24,7 @@ class AccountRepository
         return true; // Assume the update was successful
     }
     
-    public function getAccountByCustomerId($customer_id)
+    public function getAccountByCustomer($customer_id)
     {
         try {
             $account = Account::where('customer_id', $customer_id)->first();
