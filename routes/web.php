@@ -73,7 +73,7 @@ Route::controller(VoteController::class)->group(function () {
         // NOUVELLE ROUTE : Retour paiement (Rollback)
         Route::get('/payment_rollback/{idCampagne}/{idTransaction}', 'paymentReturn')->name('business.paymentReturn');
     });
-    
+
     // Route::get('/business/wave_rollback/{idCampagne}/{idTransaction}', 'waveRollback')->name('business.waveRollback');
 
 });
@@ -195,6 +195,7 @@ Route::group(['middleware' => 'auth'], function () {
 
                 #ROUTES RETRAITS
                 Route::get('list_retrait', 'listRetrait')->name('list_retrait');
+                Route::post('demande_retrait', 'DemandeRetrait')->name('demande_retrait');
             });
         });
 });

@@ -170,7 +170,7 @@ class CandidatController extends Controller
             ], 500);
         }
     }
-
+ 
     #SAVE CANDIDAT
     public function saveCandidat(CandidatRequest $request)
     {

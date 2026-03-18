@@ -938,7 +938,7 @@
                 <i class="ti ti-plus" style="font-size:14px;"></i> Créer
             </a>
 
-            <div class="dropdown">
+            <div class="dropdown js-btn-create-candidat" style="pointer-events:none; opacity:0.5;">
                 <a href="javascript:void(0);" class="vt-btn-muted dropdown-toggle" data-bs-toggle="dropdown">
                     <i class="ti ti-package-import" style="font-size:15px;"></i> Importer
                 </a>
@@ -949,7 +949,7 @@
                             en Excel</a></li>
                 </ul>
             </div>
-            <a href="javascript:void(0);" class="vt-btn-outline-dark">
+            <a href="javascript:void(0);" class="vt-btn-outline-dark js-btn-create-candidat" style="pointer-events:none; opacity:0.5;">
                 <i class="ti ti-download" style="font-size:14px;"></i> Exporter
             </a>
         </div>
@@ -1942,7 +1942,7 @@
                 const photoHtml = buildPhotoHtml(candidat);
 
                 return `
-                <div class="col-xxl-3 col-xl-4 col-md-6 col-sm-6">
+                <div class="col-xxl-3 col-xl-3 col-md-6 col-sm-6">
                     <div class="vt-cand-card">
 
                         <div class="vt-cand-photo-wrap">
