@@ -33,9 +33,12 @@
     <link rel="stylesheet" href="{{ asset('assets/plugins/datatables/css/dataTables.bootstrap5.min.css') }}">
     <!-- Daterangepicker CSS -->
     <link rel="stylesheet" href="{{ asset('assets/plugins/daterangepicker/daterangepicker.css') }}">
+    <!-- webfont pour afficher les icônes -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.31.0/dist/tabler-icons.min.css">
 
     <!-- Main CSS -->
     <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}" id="app-style">
+
     <!-- Charger jQuery en premier -->
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 
@@ -56,11 +59,13 @@
                         <!-- Logo Normal -->
                         <span class="logo-light">
                             <span class="logo-lg"><img src="{{ asset('assets/img/logo.svg') }}" alt="logo"></span>
-                            <span class="logo-sm"><img src="{{ asset('assets/img/logo-small.svg') }}" alt="small logo"></span>
+                            <span class="logo-sm"><img src="{{ asset('assets/img/logo-small.svg') }}"
+                                    alt="small logo"></span>
                         </span>
                         <!-- Logo Dark -->
                         <span class="logo-dark">
-                            <span class="logo-lg"><img src="{{ asset('assets/img/logo-white.svg') }}" alt="dark logo"></span>
+                            <span class="logo-lg"><img src="{{ asset('assets/img/logo-white.svg') }}"
+                                    alt="dark logo"></span>
                         </span>
                     </a>
 
@@ -86,7 +91,8 @@
                                 <span class="badge rounded-pill">10</span>
                             </button> -->
 
-                            <div class="dropdown-menu p-0 dropdown-menu-end dropdown-menu-lg" style="min-height: 300px;">
+                            <div class="dropdown-menu p-0 dropdown-menu-end dropdown-menu-lg"
+                                style="min-height: 300px;">
 
                                 <div class="p-2 border-bottom">
                                     <div class="row align-items-center">
@@ -100,18 +106,27 @@
                                 <div class="notification-body position-relative z-2 rounded-0" data-simplebar>
 
                                     <!-- Item-->
-                                    <div class="dropdown-item notification-item py-3 text-wrap border-bottom" id="notification-2">
+                                    <div class="dropdown-item notification-item py-3 text-wrap border-bottom"
+                                        id="notification-2">
                                         <div class="d-flex">
                                             <div class="flex-grow-1">
                                                 <p class="mb-0 fw-medium text-dark">Thomas William</p>
                                                 <p class="mb-1 text-wrap">
-                                                    “Oh, I finished de-bugging the phones, but the system's compiling for eighteen minutes, or twenty...”
+                                                    “Oh, I finished de-bugging the phones, but the system's compiling
+                                                    for eighteen minutes, or twenty...”
                                                 </p>
                                                 <div class="d-flex justify-content-between align-items-center">
-                                                    <span class="fs-12"><i class="ti ti-clock me-1"></i>8 min ago</span>
-                                                    <div class="notification-action d-flex align-items-center float-end gap-2">
-                                                        <a href="javascript:void(0);" class="notification-read rounded-circle bg-danger" data-bs-toggle="tooltip" title="" data-bs-original-title="Make as Read" aria-label="Make as Read"></a>
-                                                        <button class="btn rounded-circle p-0" data-dismissible="#notification-2">
+                                                    <span class="fs-12"><i class="ti ti-clock me-1"></i>8 min
+                                                        ago</span>
+                                                    <div
+                                                        class="notification-action d-flex align-items-center float-end gap-2">
+                                                        <a href="javascript:void(0);"
+                                                            class="notification-read rounded-circle bg-danger"
+                                                            data-bs-toggle="tooltip" title=""
+                                                            data-bs-original-title="Make as Read"
+                                                            aria-label="Make as Read"></a>
+                                                        <button class="btn rounded-circle p-0"
+                                                            data-dismissible="#notification-2">
                                                             <i class="ti ti-x"></i>
                                                         </button>
                                                     </div>
@@ -135,14 +150,20 @@
 
                     <!-- User Dropdown -->
                     <div class="dropdown profile-dropdown d-flex align-items-center justify-content-center">
-                        <a href="javascript:void(0);" class="topbar-link dropdown-toggle drop-arrow-none position-relative" data-bs-toggle="dropdown" data-bs-offset="0,22" aria-haspopup="false" aria-expanded="false">
-                            <img src="{{ asset(env('IMAGES_PATH') . '/' . (Auth::user()->customer->logo ?? 'default-logo.png')) }}" width="38" class="rounded-1 d-flex" alt="user-image">
-                            <span class="online text-success"><i class="ti ti-circle-filled d-flex bg-white rounded-circle border border-1 border-white"></i></span>
+                        <a href="javascript:void(0);"
+                            class="topbar-link dropdown-toggle drop-arrow-none position-relative"
+                            data-bs-toggle="dropdown" data-bs-offset="0,22" aria-haspopup="false"
+                            aria-expanded="false">
+                            <img src="{{ asset(env('IMAGES_PATH') . '/' . (Auth::user()->customer->logo ?? 'default-logo.png')) }}"
+                                width="38" class="rounded-1 d-flex" alt="user-image">
+                            <span class="online text-success"><i
+                                    class="ti ti-circle-filled d-flex bg-white rounded-circle border border-1 border-white"></i></span>
                         </a>
                         <div class="dropdown-menu dropdown-menu-end dropdown-menu-md p-2">
 
                             <div class="d-flex align-items-center bg-light rounded-3 p-2 mb-2">
-                                <img src="{{ asset(env('IMAGES_PATH') . '/' . (Auth::user()->customer->logo ?? 'default-logo.png')) }}" class="rounded-circle" width="42" height="42" alt="Img">
+                                <img src="{{ asset(env('IMAGES_PATH') . '/' . (Auth::user()->customer->logo ?? 'default-logo.png')) }}"
+                                    class="rounded-circle" width="42" height="42" alt="Img">
                                 <div class="ms-2">
                                     <p class="fw-medium text-dark mb-0">{{ Auth::user()->name }}</p>
                                     <span class="d-block fs-13">{{ Auth::user()->role }}</span>
@@ -290,11 +311,13 @@
                 $form.find('.invalid-feedback').remove();
 
                 // Désactiver le bouton et mettre un spinner
-                $submitBtn.prop('disabled', true).html('<span class="spinner-border spinner-border-sm me-1"></span> Traitement...');
+                $submitBtn.prop('disabled', true).html(
+                    '<span class="spinner-border spinner-border-sm me-1"></span> Traitement...');
 
                 $.ajax({
                     url: $form.attr('action'),
-                    method: $form.attr('method'), // POST (Laravel gère le @method('PUT') via FormData)
+                    method: $form.attr(
+                        'method'), // POST (Laravel gère le @method('PUT') via FormData)
                     data: formData,
                     processData: false,
                     contentType: false,
@@ -330,25 +353,31 @@
                             const errors = xhr.responseJSON.errors;
 
                             if (typeof showAjaxAlert === 'function') {
-                                showAjaxAlert('danger', "Veuillez vérifier les champs du formulaire.");
+                                showAjaxAlert('danger',
+                                    "Veuillez vérifier les champs du formulaire.");
                             }
 
                             // BOUCLE SCALABLE : Parcourt toutes les erreurs renvoyées par Laravel
                             $.each(errors, function(fieldName, messages) {
                                 // On gère les noms de champs complexes (ex: 'logo.image' ou 'tags[]')
-                                let $input = $form.find(`[name="${fieldName}"], [name="${fieldName}[]"]`).first();
+                                let $input = $form.find(
+                                    `[name="${fieldName}"], [name="${fieldName}[]"]`
+                                ).first();
 
                                 if ($input.length > 0) {
                                     $input.addClass('is-invalid');
-                                    let errorMsg = `<div class="invalid-feedback d-block">${messages[0]}</div>`;
+                                    let errorMsg =
+                                        `<div class="invalid-feedback d-block">${messages[0]}</div>`;
 
                                     // Placement intelligent de l'erreur
                                     if ($input.closest('.input-group').length) {
                                         // Si c'est un input group (réseaux sociaux), on met l'erreur après le groupe
                                         $input.closest('.input-group').after(errorMsg);
-                                    } else if ($input.attr('type') === 'file' && $input.closest('.image-upload-group').length) {
+                                    } else if ($input.attr('type') === 'file' && $input
+                                        .closest('.image-upload-group').length) {
                                         // Cas spécifique de ton upload de logo
-                                        $input.closest('.image-upload-group').after(errorMsg);
+                                        $input.closest('.image-upload-group').after(
+                                            errorMsg);
                                     } else {
                                         // Cas standard
                                         $input.after(errorMsg);
@@ -361,7 +390,8 @@
 
                         } else {
                             // Autre erreur (500, 403, etc.)
-                            const errorTxt = xhr.responseJSON?.message || "Une erreur est survenue.";
+                            const errorTxt = xhr.responseJSON?.message ||
+                                "Une erreur est survenue.";
                             if (typeof showAjaxAlert === 'function') {
                                 showAjaxAlert('danger', errorTxt);
                             }

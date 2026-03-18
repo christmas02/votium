@@ -43,7 +43,7 @@ Route::controller(AuthController::class)->group(function () {
 
     Route::get('forgot_password', 'screenForgot')->name('screenForgot');
     Route::post('forgot_password', 'forgot')->name('forgot');
-    
+
     Route::get('reset_password/{token}', 'screenReset')->name('screenReset');
     Route::post('reset_password', 'reset')->name('reset');
 });
@@ -70,14 +70,12 @@ Route::controller(VoteController::class)->group(function () {
     #ROUTE POUR VERIFIER LE STATUT DU PAIEMENT VOTE
     Route::prefix('business')->group(function () {
         Route::get('/paiement/verifier_statut/{transactionId}', 'verifyPaymentVote')->name('business.paymentVerify');
+        // NOUVELLE ROUTE : Retour paiement (Rollback)
+        Route::get('/payment_rollback/{idCampagne}/{idTransaction}', 'paymentReturn')->name('business.paymentReturn');
     });
 
-    // NOUVELLE ROUTE : Retour paiement Wave (Rollback)
-    Route::get('/business/wave_rollback/{idCampagne}/{idTransaction}', 'waveRollback')->name('business.waveRollback');
+    // Route::get('/business/wave_rollback/{idCampagne}/{idTransaction}', 'waveRollback')->name('business.waveRollback');
 
-    #Page de retour unifiée (tous providers)
-    Route::get('/paiement/retour/{idCampagne}/{transactionId}', 'paymentReturn')
-        ->name('business.paymentReturn');
 });
 
 Route::group(['middleware' => 'auth'], function () {
@@ -197,6 +195,7 @@ Route::group(['middleware' => 'auth'], function () {
 
                 #ROUTES RETRAITS
                 Route::get('list_retrait', 'listRetrait')->name('list_retrait');
+                Route::post('demande_retrait', 'DemandeRetrait')->name('demande_retrait');
             });
         });
 });

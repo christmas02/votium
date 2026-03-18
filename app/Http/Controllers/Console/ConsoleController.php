@@ -155,6 +155,7 @@ class ConsoleController  extends Controller
     #SAVE CUSTOMER
     public function saveCustomer(CustomerRequest $request)
     {
+        // dd($request->all());
         try {
             #Transfert et upload du fichier logo
             $name_file = ($request->hasFile('logo'))
@@ -186,6 +187,7 @@ class ConsoleController  extends Controller
                 'link_tiktok' => $request->link_tiktok,
                 'is_active' => false,
             ];
+            dd($dateCustomer);
 
             // Sauvegarde des données via le service
             $saved = $this->CustomerService->createNewCustomer($dateCustomer);

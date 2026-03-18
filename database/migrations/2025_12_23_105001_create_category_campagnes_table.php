@@ -18,8 +18,8 @@ class CreateCategoryCampagnesTable extends Migration
             $table->uuid('category_id')->primary();
             $table->string('name');
             $table->string('campagne_id');
-            $table->string('description');
-            $table->string('icon');
+            $table->string('description')->nullable();
+            $table->string('icon')->nullable();
             $table->string('is_active');
             $table->timestamps();
         });

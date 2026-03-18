@@ -17,15 +17,15 @@ class CreateCandidats extends Migration
         Schema::create('candidats', function (Blueprint $table) {
             $table->uuid('candidat_id')->primary();
             $table->string('name');
-            $table->string('email');
-            $table->string('phonenumber');
-            $table->string('sexe');
-            $table->string('date_naissance');
-            $table->string('ville');
-            $table->string('pays');
-            $table->string('profession');
+            $table->string('email')->nullable();
+            $table->string('phonenumber')->nullable();
+            $table->string('sexe')->nullable();
+            $table->string('date_naissance')->nullable();
+            $table->string('ville')->nullable();
+            $table->string('pays')->nullable();
+            $table->string('profession')->nullable();
             $table->text('photo');
-            $table->text('description');
+            $table->text('description')->nullable();
             $table->text('data')->nullable();
             $table->string('is_active')->default(true);
             $table->timestamps();
