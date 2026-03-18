@@ -44,8 +44,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const btnBack = document.getElementById('btn-back');
 
     let attempts = 0;
-    const maxAttempts = 100; // Beaucoup de tentatives pour te laisser le temps de changer le statut en BDD
-    const intervalTime = 3000; // 3 secondes
+    const maxAttempts = 3; // Beaucoup de tentatives pour te laisser le temps de changer le statut en BDD
+    const intervalTime = 15000; // 15 secondes
 
     function pollStatus() {
         attempts++;

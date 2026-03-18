@@ -66,6 +66,13 @@ class CandidatController extends Controller
             $user = auth()->user();
             $customer = $this->CustomerService->customerByIdUser($user->user_id);
 
+            // Vérifier que le client existe
+            if (!$customer) {
+                Log::error("Erreur : Aucun client trouvé pour l'utilisateur : " . $user->user_id);
+                return redirect()->back()
+                    ->with('error', __('messages.server_error'));
+            }
+
             $campagnes = $this->CampagneService->listCampagnesByCustomerId($customer->customer_id);
 
             // Récupération de toutes les étapes pour les campagnes du client
@@ -115,51 +122,6 @@ class CandidatController extends Controller
     }
 
     #RECHERCHE CANDIDAT
-    // public function rechercheCandidat(Request $request)
-    // {
-    //     try {
-    //         $filters = [
-    //             'campagne_id' => $request->campagne_id,
-    //             'etape_id'    => $request->etape_id,
-    //             'category_id' => $request->category_id,
-    //         ];
-
-    //         $candidats = $this->CandidatureService->searchCandidat($filters);
-    //         // dd($candidats);
-    //         //Transformer en Collection
-    //         $collection = collect($candidats);
-
-    //         //Appliquer la recherche (si le champ search est rempli)
-    //         if ($request->filled('search')) {
-    //             $searchTerm = strtolower($request->search);
-    //             $collection = $collection->filter(function ($candidat) use ($searchTerm) {
-    //                 return str_contains(strtolower($candidat->name ?? ''), $searchTerm) ||
-    //                     str_contains(strtolower($candidat->email ?? ''), $searchTerm);
-    //             });
-    //         }
-
-    //         //Gérer la pagination manuelle
-    //         $perPage = 12;
-    //         $page = (int) $request->get('page', 1);
-    //         $total = $collection->count();
-
-    //         // On découpe la collection pour n'avoir que les 12 éléments de la page demandée
-    //         $pagedData = $collection->slice(($page - 1) * $perPage, $perPage)->values();
-
-    //         return response()->json([
-    //             'data'         => $pagedData,
-    //             'current_page' => $page,
-    //             'last_page'    => ceil($total / $perPage),
-    //             'total'        => $total
-    //         ]);
-    //     } catch (\Exception $th) {
-    //         Log::error("Erreur lors de la recherche des candidats : " . $th->getMessage(), [
-    //             'stack_trace' => $th->getTraceAsString(),
-    //         ]);
-    //         return response()->json(['error' => 'Erreur lors de la recherche des candidats'], 500);
-    //     }
-    // }
-
     public function rechercheCandidat(Request $request)
     {
         try {
@@ -208,7 +170,7 @@ class CandidatController extends Controller
             ], 500);
         }
     }
-
+ 
     #SAVE CANDIDAT
     public function saveCandidat(CandidatRequest $request)
     {

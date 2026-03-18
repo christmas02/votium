@@ -18,28 +18,38 @@ class Hub2Webhook
     {
         try {
             $HUB2_BASE_URL = config('sdkpayment.HUB2_BASE_URL');
-            $response = $this->client->request('POST', $HUB2_BASE_URL.'webhooks/', [
+            $url = rtrim($HUB2_BASE_URL, '/') . '/webhooks/';
+            //'url' => "https://webhook.site/1e3b7f56-c38c-41df-a5c4-a2c43440b4c2",
+
+
+            $payload = [
+                'url' => "https://votium.net/api/webhook/hub2",
+                "events" => [
+                    "transfer.created",
+                    "transfer.processing",
+                    "transfer.succeeded",
+                    "transfer.failed",
+                    "payment.created",
+                    "payment.pending",
+                    "payment.succeeded",
+                    "payment.failed",
+                ],
+                "description" => "This is a webhook trigger upon transfer, payment & payment_intent creation",
+            ];
+
+            logger()->info('Hub2 execute create link webhook request', [
+                'url' => $url,
+                'payload' => $payload
+            ]);
+
+            $response = $this->client->request('POST', $url, [
                 'headers' => [
                     'ApiKey' => config('sdkpayment.HUB2_API_KEY'),
                     'MerchantId' => config('sdkpayment.HUB2_MERCHANT_ID'),
                     'Environment' => config('sdkpayment.HUB2_ENVIRONMENT'),
                     'Content-Type' => 'application/json'
                 ],
-                'json' => [
-                    "url" => "https://webhook.site/1e3b7f56-c38c-41df-a5c4-a2c43440b4c2",
-                    "events" => [
-                        "transfer.created",
-                        "transfer.processing",
-                        "transfer.succeeded",
-                        "transfer.failed",
-                        "payment.created",
-                        "payment.pending",
-                        "payment.succeeded",
-                        "payment.failed",
-                    ],
-                    "description" => "This is a webhook trigger upon transfer, payment & payment_intent creation",
-                    "metadata" => new \stdClass()
-                ],
+                'body' => json_encode($payload),
                 'http_errors' => false
             ]);
 

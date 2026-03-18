@@ -29,12 +29,12 @@ class UsersSeeder extends Seeder
                 'name' => $admin['name'],
                 'email' => $admin['email'],
                 'role' => 'admin',
-                'password' => Hash::make('33'),
+                'password' => Hash::make('password123'),
                 'phonenumber' => $faker->phoneNumber,
             ]);
         }
 
-        // 10 customers générés customer1@exemple.com
+        // 10 customers générés customer9@exemple.com
         for ($i = 1; $i <= 10; $i++) {
             User::create([
                 'user_id' => (string) Str::uuid(),

@@ -1,438 +1,827 @@
-@extends('layout.header.business')
+@extends('refont.layout.app')
 
+@section('title', 'Étapes de sessions')
+
+{{-- ===== BREADCRUMB ===== --}}
+@section('breadcrumb')
+    <li><a href="{{ route('business.espace') }}"><i class="ti ti-home" style="font-size:13px;"></i>&nbsp;Accueil</a></li>
+    <li class="vt-breadcrumb-sep"><i class="ti ti-chevron-right" style="font-size:11px;"></i></li>
+    <li><a href="{{ route('business.list_campagne') }}">Sessions</a></li>
+    <li class="vt-breadcrumb-sep"><i class="ti ti-chevron-right" style="font-size:11px;"></i></li>
+    <li class="active">Étapes</li>
+@endsection
+
+{{-- ===== CSS SPÉCIFIQUE ===== --}}
+@section('extra-css')
+<style>
+    /* ---- En-tête page ---- */
+    .vt-etapes-header {
+        display: flex; align-items: center;
+        justify-content: space-between;
+        gap: 16px; margin-bottom: 22px; flex-wrap: wrap;
+    }
+    .vt-etapes-title {
+        font-size: 34px; font-weight: 800;
+        color: var(--vt-text-main); margin: 0;
+        letter-spacing: -.5px;
+    }
+
+    /* ---- Stat pills ---- */
+    .vt-stat-pills { display: flex; gap: 12px; flex-wrap: wrap; }
+    .vt-stat-pill {
+        background: #fff; border: 1px solid var(--vt-border);
+        border-radius: var(--vt-radius); padding: 12px 18px;
+        box-shadow: var(--vt-shadow);
+        display: flex; align-items: center; gap: 16px; min-width: 150px;
+    }
+    .vt-stat-pill-content { flex: 1; }
+    .vt-stat-pill-label { font-size: 11px; font-weight: 500; color: var(--vt-text-muted); margin: 0 0 2px; }
+    .vt-stat-pill-value { font-size: 22px; font-weight: 800; color: var(--vt-text-main); line-height: 1; }
+    .vt-stat-pill-badge {
+        background: #fde8cc; color: var(--vt-orange);
+        font-size: 10.5px; font-weight: 700;
+        padding: 3px 9px; border-radius: 50px; flex-shrink: 0;
+    }
+    .vt-stat-pill-badge.blue {
+        background: #dbeafe; color: #2563eb;
+    }
+
+    /* ---- Layout deux colonnes ---- */
+    .vt-etapes-layout {
+        display: flex; align-items: flex-start; gap: 16px;
+    }
+
+    /* ---- Colonne filtre gauche ---- */
+    .vt-etapes-filter {
+        width: 264px; flex-shrink: 0;
+        background: var(--vt-card-bg);
+        border-radius: var(--vt-radius);
+        box-shadow: var(--vt-shadow);
+        padding: 20px 18px;
+    }
+    .vt-etapes-filter-title {
+        font-size: 18px; font-weight: 700;
+        color: var(--vt-text-main); margin: 0 0 18px;
+    }
+    .vt-filter-field-label {
+        font-size: 12px; font-weight: 600;
+        color: var(--vt-orange); margin-bottom: 6px;
+    }
+    .vt-filter-input-wrap { position: relative; margin-bottom: 14px; }
+    .vt-filter-input-wrap .vt-fi-icon {
+        position: absolute; left: 11px; top: 50%; transform: translateY(-50%);
+        color: #94a3b8; font-size: 14px; pointer-events: none;
+    }
+    .vt-filter-select-icon {
+        width: 100%; padding: 9px 30px 9px 34px;
+        border: 1px solid var(--vt-border); border-radius: var(--vt-radius-sm);
+        background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E") no-repeat right 10px center / 15px;
+        appearance: none; font-size: 13px; color: var(--vt-text-main);
+        cursor: pointer; transition: border-color .15s;
+    }
+    .vt-filter-select-icon:focus { outline: none; border-color: var(--vt-orange); }
+
+    /* Nom session sélectionnée */
+    .vt-session-selected-label {
+        font-size: 11px; color: var(--vt-text-muted); margin: 0 0 3px;
+    }
+    .vt-session-selected-name {
+        font-size: 13px; font-weight: 700; color: var(--vt-orange);
+        margin: 0 0 16px;
+        word-break: break-word;
+    }
+
+    /* Bouton reset */
+    .vt-btn-reset {
+        width: 100%; padding: 10px;
+        background: #fff; color: var(--vt-text-main);
+        border: 1.5px solid var(--vt-border); border-radius: var(--vt-radius-sm);
+        font-size: 13.5px; font-weight: 600; cursor: pointer; transition: all .15s;
+    }
+    .vt-btn-reset:hover { border-color: #94a3b8; background: #f8fafc; }
+
+    /* ---- Colonne droite (tableau) ---- */
+    .vt-etapes-main { flex: 1; min-width: 0; }
+    .vt-etapes-table-card {
+        background: var(--vt-card-bg); border-radius: var(--vt-radius);
+        box-shadow: var(--vt-shadow); overflow: hidden;
+    }
+    .vt-etapes-table-header {
+        display: flex; align-items: center; justify-content: space-between;
+        padding: 16px 20px; border-bottom: 1px solid var(--vt-border);
+        gap: 12px; flex-wrap: wrap;
+    }
+    .vt-etapes-table-title {
+        font-size: 15px; font-weight: 700; color: var(--vt-text-main); margin: 0;
+    }
+
+    /* Table */
+    .vt-etapes-table { width: 100%; border-collapse: collapse; font-size: 12.5px; }
+    .vt-etapes-table thead th {
+        padding: 11px 16px; font-size: 11px; font-weight: 700;
+        letter-spacing: .6px; text-transform: uppercase;
+        color: var(--vt-text-muted); border-bottom: 1px solid var(--vt-border);
+        white-space: nowrap;
+    }
+    .vt-etapes-table tbody td {
+        padding: 13px 16px; border-bottom: 1px solid var(--vt-border);
+        color: var(--vt-text-main); vertical-align: middle;
+    }
+    .vt-etapes-table tbody tr:last-child td { border-bottom: none; }
+    .vt-etapes-table tbody tr:hover td { background: #fafbfc; }
+    .vt-etapes-table .cell-name { font-weight: 700; }
+    .vt-etapes-table .cell-prix { font-weight: 600; color: var(--vt-orange); }
+
+    /* Badges état */
+    .vt-badge-actif {
+        background: var(--vt-green-light); color: var(--vt-green);
+        font-size: 10.5px; font-weight: 700; padding: 3px 10px; border-radius: 50px;
+        display: inline-flex; align-items: center; gap: 4px;
+    }
+    .vt-badge-inactif {
+        background: #f1f5f9; color: var(--vt-text-muted);
+        font-size: 10.5px; font-weight: 600; padding: 3px 10px; border-radius: 50px;
+    }
+
+    /* Boutons actions */
+    .vt-etape-actions { display: flex; gap: 5px; }
+    .vt-etape-btn {
+        width: 30px; height: 30px; border-radius: 7px;
+        border: 1px solid var(--vt-border); background: #fff; color: var(--vt-text-muted);
+        display: inline-flex; align-items: center; justify-content: center;
+        font-size: 13px; cursor: pointer; text-decoration: none; transition: all .15s;
+    }
+    .vt-etape-btn.edit:hover  { border-color: #93c5fd; color: #2563eb; background: #eff6ff; }
+    .vt-etape-btn.del:hover   { border-color: #fca5a5; color: #dc2626; background: #fff5f5; }
+
+    .vt-etapes-empty {
+        padding: 32px 16px; text-align: center;
+        color: var(--vt-text-muted); font-size: 13px;
+    }
+
+    /* Packages dans les modales */
+    .vt-pkg-row {
+        display: grid; grid-template-columns: 1fr 1fr auto;
+        gap: 8px; align-items: center; margin-bottom: 8px;
+    }
+    .vt-pkg-input {
+        width: 100%; padding: 8px 10px;
+        border: 1px solid var(--vt-border); border-radius: var(--vt-radius-sm);
+        font-size: 12.5px; color: var(--vt-text-main);
+        background: #f8fafc;
+    }
+    .vt-pkg-input:focus { outline: none; border-color: var(--vt-orange); background: #fff; }
+    .vt-pkg-del {
+        width: 28px; height: 28px; border-radius: 6px;
+        border: 1px solid #fca5a5; background: #fff5f5; color: #dc2626;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 12px; cursor: pointer; flex-shrink: 0;
+    }
+    .vt-pkg-del:hover { background: #fee2e2; }
+    .vt-pkg-add-btn {
+        display: inline-flex; align-items: center; gap: 5px;
+        font-size: 12px; color: var(--vt-orange); font-weight: 600;
+        border: 1.5px dashed var(--vt-orange-border); border-radius: var(--vt-radius-sm);
+        background: var(--vt-orange-light); padding: 7px 14px;
+        cursor: pointer; transition: all .15s; width: 100%; margin-top: 4px;
+        text-align: center; justify-content: center;
+    }
+    .vt-pkg-add-btn:hover { background: #fed7aa20; border-color: var(--vt-orange); }
+
+    @media (max-width: 860px) {
+        .vt-etapes-layout { flex-direction: column; }
+        .vt-etapes-filter { width: 100%; }
+        .vt-stat-pill { min-width: auto; flex: 1; }
+    }
+
+    /* ================================================================
+       MODAL NOUVELLE ÉTAPE — design "Demande de retrait"
+       ================================================================ */
+    #modal_add_step_ .modal-content,
+    #modal_update_step .modal-content {
+        border: none; border-radius: 16px; overflow: hidden;
+        box-shadow: 0 20px 60px rgba(0,0,0,.18);
+    }
+    .vt-ae-header {
+        display: flex; align-items: center; gap: 14px;
+        padding: 22px 24px 18px;
+        background: linear-gradient(135deg, #fff8f0 0%, #ffffff 100%);
+        border-bottom: 1px solid #f0e6d8;
+        position: relative;
+    }
+    .vt-ae-icon {
+        width: 40px; height: 40px; flex-shrink: 0;
+        background: var(--vt-orange-light); border: 1.5px solid var(--vt-orange-border);
+        border-radius: 10px;
+        display: flex; align-items: center; justify-content: center;
+        color: var(--vt-orange); font-size: 18px;
+    }
+    .vt-ae-title {
+        font-size: 17px; font-weight: 700; color: var(--vt-text-main);
+        margin: 0; flex: 1;
+    }
+    .vt-ae-close {
+        width: 30px; height: 30px; border-radius: 50%;
+        border: 1.5px solid var(--vt-border); background: #fff;
+        display: flex; align-items: center; justify-content: center;
+        color: var(--vt-text-muted); font-size: 13px;
+        cursor: pointer; transition: all .15s; flex-shrink: 0;
+    }
+    .vt-ae-close:hover { background: #f1f5f9; border-color: #94a3b8; color: var(--vt-text-main); }
+
+    /* Body */
+    #modal_add_step_ .modal-body,
+    #modal_update_step .modal-body { padding: 20px 24px 4px; }
+
+    /* Séparateur de section */
+    .vt-ae-section {
+        display: flex; align-items: center; gap: 10px;
+        margin: 18px 0 14px;
+    }
+    .vt-ae-section::before,
+    .vt-ae-section::after {
+        content: ''; flex: 1; height: 1px; background: var(--vt-border);
+    }
+    .vt-ae-section span {
+        font-size: 10px; font-weight: 700; letter-spacing: .8px;
+        text-transform: uppercase; color: var(--vt-text-muted);
+        white-space: nowrap;
+    }
+
+    /* Champ générique */
+    .vt-ae-field { margin-bottom: 12px; }
+    .vt-ae-label {
+        font-size: 11px; font-weight: 600; color: var(--vt-text-muted);
+        margin-bottom: 5px; display: block; letter-spacing: .3px;
+    }
+    .vt-ae-input-wrap { position: relative; }
+    .vt-ae-field-icon {
+        position: absolute; left: 11px; top: 50%; transform: translateY(-50%);
+        color: #94a3b8; font-size: 14px; pointer-events: none; z-index: 1;
+    }
+    .vt-ae-input {
+        width: 100%; padding: 9px 12px 9px 34px;
+        border: 1.5px solid var(--vt-border); border-radius: var(--vt-radius-sm);
+        font-size: 13px; color: var(--vt-text-main); background: #fafafa;
+        transition: border-color .15s, background .15s;
+    }
+    .vt-ae-input:focus {
+        outline: none; border-color: var(--vt-orange);
+        background: #fff; box-shadow: 0 0 0 3px rgba(234,88,12,.07);
+    }
+    .vt-ae-input::placeholder { color: #b0bec5; }
+    textarea.vt-ae-input { padding-top: 9px; resize: vertical; min-height: 72px; }
+
+    /* Grille 2 colonnes */
+    .vt-ae-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    @media (max-width: 480px) { .vt-ae-row { grid-template-columns: 1fr; } }
+
+    /* Footer */
+    .vt-ae-footer {
+        display: flex; align-items: center; justify-content: flex-end;
+        gap: 10px; padding: 16px 24px 20px;
+        border-top: 1px solid var(--vt-border); margin-top: 8px;
+        position: sticky; bottom: 0; background: #fff; z-index: 10;
+    }
+    .vt-ae-btn-cancel {
+        padding: 9px 22px; border-radius: var(--vt-radius-sm);
+        border: 1.5px solid var(--vt-border); background: #fff;
+        color: var(--vt-text-main); font-size: 13px; font-weight: 600;
+        cursor: pointer; transition: all .15s;
+    }
+    .vt-ae-btn-cancel:hover { border-color: #94a3b8; background: #f8fafc; }
+    .vt-ae-btn-submit {
+        padding: 9px 22px; border-radius: var(--vt-radius-sm);
+        background: var(--vt-orange); border: none;
+        color: #fff; font-size: 13px; font-weight: 700;
+        cursor: pointer; display: inline-flex; align-items: center;
+        gap: 6px; transition: background .15s;
+    }
+    .vt-ae-btn-submit:hover { background: #c2560a; }
+    .vt-ae-btn-submit:disabled { opacity: .65; cursor: not-allowed; }
+</style>
+@endsection
+
+{{-- ===== CONTENU ===== --}}
 @section('content')
 
-<!-- Start Content -->
-<div class="content pb-0">
-
-    <!-- Page Header -->
-    <div class="d-flex align-items-center justify-content-between gap-2 mb-4 flex-wrap">
-        <div class="row col-12">
-            <div class="col-sm-6">
-                <h4 class="mb-0">{{ $title }}</h4>
-                <nav aria-label="breadcrumb">
-                    <ol class="breadcrumb mb-0 p-0">
-                        <li class="breadcrumb-item"><a href="{{ $link_back }}">{{ $title_back }}</a></li>
-                        <li class="breadcrumb-item active" aria-current="page">{{ $title }}</li>
-                    </ol>
-                </nav>
-            </div>
-            <div class="col-sm-6">@include('layout.status')</div>
-        </div>
-    </div>
-    <!-- End Page Header -->
-
-
-    <div class="row" x-data="campagneHandler()">
-        <!-- Colonne Gauche -->
-        <div class="col-xl-3">
-            <div class="card border shadow-none">
-                <div class="card-body">
-                    <label class="form-label">Choisir la campagne</label>
-                    <select class="form-select js-select-campagne">
-                        <option value="" disabled {{ !request('campagne_id') ? 'selected' : '' }}>Sélectionnez</option>
-                        @foreach($campagnes as $item)
-                        <option value="{{ $item['campagne']->campagne_id }}" {{ request('campagne_id') == $item['campagne']->campagne_id ? 'selected' : '' }}>{{ $item['campagne']->name }}</option>
-                        @endforeach
-                    </select>
-
-                    <p class="mt-3 mb-0">Campagne sélectionnée :</p>
-                    <h4 class="fw-bold js-display-campagne-name" style="color: #f3613c;">Aucune</h4>
+    {{-- En-tête : titre + stat pills --}}
+    <div class="vt-etapes-header">
+        <h1 class="vt-etapes-title">Étapes</h1>
+        <div class="vt-stat-pills">
+            <div class="vt-stat-pill">
+                <div class="vt-stat-pill-content">
+                    <p class="vt-stat-pill-label">Nbre d'étapes</p>
+                    <div class="vt-stat-pill-value" id="stat-nbre-etapes">0</div>
                 </div>
+                <span class="vt-stat-pill-badge">LIVE</span>
+            </div>
+            <div class="vt-stat-pill">
+                <div class="vt-stat-pill-content">
+                    <p class="vt-stat-pill-label">Session active</p>
+                    <div class="vt-stat-pill-value" id="stat-session-name" style="font-size:13px; font-weight:600;">—</div>
+                </div>
+                <span class="vt-stat-pill-badge blue">SESSION</span>
             </div>
         </div>
+        
+    </div>
+<div class="col-sm-12">@include('layout.status')</div>
+    {{-- Layout deux colonnes --}}
+    <div class="vt-etapes-layout">
 
-        <!-- Colonne Droite : Liste des étapes -->
-        <div class="col-xl-9">
-            <div class="card border shadow-none">
-                <div class="card-header d-flex align-items-center justify-content-between bg-transparent border-0">
-                    <div class="search-input">
-                        <input type="text" class="form-control" placeholder="Rechercher ...">
-                    </div>
-                    <button id="btn-creer-etape" class="btn btn-primary d-flex align-items-center d-none" style="background-color: #f3613c; border:none;" data-bs-toggle="modal" data-bs-target="#modal_add_step_">
-                        <i class="ti ti-circle-plus me-1"></i> Créer
+        {{-- =====================================================
+             COLONNE GAUCHE — FILTRE
+             ===================================================== --}}
+        <div class="vt-etapes-filter">
+            <h2 class="vt-etapes-filter-title">Filtrer</h2>
+
+            {{-- Session --}}
+            <p class="vt-filter-field-label">Choisir la session</p>
+            <div class="vt-filter-input-wrap">
+                <i class="ti ti-layout-list vt-fi-icon"></i>
+                <select class="vt-filter-select-icon js-select-campagne">
+                    <option value="" disabled {{ !request('campagne_id') ? 'selected' : '' }}>
+                        Toutes les sessions
+                    </option>
+                    @foreach($campagnes as $item)
+                        <option value="{{ $item['campagne']->campagne_id }}"
+                            {{ request('campagne_id') == $item['campagne']->campagne_id ? 'selected' : '' }}>
+                            {{ $item['campagne']->name }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+
+            {{-- Nom session sélectionnée --}}
+            <p class="vt-session-selected-label">Session sélectionnée</p>
+            <p class="vt-session-selected-name js-display-campagne-name">Aucune</p>
+
+            {{-- Bouton réinitialiser --}}
+            <button type="button" class="vt-btn-reset" id="btn-reset-etapes">
+                Réinitialiser
+            </button>
+        </div>
+
+        {{-- =====================================================
+             COLONNE DROITE — TABLEAU DES ÉTAPES
+             ===================================================== --}}
+        <div class="vt-etapes-main">
+            <div class="vt-etapes-table-card">
+
+                <div class="vt-etapes-table-header">
+                    <h3 class="vt-etapes-table-title">Étapes de la session</h3>
+                    <button id="btn-creer-etape"
+                            class="vt-btn-primary d-none"
+                            style="border-radius: var(--vt-radius-sm); padding: 8px 18px; font-size: 13px;"
+                            data-bs-toggle="modal" data-bs-target="#modal_add_step_">
+                        <i class="ti ti-plus" style="font-size:13px;"></i> Créer une étape
                     </button>
                 </div>
-                <div class="card-body pt-0">
-                    <div class="table-responsive">
-                        <table class="table table-nowrap align-middle">
-                            <thead class="table-light">
-                                <tr class="text-muted fs-11 text-uppercase">
-                                    <th>Nom de l'étape</th>
-                                    <th>Date de début</th>
-                                    <th>Date de fin</th>
-                                    <th>Prix du vote</th>
-                                    <th>Nbre de votes</th>
-                                    <th>Etat</th>
-                                    <th class="text-end">Action</th>
-                                </tr>
-                            </thead>
-                            <tbody class="js-etape-table-body">
-                                <tr>
-                                    <td colspan="7" class="text-center">Sélectionnez une campagne pour voir les étapes.</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
+
+                <div style="overflow-x: auto;">
+                    <table class="vt-etapes-table">
+                        <thead>
+                            <tr>
+                                <th>Nom de l'étape</th>
+                                <th>Date début</th>
+                                <th>Date fin</th>
+                                <th>Prix du vote</th>
+                                
+                                <th>État</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody class="js-etape-table-body">
+                            <tr>
+                                <td colspan="6" class="vt-etapes-empty">
+                                    Sélectionnez une session pour afficher les étapes.
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
+
             </div>
         </div>
+
     </div>
 
+@endsection
 
-</div>
-<!-- End Content -->
+{{-- =====================================================
+     MODAL — NOUVELLE ÉTAPE
+     ===================================================== --}}
+<div class="modal fade" id="modal_add_step_" tabindex="-1" aria-hidden="true"
+     data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
 
-<!-- Modal Nouvelle Étape -->
-<div class="modal fade" id="modal_add_step_" tabindex="-1" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
-    <div class="modal-dialog modal-md modal-dialog-centered">
-        <div class="modal-content border-0 shadow-lg" style="border-radius: 15px;">
-            <div class="modal-header border-0">
-                <h4 class="modal-title fw-bold" style="color: #2d3748;">Nouvelle étape</h4>
-                <button type="button" class="btn-close bg-light rounded-circle p-2" data-bs-dismiss="modal" aria-label="Close"></button>
+            {{-- Header gradient --}}
+            <div class="vt-ae-header">
+                <div class="vt-ae-icon">
+                    <i class="ti ti-plus"></i>
+                </div>
+                <h5 class="vt-ae-title">Nouvelle étape</h5>
+                <button type="button" class="vt-ae-close" data-bs-dismiss="modal" aria-label="Close">
+                    <i class="ti ti-x"></i>
+                </button>
             </div>
+
             <div class="modal-body">
                 <form id="form_add_step" action="{{ route('business.save_etape') }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     <input type="hidden" id="modal_add_campagne_id" name="campagne_id" value="">
-                    <div class="mb-3">
-                        <label class="form-label fw-semibold">Nom de l'étape <span class="text-danger">*</span></label>
-                        <input type="text" class="form-control bg-light border-0" name="name" placeholder="Attribuez un nom à cette étape.">
-                    </div>
 
-                    <div class="row g-3 mb-3">
-                        <div class="col-6">
-                            <label class="form-label fw-semibold">Date de début <span class="text-danger">*</span></label>
-                            <input type="date" class="form-control bg-light border-0" name="date_debut">
-                        </div>
-                        <div class="col-6">
-                            <label class="form-label fw-semibold">Heure de début <span class="text-danger">*</span></label>
-                            <input type="time" class="form-control bg-light border-0" name="heure_debut">
+                    {{-- SECTION : INFORMATIONS --}}
+                    <div class="vt-ae-section"><span>Informations</span></div>
+
+                    <div class="vt-ae-field">
+                        <label class="vt-ae-label">Nom de l'étape <span style="color:#ef4444;">*</span></label>
+                        <div class="vt-ae-input-wrap">
+                            <i class="ti ti-flag vt-ae-field-icon"></i>
+                            <input type="text" class="vt-ae-input" name="name"
+                                   placeholder="Ex : Phase 1 — Demi-finale" required>
                         </div>
                     </div>
 
-                    <div class="row g-3 mb-3">
-                        <div class="col-6">
-                            <label class="form-label fw-semibold">Date de fin <span class="text-danger">*</span></label>
-                            <input type="date" class="form-control bg-light border-0" name="date_fin">
-                        </div>
-                        <div class="col-6">
-                            <label class="form-label fw-semibold">Heure de fin <span class="text-danger">*</span></label>
-                            <input type="time" class="form-control bg-light border-0" name="heure_fin">
+                    <div class="vt-ae-field">
+                        <label class="vt-ae-label">Description <span style="color:#ef4444;">*</span></label>
+                        <div class="vt-ae-input-wrap">
+                            <i class="ti ti-align-left vt-ae-field-icon" style="top:14px; transform:none;"></i>
+                            <textarea class="vt-ae-input" name="description"
+                                      placeholder="Décrivez cette étape..." rows="3" required></textarea>
                         </div>
                     </div>
 
-                    <div class="mb-3">
-                        <label class="form-label fw-semibold">Décrivez l'étape <span class="text-danger">*</span></label>
-                        <textarea class="form-control bg-light border-0" rows="4" name="description" placeholder="Décrivez l'étape ..."></textarea>
-                    </div>
+                    {{-- SECTION : PÉRIODE --}}
+                    <div class="vt-ae-section"><span>Période</span></div>
 
-                    <!-- <div class="row g-3 mb-3">
-                        <div class="col-6">
-                            <label class="form-label fw-semibold">Type d'éligibilité</label>
-                            <select class="form-select bg-light border-0" name="type_eligibility">
-                                <option>Choisir</option>
-                            </select>
-                        </div>
-                        <div class="col-6">
-                            <label class="form-label fw-semibold">Seuil de sélection</label>
-                            <input type="number" class="form-control bg-light border-0" name="seuil_selection" placeholder="Ex: 1000">
-                        </div>
-                    </div>
-
-                    <div class="bg-light p-3 rounded mb-3">
-                        <div class="col-md-12 d-flex align-items-end">
-                            <div class="form-check form-switch mb-2">
-                                <input class="form-check-input" type="checkbox" role="switch" id="reinitialisation" name="reinitialisation" value="1">
-                                <label class="form-check-label" for="reinitialisation">Réinitialisation</label>
+                    <div class="vt-ae-row">
+                        <div class="vt-ae-field">
+                            <label class="vt-ae-label">Date de début <span style="color:#ef4444;">*</span></label>
+                            <div class="vt-ae-input-wrap">
+                                <i class="ti ti-calendar vt-ae-field-icon"></i>
+                                <input type="date" class="vt-ae-input" name="date_debut" required>
                             </div>
                         </div>
-                    </div> -->
-
-                    <div class="mb-3">
-                        <label class="form-label fw-semibold">Prix d'un vote <span class="text-danger">*</span></label>
-                        <input type="text" class="form-control bg-light border-0" name="prix_vote" placeholder="Ex: 500">
+                        <div class="vt-ae-field">
+                            <label class="vt-ae-label">Heure de début <span style="color:#ef4444;">*</span></label>
+                            <div class="vt-ae-input-wrap">
+                                <i class="ti ti-clock vt-ae-field-icon"></i>
+                                <input type="time" class="vt-ae-input" name="heure_debut" required>
+                            </div>
+                        </div>
                     </div>
 
-                    <div class="mb-3">
-                        <label class="form-label fw-semibold">Packages de vote <span class="text-danger">*</span></label>
+                    <div class="vt-ae-row">
+                        <div class="vt-ae-field">
+                            <label class="vt-ae-label">Date de fin <span style="color:#ef4444;">*</span></label>
+                            <div class="vt-ae-input-wrap">
+                                <i class="ti ti-calendar-off vt-ae-field-icon"></i>
+                                <input type="date" class="vt-ae-input" name="date_fin" required>
+                            </div>
+                        </div>
+                        <div class="vt-ae-field">
+                            <label class="vt-ae-label">Heure de fin <span style="color:#ef4444;">*</span></label>
+                            <div class="vt-ae-input-wrap">
+                                <i class="ti ti-clock-off vt-ae-field-icon"></i>
+                                <input type="time" class="vt-ae-input" name="heure_fin" required>
+                            </div>
+                        </div>
+                    </div>
 
+                    {{-- SECTION : VOTE --}}
+                    <div class="vt-ae-section"><span>Vote</span></div>
+
+                    <div class="vt-ae-field">
+                        <label class="vt-ae-label">Prix d'un vote (FCFA) <span style="color:#ef4444;">*</span></label>
+                        <div class="vt-ae-input-wrap">
+                            <i class="ti ti-currency-franc vt-ae-field-icon"></i>
+                            <input type="number" class="vt-ae-input js-prix-unitaire"
+                                   name="prix_vote" placeholder="Ex : 500" required>
+                        </div>
+                    </div>
+
+                    <div class="vt-ae-field">
+                        <label class="vt-ae-label">Packages de vote <span style="color:#ef4444;">*</span></label>
                         <div class="packages-wrapper">
                             <div class="packages-container" data-index="1" id="packages_container">
-
-                                <!-- Package par défaut -->
-                                <div class="row g-2 align-items-end package-item package-itemadd mb-2">
-                                    <div class="col-5">
-                                        <input type="number" name="packages[0][votes]" class="form-control bg-light border-0" placeholder="Nombre de votes" required>
-                                    </div>
-
-                                    <div class="col-5">
-                                        <input type="number" name="packages[0][montant]" class="form-control bg-light border-0" placeholder="Prix (FCFA)" readonly required>
-                                    </div>
-
-                                    <div class="col-2 text-end">
-                                        <button type="button" class="btn btn-danger btn-sm remove-package d-none">✕</button>
-                                    </div>
+                                <div class="vt-pkg-row package-item package-itemadd">
+                                    <input type="number" name="packages[0][votes]"
+                                           class="vt-pkg-input js-package-votes"
+                                           placeholder="Nombre de votes" required>
+                                    <input type="number" name="packages[0][montant]"
+                                           class="vt-pkg-input js-package-amount"
+                                           placeholder="Prix (FCFA)" readonly required>
+                                    <button type="button" class="vt-pkg-del remove-package d-none">✕</button>
                                 </div>
-
                             </div>
-
-                            <button type="button" class="btn btn-outline-primary btn-sm mt-2 add-package" id="addPackage">
-                                + Ajouter un package
+                            <button type="button" class="vt-pkg-add-btn add-package">
+                                <i class="ti ti-plus" style="font-size:12px;"></i> Ajouter un package
                             </button>
                         </div>
                     </div>
 
-
-                    <!-- Le bouton de validation n'est pas visible sur votre capture, mais voici le style habituel -->
-                    <div class="mt-4">
-                        <button type="submit" class="btn btn-primary w-100 py-2 fw-bold" style="background-color: #f3613c; border:none;">Enregistrer l'étape</button>
-                    </div>
                 </form>
             </div>
+
+            {{-- Footer sticky --}}
+            <div class="vt-ae-footer">
+                <button type="button" class="vt-ae-btn-cancel" data-bs-dismiss="modal">Annuler</button>
+                <button type="submit" form="form_add_step" class="vt-ae-btn-submit">
+                    <i class="ti ti-check" style="font-size:13px;"></i> Confirmer
+                </button>
+            </div>
+
         </div>
     </div>
 </div>
 
-<!-- Modal update étape -->
-<div class="modal fade" id="modal_update_step" tabindex="-1" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
-    <div class="modal-dialog modal-md modal-dialog-centered">
-        <div class="modal-content border-0 shadow-lg" style="border-radius: 15px;">
-            <div class="modal-header border-0">
-                <h4 class="modal-title fw-bold" style="color: #2d3748;">Modifier l'étape</h4>
-                <button type="button" class="btn-close bg-light rounded-circle p-2" data-bs-dismiss="modal" aria-label="Close"></button>
+{{-- =====================================================
+     MODAL — MODIFIER ÉTAPE
+     ===================================================== --}}
+<div class="modal fade" id="modal_update_step" tabindex="-1" aria-hidden="true"
+     data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+
+            {{-- Header gradient --}}
+            <div class="vt-ae-header">
+                <div class="vt-ae-icon">
+                    <i class="ti ti-pencil"></i>
+                </div>
+                <h5 class="vt-ae-title">Modifier l'étape</h5>
+                <button type="button" class="vt-ae-close" data-bs-dismiss="modal" aria-label="Close">
+                    <i class="ti ti-x"></i>
+                </button>
             </div>
+
             <div class="modal-body">
-                <!-- Route de mise à jour -->
                 <form id="form_update_step" action="{{ route('business.update_etape') }}" method="POST" enctype="multipart/form-data">
                     @csrf
-
-                    <!-- Champs cachés pour l'ID de l'étape et de la campagne -->
                     <input type="hidden" name="etape_id" id="upd_etape_id">
                     <input type="hidden" name="campagne_id" id="upd_campagne_id">
 
-                    <div class="mb-3">
-                        <label class="form-label fw-semibold">Nom de l'étape</label>
-                        <input type="text" class="form-control bg-light border-0" name="name" id="upd_name">
-                    </div>
+                    {{-- SECTION : INFORMATIONS --}}
+                    <div class="vt-ae-section"><span>Informations</span></div>
 
-                    <div class="row g-3 mb-3">
-                        <div class="col-6">
-                            <label class="form-label fw-semibold">Date de début</label>
-                            <input type="date" class="form-control bg-light border-0" name="date_debut" id="upd_date_debut">
-                        </div>
-                        <div class="col-6">
-                            <label class="form-label fw-semibold">Heure de début</label>
-                            <input type="time" class="form-control bg-light border-0" name="heure_debut" id="upd_heure_debut">
+                    <div class="vt-ae-field">
+                        <label class="vt-ae-label">Nom de l'étape</label>
+                        <div class="vt-ae-input-wrap">
+                            <i class="ti ti-flag vt-ae-field-icon"></i>
+                            <input type="text" class="vt-ae-input" name="name" id="upd_name" required>
                         </div>
                     </div>
 
-                    <div class="row g-3 mb-3">
-                        <div class="col-6">
-                            <label class="form-label fw-semibold">Date de fin</label>
-                            <input type="date" class="form-control bg-light border-0" name="date_fin" id="upd_date_fin">
-                        </div>
-                        <div class="col-6">
-                            <label class="form-label fw-semibold">Heure de fin</label>
-                            <input type="time" class="form-control bg-light border-0" name="heure_fin" id="upd_heure_fin">
+                    <div class="vt-ae-field">
+                        <label class="vt-ae-label">Description</label>
+                        <div class="vt-ae-input-wrap">
+                            <i class="ti ti-align-left vt-ae-field-icon" style="top:14px; transform:none;"></i>
+                            <textarea class="vt-ae-input" name="description" id="upd_description" rows="3"></textarea>
                         </div>
                     </div>
 
-                    <div class="mb-3">
-                        <label class="form-label fw-semibold">Décrivez l'étape</label>
-                        <textarea class="form-control bg-light border-0" rows="3" name="description" id="upd_description"></textarea>
-                    </div>
+                    {{-- SECTION : PÉRIODE --}}
+                    <div class="vt-ae-section"><span>Période</span></div>
 
-                    <div class="mb-3">
-                        <label class="form-label fw-semibold">Prix d'un vote (FCFA)</label>
-                        <!-- Classe js-prix-unitaire pour le calcul automatique -->
-                        <input type="number" class="form-control bg-light border-0 js-prix-unitaire" name="prix_vote" id="upd_prix_vote">
-                    </div>
-
-                    <div class="mb-3">
-                        <div class="d-flex justify-content-between align-items-center mb-2">
-                            <label class="form-label fw-semibold mb-0">Packages de vote</label>
-                            <!-- <span class="badge bg-soft-primary text-primary border">
-                                Total : <span class="js-total-packages-sum">0</span> FCFA
-                            </span> -->
-                        </div>
-
-                        <div class="packages-wrapper">
-                            <!-- Le conteneur qui recevra les packages via jQuery -->
-                            <div class="packages-container js-upd-packages-container">
-                                <!-- Injecté dynamiquement par JS -->
+                    <div class="vt-ae-row">
+                        <div class="vt-ae-field">
+                            <label class="vt-ae-label">Date de début</label>
+                            <div class="vt-ae-input-wrap">
+                                <i class="ti ti-calendar vt-ae-field-icon"></i>
+                                <input type="date" class="vt-ae-input" name="date_debut" id="upd_date_debut">
                             </div>
+                        </div>
+                        <div class="vt-ae-field">
+                            <label class="vt-ae-label">Heure de début</label>
+                            <div class="vt-ae-input-wrap">
+                                <i class="ti ti-clock vt-ae-field-icon"></i>
+                                <input type="time" class="vt-ae-input" name="heure_debut" id="upd_heure_debut">
+                            </div>
+                        </div>
+                    </div>
 
-                            <button type="button" class="btn btn-outline-primary btn-sm mt-2 js-add-package-upd">
-                                <i class="ti ti-plus me-1"></i> Ajouter un package
+                    <div class="vt-ae-row">
+                        <div class="vt-ae-field">
+                            <label class="vt-ae-label">Date de fin</label>
+                            <div class="vt-ae-input-wrap">
+                                <i class="ti ti-calendar-off vt-ae-field-icon"></i>
+                                <input type="date" class="vt-ae-input" name="date_fin" id="upd_date_fin">
+                            </div>
+                        </div>
+                        <div class="vt-ae-field">
+                            <label class="vt-ae-label">Heure de fin</label>
+                            <div class="vt-ae-input-wrap">
+                                <i class="ti ti-clock-off vt-ae-field-icon"></i>
+                                <input type="time" class="vt-ae-input" name="heure_fin" id="upd_heure_fin">
+                            </div>
+                        </div>
+                    </div>
+
+                    {{-- SECTION : VOTE --}}
+                    <div class="vt-ae-section"><span>Vote</span></div>
+
+                    <div class="vt-ae-field">
+                        <label class="vt-ae-label">Prix d'un vote (FCFA)</label>
+                        <div class="vt-ae-input-wrap">
+                            <i class="ti ti-currency-franc vt-ae-field-icon"></i>
+                            <input type="number" class="vt-ae-input js-prix-unitaire" name="prix_vote" id="upd_prix_vote">
+                        </div>
+                    </div>
+
+                    <div class="vt-ae-field">
+                        <label class="vt-ae-label">Packages de vote</label>
+                        <div class="packages-wrapper">
+                            <div class="packages-container js-upd-packages-container"></div>
+                            <button type="button" class="vt-pkg-add-btn js-add-package-upd mt-2">
+                                <i class="ti ti-plus" style="font-size:12px;"></i> Ajouter un package
                             </button>
                         </div>
                     </div>
 
-                    <div class="mt-4">
-                        <button type="submit" class="btn btn-primary w-100 py-2 fw-bold" style="background-color: #f3613c; border:none;">
-                            Mettre à jour l'étape
-                        </button>
-                    </div>
                 </form>
             </div>
+
+            {{-- Footer sticky --}}
+            <div class="vt-ae-footer">
+                <button type="button" class="vt-ae-btn-cancel" data-bs-dismiss="modal">Annuler</button>
+                <button type="submit" form="form_update_step" class="vt-ae-btn-submit">
+                    <i class="ti ti-check" style="font-size:13px;"></i> Mettre à jour
+                </button>
+            </div>
+
         </div>
     </div>
 </div>
 
-<!-- Modal Delete -->
-<div class="modal fade" id="modal_delete_step" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false">
-    <div class="modal-dialog">
+{{-- =====================================================
+     MODAL — SUPPRIMER ÉTAPE
+     ===================================================== --}}
+<div class="modal fade" id="modal_delete_step" tabindex="-1"
+     data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog modal-dialog-centered modal-sm">
         <div class="modal-content">
-            <div class="modal-body text-center">
-                <h4>Êtes-vous sûr ?</h4>
-                <p>Cette action est irréversible.</p>
-                <button class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-                <button class="btn btn-danger js-confirm-delete">Supprimer</button>
+            <div class="modal-body p-4 text-center">
+                <div class="mb-3">
+                    <span class="avatar avatar-xl badge-soft-danger border-0 text-danger rounded-circle">
+                        <i class="ti ti-trash fs-24"></i>
+                    </span>
+                </div>
+                <h5 class="mb-1">Supprimer l'étape</h5>
+                <p class="mb-3 text-muted" style="font-size:13px;">Cette action est irréversible.</p>
+                <div class="d-flex gap-2">
+                    <button type="button" class="btn btn-light w-100" data-bs-dismiss="modal">Annuler</button>
+                    <button class="btn btn-danger w-100 js-confirm-delete">Supprimer</button>
+                </div>
             </div>
         </div>
     </div>
 </div>
 
+{{-- ===== SCRIPTS ===== --}}
+@section('extra-js')
 <script>
-    // Fonction pour gérer le package des votes
-    document.addEventListener('click', function(e) {
 
-        if (e.target.classList.contains('add-package')) {
-
-            const wrapper = e.target.closest('.packages-wrapper');
-            const container = wrapper.querySelector('.packages-container');
-
-            let index = parseInt(container.dataset.index);
-
+    /* -------------------------------------------------------
+       Packages — ajout/suppression (formulaire création)
+       ------------------------------------------------------- */
+    document.addEventListener('click', function (e) {
+        if (e.target.classList.contains('add-package') || e.target.closest('.add-package')) {
+            const wrapper    = e.target.closest('.packages-wrapper');
+            const container  = wrapper.querySelector('.packages-container');
+            const index      = parseInt(container.dataset.index);
             const html = `
-        <div class="row g-2 align-items-end package-item package-itemadd mb-2">
-            <div class="col-5">
-                <input type="number" name="packages[${index}][votes]" class="form-control bg-light border-0" placeholder="Nombre de votes" required>
-            </div>
-            <div class="col-5">
-                <input type="number" name="packages[${index}][montant]" class="form-control bg-light border-0" placeholder="Prix (FCFA)" readonly required>
-            </div>
-            <div class="col-2 text-end">
-                <button type="button" class="btn btn-danger btn-sm remove-package">✕</button>
-            </div>
-        </div>
-        `;
-
+                <div class="vt-pkg-row package-item package-itemadd">
+                    <input type="number" name="packages[${index}][votes]"
+                           class="vt-pkg-input js-package-votes" placeholder="Nombre de votes" required>
+                    <input type="number" name="packages[${index}][montant]"
+                           class="vt-pkg-input js-package-amount" placeholder="Prix (FCFA)" readonly required>
+                    <button type="button" class="vt-pkg-del remove-package">✕</button>
+                </div>`;
             container.insertAdjacentHTML('beforeend', html);
             container.dataset.index = index + 1;
         }
-
-        // Supprimer un package
         if (e.target.classList.contains('remove-package')) {
             e.target.closest('.package-item').remove();
         }
-
     });
 
-    // Quand on change le prix du vote
-    document.addEventListener('input', function(e) {
+    /* Calcul montants auto (création) */
+    document.addEventListener('input', function (e) {
         if (e.target.name === 'prix_vote' || e.target.name.includes('[votes]')) {
             calculerMontants();
         }
     });
 
-    // Calculer les montants en fonction du prix par vote
     function calculerMontants() {
-        const prixVote = parseFloat(document.querySelector('input[name="prix_vote"]').value) || 0;
-
-        document.querySelectorAll('.package-itemadd').forEach(package => {
-            const votesInput = package.querySelector('input[name*="[votes]"]');
-            const montantInput = package.querySelector('input[name*="[montant]"]');
-
-            const votes = parseFloat(votesInput.value) || 0;
-
-            const montant = prixVote * votes;
-
-            montantInput.value = montant > 0 ? montant : '';
+        const prixVote = parseFloat(document.querySelector('#form_add_step input[name="prix_vote"]')?.value) || 0;
+        document.querySelectorAll('.package-itemadd').forEach(pkg => {
+            const votes  = parseFloat(pkg.querySelector('input[name*="[votes]"]')?.value) || 0;
+            const montantInput = pkg.querySelector('input[name*="[montant]"]');
+            if (montantInput) montantInput.value = votes > 0 ? (prixVote * votes) : '';
         });
     }
 
-    // Ce script centralise toute la logique jQuery pour la gestion des étapes de campagne
-    $(document).ready(function() {
-
+    /* -------------------------------------------------------
+       jQuery — logique principale
+       ------------------------------------------------------- */
+    $(document).ready(function () {
 
         $.ajaxSetup({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            }
+            headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') }
         });
 
-        //-- 1. SELECTION DE CAMPAGNE
-        $(document).on('change', '.js-select-campagne', function() {
-            const id = $(this).val();
+        /* ----- 1. SÉLECTION DE SESSION ----- */
+        $(document).on('change', '.js-select-campagne', function () {
+            const id   = $(this).val();
             const name = $(this).find('option:selected').text();
 
-            // 1. INJECTION DE L'ID DANS LE MODAL
+            /* Met à jour la modale d'ajout */
             $('#modal_add_campagne_id').val(id);
 
-            // 2. AFFICHAGE DU BOUTON CRÉER
+            /* Bouton créer */
             if (id) {
-                $('#btn-creer-etape').removeClass('d-none').addClass('d-flex');
+                $('#btn-creer-etape').removeClass('d-none');
             } else {
-                $('#btn-creer-etape').addClass('d-none').removeClass('d-flex');
+                $('#btn-creer-etape').addClass('d-none');
             }
 
-            // Mise à jour visuelle immédiate
-            $('.js-display-campagne-name').text(name);
-            $('.js-etape-table-body').html('<tr><td colspan="7" class="text-center">Chargement...</td></tr>');
+            /* Affichage visuel */
+            $('.js-display-campagne-name').text(id ? name : 'Aucune');
+            $('#stat-session-name').text(id ? name.substring(0, 18) + (name.length > 18 ? '…' : '') : '—');
 
-            // 3. REQUÊTE AJAX POUR RÉCUPÉRER LES ÉTAPES
+            /* Chargement AJAX */
+            $('.js-etape-table-body').html(
+                '<tr><td colspan="6" class="vt-etapes-empty"><div class="spinner-border spinner-border-sm text-primary me-2"></div> Chargement...</td></tr>'
+            );
+
+            if (!id) {
+                $('.js-etape-table-body').html(
+                    '<tr><td colspan="6" class="vt-etapes-empty">Sélectionnez une session pour afficher les étapes.</td></tr>'
+                );
+                $('#stat-nbre-etapes').text('0');
+                return;
+            }
+
             $.ajax({
                 url: `/business/recherche_etape_campagne/${id}`,
                 method: 'GET',
-                success: function(etapes) {
+                success: function (etapes) {
                     renderEtapeTable(etapes);
+                    $('#stat-nbre-etapes').text(etapes.length);
                 },
-                error: function() {
-                    $('.js-etape-table-body').html('<tr><td colspan="7" class="text-danger">Erreur de chargement.</td></tr>');
+                error: function () {
+                    $('.js-etape-table-body').html(
+                        '<tr><td colspan="6" class="vt-etapes-empty" style="color:#dc2626;">Erreur de chargement.</td></tr>'
+                    );
                 }
             });
         });
 
-        // --- 2. FONCTION DE RENDU DU TABLEAU ---
+        /* ----- 2. RENDU DU TABLEAU ----- */
         function renderEtapeTable(etapes) {
-            let html = '';
             if (etapes.length === 0) {
-                html = '<tr><td colspan="7" class="text-center">Aucune étape trouvée.</td></tr>';
-            } else {
-                etapes.forEach(etape => {
-                    // On stocke l'objet entier en JSON dans un attribut data pour l'édition
-                    const etapeData = encodeURIComponent(JSON.stringify(etape));
+                $('.js-etape-table-body').html(
+                    '<tr><td colspan="6" class="vt-etapes-empty">Aucune étape pour cette session.</td></tr>'
+                );
+                return;
+            }
+            let html = '';
+            etapes.forEach(etape => {
+                const data     = encodeURIComponent(JSON.stringify(etape));
+                const actif    = etape.is_active == 1;
+                const badgeCls = actif ? 'vt-badge-actif' : 'vt-badge-inactif';
+                const badgeTxt = actif ? '<i class="ti ti-check" style="font-size:10px;"></i> Actif' : 'Inactif';
 
-                    html += `
+                html += `
                 <tr>
-                    <td class="fw-bold">${etape.name}</td>
-                    <td>${etape.date_debut}</td>
-                    <td>${etape.date_fin}</td>
-                    <td>${etape.prix_vote} FCFA</td>
-                    <td>NAN</td>
-                    <td>${etape.is_active == 0 ? 'Actif' : 'Inactif'}</td>
-                    <td class="text-end">
-                        <button class="btn btn-sm btn-info js-btn-edit" data-etape="${etapeData}">
-                            <i class="ti ti-edit"></i>
-                        </button>
-                        <button class="btn btn-sm btn-danger js-btn-delete" data-id="${etape.etape_id}">
-                            <i class="ti ti-trash"></i>
-                        </button>
+                    <td class="cell-name">${etape.name}</td>
+                    <td>${etape.date_debut || '—'}</td>
+                    <td>${etape.date_fin || '—'}</td>
+                    <td class="cell-prix">${Number(etape.prix_vote).toLocaleString('fr-FR')} FCFA</td>
+                    
+                    <td><span class="${badgeCls}">${badgeTxt}</span></td>
+                    <td>
+                        <div class="vt-etape-actions">
+                            <button class="vt-etape-btn edit js-btn-edit" data-etape="${data}" title="Modifier">
+                                <i class="ti ti-pencil"></i>
+                            </button>
+                            <button class="vt-etape-btn del js-btn-delete" data-id="${etape.etape_id}" title="Supprimer">
+                                <i class="ti ti-trash"></i>
+                            </button>
+                        </div>
                     </td>
                 </tr>`;
-                });
-            }
+            });
             $('.js-etape-table-body').html(html);
         }
 
-        // --- 3. OUVERTURE MODAL ÉDITION ---
-        $(document).on('click', '.js-btn-edit', function() {
-            const data = JSON.parse(decodeURIComponent($(this).data('etape')));
+        /* ----- 3. MODAL ÉDITION ----- */
+        $(document).on('click', '.js-btn-edit', function () {
+            const data   = JSON.parse(decodeURIComponent($(this).data('etape')));
             const $modal = $('#modal_update_step');
 
-            // Remplissage des champs du modal par leurs noms
             $modal.find('input[name="etape_id"]').val(data.etape_id);
             $modal.find('input[name="campagne_id"]').val(data.campagne_id);
             $modal.find('input[name="name"]').val(data.name);
@@ -441,386 +830,183 @@
             $modal.find('input[name="heure_debut"]').val(data.heure_debut);
             $modal.find('input[name="heure_fin"]').val(data.heure_fin);
             $modal.find('textarea[name="description"]').val(data.description);
-            $modal.find('textarea[name="type_eligibility"]').val(data.type_eligibility);
-            $modal.find('textarea[name="seuil_selection"]').val(data.seuil_selection);
             $modal.find('input[name="prix_vote"]').val(data.prix_vote);
-            $modal.find('input[name="renitialisation"]').val(data.renitialisation);
-
-            // Remplissage des packages
             renderUpdatePackages(data.package, $modal);
 
             $modal.modal('show');
         });
 
-        // --- 4. OUVERTURE MODAL SUPPRESSION ---
-        $(document).on('click', '.js-btn-delete', function() {
+        /* ----- 4. MODAL SUPPRESSION ----- */
+        $(document).on('click', '.js-btn-delete', function () {
             const id = $(this).data('id');
-            const $modal = $('#modal_delete_step');
-            $modal.find('.js-confirm-delete').attr('data-id', id);
-            $modal.modal('show');
+            $('#modal_delete_step').find('.js-confirm-delete').attr('data-id', id);
+            $('#modal_delete_step').modal('show');
         });
 
-        // --- 5. ACTION SUPPRIMER ---
-        $(document).on('click', '.js-confirm-delete', function() {
-            const id = $(this).data('id');
+        /* ----- 5. CONFIRMER SUPPRESSION ----- */
+        $(document).on('click', '.js-confirm-delete', function () {
+            const id  = $(this).data('id');
             const $btn = $(this);
-
-            // Désactiver le bouton pendant le chargement
-            $btn.prop('disabled', true).html('<span class="spinner-border spinner-border-sm"></span>...');
+            $btn.prop('disabled', true).html('<span class="spinner-border spinner-border-sm"></span>');
 
             $.ajax({
                 url: `/business/delete_etape/${id}`,
                 method: 'POST',
-                data: {
-                    _method: 'DELETE',
-                    _token: $('meta[name="csrf-token"]').attr('content')
-                },
-                success: function(response) {
+                data: { _method: 'DELETE', _token: $('meta[name="csrf-token"]').attr('content') },
+                success: function (response) {
                     $('#modal_delete_step').modal('hide');
-
-                    if (response.success) {
+                    if (response.success && typeof showAjaxAlert === 'function')
                         showAjaxAlert('success', response.message);
-                    }
-
-                    // Rafraîchir le tableau
                     $('.js-select-campagne').trigger('change');
                 },
-                error: function(xhr) {
+                error: function (xhr) {
                     $('#modal_delete_step').modal('hide');
-                    let msg = "Erreur lors de la suppression.";
-                    if (xhr.responseJSON && xhr.responseJSON.message) {
-                        msg = xhr.responseJSON.message;
-                    }
-                    showAjaxAlert('danger', msg);
+                    const msg = xhr.responseJSON?.message || 'Erreur lors de la suppression.';
+                    if (typeof showAjaxAlert === 'function') showAjaxAlert('danger', msg);
                 },
-                complete: function() {
-                    // Réinitialiser le bouton
-                    $btn.prop('disabled', false).text('Supprimer');
-                }
+                complete: function () { $btn.prop('disabled', false).text('Supprimer'); }
             });
         });
 
+        /* ----- RESET ----- */
+        $('#btn-reset-etapes').on('click', function () {
+            $('.js-select-campagne').val('').trigger('change');
+        });
+
+        /* ----- PACKAGES (update modal) ----- */
         function renderUpdatePackages(packagesData, $modal) {
             const $container = $modal.find('.js-upd-packages-container');
             $container.empty();
-
             let packages = [];
-            try {
-                packages = typeof packagesData === 'string' ? JSON.parse(packagesData) : packagesData;
-            } catch (e) {
-                packages = [];
-            }
+            try { packages = typeof packagesData === 'string' ? JSON.parse(packagesData) : packagesData; }
+            catch (e) { packages = []; }
 
             if (packages && packages.length > 0) {
                 packages.forEach((pkg, i) => {
-                    const html = `
-                <div class="row g-2 mb-2 package-item">
-                    <div class="col-5">
-                        <input type="number" name="packages[${i}][votes]" value="${pkg.vote}" 
-                               class="form-control bg-light border-0 js-package-votes" placeholder="Votes">
-                    </div>
-                    <div class="col-5">
-                        <input type="number" name="packages[${i}][montant]" value="${pkg.montant}" 
-                               class="form-control bg-light border-0 js-package-amount" readonly>
-                    </div>
-                    <div class="col-2 text-end">
-                        <button type="button" class="btn btn-danger btn-sm js-remove-package">✕</button>
-                    </div>
-                </div>`;
-                    $container.append(html);
+                    $container.append(`
+                        <div class="vt-pkg-row package-item">
+                            <input type="number" name="packages[${i}][votes]"
+                                   value="${pkg.vote}" class="vt-pkg-input js-package-votes" placeholder="Votes">
+                            <input type="number" name="packages[${i}][montant]"
+                                   value="${pkg.montant}" class="vt-pkg-input js-package-amount" readonly>
+                            <button type="button" class="vt-pkg-del js-remove-package">✕</button>
+                        </div>`);
                 });
             }
-            calculateGlobalTotal();
         }
 
-        // --- 3. CALCULS AUTOMATIQUES ---
-
-        // A. Calcul lorsqu'on modifie le nombre de votes d'un package
-        $(document).on('input', '.js-package-votes', function() {
-            // 1. On identifie le modal dans lequel on se trouve (Ajout ou Update)
-            const $modal = $(this).closest('.modal');
-
-            // 2. On récupère le prix unitaire spécifique à CE modal
-            const prixUnitaire = parseFloat($modal.find('.js-prix-unitaire').val()) || 0;
-
-            // 3. On calcule le montant de la ligne actuelle
-            const nbVotes = parseFloat($(this).val()) || 0;
-            const montantLigne = nbVotes * prixUnitaire;
-
-            // 4. On met à jour l'input montant de cette ligne uniquement
-            $(this).closest('.package-item').find('.js-package-amount').val(montantLigne > 0 ? montantLigne : '');
-
-            // 5. On met à jour le total global de CE modal
-            calculateGlobalTotal($modal);
+        $(document).on('click', '.js-add-package-upd', function () {
+            const $modal     = $(this).closest('.modal');
+            const $container = $modal.find('.js-upd-packages-container');
+            const index      = $container.find('.package-item').length;
+            $container.append(`
+                <div class="vt-pkg-row package-item">
+                    <input type="number" name="packages[${index}][votes]"
+                           class="vt-pkg-input js-package-votes" placeholder="Votes">
+                    <input type="number" name="packages[${index}][montant]"
+                           class="vt-pkg-input js-package-amount" readonly>
+                    <button type="button" class="vt-pkg-del js-remove-package">✕</button>
+                </div>`);
         });
 
-        // B. Calcul lorsqu'on modifie le prix unitaire principal
-        $(document).on('input', '.js-prix-unitaire', function() {
-            const $modal = $(this).closest('.modal');
+        $(document).on('click', '.js-remove-package', function () {
+            $(this).closest('.package-item').remove();
+        });
 
-            // On demande à chaque champ de vote de CE modal de se recalculer
-            $modal.find('.js-package-votes').each(function() {
-                // On déclenche l'événement input manuellement sur chaque ligne
+        /* Calcul montants auto (édition) */
+        $(document).on('input', '.js-package-votes', function () {
+            const $modal      = $(this).closest('.modal');
+            const prixUnit    = parseFloat($modal.find('.js-prix-unitaire').val()) || 0;
+            const nbVotes     = parseFloat($(this).val()) || 0;
+            $(this).closest('.package-item').find('.js-package-amount').val(nbVotes > 0 ? nbVotes * prixUnit : '');
+        });
+
+        $(document).on('input', '.js-prix-unitaire', function () {
+            $(this).closest('.modal').find('.js-package-votes').each(function () {
                 $(this).trigger('input');
             });
         });
 
-        // C. Fonction de somme globale (Indépendante par modal)
-        function calculateGlobalTotal($modal) {
-            // Si $modal n'est pas défini, on cherche le modal ouvert
-            const $currentModal = $modal || $('.modal.show');
-            let total = 0;
-
-            // On additionne uniquement les montants du modal en question
-            $currentModal.find('.js-package-amount').each(function() {
-                total += parseFloat($(this).val()) || 0;
-            });
-
-            // On affiche le total dans le badge du modal correspondant
-            $currentModal.find('.js-total-packages-sum').text(total.toLocaleString('fr-FR'));
-        }
-
-        // D. Mise à jour de la fonction "Ajouter un package" pour ne pas casser les calculs
-        $(document).on('click', '.js-add-package-upd', function() {
-            const $modal = $(this).closest('.modal');
-            const $container = $modal.find('.js-upd-packages-container');
-            const index = $container.find('.package-item').length;
-
-            const html = `
-                <div class="row g-2 mb-2 package-item">
-                    <div class="col-5">
-                        <input type="number" name="packages[${index}][votes]" class="form-control bg-light border-0 js-package-votes">
-                    </div>
-                    <div class="col-5">
-                        <input type="number" name="packages[${index}][montant]" class="form-control bg-light border-0 js-package-amount" readonly>
-                    </div>
-                    <div class="col-2 text-end">
-                        <button type="button" class="btn btn-danger btn-sm js-remove-package">✕</button>
-                    </div>
-                </div>`;
-
-            $container.append(html);
-        });
-
-        // E. Suppression d'un package
-        $(document).on('click', '.js-remove-package', function() {
-            const $modal = $(this).closest('.modal');
-            $(this).closest('.package-item').remove();
-            calculateGlobalTotal($modal);
-        });
-
-        // --- AUTOLOAD SI CAMPAGNE PRÉ-SÉLECTIONNÉE ---
-        const preSelectedVal = $('.js-select-campagne').val();
-        if (preSelectedVal) {
-            // On déclenche manuellement le change pour lancer l'AJAX et afficher le tableau
-            $('.js-select-campagne').trigger('change');
-        }
-
-    });
-
-    $(document).ready(function() {
-
-        // --- ENREGISTREMENT DE L'ÉTAPE EN AJAX ---
-        $('#form_add_step').on('submit', function(e) {
+        /* ----- ENREGISTREMENT AJAX (ajout) ----- */
+        $('#form_add_step').on('submit', function (e) {
             e.preventDefault();
-
-            let $form = $(this);
-            let $submitBtn = $form.find('button[type="submit"]');
-            let originalBtnHtml = $submitBtn.html();
-            let formData = new FormData(this);
-
-            // 🔄 Nettoyage des anciennes erreurs
+            const $form      = $(this);
+            const $submitBtn = $form.find('button[type="submit"]');
+            const origHtml   = $submitBtn.html();
             $form.find('.is-invalid').removeClass('is-invalid');
             $form.find('.invalid-feedback').remove();
-
             $submitBtn.prop('disabled', true).html('Enregistrement...');
 
             $.ajax({
-                url: $form.attr('action'),
-                type: 'POST',
-                data: formData,
-                processData: false,
-                contentType: false,
-
-                success: function(response) {
-                    // 1. Fermer le modal
+                url: $form.attr('action'), type: 'POST',
+                data: new FormData(this), processData: false, contentType: false,
+                success: function (response) {
                     $('#modal_add_step_').modal('hide');
-
-                    // 2. Reset du formulaire
                     $form[0].reset();
                     $form.find('.package-itemadd').not(':first').remove();
-
-                    // 3. Message de succès
-                    if (response.success && typeof showAjaxAlert === 'function') {
+                    if (response.success && typeof showAjaxAlert === 'function')
                         showAjaxAlert('success', response.message);
-                    }
-
-                    // 4. Rafraîchir les données
                     $('.js-select-campagne').trigger('change');
                 },
-
-                error: function(xhr) {
-                    if (xhr.status === 422) {
-                        const errors = xhr.responseJSON.errors;
-
-                        if (typeof showAjaxAlert === 'function') {
-                            showAjaxAlert('danger', 'Veuillez vérifier les champs du formulaire.');
-                        }
-
-                        // 🔁 Boucle dynamique sur les erreurs Laravel
-                        $.each(errors, function(fieldName, messages) {
-
-                            // Support champs tableau (ex: items.0.name → items[0][name])
-                            let fieldSelector = fieldName
-                                .replace(/\.(\d+)\./g, '[$1][')
-                                .replace(/\./g, ']')
-                                .replace(/$/, ']');
-
-                            let $input = $form.find(
-                                `[name="${fieldName}"], 
-                         [name="${fieldName}[]"], 
-                         [name="${fieldSelector}"]`
-                            ).first();
-
-                            if ($input.length) {
-                                $input.addClass('is-invalid');
-
-                                let errorHtml = `
-                            <div class="invalid-feedback d-block">
-                                ${messages[0]}
-                            </div>
-                        `;
-
-                                // 📍 Placement intelligent
-                                if ($input.closest('.input-group').length) {
-                                    $input.closest('.input-group').after(errorHtml);
-                                } else if ($input.attr('type') === 'file' && $input.closest('.image-upload-group').length) {
-                                    $input.closest('.image-upload-group').after(errorHtml);
-                                } else {
-                                    $input.after(errorHtml);
-                                }
-                            }
-                        });
-
-                        // 🎯 Focus premier champ en erreur
-                        $form.find('.is-invalid').first().focus();
-
-                    } else {
-                        const errorTxt = xhr.responseJSON?.message || 'Une erreur est survenue.';
-                        if (typeof showAjaxAlert === 'function') {
-                            showAjaxAlert('danger', errorTxt);
-                        }
-                    }
+                error: function (xhr) {
+                    handleFormErrors(xhr, $form);
                 },
-
-                complete: function() {
-                    $submitBtn.prop('disabled', false).html(originalBtnHtml);
-                }
+                complete: function () { $submitBtn.prop('disabled', false).html(origHtml); }
             });
         });
 
-
-        // --- MISE À JOUR DE L'ÉTAPE EN AJAX ---
-        $('#form_update_step').on('submit', function(e) {
+        /* ----- MISE À JOUR AJAX (édition) ----- */
+        $('#form_update_step').on('submit', function (e) {
             e.preventDefault();
-
-            let $form = $(this);
-            let $submitBtn = $form.find('button[type="submit"]');
-            let originalBtnHtml = $submitBtn.html();
-            let formData = new FormData(this);
-
-            // 🔄 Nettoyage des anciennes erreurs
+            const $form      = $(this);
+            const $submitBtn = $form.find('button[type="submit"]');
+            const origHtml   = $submitBtn.html();
             $form.find('.is-invalid').removeClass('is-invalid');
             $form.find('.invalid-feedback').remove();
-
-            // Désactiver le bouton
             $submitBtn.prop('disabled', true).html('Mise à jour...');
 
             $.ajax({
-                url: $form.attr('action'),
-                type: 'POST', // (PUT/PATCH géré via _method si besoin)
-                data: formData,
-                processData: false,
-                contentType: false,
-
-                success: function(response) {
-                    // 1. Fermer le modal
+                url: $form.attr('action'), type: 'POST',
+                data: new FormData(this), processData: false, contentType: false,
+                success: function (response) {
                     $('#modal_update_step').modal('hide');
-
-                    // 2. Message succès
-                    if (response.success && typeof showAjaxAlert === 'function') {
+                    if (response.success && typeof showAjaxAlert === 'function')
                         showAjaxAlert('success', response.message);
-                    }
-
-                    // 3. Rafraîchir le tableau
                     $('.js-select-campagne').trigger('change');
                 },
-
-                error: function(xhr) {
-                    if (xhr.status === 422) {
-                        const errors = xhr.responseJSON.errors;
-
-                        if (typeof showAjaxAlert === 'function') {
-                            showAjaxAlert('danger', 'Veuillez corriger les champs en erreur.');
-                        }
-
-                        // 🔁 Affichage champ par champ
-                        $.each(errors, function(fieldName, messages) {
-
-                            // Support champs Laravel complexes (items.0.name)
-                            let fieldSelector = fieldName
-                                .replace(/\.(\d+)\./g, '[$1][')
-                                .replace(/\./g, ']')
-                                .replace(/$/, ']');
-
-                            let $input = $form.find(
-                                `[name="${fieldName}"],
-                         [name="${fieldName}[]"],
-                         [name="${fieldSelector}"]`
-                            ).first();
-
-                            if ($input.length) {
-                                $input.addClass('is-invalid');
-
-                                let errorHtml = `
-                            <div class="invalid-feedback d-block">
-                                ${messages[0]}
-                            </div>
-                        `;
-
-                                // Placement intelligent
-                                if ($input.closest('.input-group').length) {
-                                    $input.closest('.input-group').after(errorHtml);
-                                } else if ($input.attr('type') === 'file' && $input.closest('.image-upload-group').length) {
-                                    $input.closest('.image-upload-group').after(errorHtml);
-                                } else {
-                                    $input.after(errorHtml);
-                                }
-                            }
-                        });
-
-                        // 🎯 Focus sur le premier champ invalide
-                        $form.find('.is-invalid').first().focus();
-
-                    } else {
-                        const errorTxt = xhr.responseJSON?.message || 'Erreur lors de la modification.';
-                        if (typeof showAjaxAlert === 'function') {
-                            showAjaxAlert('danger', errorTxt);
-                        }
-                    }
+                error: function (xhr) {
+                    handleFormErrors(xhr, $form);
                 },
-
-                complete: function() {
-                    // Réactiver le bouton
-                    $submitBtn.prop('disabled', false).html(originalBtnHtml);
-                }
+                complete: function () { $submitBtn.prop('disabled', false).html(origHtml); }
             });
         });
 
+        /* ----- Gestion erreurs formulaires ----- */
+        function handleFormErrors(xhr, $form) {
+            if (xhr.status === 422) {
+                const errors = xhr.responseJSON.errors;
+                if (typeof showAjaxAlert === 'function')
+                    showAjaxAlert('danger', 'Veuillez vérifier les champs du formulaire.');
+                $.each(errors, function (fieldName, messages) {
+                    let $input = $form.find(`[name="${fieldName}"], [name="${fieldName}[]"]`).first();
+                    if ($input.length) {
+                        $input.addClass('is-invalid');
+                        const errHtml = `<div class="invalid-feedback d-block" style="color:#dc3545;font-size:11.5px;">${messages[0]}</div>`;
+                        if ($input.closest('.input-group').length) $input.closest('.input-group').after(errHtml);
+                        else $input.after(errHtml);
+                    }
+                });
+                $form.find('.is-invalid').first().focus();
+            } else {
+                const msg = xhr.responseJSON?.message || 'Une erreur est survenue.';
+                if (typeof showAjaxAlert === 'function') showAjaxAlert('danger', msg);
+            }
+        }
+
+        /* ----- AUTOLOAD si session pré-sélectionnée (URL param) ----- */
+        const preSelected = $('.js-select-campagne').val();
+        if (preSelected) $('.js-select-campagne').trigger('change');
+
     });
 </script>
-@endsection
-<!-- section js -->
-@section('extra-js')
-
 @endsection

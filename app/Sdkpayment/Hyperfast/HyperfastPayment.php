@@ -21,7 +21,7 @@ class HyperfastPayment
             $CALLBACK_URL = config('sdkpayment.HYPERFAST_CALLBACK_URL', 'http://votium.net/api/webhook/hyperfast');
             $HYPERFAST_BASE_URL = config('sdkpayment.HYPERFAST_BASE_URL');
             $HYPERFAST_PAYMENT_WAVE_URL = config('sdkpayment.HYPERFAST_PAYMENT_WAVE_URL');
-            $RETURN_URL = 'http://votium.net/business/wave_rollback/' . $paramPayment['campagne_id'] . '/' . $paramPayment['transaction_id'];
+            $RETURN_URL = 'http://votium.net/business/payment_rollback/' . $paramPayment['campagne_id'] . '/' . $paramPayment['transaction_id'];
 
             $payload = [
                 'amount' => $paramPayment['amount'],

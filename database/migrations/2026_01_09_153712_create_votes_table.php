@@ -13,6 +13,7 @@ class CreateVotesTable extends Migration
      */
     public function up()
     {
+        if (Schema::hasTable('votes')) return;
         Schema::create('votes', function (Blueprint $table) {
             $table->uuid('vote_id')->primary();
             $table->string('campagne_id');

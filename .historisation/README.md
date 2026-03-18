@@ -5,6 +5,7 @@
 
 | Fichier | Description |
 |---|---|
+| `JOURNAL.md` | **Chronologie complète** de toutes les sessions de travail |
 | `01_design-system.md` | Variables CSS, composants réutilisables (layout refont) |
 | `02_refont-index.md` | Dashboard principal (`business/index.blade.php`) |
 | `03_refont-listCampagnes.md` | Vue Sessions (`business/listCampagnes.blade.php`) |
@@ -14,4 +15,31 @@
 | `07_refont-listRetraits.md` | Vue Retraits (`business/listRetraits.blade.php`) |
 
 ---
-*Dernière mise à jour : 2026-03-09*
+
+## Résumé des sessions
+
+| Session | Date | Actions principales |
+|---|---|---|
+| Session 1 | 2026-03-08 | Design system, refonte 6 vues principales |
+| Session 2 | 2026-03-09 | Cartes candidats v2, listEtapesCampagne, modales sessions (create+edit), CSS fix |
+| Session 3 | 2026-03-10 | Modal ajout candidat redessiné (design "Demande de retrait") |
+| Session 4 | 2026-03-13 | Modal "Nouvelle étape" redessiné (design "Demande de retrait") |
+| Session 5 | 2026-03-13 | Modal "Ajouter un compte retrait" redessiné (design "Demande de retrait") |
+| Session 6 | 2026-03-15 | Refonte espace admin — layout console + navbar + dashboard |
+
+---
+
+## Vues refontées — Statut
+
+| Vue | Statut | Dernière modif |
+|---|---|---|
+| `business/index` | ✅ Done | 2026-03-08 |
+| `business/listCampagnes` | ✅ Done | 2026-03-09 |
+| `business/listCandidats` | ✅ Done | 2026-03-10 |
+| `business/listVotes` | ✅ Done | 2026-03-08 |
+| `business/listEtapesCampagne` | ✅ Done | 2026-03-13 |
+| `business/profile` | ✅ Done | 2026-03-08 |
+| `business/listRetraits` | ✅ Done | 2026-03-08 |
+
+---
+*Dernière mise à jour : 2026-03-10*

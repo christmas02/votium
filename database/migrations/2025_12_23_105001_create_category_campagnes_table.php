@@ -13,12 +13,13 @@ class CreateCategoryCampagnesTable extends Migration
      */
     public function up()
     {
+        if (Schema::hasTable('category_campagnes')) return;
         Schema::create('category_campagnes', function (Blueprint $table) {
             $table->uuid('category_id')->primary();
             $table->string('name');
             $table->string('campagne_id');
-            $table->string('description');
-            $table->string('icon');
+            $table->string('description')->nullable();
+            $table->string('icon')->nullable();
             $table->string('is_active');
             $table->timestamps();
         });

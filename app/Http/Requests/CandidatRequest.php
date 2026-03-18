@@ -5,7 +5,7 @@ namespace App\Http\Requests;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class CandidatRequest extends FormRequest
+class CandidatRequest extends BaseRequest
 {
     public function authorize(): bool
     {
@@ -20,26 +20,26 @@ class CandidatRequest extends FormRequest
         return [
             'name'           => 'required|string|max:255',
             'email'          => [
-                'required',
+                'nullable',
                 'email',
                 'max:255',
                 // Même si l'unique n'est pas dans ta migration, 
                 // il est fortement conseillé pour des candidats.
                 Rule::unique('candidats', 'email')->ignore($candidatId, 'candidat_id')
             ],
-            'telephone'    => 'required|string|max:20',
-            'sexe'           => 'required|string', // Force le choix
-            'date_naissance' => 'required|date', // Vérifie que c'est une date valide
-            'ville'          => 'required|string|max:255',
-            'pays'           => 'required|string|max:255',
-            'profession'     => 'required|string|max:255',
+            'telephone'    => 'nullable|string|max:20',
+            'sexe'           => 'nullable|string', // Force le choix
+            'date_naissance' => 'nullable|date', // Vérifie que c'est une date valide
+            'ville'          => 'nullable|string|max:255',
+            'pays'           => 'nullable|string|max:255',
+            'profession'     => 'nullable|string|max:255',
 
             // Photo : Obligatoire à la création, optionnelle à la modification
             'photo'          => $isUpdate
                 ? 'nullable|image|mimes:jpeg,png,jpg|max:2048'
                 : 'required|image|mimes:jpeg,png,jpg|max:2048',
 
-            'description'    => 'required|string|max:100',
+            'description'    => 'nullable|string|max:100',
             'data'           => 'nullable|string', // Pour stocker du JSON ou texte extra
         ];
     }
