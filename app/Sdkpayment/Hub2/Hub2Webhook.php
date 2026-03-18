@@ -19,9 +19,11 @@ class Hub2Webhook
         try {
             $HUB2_BASE_URL = config('sdkpayment.HUB2_BASE_URL');
             $url = rtrim($HUB2_BASE_URL, '/') . '/webhooks/';
+            //'url' => "https://webhook.site/1e3b7f56-c38c-41df-a5c4-a2c43440b4c2",
+
 
             $payload = [
-                'url' => "https://webhook.site/1e3b7f56-c38c-41df-a5c4-a2c43440b4c2",
+                'url' => "https://votium.net/api/webhook/hub2",
                 "events" => [
                     "transfer.created",
                     "transfer.processing",
@@ -32,8 +34,7 @@ class Hub2Webhook
                     "payment.succeeded",
                     "payment.failed",
                 ],
-                'description' => "This is a webhook trigger upon transfer, payment & payment_intent creation",,
-                "metadata" => new \stdClass()
+                "description" => "This is a webhook trigger upon transfer, payment & payment_intent creation",
             ];
 
             logger()->info('Hub2 execute create link webhook request', [

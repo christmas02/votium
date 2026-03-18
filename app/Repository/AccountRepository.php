@@ -24,9 +24,15 @@ class AccountRepository
         return true; // Assume the update was successful
     }
     
-    public function getAccountByCustomerId($customerId)
+    public function getAccountByCustomerId($customer_id)
     {
-        return Account::where('customer_id', $customerId)->first();
+        try {
+            $account = Account::where('customer_id', $customer_id)->first();
+            return $account;
+        } catch (\Exception $e) {
+            \Log::error('Erreur lors de la recuperation du compte de retrait - file:CustomerRepository  : ' . $e->getMessage());
+            return false;
+        }
     }
     
     public function createAccount($data, $initialBalance = 0.00)

@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Models\Customer;
+use App\Models\Account;
 use App\Models\WithdrawalAccount;
 
 class CustomerRepository
@@ -112,4 +113,5 @@ class CustomerRepository
             return false;
         }
     }
+    
 }
