@@ -13,6 +13,7 @@ class CreateWithdrawalAccountsTable extends Migration
      */
     public function up()
     {
+        if (Schema::hasTable('withdrawal_accounts')) return;
         Schema::create('withdrawal_accounts', function (Blueprint $table) {
             $table->uuid('withdrawal_account_id')->primary();
             $table->string('customer_id');

@@ -56,19 +56,12 @@ class ConsoleController  extends Controller
             $title_back = "Tableau de bord";
             $link_back = "back_office_console";
             $title = "Console d'administration";
-
-            $title_back = "Tableau de bord";
-            $link_back = "back_office_business";
-            $title = "Paramètre du compte";
             $user = auth()->user();
-            $customer = $this->CustomerService->customerByIdUser($user->user_id);
 
-            $paymentMethods = PaymentMethod::cases();
+            return view('console.index', compact('title', 'title_back', 'link_back', 'user'));
 
-            //Liste des comptes de retrait
-            $compteRetraits = $this->CustomerService->listWithdrawalAccountByCustomer($customer->customer_id);
-            return view('console.index', compact('title', 'title_back', 'link_back', 'user', 'customer', 'paymentMethods', 'compteRetraits'));
         } catch (\Exception $th) {
+            dd($th->getMessage());
             Log::error("Erreur lors de l'affichage de la console : " . $th->getMessage(), [
                 'stack_trace' => $th->getTraceAsString(),
             ]);
@@ -101,7 +94,6 @@ class ConsoleController  extends Controller
     public function updateProfile(UserRequest $request)
     {
         try {
-
             // Mise à jour du mot de passe si fourni
             if ($request->filled('password')) {
                 $password = $this->setting->hashPassword($request->password);
@@ -172,6 +164,8 @@ class ConsoleController  extends Controller
             // Formatage des données
             $dateCustomer = [
                 'customer_id' => $this->setting->generateUuid(),
+                'account_id' => $this->setting->generateUuid(),
+                'account_number' => 'VM-'.time(),
                 'name' => $request->name,
                 'phonenumber' => $request->phonenumber,
                 'email' => $request->email_customer,
