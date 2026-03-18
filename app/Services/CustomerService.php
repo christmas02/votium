@@ -32,6 +32,11 @@ class CustomerService
         return $this->customerRepository->getCustomer($idCustomer);
     }
 
+    public function getAccountByCustomer($idCustomer)
+    {
+        return $this->accountRepository->getAccountByCustomer($idCustomer);
+    }
+
     public function customerByIdUser($user_id)
     {
         return $this->customerRepository->getCustomerByIdUser($user_id);
