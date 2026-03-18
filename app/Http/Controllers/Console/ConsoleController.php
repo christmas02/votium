@@ -61,7 +61,7 @@ class ConsoleController  extends Controller
             return view('console.index', compact('title', 'title_back', 'link_back', 'user'));
 
         } catch (\Exception $th) {
-            dd($th->getMessage());
+            // dd($th->getMessage());
             Log::error("Erreur lors de l'affichage de la console : " . $th->getMessage(), [
                 'stack_trace' => $th->getTraceAsString(),
             ]);
@@ -155,7 +155,7 @@ class ConsoleController  extends Controller
     #SAVE CUSTOMER
     public function saveCustomer(CustomerRequest $request)
     {
-        // dd($request->all());
+        
         try {
             #Transfert et upload du fichier logo
             $name_file = ($request->hasFile('logo'))
@@ -187,7 +187,6 @@ class ConsoleController  extends Controller
                 'link_tiktok' => $request->link_tiktok,
                 'is_active' => false,
             ];
-            dd($dateCustomer);
 
             // Sauvegarde des données via le service
             $saved = $this->CustomerService->createNewCustomer($dateCustomer);
@@ -227,7 +226,7 @@ class ConsoleController  extends Controller
     public function deleteCustomer(Request $request)
     {
         try {
-            dd($request->all());
+            // dd($request->all());
             $customerId = $request->input('customer_id');
 
             // Trouver le customer
@@ -517,7 +516,7 @@ class ConsoleController  extends Controller
     public function deleteCampagne(Request $request)
     {
         try {
-            dd($request->all());
+            // dd($request->all());
             $campagne_id = $request->input('campagne_id');
 
             // Trouver le campagne

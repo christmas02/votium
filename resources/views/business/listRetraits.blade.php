@@ -579,7 +579,7 @@
             <div class="vt-solde-immediate">
                 <div class="label">Solde disponible immédiatement</div>
                 <div class="value">
-                    <span id="solde-immediat">0</span>
+                    <span id="solde-immediat">{{ $account->balance, 0, ',', ' ' }}</span>
                     <span class="unit">FCFA</span>
                 </div>
             </div>
@@ -587,7 +587,7 @@
             <div class="vt-solde-demande">
                 <div class="label">Solde disponible sur demande</div>
                 <div class="value">
-                    <span id="solde-demande">170</span>
+                    <span id="solde-demande">{{ $account->balance_after, 0, ',', ' ' }}</span>
                     <span class="unit">FCFA</span>
                 </div>
             </div>
@@ -595,7 +595,7 @@
             <div class="vt-solde-total">
                 <div class="label">Solde total</div>
                 <div class="value">
-                    <span id="solde-total">170</span>
+                    <span id="solde-total">{{ number_format($account->balance + $account->balance_after, 0, ',', ' ') }}</span>
                     <span class="unit">FCFA</span>
                 </div>
             </div>
@@ -627,38 +627,13 @@
                                 <option value="rejected">Rejeté</option>
                             </select>
                         </div>
-
-                        <div class="vt-ctrl-group">
-                            <span class="vt-ctrl-label">Destination</span>
-                            <select class="vt-ctrl-select" id="ctrl-destination">
-                                <option value="">Toutes</option>
-                                @foreach ($compteRetraits as $compte)
-                                    <option value="{{ $compte->withdrawal_account_id }}">
-                                        {{ strtoupper($compte->account_name) }} - {{ strtoupper($compte->payment_methode) }}
-                                    </option>
-                                @endforeach
-                            </select>
-                        </div>
-
-                        <div class="vt-ctrl-group">
-                            <span class="vt-ctrl-label">Du</span>
-                            <input type="date" class="vt-ctrl-date" id="ctrl-date-du">
-                        </div>
-                    </div>
-
-                    {{-- Ligne 2 --}}
-                    <div class="vt-ret-controls-bottom">
-                        <div class="vt-ctrl-group">
-                            <span class="vt-ctrl-label">Au</span>
-                            <input type="date" class="vt-ctrl-date" id="ctrl-date-au">
-                        </div>
-
                         <div class="vt-ctrl-group" style="flex:1;">
                             <span class="vt-ctrl-label">Recherche</span>
                             <input type="text" class="vt-ctrl-search" id="ctrl-search"
                                 placeholder="Réf, destination, statut...">
                         </div>
                     </div>
+
                 </div>
 
                 {{-- Table --}}
@@ -745,7 +720,9 @@
                             <select class="vt-modal-select" name="destination" required>
                                 <option value="">Choisir la destination</option>
                                 @foreach ($compteRetraits as $compte)
-                                    <option value="{{ $compte->withdrawal_account_id }}">{{ strtoupper($compte->account_name) }} - {{ strtoupper($compte->payment_methode) }}</option>
+                                    <option value="{{ $compte->withdrawal_account_id }}">
+                                        {{ strtoupper($compte->account_name) }} -
+                                        {{ strtoupper($compte->payment_methode) }}</option>
                                 @endforeach
                             </select>
                         </div>

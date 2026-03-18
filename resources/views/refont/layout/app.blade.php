@@ -691,7 +691,6 @@ g<!DOCTYPE html>
             }
         });
 
-
         $(document).ready(function() {
             /**
              * Gestionnaire global pour tous les formulaires AJAX
@@ -775,6 +774,24 @@ g<!DOCTYPE html>
 
                                         } else if ($input.closest('.input-group').length) {
                                             $input.closest('.input-group').after(errorMsg);
+
+                                        }else if ($input.closest('.vt-mf-input').length) {
+                                            $input.closest('.vt-mf-input').after(errorMsg);
+
+                                        }else if ($input.closest('.vt-mf-select').length) {
+                                            $input.closest('.vt-mf-select').after(errorMsg);
+
+                                        }else if ($input.closest('.vt-color-wrap').length) {
+                                            $input.closest('.vt-color-wrap').after(errorMsg);
+
+                                        }else if ($input.closest('.vt-radio-pills').length) {
+                                            $input.closest('.vt-radio-pills').after(errorMsg);
+
+                                        }else if ($input.closest('.vt-social-input').length) {
+                                            $input.closest('.vt-social-input').after(errorMsg);
+
+                                        }else if ($input.closest('.form-check-input').length) {
+                                            $input.closest('.form-check-input').after(errorMsg);
 
                                         }else if ($input.closest('.vt-ae-input-wrap').length) {
                                             $input.closest('.vt-ae-input-wrap').after(errorMsg);
