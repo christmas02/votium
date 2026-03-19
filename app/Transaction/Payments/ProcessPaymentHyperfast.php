@@ -29,6 +29,7 @@ class ProcessPaymentHyperfast
             //dd($paymentData);
             // Récupérer la transaction existante
             $transaction = Transaction::where('transaction_id', $paymentData['transaction_id'])->first();
+            $transaction->api_processing = 'Hyperfast';
             if (! $transaction) {
                 throw new \RuntimeException('Transaction introuvable');
             }
