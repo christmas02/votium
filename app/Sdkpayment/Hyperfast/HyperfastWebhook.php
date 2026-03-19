@@ -64,12 +64,12 @@ class HyperfastWebhook
                     $comment = 'Payment processing';
                     break;
             }
-            
+
             $transaction->status = $tr_status;
             $transaction->response_init_payment = is_array($payload) ? json_encode($payload) : $payload;
             $transaction->comment = $comment;
             $transaction->save();
-
+            
             $response = $transaction->toArray();
 
             //DB::commit();
