@@ -20,8 +20,8 @@
                                     alt="" height="50" width="50">
                             </div>
                             <div>
-                                <div>{{ $customer->user?->name }}</div>
-                                <small>{{ $customer->entreprise }}</small>
+                                <div>{{ $customer->user?->name ?? 'Nom non disponible' }}</div>
+                                <small>{{ $customer->entreprise ?? 'Entreprise non disponible' }}</small>
                             </div>
                         </div>
                         <div aria-label="Raccourcis" class="org-links">
@@ -61,8 +61,8 @@
                     <span class="badge">
                         <span class="ring"></span>
                         <span id="voteStateText">
-                            <a href="?etape_id={{ $etape->etape_id }}">
-                                {{ $etape->name }}
+                            <a href="?etape_id={{ $etape->etape_id ?? '' }}">
+                                {{ $etape->name ?? 'NAN '}}
                             </a>
                         </span>
                     </span>
@@ -88,7 +88,7 @@
                     @endif --}}
                     <div class="catpill" title="Contexte">
                         <span class="mini"></span>
-                        <span>{{ $selectedEtape->name }}</span>
+                        <span>{{ $selectedEtape->name ?? 'NAN '}}</span>
                     </div>
                 </div>
 
@@ -115,22 +115,22 @@
                 @if ($selectedEtape->is_upcoming)
                     <div class="state-message">
                         <h2 style="color:var(--ink); margin-bottom:10px;">Bientôt disponible</h2>
-                        <p>L'étape "{{ $selectedEtape->name }}" ouvrira dans :</p>
+                        <p>L'étape "{{ $selectedEtape->name ?? 'NAN '}}" ouvrira dans :</p>
 
                         <div class="countdown-wrapper">
                             <div class="countdown-item">
                                 <span
-                                    class="countdown-value">{{ sprintf('%02d', $selectedEtape->countdown['days']) }}</span>
+                                    class="countdown-value">{{ sprintf('%02d', $selectedEtape->countdown['days']) ?? 'NAN '}}</span>
                                 <span class="countdown-label">Jours</span>
                             </div>
                             <div class="countdown-item">
                                 <span
-                                    class="countdown-value">{{ sprintf('%02d', $selectedEtape->countdown['hours']) }}</span>
+                                    class="countdown-value">{{ sprintf('%02d', $selectedEtape->countdown['hours']) ?? 'NAN '}}</span>
                                 <span class="countdown-label">Heures</span>
                             </div>
                             <div class="countdown-item">
                                 <span
-                                    class="countdown-value">{{ sprintf('%02d', $selectedEtape->countdown['minutes']) }}</span>
+                                    class="countdown-value">{{ sprintf('%02d', $selectedEtape->countdown['minutes']) ?? 'NAN '}}</span>
                                 <span class="countdown-label">Minutes</span>
                             </div>
                         </div>
@@ -159,8 +159,8 @@
                                                 class="fa-solid {{ $category->icon == 'femme' ? 'fa-child-dress' : 'fa-child' }}"></i>
                                         </div>
                                         <div class="cat-info">
-                                            <h5>{{ $category->name }}</h5>
-                                            <small>{{ $category->candidats->where('etape_id', $selectedEtapeId)->count() }}
+                                            <h5>{{ $category->name ?? 'NAN '}}</h5>
+                                            <small>{{ $category->candidats->where('etape_id', $selectedEtapeId)->count() ?? 'NAN '}}
                                                 Candidat(s)</small>
                                         </div>
                                     </div>

@@ -49,6 +49,7 @@ class ProcessPaymentHub2
 
             // Récupérer la transaction existante
             $transaction = Transaction::where('transaction_id', $paymentData['transaction_id'])->first();
+            $transaction->api_processing = 'Hub2';
             if (! $transaction) {
                 return [
                     'status' => 'error',
@@ -70,11 +71,19 @@ class ProcessPaymentHub2
                 'environment' => config('sdkpayment.HUB2_ENVIRONMENT'),
             ];
             $authResponse = $this->hub2authentication->authenticate($authParams);
+            logger()->info('Hub2 response after authenticate ', [$authResponse]);
 
             $token = $authResponse['token'] ?? null;
             $id = $authResponse['id'] ?? null;
             if (! $token || ! $id) {
                 throw new \RuntimeException('Réponse d\'authentification invalide');
+            }
+            
+            // format name provider
+            if ($paymentData['provider'] === 'orange_money') {
+                $provider = 'orange';
+            } else {
+                $provider = $paymentData['provider'];
             }
 
             // Exécution du paiement
@@ -83,11 +92,13 @@ class ProcessPaymentHub2
                 'id' => $id,
                 'paymentMethod' => 'mobile_money',
                 'country' => $paymentData['country'],
-                'provider' => $paymentData['provider'],
+                'provider' => $provider,
                 'phoneNumber' => $paymentData['phoneNumber'],
                 'otpCode' => $paymentData['otpCode'],
             ];
             $paymentResponse = $this->hub2payment->executePayment($paymentParams);
+            logger()->info('Hub2 response after payment execute ', [$paymentResponse]);
+
 
             $pay_id = $paymentResponse['payment']['payment_id'] ?? null;
             if (! $pay_id) {
@@ -109,6 +120,8 @@ class ProcessPaymentHub2
                 'environment' => config('sdkpayment.HUB2_ENVIRONMENT'),
             ];
             $verificationResponse = $this->hub2verification->executeVerification($verificationParams);
+            logger()->info('Hub2 response after verification state ', [$verificationResponse]);
+
 
             $status = $verificationResponse['status'] ?? null;
             if ($status === 'success') {
@@ -134,6 +147,13 @@ class ProcessPaymentHub2
 
             DB::commit();
 
+            logger()->info('Hub2 response final ', [
+                'status' => $tr_status,
+                'message' => $comment,
+                'transactions_id' => $transaction['transaction_id'],
+                'api_response' => $verificationResponse,
+            ]);
+            
             return [
                 'status' => $tr_status,
                 'message' => $comment,

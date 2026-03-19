@@ -75,7 +75,13 @@ class RetraitController extends Controller
         #Recupérer les comptes de retrait du client connecté
         $compteRetraits = $this->CustomerService->listWithdrawalAccountByCustomer($customer_id);
         
-        return view('business.listRetraits', compact('title', 'title_back', 'link_back', 'compteRetraits'));
+        #Recupérer accounts by customer
+        $account = $this->CustomerService->getAccountByCustomer($customer_id);
+
+        #Liste des retraits du client connecté
+        $retraits = $this->RetraitService->listeRetraitByCustomer($customer_id);
+        // dd($retraits);
+        return view('business.listRetraits', compact('title', 'title_back', 'link_back', 'compteRetraits', 'account', 'retraits'));
     }
 
     #  DEMANDES DE RETRAITS

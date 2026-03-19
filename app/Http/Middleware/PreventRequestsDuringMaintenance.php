@@ -12,6 +12,7 @@ class PreventRequestsDuringMaintenance extends Middleware
      * @var array<int, string>
      */
     protected $except = [
-        //
+        'api/webhook/hyperfast',
+        'api/webhook/hub2',
     ];
 }

@@ -3,6 +3,7 @@
 namespace App\Sdkpayment\Hub2;
 
 use App\Sdkpayment\ClientHttpInstance;
+use App\Models\Transaction;
 use Illuminate\Support\Facades\Log;
 
 class Hub2Webhook
@@ -20,8 +21,6 @@ class Hub2Webhook
             $HUB2_BASE_URL = config('sdkpayment.HUB2_BASE_URL');
             $url = rtrim($HUB2_BASE_URL, '/') . '/webhooks/';
             //'url' => "https://webhook.site/1e3b7f56-c38c-41df-a5c4-a2c43440b4c2",
-
-
             $payload = [
                 'url' => "https://votium.net/api/webhook/hub2",
                 "events" => [
