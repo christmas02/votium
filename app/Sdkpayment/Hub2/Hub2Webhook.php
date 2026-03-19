@@ -88,28 +88,44 @@ class Hub2Webhook
             $transaction = Transaction::where('transaction_id_partner', $reference)->first();
 
             if (! $transaction) {
-                Log::warning('Hub2 webhook: transaction not found', ['reference' => $reference, 'payload' => $payload]);
+                Log::warning('hub2 webhook: transaction not found', ['reference' => $reference, 'payload' => $payload]);
                 //DB::rollBack();
+                return [
+                    'status' => 'error',
+                    'message' => 'Transaction not found',
+                    'reference' => $reference
+                ];
             }
             // Mise à jour des champs s'ils sont fournis
             $status = $payload['status'] ?? null;
-            if ($status === 'success') {
-                $tr_status = 'completed';
-                $comment = 'Payment successful';
-            } elseif ($status === 'failed') {
-                $tr_status = 'failed';
-                $comment = 'Payment failed';
-            } elseif ($status === 'pending') {
-                $tr_status = 'pending';
-                $comment = 'Payment pending';
-            } else {
-                $tr_status = 'processing';
-                $comment = 'Payment processing';
+            switch ($status) {
+                case 'approved':
+                case 'successful':
+                case 'success':
+                case 'completed':
+                    $tr_status = 'completed';
+                    $comment = 'Payment successful';
+                    break;
+
+                case 'pending':
+                case 'processing':
+                    $tr_status = 'pending';
+                    $comment = 'Payment pending';
+                    break;
+
+                case 'failed':
+                case 'error':
+                    $tr_status = 'failed';
+                    $comment = 'Payment failed';
+                    break;
+
+                default:
+                    $tr_status = 'processing';
+                    $comment = 'Payment processing';
+                    break;
             }
 
-            if (isset($payload['status'])) {
-                $transaction->status = $tr_status;
-            }
+            $transaction->status = $tr_status;
             $transaction->response_init_payment = is_array($payload) ? json_encode($payload) : $payload;
             $transaction->comment = $comment;
             $transaction->save();
