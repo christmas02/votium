@@ -14,21 +14,22 @@ class VoteService
 {
     protected $voteRepository;
     protected $transactionRepository;
-    protected $payment;
+    protected $paymentHub2;
     protected $setting;
     protected $paymentHyperfast;
+    
 
     public function __construct(
         VotesRepository $voteRepository,
         TransactionRepository $transactionRepository,
-        ProcessPaymentHub2 $payment,
+        ProcessPaymentHub2 $paymentHub2,
         Setting $setting,
         ProcessPaymentHyperfast $paymentHyperfast
     ) {
         // Initialisation des dépendances si nécessaire
         $this->voteRepository = $voteRepository;
         $this->transactionRepository = $transactionRepository;
-        $this->payment = $payment;
+        $this->paymentHub2 = $paymentHub2;
         $this->setting = $setting;
         $this->paymentHyperfast = $paymentHyperfast;
     }
@@ -65,7 +66,7 @@ class VoteService
                 'currency' => 'XOF',
                 'country' => 'CI',
                 'phoneNumber' => $data['phoneNumber'],
-                'api_processing' => 'hyperfast',
+                'api_processing' => 'no default',
                 'comment' => 'creat payment for vote',
                 'otpCode' => $data['otpCode'] ?? null,
             ];
@@ -77,8 +78,8 @@ class VoteService
             }
 
             // 3️⃣ Processing de la transaction (paiement)
-            //$resul = $this->payment->execute($dataTransaction);
-            $resul = $this->paymentHyperfast->execute($dataTransaction);
+            $resul = $this->paymentHub2->execute($dataTransaction);
+            //$resul = $this->paymentHyperfast->execute($dataTransaction);
 
             return $resul;
         } catch (\Exception $e) {
