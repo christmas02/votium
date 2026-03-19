@@ -71,7 +71,7 @@ class Hub2Webhook
             logger()->error('Hub2 create link webhook error: '.$e->getMessage());
             throw new \Exception('Hub2 create link webhook error: '.$e->getMessage());
         }
-        
+
     }
 
     public function handleWebhook(array $payload): array
@@ -79,7 +79,7 @@ class Hub2Webhook
         try {
             logger()->info('Hub2 webhook received', ['payload' => $payload]);
             // Traiter la réponse du webhook et mettre à jour la transaction en conséquence
-    
+
             $datas = $payload['data'] ?? null;
             $status = $datas['status'] ?? null;
             $reference = $datas['id'] ?? null;
@@ -97,7 +97,6 @@ class Hub2Webhook
                 ];
             }
             // Mise à jour des champs s'ils sont fournis
-            $status = $payload['status'] ?? null;
             switch ($status) {
                 case 'approved':
                 case 'successful':
@@ -133,9 +132,9 @@ class Hub2Webhook
             $response = $transaction->toArray();
 
             //DB::commit();
-            Log::info('Hyperfast webhook: transaction updated', ['id' => $transaction->transaction_id, 'reference' => $reference]);
+            Log::info('Hyperfast webhook: transaction updated', ['id' => $transaction->transaction_id, '$status' => $status, 'reference' => $reference]);
             return $response;
-            
+
         } catch (\Exception $e) {
             logger()->error('Hub2 webhook handling error: ' . $e->getMessage(), ['payload' => $payload]);
             return [
