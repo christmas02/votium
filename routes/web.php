@@ -9,7 +9,7 @@ use App\Http\Controllers\Business\BusinessController;
 use App\Http\Controllers\Business\CampagneController;
 use App\Http\Controllers\Business\CandidatController;
 use App\Http\Controllers\Business\RetraitController;
-use App\Http\Controllers\Business\SiteCampagneController;
+use App\Http\Controllers\SiteCampagneController;
 use App\Http\Controllers\Business\VoteController;
 
 /*
