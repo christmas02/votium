@@ -19,20 +19,6 @@
     <div class="body">
         <div class="name">{{ $candidat->name }}</div>
         <div class="sub">Candidat(e) / Nominé(e)</div>
-        {{-- <div class="stats">
-            <div class="pct">
-                <span>Vote{{ $candidat->votes_count > 1 ? 's' : '' }}</span><br>
-                @if ($campagne->afficher_montant_pourcentage == 'pourcentage')
-                    {{ $candidat->vote_percentage }}%
-                @elseif($campagne->afficher_montant_pourcentage == 'claire')
-                    {{ number_format($candidat->total_votes, 0, ',', ' ') }}
-                @else
-                    {{ $candidat->votes_count }} vote{{ $candidat->votes_count > 1 ? 's' : '' }} =>
-                    {{ $candidat->vote_percentage }}%
-                @endif
-
-            </div>
-        </div> --}}
         <div class="sub">Vote{{ $candidat->votes_count > 1 ? 's' : '' }}</div>
         <div class="form-check p-2 rounded d-flex align-items-center gap-2" style="background-color: rgba(0,0,0,0.03);">
             @if ($campagne->afficher_montant_pourcentage == 'pourcentage')
@@ -43,8 +29,6 @@
                 {{ $candidat->votes_count }} vote{{ $candidat->votes_count > 1 ? 's' : '' }} /
                 {{ $candidat->vote_percentage }}%
             @endif
-
-
         </div>
 
     </div>
