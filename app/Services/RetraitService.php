@@ -22,6 +22,12 @@ class RetraitService
     public function createRetrait($data)
     {
         try {
+            [
+                'customer_id' => 'required|string',
+                'withdrawal_account_id' => 'required|string',
+                'amount' => 'required|numeric',
+                'motif' => 'nullable|string',
+            ];
             // Récupérer le compte client via customer_id
             $account = Account::where('customer_id', $data['customer_id'])->first();
             if (!$account) {
@@ -36,8 +42,8 @@ class RetraitService
                 return response()->json(['message' => 'Compte de retrait non trouvé.'], 404);
             }
 
-            $paymentMethod = $withdrawalAccount['payment_method'];
-            $telephone = $withdrawalAccount['telephone'];
+            $paymentMethod = $withdrawalAccount->payment_method;
+            $telephone = $withdrawalAccount->telephone;
 
             // Vérifier que la balance est suffisante
             $amount = (float) $data['amount'];
@@ -54,21 +60,25 @@ class RetraitService
             $transactionRetrait = new TransactionRetrait();
             $transactionRetrait->transactions_retrait_id = (string) \Str::uuid();
             $transactionRetrait->withdrawal_account_id = $data['withdrawal_account_id'];
-            $transactionRetrait->amount = $data['amount'];
+            $transactionRetrait->montant_payee = $data['amount'];
             $transactionRetrait->payment_method = $paymentMethod;
-            $transactionRetrait->montant_payee = $data['montant_payee'];
-            $transactionRetrait->currency = $data['currency'];
+            $transactionRetrait->currency = 'XOF';
             $transactionRetrait->telephone = $telephone;
-            $transactionRetrait->api_processing = $data['api_processing'] ?? null;
-            $transactionRetrait->api_response = $data['api_response'] ?? null;
-            $transactionRetrait->commentaire = $data['commentaire'];
+            $transactionRetrait->api_processing =  null;
+            $transactionRetrait->api_response =  null;
+            $transactionRetrait->commentaire = null;
             $transactionRetrait->status = 'created';
             $transactionRetrait->date_transaction = now();
             $transactionRetrait->save();
 
             // appel du service de retrait externe (ex: PayDunya) et mise à jour du statut en fonction de la réponse
            
-            return response()->json(['message' => 'Retrait créé avec succès.', 'retrait' => $transactionRetrait], 201);
+            return [
+                'status' => 'created',
+                'message' => $comment ?? 'Retrait créé avec succès.',
+                'transactions_id' => $transactionRetrait['transactions_retrait_id'],
+                'api_response' => $verificationResponse ?? null,
+            ];
         } catch (\Exception $e) {
             \Log::error('Erreur lors de la création du retrait : ' . $e->getMessage());
             return response()->json(['message' => 'Une erreur est survenue lors de la création du retrait.'], 500);
