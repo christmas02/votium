@@ -4,9 +4,8 @@ namespace App\ApiTransfer;
 
 use App\Sdkpayment\ClientHttpInstance;
 
-class HyperfastTransfert
+class HyperfastBalance
 {
-
     private $client;
 
     public function __construct()
@@ -14,54 +13,43 @@ class HyperfastTransfert
         $this->client = ClientHttpInstance::getInstance();
     }
 
-
-    public function process_transfer(array $paramTransfert): array
+    public function get_balance(string $accessToken): array
     {
         try {
-            $CALLBACK_URL = config('sdkpayment.HYPERFAST_CALLBACK_URL', 'http://votium.net/api/webhook/hyperfast');
             $HYPERFAST_BASE_URL = config('sdkpayment.HYPERFAST_BASE_URL');
-            $HYPERFAST_PAYMENT_URL = config('sdkpayment.HYPERFAST_PAYMENT_URL');// Assurez-vous de configurer un CALLBACK_URL valide
+            $HYPERFAST_BALANCE_URL = config('sdkpayment.HYPERFAST_BALANCE_URL');
 
-            $payload = [
-                "phone" => $paramTransfert['phone'],
-                "amount" =>  $paramTransfert['amount'],
-                "callback" => $CALLBACK_URL
-            ];
-
-            logger()->info('Hyperfast transfert create request', [
-                'url' => $HYPERFAST_BASE_URL . '/payout/momo/',
-                'payload' => $payload
+            logger()->info('Hyperfast balance request', [
+                'url' => $HYPERFAST_BASE_URL . $HYPERFAST_BALANCE_URL,
             ]);
 
-            $response = $this->client->request('POST', $HYPERFAST_BASE_URL . '/payout/momo/', [
+            $response = $this->client->request('GET', $HYPERFAST_BASE_URL . $HYPERFAST_BALANCE_URL, [
                 'headers' => [
                     'Accept' => 'application/json',
-                    'Content-Type' => 'application/json',
-                    'Authorization' => 'Bearer ' . $paramTransfert['access_token']
-                ],
-                'json' => $payload
+                    'Authorization' => 'Bearer ' . $accessToken
+                ]
             ]);
-          
-            // Analysez la réponse
+
             $statusCode = $response->getStatusCode();
             $body = json_decode($response->getBody()->getContents(), true);
 
             if ($statusCode >= 200 && $statusCode < 300) {
-                logger()->info('Hyperfast execute transfert  successful', ['response' => $body]);
-                return $this->computeResponse($body);
+                logger()->info('Hyperfast balance retrieval successful', ['response' => $body]);
+                return $this->computeBalanceResponse($body);
             }
 
-            logger()->error('Hyperfast transfert failed', [
+            logger()->error('Hyperfast balance retrieval failed', [
                 'status' => $statusCode,
                 'response' => $body
             ]);
 
             throw new \Exception("Hyperfast API returned error: " . ($body['message'] ?? 'Unknown error'));
 
-        } catch (\Throwable $th) {
-            throw new \Exception("Wave payment processing failed: " . $th->getMessage());
+        } catch (\Exception $e) {
+            throw new \Exception("Balance retrieval failed: " . $e->getMessage());
         }
     }
+
 
     /**
      * Extract relevant data from authentication response
@@ -84,9 +72,5 @@ class HyperfastTransfert
             throw new \Exception("Failed to process Hyperfast response: " . $e->getMessage());
         }
     }
-
-
-
-
 
 }
