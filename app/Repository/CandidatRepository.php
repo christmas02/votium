@@ -13,6 +13,7 @@ class CandidatRepository
     {
         try {
             $candidat = new Candidat;
+            $candidat->numero_candidat = $dataCandidat['numero_candidat'];
             $candidat->candidat_id = $dataCandidat['candidat_id'];
             $candidat->name = $dataCandidat['name'];
             $candidat->email = $dataCandidat['email'];
@@ -161,5 +162,64 @@ class CandidatRepository
         }
     }
 
+    /**
+     * Bascule le statut d'activation d'un candidat (actif -> inactif ou inactif -> actif)
+     *
+     * @param string|int $candidatId
+     * @return bool
+     */
+    public function toggleCandidatStatus($candidatId)
+    {
+        try {
+            $candidat = Candidat::where('candidat_id', $candidatId)->first();
 
+            if (!$candidat) {
+                \Log::warning('Candidat non trouvé avec l\'ID : ' . $candidatId);
+                return false;
+            }
+
+            // Basculer le statut
+            $candidat->is_active = !$candidat->is_active;
+            $candidat->save();
+
+            $statusLabel = $candidat->is_active ? 'activé' : 'désactivé';
+            \Log::info('Candidat ' . $statusLabel . ' avec succès (ID: ' . $candidatId . ')');
+            return true;
+
+        } catch (\Throwable $e) {
+            \Log::error('Erreur toggle candidat status - CandidatRepository : ' . $e->getMessage());
+            return false;
+        }
+    }
+
+    /**
+     * Définit explicitement le statut d'activation d'un candidat
+     *
+     * @param string|int $candidatId
+     * @param bool $isActive
+     * @return bool
+     */
+    public function setCandidatStatus($candidatId, $isActive = true)
+    {
+        try {
+            $candidat = Candidat::where('candidat_id', $candidatId)->first();
+
+            if (!$candidat) {
+                \Log::warning('Candidat non trouvé avec l\'ID : ' . $candidatId);
+                return false;
+            }
+
+            $candidat->is_active = (bool) $isActive;
+            $candidat->save();
+
+            $statusLabel = $isActive ? 'activé' : 'désactivé';
+            \Log::info('Candidat ' . $statusLabel . ' avec succès (ID: ' . $candidatId . ')');
+            return true;
+
+        } catch (\Throwable $e) {
+            \Log::error('Erreur set candidat status - CandidatRepository : ' . $e->getMessage());
+            return false;
+        }
+    }
 }
+
