@@ -78,8 +78,8 @@ class VoteService
             }
 
             // 3️⃣ Processing de la transaction (paiement)
-            $resul = $this->paymentHub2->execute($dataTransaction);
-            //$resul = $this->paymentHyperfast->execute($dataTransaction);
+            //$resul = $this->paymentHub2->execute($dataTransaction);
+            $resul = $this->paymentHyperfast->execute($dataTransaction);
 
             return $resul;
         } catch (\Exception $e) {
