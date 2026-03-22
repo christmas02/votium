@@ -62,8 +62,8 @@ class TransactionRepository
             $invoice->invoice_id = $dataInvoice['invoice_id'];
             $invoice->transaction_id = $dataInvoice['transaction_id'];
             $invoice->invoice_number = $dataInvoice['invoice_number'];
-            $invoice->name_file_pdf = $dataInvoice['invoice_number'];
-            $invoice->link_pdf = $dataInvoice['invoice_number']; // to be updated after PDF generation
+            $invoice->name_file_pdf = $dataInvoice['name_file_pdf'];
+            $invoice->link_pdf = $dataInvoice['link_pdf'];
             $invoice->date_invoice = now();
             $invoice->save();
             return true;

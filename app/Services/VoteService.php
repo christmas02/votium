@@ -141,6 +141,8 @@ class VoteService
                     'status' => $resul->status,
                 ];
             }
+            logger()->info('Vérification du statut de la transaction ID ' . $transactionId . ' : ' . $invoice);
+
         } catch (\Exception $e) {
             \Log::error('Erreur lors de la vérification du statut : ' . $e->getMessage());
             return [
@@ -332,7 +334,9 @@ class VoteService
                 'link_pdf' => $link_pdf,
                 'name_file_pdf' => $invoice_name,
             ];
-            $this->transactionRepository->createImvoie($dataInvoice);
+            $invoice = $this->transactionRepository->createImvoie($dataInvoice);
+            \Log::info('creation de l invoice : ' . $invoice);
+
 
         } catch (\Exception $e) {
             \Log::error('Erreur lors de la creation de l invoice : ' . $e->getMessage());
