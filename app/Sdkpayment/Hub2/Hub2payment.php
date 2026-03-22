@@ -43,15 +43,26 @@ class  Hub2payment
             // Construction de l'URL avec l'ID de l'intent
             $url = rtrim($HUB2_BASE_URL, '/') . '/payment-intents/' . $param['id'] . '/payments';
 
+            if($param['provider'] === 'wave') {
+                $mobileMoneyData = [
+                    'msisdn' => $param['phoneNumber'],
+                    "onSuccessRedirectionUrl" => "https://ton.site/echec",
+                    "onFailedRedirectionUrl" => "https://ton.site/succes"
+                ];
+            }
+            if($param['provider'] === 'orange') {
+                $mobileMoneyData = [
+                    'msisdn' => $param['phoneNumber'],
+                    'otp' => $param['otpCode'] ?? null,
+                ];
+            }
+
             $payload = [
                 'token' => $param['token'],
                 'paymentMethod' => $param['paymentMethod'],
                 'country' => $param['country'],
                 'provider' => $param['provider'],
-                'mobileMoney' => [
-                    'msisdn' => $param['phoneNumber'],
-                    'otp' => $param['otpCode'] ?? null
-                ],
+                'mobileMoney' => $mobileMoneyData,
             ];
 
             logger()->info('Hub2 execute payment request', [
