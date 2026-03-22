@@ -339,7 +339,7 @@ class CandidatController extends Controller
             $candidat_id = $request->input('candidat_id');
 
             // Trouver le candidat
-            $candidat = $this->CandidatureService->deleteCandidat($candidat_id);
+            $candidat = $this->CandidatureService->removeCandidatInEtapeAndCategoryForCampagne($candidat_id);
             if (!$candidat) {
                 return response()->json([
                     'success' => false,

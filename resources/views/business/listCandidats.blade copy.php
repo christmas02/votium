@@ -401,8 +401,8 @@
         }
 
         /* =====================================================
-                                                                                                   CARTE CANDIDAT — design compact
-                                                                                                   ===================================================== */
+                                                                                           CARTE CANDIDAT — design compact
+                                                                                           ===================================================== */
         .vt-cand-card {
             background: #fff;
             border: 1px solid var(--vt-border);
@@ -622,8 +622,8 @@
         }
 
         /* ================================================
-                                                                                   MODAL CANDIDAT — Design "Demande de retrait"
-                                                                                   ================================================ */
+                                                                           MODAL CANDIDAT — Design "Demande de retrait"
+                                                                           ================================================ */
         .vt-cand-modal .modal-content {
             border-radius: 16px;
             border: none;
@@ -2023,8 +2023,8 @@
 @section('extra-js')
     <script>
         /* =====================================================
-                       ICON PICKER — autonome, sans CDN
-                       ===================================================== */
+               ICON PICKER — autonome, sans CDN
+               ===================================================== */
         const IP_ICONS = {
             "Interface": ["ti-home", "ti-search", "ti-settings", "ti-bell", "ti-star", "ti-heart", "ti-bookmark",
                 "ti-lock", "ti-lock-open", "ti-eye", "ti-eye-off", "ti-edit", "ti-trash", "ti-copy", "ti-download",
@@ -2399,16 +2399,10 @@
                                    data-candidat="${data}" title="Modifier">
                                     <i class="ti ti-pencil"></i>
                                 </a>
-                                ${candidat.status == 'false'
-                                    ? `<a href="javascript:void(0);" class="vt-cand-action-btn del js-btn-delete"
-                                            data-id="${candidat.candidat_id}" title="Archiver">
-                                            <i class="ti ti-eye"></i>
-                                        </a>`
-                                    : `<a href="javascript:void(0);" class="vt-cand-action-btn del disabled"
-                                            title="Archivage non autorisé" style="pointer-events:none;">
-                                            <i class="ti ti-eye" style="color:#ccc;"></i>
-                                        </a>`
-                                }
+                                <a href="javascript:void(0);" class="vt-cand-action-btn del js-btn-delete"
+                                   data-id="${candidat.candidat_id}" title="Supprimer">
+                                    <i class="ti ti-eye"></i>
+                                </a>
                             </div>
                         </div>
 
@@ -2644,11 +2638,8 @@
              */
             function soumettreFormAjax($form, loadingLabel, originalLabel, onSuccess) {
                 const $submitBtn = $form.find('button[type="submit"]');
-
-                // Reset erreurs précédentes
                 $form.find('.is-invalid').removeClass('is-invalid');
                 $form.find('.invalid-feedback').remove();
-
                 $submitBtn.prop('disabled', true).html(loadingLabel);
 
                 $.ajax({
@@ -2657,49 +2648,25 @@
                     data: new FormData($form[0]),
                     processData: false,
                     contentType: false,
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
-                        'Accept': 'application/json'
-                    },
                     success: function(response) {
                         onSuccess(response);
                     },
                     error: function(xhr) {
                         if (xhr.status === 422) {
                             if (typeof showAjaxAlert === 'function')
-                                showAjaxAlert('danger', 'Veuillez vérifier les champs du formulaire.');
-
+                                showAjaxAlert('danger', 'Veuillez corriger les champs en erreur.');
                             $.each(xhr.responseJSON.errors, function(fieldName, messages) {
-                                let $input = $form.find(
-                                    `[name="${fieldName}"], [name="${fieldName}[]"]`
-                                ).first();
-
-                                if ($input.length > 0) {
+                                const $input = $form.find(`[name="${fieldName}"]`).first();
+                                if ($input.length) {
                                     $input.addClass('is-invalid');
-                                    const errorMsg =
-                                        `<div class="invalid-feedback d-block" style="color:#dc3545;font-size:11.5px;margin-top:5px;">${messages[0]}</div>`;
-
-                                    if ($input.closest('.vt-cm-input-wrap').length) {
-                                        $input.closest('.vt-cm-input-wrap').after(errorMsg);
-                                    } else if ($input.closest('.vt-input-wrap').length) {
-                                        $input.closest('.vt-input-wrap').after(errorMsg);
-                                    } else if ($input.closest('.input-group').length) {
-                                        $input.closest('.input-group').after(errorMsg);
-                                    } else if ($input.attr('type') === 'file' && $input.closest(
-                                            '.image-upload-group').length) {
-                                        $input.closest('.image-upload-group').after(errorMsg);
-                                    } else {
-                                        $input.after(errorMsg);
-                                    }
+                                    $input.after(
+                                        `<div class="invalid-feedback d-block">${messages[0]}</div>`
+                                    );
                                 }
                             });
-
-                            $form.find('.is-invalid').first().focus();
-
                         } else {
                             if (typeof showAjaxAlert === 'function')
-                                showAjaxAlert('danger', xhr.responseJSON?.message ||
-                                    'Une erreur est survenue.');
+                                showAjaxAlert('danger', xhr.responseJSON?.message || 'Erreur.');
                         }
                     },
                     complete: function() {
