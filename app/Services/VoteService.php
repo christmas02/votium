@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Vote;
+use App\Repository\CandidatRepository;
 use App\Repository\TransactionRepository;
 use App\Repository\VotesRepository;
 use App\Transaction\Payments\ProcessPaymentHub2;
@@ -25,7 +26,8 @@ class VoteService
         TransactionRepository $transactionRepository,
         ProcessPaymentHub2 $paymentHub2,
         Setting $setting,
-        ProcessPaymentHyperfast $paymentHyperfast
+        ProcessPaymentHyperfast $paymentHyperfast,
+        CandidatRepository $candidat,
     ) {
         // Initialisation des dépendances si nécessaire
         $this->voteRepository = $voteRepository;
@@ -33,6 +35,7 @@ class VoteService
         $this->paymentHub2 = $paymentHub2;
         $this->setting = $setting;
         $this->paymentHyperfast = $paymentHyperfast;
+        $this->candidat = $candidat;
     }
 
     /**
