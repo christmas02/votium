@@ -27,7 +27,7 @@ class HyperfastWebhook
             // Cherche la transaction par plusieurs colonnes possibles
             $transaction = Transaction::where('transaction_id_partner', $reference)->first();
 
-            if (! $transaction) {
+            if (!$transaction) {
                 Log::warning('Hyperfast webhook: transaction not found', ['reference' => $reference, 'payload' => $payload]);
                 //DB::rollBack();
                 return [
