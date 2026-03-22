@@ -7,6 +7,7 @@ use App\Repository\TransactionRepository;
 use App\Repository\VotesRepository;
 use App\Transaction\Payments\ProcessPaymentHub2;
 use App\Transaction\Payments\ProcessPaymentHyperfast;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 
 
@@ -79,7 +80,11 @@ class VoteService
 
             // 3️⃣ Processing de la transaction (paiement)
             //$resul = $this->paymentHub2->execute($dataTransaction);
-            $resul = $this->paymentHyperfast->execute($dataTransaction);
+            if ($dataTransaction['provider'] === 'wave') {
+                 $resul = $this->paymentHyperfast->execute($dataTransaction);
+            } else {
+                $resul = $this->paymentHub2->execute($dataTransaction);
+            }
 
             return $resul;
         } catch (\Exception $e) {
@@ -202,25 +207,25 @@ class VoteService
         }
     }
 
-    public function saveInvoiceAfterPayment($invoiceData): bool
-    {
-        try {
-            return $this->transactionRepository->createImvoie($invoiceData);
-        } catch (\Exception $e) {
-            \Log::error('Erreur lors de la création de la facture : ' . $e->getMessage());
-            return false;
-        }
-    }
+//    public function saveInvoiceAfterPayment($invoiceData): bool
+//    {
+//        try {
+//            return $this->transactionRepository->createImvoie($invoiceData);
+//        } catch (\Exception $e) {
+//            \Log::error('Erreur lors de la création de la facture : ' . $e->getMessage());
+//            return false;
+//        }
+//    }
 
-    public function updateLinkInvoiceAfterGeneratePdf($dataInvoice): bool
-    {
-        try {
-            return $this->transactionRepository->updateLinkeAndNameInvoice($dataInvoice);
-        } catch (\Exception $e) {
-            \Log::error('Erreur lors de la mise à jour du lien de la facture : ' . $e->getMessage());
-            return false;
-        }
-    }
+//    public function updateLinkInvoiceAfterGeneratePdf($dataInvoice): bool
+//    {
+//        try {
+//            return $this->transactionRepository->updateLinkeAndNameInvoice($dataInvoice);
+//        } catch (\Exception $e) {
+//            \Log::error('Erreur lors de la mise à jour du lien de la facture : ' . $e->getMessage());
+//            return false;
+//        }
+//    }
 
      public function searchVote(array $filters)
     {
@@ -284,6 +289,51 @@ class VoteService
                 'total_montant' => 0,
                 'count' => 0
             ];
+        }
+    }
+
+
+    public function createInvoice($vote, $transaction){
+        try {
+            // info invoice
+            $invoice_number = 'VOTIYM' . str_pad(rand(0, 999999), 6, '0', STR_PAD_LEFT);
+            $invoice_id = $this->setting->generateUuid();
+
+            // Recuperation data for candidats
+            $candidat = $this->candidat->getCandidat($vote->candidat_id);
+
+            // Génération du PDF de reçu de paiement
+            $pdfGenerator = new GeneratePdf();
+            $pdfData = [
+                'transaction_id' => $transaction['transaction_id'],
+                'invoice_number' => $invoice_number,
+                'reference' => $transaction['transaction_id_partner'],
+                'date' => Carbon::now()->format('d/m/Y H:i:s'),
+                'date_transaction' => Carbon::now()->format('d/m/Y H:i:s'),
+                'phoneNumber' => $transaction['telephone'],
+                'name' => $vote->name,
+                'email' => $vote->email,
+                'quantity' => $vote->quantity,
+                'amount' => $transaction['amount_paid'],
+                'candidat' => $candidat->name,
+                'moyen_paiement' => $transaction['payment_method']
+            ];
+            // Génération du PDF de reçu de paiement
+            $invoice_name = $pdfGenerator->generatePaymentReceipt($pdfData);
+            $link_pdf = rtrim(env('INVOICE_PATH'), '/') . '/' . $invoice_name;
+
+            $dataInvoice = [
+                'invoice_id' => $invoice_id,
+                'transaction_id' => $transaction['transaction_id'],
+                'invoice_number' => $invoice_number,
+                'link_pdf' => $link_pdf,
+                'name_file_pdf' => $invoice_name,
+            ];
+            $this->transactionRepository->createImvoie($dataInvoice);
+
+        } catch (\Exception $e) {
+            \Log::error('Erreur lors de la creation de l invoice : ' . $e->getMessage());
+            return false;
         }
     }
 }
