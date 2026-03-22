@@ -169,8 +169,10 @@ class VoteService
             ];
 
             $vote = $this->voteRepository->updateVoteStatus($dataVote);
-            logger()->info("Statut du vote mis à jour avec succès pour le vote ID " .  $resul['vote_id'] . " en statut " . $voteStatus);
-            return updateLinkInvoiceAfterGeneratePdf;
+            \Log::info("Statut du vote mis à jour avec succès pour le vote ID " .  $resul['vote_id'] . " en statut " . $voteStatus);
+
+            // Retourner l'objet vote mis à jour
+            return $vote;
         } catch (\Throwable $e) {
 
             \Log::error('Erreur lors de la mise à jour du statut du vote', [

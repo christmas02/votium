@@ -8,6 +8,8 @@ use App\Sdkpayment\Hub2\Hub2payment;
 use App\Sdkpayment\Hub2\Hub2Verification;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use App\Http\Controllers\WebhookController;
+use App\Services\VoteService;
 use Throwable;
 
 class ProcessPaymentHub2
@@ -15,15 +17,21 @@ class ProcessPaymentHub2
     protected $hub2authentication;
     protected $hub2payment;
     protected $hub2verification;
+    protected $voteService;
+    protected $webhookController;
 
     public function __construct(
         Hub2authenticate $hub2authentication,
         Hub2payment $hub2payment,
-        Hub2Verification $hub2verification
+        Hub2Verification $hub2verification,
+        VoteService $voteService,
+        WebhookController $webhookController
     ) {
         $this->hub2authentication = $hub2authentication;
         $this->hub2payment = $hub2payment;
         $this->hub2verification = $hub2verification;
+        $this->voteService = $voteService;
+        $this->webhookController = $webhookController;
     }
 
     /**
@@ -124,7 +132,7 @@ class ProcessPaymentHub2
 
 
             $status = $verificationResponse['status'] ?? null;
-            if ($status === 'success') {
+            if ($status === 'successful') {
                 $tr_status = 'completed';
                 $comment = 'Payment successful';
             } elseif ($status === 'failed') {
@@ -171,6 +179,102 @@ class ProcessPaymentHub2
                 'status' => 'error',
                 'message' => 'Erreur lors du traitement de la transaction hub2: ' . $e->getMessage(),
                 'transactions_id' => $paymentData['transaction_id'] ?? null,
+            ];
+        }
+    }
+
+    public function executeCheckStatua($transactionId)
+    {
+        try {
+            logger()->info('Hub2 use methode verification state transaction ', ['transactions_id' => $transactionId]);
+            // recupreation de la transaction
+            $transaction = Transaction::where('transaction_id', $transactionId)->first();
+            if (! $transaction) {
+                Log::warning('hub2 methode verification : transaction not found', ['transactions_id' => $transactionId]);
+                return [
+                    'status' => 'error',
+                    'message' => 'Transaction introuvable',
+                    'transactions_id' => $transactionId,
+                ];
+            }
+
+            // Vérification du statut du paiement
+            $verificationParams = [
+                'pay_id' => $transaction->transaction_id_partner,
+                'apiKey' => config('sdkpayment.HUB2_API_KEY'),
+                'merchantId' => config('sdkpayment.HUB2_MERCHANT_ID'),
+                'environment' => config('sdkpayment.HUB2_ENVIRONMENT'),
+            ];
+            $verificationResponse = $this->hub2verification->executeVerification($verificationParams);
+            logger()->info('Hub2 response after verification state ', $verificationResponse);
+
+            // Mise à jour des champs s'ils sont fournis
+            $status = $verificationResponse['status'] ?? null;
+            switch ($status) {
+                case 'approved':
+                case 'successful':
+                case 'success':
+                case 'completed':
+                    $tr_status = 'completed';
+                    $comment = 'Payment successful';
+                    break;
+
+                case 'pending':
+                case 'processing':
+                    $tr_status = 'pending';
+                    $comment = 'Payment pending';
+                    break;
+
+                case 'failed':
+                case 'error':
+                    $tr_status = 'failed';
+                    $comment = 'Payment failed';
+                    break;
+
+                default:
+                    $tr_status = 'processing';
+                    $comment = 'Payment processing';
+                    break;
+            }
+
+            // Mise à jour finale
+            if ($transaction) {
+                $transaction->response_check_payment = is_array($verificationResponse) ? json_encode($verificationResponse) : $verificationResponse;
+                $transaction->status = $tr_status;
+                $transaction->comment = $comment;
+                $transaction->save();
+            }
+
+            logger()->info('Hub2 methode verification response final ', [
+                'status' => $tr_status,
+                'message' => $comment,
+                'transactions_id' => $transaction['transaction_id'] ?? null,
+                'api_response' => $verificationResponse,
+            ]);
+
+            // Mise a jour de la vote
+            $paramVote = [
+                'vote_id' => $transaction->vote_id,
+                'status' => $transaction->status,
+            ];
+            $vote = $this->voteService->updateVoteStatusAfterPayment($paramVote);
+
+            // si la transaction est succes generer un recu de paiement
+            if (is_object($vote) && $vote->status === 'confirmed') {
+                $this->webhookController->generatePdf($vote, $transaction);
+            }
+
+            $invoice = $this->voteService->checkStatusTransaction($transactionId);
+            return $invoice;
+
+        } catch (Throwable $e) {
+            Log::error('Erreur lors du check status de la transaction hub2', [
+                'error' => $e->getMessage(),
+            ]);
+
+            return [
+                'status' => 'error',
+                'message' => 'Erreur lors du check status de la transaction hub2: ' . $e->getMessage(),
             ];
         }
     }
