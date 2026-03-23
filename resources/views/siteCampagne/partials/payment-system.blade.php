@@ -457,9 +457,8 @@
                         } else {
                             swal.fire({
                                 icon: 'error',
-                                title: 'Erreur',
-                                text: data.message ||
-                                    'Une erreur est survenue lors du paiement. Veuillez réessayer.',
+                                title: 'Paiement échoué',
+                                text: 'Une erreur est survenue lors du paiement. Veuillez réessayer ou contacter le support si le problème persiste.',
                             });
                             btnConfirmPay.disabled = false;
                             btnConfirmPay.innerHTML = originalBtnText;
@@ -469,9 +468,8 @@
                         console.error(error);
                         swal.fire({
                             icon: 'error',
-                            title: 'Erreur',
-                            text: error.message ||
-                                'Une erreur est survenue lors du paiement. Veuillez réessayer.',
+                            title: 'Erreur de connexion',
+                            text: 'Impossible de contacter le service de paiement. Vérifiez votre connexion et réessayez.',
                         });
                         btnConfirmPay.disabled = false;
                         btnConfirmPay.innerHTML = originalBtnText;

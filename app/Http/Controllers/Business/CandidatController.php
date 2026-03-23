@@ -339,7 +339,7 @@ class CandidatController extends Controller
             $candidat_id = $request->input('candidat_id');
 
             // Trouver le candidat
-            $candidat = $this->CandidatureService->removeCandidatInEtapeAndCategoryForCampagne($candidat_id);
+            $candidat = $this->CandidatureService->toggleCandidatStatus($candidat_id);
             if (!$candidat) {
                 return response()->json([
                     'success' => false,
@@ -349,10 +349,40 @@ class CandidatController extends Controller
 
             return response()->json([
                 'success' => true,
-                'message' => 'Candidat supprimé avec succès !'
+                'message' => 'Candidat archivé avec succès !'
             ], 200);
         } catch (\Exception $th) {
-            Log::error("Erreur lors de la suppression du candidat : " . $th->getMessage(), [
+            Log::error("Erreur lors de l'archivage du candidat : " . $th->getMessage(), [
+                'request_data' => $request->all(),
+                'stack_trace' => $th->getTraceAsString(),
+            ]);
+            return redirect()->back()
+                ->withInput()
+                ->with('error', __('messages.server_error'));
+        }
+    }
+
+    #ACTIVER CANDIDAT
+    public function activateCandidat(Request $request)  
+    {
+        try {
+            $candidat_id = $request->input('candidat_id');
+
+            // Trouver le candidat
+            $candidat = $this->CandidatureService->setCandidatStatus($candidat_id, true);
+            if (!$candidat) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Candidat introuvable.'
+                ], 500);
+            }
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Candidat activé avec succès !'
+            ], 200);
+        } catch (\Exception $th) {
+            Log::error("Erreur lors de l'activation du candidat : " . $th->getMessage(), [
                 'request_data' => $request->all(),
                 'stack_trace' => $th->getTraceAsString(),
             ]);

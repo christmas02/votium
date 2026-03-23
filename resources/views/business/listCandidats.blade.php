@@ -401,8 +401,8 @@
         }
 
         /* =====================================================
-                                                                                                   CARTE CANDIDAT — design compact
-                                                                                                   ===================================================== */
+                                                                                                           CARTE CANDIDAT — design compact
+                                                                                                           ===================================================== */
         .vt-cand-card {
             background: #fff;
             border: 1px solid var(--vt-border);
@@ -622,8 +622,8 @@
         }
 
         /* ================================================
-                                                                                   MODAL CANDIDAT — Design "Demande de retrait"
-                                                                                   ================================================ */
+                                                                                           MODAL CANDIDAT — Design "Demande de retrait"
+                                                                                           ================================================ */
         .vt-cand-modal .modal-content {
             border-radius: 16px;
             border: none;
@@ -1728,7 +1728,7 @@
     </div>
 </div>
 
-{{-- Suppression candidat --}}
+{{-- Archiver candidat --}}
 <div class="modal fade vt-cand-modal" id="delete_contact" tabindex="-1" aria-hidden="true"
     data-bs-backdrop="static" data-bs-keyboard="false">
     <div class="modal-dialog modal-dialog-centered" style="max-width:400px;">
@@ -1764,6 +1764,49 @@
                     <button type="submit" class="vt-cm-btn-submit"
                         style="background:#ef4444; box-shadow:0 4px 12px rgba(239,68,68,.25);">
                         <i class="ti ti-trash" style="font-size:13px;"></i> Oui, archiver
+                    </button>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>
+
+{{-- Activation candidat --}}
+<div class="modal fade vt-cand-modal" id="activate_contact" tabindex="-1" aria-hidden="true"
+    data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog modal-dialog-centered" style="max-width:400px;">
+        <div class="modal-content">
+
+            {{-- Header --}}
+            <div class="vt-cand-modal-header">
+                <div class="vt-cand-modal-icon" style="background:rgba(34,197,94,.15); color:#22c55e;">
+                    <i class="ti ti-eye"></i>
+                </div>
+                <h5 class="vt-cand-modal-title">Activer le candidat</h5>
+                <button type="button" class="vt-cand-modal-close" data-bs-dismiss="modal" aria-label="Close">
+                    <i class="ti ti-x" style="font-size:12px;"></i>
+                </button>
+            </div>
+
+            {{-- Corps --}}
+            <form id="form_activate_candidat" action="{{ route('business.activate_candidat') }}" method="POST">
+                @csrf
+                @method('PATCH')
+                <input type="hidden" name="candidat_id">
+
+                <div class="modal-body text-center px-4 py-4">
+                    <p class="mb-0" style="font-size:14px; color:#64748b;">
+                        Êtes-vous sûr de vouloir activer ce candidat ?
+                    </p>
+                </div>
+
+                {{-- Footer --}}
+                <div class="vt-cand-modal-footer">
+                    <button type="button" class="vt-cm-btn-cancel" data-bs-dismiss="modal">Annuler</button>
+                    <button type="submit" class="vt-cm-btn-submit"
+                        style="background:#22c55e; box-shadow:0 4px 12px rgba(34,197,94,.25);">
+                        <i class="ti ti-eye" style="font-size:13px;"></i> Oui, activer
                     </button>
                 </div>
             </form>
@@ -2023,8 +2066,8 @@
 @section('extra-js')
     <script>
         /* =====================================================
-                       ICON PICKER — autonome, sans CDN
-                       ===================================================== */
+                               ICON PICKER — autonome, sans CDN
+                               ===================================================== */
         const IP_ICONS = {
             "Interface": ["ti-home", "ti-search", "ti-settings", "ti-bell", "ti-star", "ti-heart", "ti-bookmark",
                 "ti-lock", "ti-lock-open", "ti-eye", "ti-eye-off", "ti-edit", "ti-trash", "ti-copy", "ti-download",
@@ -2358,7 +2401,6 @@
             function buildCardHtml(candidat, orderNum) {
                 const data = encodeURIComponent(JSON.stringify(candidat));
                 const age = calculerAge(candidat.date_naissance);
-                const numLabel = String(orderNum).padStart(3, '0');
                 const photoHtml = buildPhotoHtml(candidat);
 
                 return `
@@ -2367,7 +2409,7 @@
 
                         <div class="vt-cand-photo-wrap">
                             ${photoHtml}
-                            <span class="vt-cand-num"># ${numLabel}</span>
+                            <span class="vt-cand-num"># ${candidat.numero_candidat}</span>
                             <div class="vt-cand-menu dropdown">
                                 <button class="vt-cand-menu-btn" data-bs-toggle="dropdown">
                                     <i class="ti ti-dots-vertical"></i>
@@ -2376,9 +2418,15 @@
                                     <a class="dropdown-item js-btn-edit" href="javascript:void(0);" data-candidat="${data}">
                                         <i class="ti ti-edit me-1"></i> Modifier
                                     </a>
-                                    <a class="dropdown-item text-danger js-btn-delete" href="javascript:void(0);" data-id="${candidat.candidat_id}">
-                                        <i class="ti ti-eye me-1"></i> Supprimer
-                                    </a>
+                                    ${candidat.is_active == 1
+                                        ? `<a class="dropdown-item js-btn-delete" href="javascript:void(0);" data-id="${candidat.candidat_id}">
+                                            <i class="ti ti-eye me-1" style="color:#22c55e;"></i> Archiver
+                                        </a>`
+                                        : `<a class="dropdown-item js-btn-activate" href="javascript:void(0);" data-id="${candidat.candidat_id}">
+                                            <i class="ti ti-eye-off me-1" style="color:#ef4444;"></i> Activer
+                                        </a>`
+                                    }
+                                    
                                 </div>
                             </div>
                         </div>
@@ -2399,15 +2447,15 @@
                                    data-candidat="${data}" title="Modifier">
                                     <i class="ti ti-pencil"></i>
                                 </a>
-                                ${candidat.status == 'false'
+                                ${candidat.is_active == 1
                                     ? `<a href="javascript:void(0);" class="vt-cand-action-btn del js-btn-delete"
-                                            data-id="${candidat.candidat_id}" title="Archiver">
-                                            <i class="ti ti-eye"></i>
-                                        </a>`
-                                    : `<a href="javascript:void(0);" class="vt-cand-action-btn del disabled"
-                                            title="Archivage non autorisé" style="pointer-events:none;">
-                                            <i class="ti ti-eye" style="color:#ccc;"></i>
-                                        </a>`
+                                                    data-id="${candidat.candidat_id}" title="Archiver">
+                                                    <i class="ti ti-eye" style="color:#22c55e;"></i>
+                                                </a>`
+                                    : `<a href="javascript:void(0);" class="vt-cand-action-btn js-btn-activate"
+                                                    data-id="${candidat.candidat_id}" title="Activer">
+                                                    <i class="ti ti-eye-off" style="color:#ef4444;"></i>
+                                                </a>`
                                 }
                             </div>
                         </div>
@@ -2597,10 +2645,15 @@
                 $modal.modal('show');
             });
 
-            /* Ouvrir modale suppression candidat */
+            /* Ouvrir modale archiver candidat */
             $(document).on('click', '.js-btn-delete', function() {
                 $('#delete_contact').find('input[name="candidat_id"]').val($(this).data('id'));
                 $('#delete_contact').modal('show');
+            });
+            /* Ouvrir modale activer candidat */
+            $(document).on('click', '.js-btn-activate', function() {
+                $('#activate_contact').find('input[name="candidat_id"]').val($(this).data('id'));
+                $('#activate_contact').modal('show');
             });
 
             /* Pré-remplir modale édition catégorie */
@@ -2741,13 +2794,13 @@
                 );
             });
 
-            /* Suppression candidat */
+            /* Archiver candidat */
             $('#form_delete_candidat').on('submit', function(e) {
                 e.preventDefault();
                 soumettreFormAjax(
                     $(this),
                     '<span class="spinner-border spinner-border-sm"></span>',
-                    'Oui, supprimer',
+                    'Oui, archiver',
                     function(response) {
                         $('#delete_contact').modal('hide');
                         if (response.success && typeof showAjaxAlert === 'function')
@@ -2755,6 +2808,22 @@
                         $('.js-select-campagne').trigger('change');
                     }
                 );
+            });
+            /* Activer candidat */
+            $('#form_activate_candidat').on('submit', function(e) {
+                e.preventDefault();
+                soumettreFormAjax(
+                    $(this),
+                    '<span class="spinner-border spinner-border-sm"></span>',
+                    'Oui, activer',
+                    function(response) {
+                        $('#activate_contact').modal('hide');
+                        if (response.success && typeof showAjaxAlert === 'function')
+                            showAjaxAlert('success', response.message);
+                        $('.js-select-campagne').trigger('change');
+                    }
+                );
+
             });
 
         });
