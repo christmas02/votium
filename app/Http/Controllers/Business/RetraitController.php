@@ -70,7 +70,7 @@ class RetraitController extends Controller
         $link_back = "list_retrait";
         $title = "Liste retraits";
 
-        $customer_id = auth()->user()->customer->customer_id;
+        $customer_id = auth()->user()->customer->customer_id; 
 
         #Recupérer les comptes de retrait du client connecté
         $compteRetraits = $this->CustomerService->listWithdrawalAccountByCustomer($customer_id);

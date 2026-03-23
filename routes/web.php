@@ -168,6 +168,7 @@ Route::group(['middleware' => 'auth'], function () {
                 Route::post('save_candidat', 'saveCandidat')->name('save_candidat');
                 Route::post('update_candidat', 'updateCandidat')->name('update_candidat');
                 Route::delete('delete_candidat', 'deleteCandidat')->name('delete_candidat');
+                Route::patch('activate_candidat', 'activateCandidat')->name('activate_candidat');
             });
 
 

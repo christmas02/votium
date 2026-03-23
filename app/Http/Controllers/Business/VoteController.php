@@ -394,7 +394,7 @@ class VoteController extends Controller
                     $campagneUrl = url("/business/site_campagne/{$vote->campagne_id}");
 
                     Log::info('Vote trouvé', [
-                        'vote_id' => $vote->id,
+                        'vote_id' => $vote->vote_id,
                         'campagne_id' => $vote->campagne_id
                     ]);
                 } else {

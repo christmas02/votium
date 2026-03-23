@@ -125,7 +125,15 @@ class CandidatController extends Controller
     public function rechercheCandidat(Request $request)
     {
         try {
+            $user = auth()->user();
+            $customer = $this->CustomerService->customerByIdUser($user->user_id);
+
+            if (!$customer) {
+                return response()->json(['error' => 'Client introuvable'], 403);
+            }
+            
             $filters = [
+                'customer_id' => $customer->customer_id,
                 'campagne_id' => $request->campagne_id,
                 'etape_id'    => $request->etape_id,
                 'category_id' => $request->category_id,
@@ -133,6 +141,20 @@ class CandidatController extends Controller
 
             // Le service retourne déjà une Collection
             $collection = $this->CandidatureService->searchCandidat($filters);
+
+            //Récupérer la campagne une seule fois
+            $campagne = $this->CampagneService->detailCampagne($request->campagne_id);
+
+            //Calcul du total global AVANT le filtre search (pour avoir le bon total)
+            $totalCampagne = $collection->sum('total_quantity');
+
+            //Ajout du pourcentage sur toute la collection
+            $collection = $collection->map(function ($candidat) use ($totalCampagne) {
+                $candidat->vote_percentage = $totalCampagne > 0
+                    ? round(($candidat->total_quantity / $totalCampagne) * 100, 2)
+                    : 0;
+                return $candidat;
+            });
 
             // Recherche texte
             if ($request->filled('search')) {
@@ -153,12 +175,14 @@ class CandidatController extends Controller
             $pagedData = $collection
                 ->slice(($page - 1) * $perPage, $perPage)
                 ->values();
-
+            // dd($pagedData, $total, $page, $perPage, $totalCampagne);
             return response()->json([
                 'data'         => $pagedData,
                 'current_page' => $page,
                 'last_page'    => max(ceil($total / $perPage), 1),
-                'total'        => $total
+                'total'        => $total,
+                'total_votes'  => $totalCampagne,
+                'afficher_montant_pourcentage' => $campagne->afficher_montant_pourcentage ?? null,
             ]);
         } catch (\Exception $th) {
             Log::error("Erreur lors de la recherche des candidats : " . $th->getMessage(), [
@@ -170,7 +194,7 @@ class CandidatController extends Controller
             ], 500);
         }
     }
- 
+
     #SAVE CANDIDAT
     public function saveCandidat(CandidatRequest $request)
     {
@@ -315,7 +339,7 @@ class CandidatController extends Controller
             $candidat_id = $request->input('candidat_id');
 
             // Trouver le candidat
-            $candidat = $this->CandidatureService->deleteCandidat($candidat_id);
+            $candidat = $this->CandidatureService->toggleCandidatStatus($candidat_id);
             if (!$candidat) {
                 return response()->json([
                     'success' => false,
@@ -325,10 +349,40 @@ class CandidatController extends Controller
 
             return response()->json([
                 'success' => true,
-                'message' => 'Candidat supprimé avec succès !'
+                'message' => 'Candidat archivé avec succès !'
             ], 200);
         } catch (\Exception $th) {
-            Log::error("Erreur lors de la suppression du candidat : " . $th->getMessage(), [
+            Log::error("Erreur lors de l'archivage du candidat : " . $th->getMessage(), [
+                'request_data' => $request->all(),
+                'stack_trace' => $th->getTraceAsString(),
+            ]);
+            return redirect()->back()
+                ->withInput()
+                ->with('error', __('messages.server_error'));
+        }
+    }
+
+    #ACTIVER CANDIDAT
+    public function activateCandidat(Request $request)  
+    {
+        try {
+            $candidat_id = $request->input('candidat_id');
+
+            // Trouver le candidat
+            $candidat = $this->CandidatureService->setCandidatStatus($candidat_id, true);
+            if (!$candidat) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Candidat introuvable.'
+                ], 500);
+            }
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Candidat activé avec succès !'
+            ], 200);
+        } catch (\Exception $th) {
+            Log::error("Erreur lors de l'activation du candidat : " . $th->getMessage(), [
                 'request_data' => $request->all(),
                 'stack_trace' => $th->getTraceAsString(),
             ]);

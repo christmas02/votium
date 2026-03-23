@@ -13,26 +13,12 @@
         @else
             <div class="thumb" style="background: linear-gradient(135deg, var(--primary), #000);"></div>
         @endif
-        <div class="tag"><span class="dot"></span>#{{ sprintf('%03d', $loop->iteration) }}</div>
+        <div class="tag"><span class="dot"></span>#{{ $candidat->numero_candidat }}</div>
     </div>
 
     <div class="body">
         <div class="name">{{ $candidat->name }}</div>
         <div class="sub">Candidat(e) / Nominé(e)</div>
-        {{-- <div class="stats">
-            <div class="pct">
-                <span>Vote{{ $candidat->votes_count > 1 ? 's' : '' }}</span><br>
-                @if ($campagne->afficher_montant_pourcentage == 'pourcentage')
-                    {{ $candidat->vote_percentage }}%
-                @elseif($campagne->afficher_montant_pourcentage == 'claire')
-                    {{ number_format($candidat->total_votes, 0, ',', ' ') }}
-                @else
-                    {{ $candidat->votes_count }} vote{{ $candidat->votes_count > 1 ? 's' : '' }} =>
-                    {{ $candidat->vote_percentage }}%
-                @endif
-
-            </div>
-        </div> --}}
         <div class="sub">Vote{{ $candidat->votes_count > 1 ? 's' : '' }}</div>
         <div class="form-check p-2 rounded d-flex align-items-center gap-2" style="background-color: rgba(0,0,0,0.03);">
             @if ($campagne->afficher_montant_pourcentage == 'pourcentage')
@@ -43,15 +29,13 @@
                 {{ $candidat->votes_count }} vote{{ $candidat->votes_count > 1 ? 's' : '' }} /
                 {{ $candidat->vote_percentage }}%
             @endif
-
-
         </div>
 
     </div>
 
     <div class="actions">
         <button class="iconbtn" type="button" aria-label="Partager"
-            onclick="shareCandidate('{{ addslashes($candidat->name) }}','{{ sprintf('%03d', $loop->iteration) }}')">
+            onclick="shareCandidate('{{ addslashes($candidat->name) }}', '{{ $candidat->numero_candidat }}', '{{ $candidat->candidat_id }}')">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M4 12v8a2 2 0 002 2h12a2 2 0 002-2v-8m-4-6l-4-4-4 4m4-4v13" />
             </svg>
@@ -65,7 +49,7 @@
 </article>
 
 {{-- 2. LA MODALE SPÉCIFIQUE AU CANDIDAT (Générée par Blade) --}}
-<div aria-hidden="true" class="modal" id="{{ $modalId }}">
+<div aria-hidden="true" class="modal" id="{{ $modalId }}" data-candidat-id="{{ $candidat->candidat_id }}">
     <div class="modal__overlay"></div>
     <div class="modal__panel" role="dialog">
         <button class="modal__close" onclick="closeSpecificModal('{{ $modalId }}')">✕</button>
@@ -88,7 +72,7 @@
                 <div class="voteModal__sub">
                     <span id="voteModalRole">Candidat(e)</span>
                     <span class="dot">•</span>
-                    <span>Numéro</span> <strong>{{ sprintf('%03d', $loop->iteration) }}</strong>
+                    <span>Numéro:</span> <strong> #{{ $candidat->numero_candidat }}</strong>
                 </div>
             </div>
 
@@ -108,7 +92,7 @@
 
             <div class="voteModal__actions">
                 <button class="iconbtn" type="button" aria-label="Partager"
-                    onclick="shareCandidate('{{ addslashes($candidat->name) }}','{{ sprintf('%03d', $loop->iteration) }}')">
+                    onclick="shareCandidate('{{ addslashes($candidat->name) }}', '{{ $candidat->numero_candidat }}', '{{ $candidat->candidat_id }}')">
                     <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
                         <path d="M18 8a3 3 0 1 0-2.8-4" stroke="var(--primary)" stroke-width="1.8"
                             stroke-linecap="round" />
@@ -124,7 +108,7 @@
                 <button class="primaryBtn btn-validate-vote" type="button" id="btn-{{ $modalId }}"
                     data-candidat-id="{{ $candidat->candidat_id }}" data-campagne-id="{{ $candidat->campagne_id }}"
                     data-etape-id="{{ $candidat->etape_id }}" data-candidat-nom="{{ $candidat->name }}"
-                    data-candidat-num="{{ sprintf('%03d', $loop->iteration) }}"
+                    data-candidat-num="{{ $candidat->numero_candidat }}"
                     data-pack-votes="{{ $firstPack ? $firstPack->vote : 0 }}"
                     data-pack-montant="{{ $firstPack ? $firstPack->montant : 0 }}" onclick="proceedToCheckout(this)"
                     {{ empty($packages) ? 'disabled' : '' }}>

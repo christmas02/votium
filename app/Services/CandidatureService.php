@@ -154,6 +154,7 @@ class CandidatureService
             // Construire la requête (SANS get)
             $query = DB::table('candidat_etap_category_campagnes as cecc')
                 ->join('candidats as c', 'c.candidat_id', '=', 'cecc.candidat_id')
+                ->join('campagnes as camp', 'camp.campagne_id', '=', 'cecc.campagne_id')
                 ->leftJoin('votes as v', function ($join) {
                     $join->on('v.candidat_id', '=', 'c.candidat_id')
                         ->on('v.campagne_id', '=', 'cecc.campagne_id')
@@ -161,6 +162,7 @@ class CandidatureService
                 })
                 ->select(
                     'c.candidat_id',
+                    'c.numero_candidat',
                     'c.name',
                     'c.email',
                     'c.phonenumber as telephone',
@@ -171,6 +173,7 @@ class CandidatureService
                     'c.profession',
                     'c.photo',
                     'c.description',
+                    'c.is_active',
                     'c.created_at',
                     'c.updated_at',
                     'cecc.campagne_id',
@@ -181,6 +184,7 @@ class CandidatureService
                 )
                 ->groupBy(
                     'c.candidat_id',
+                    'c.numero_candidat',
                     'c.name',
                     'c.email',
                     'c.phonenumber',
@@ -191,6 +195,7 @@ class CandidatureService
                     'c.profession',
                     'c.photo',
                     'c.description',
+                    'c.is_active',
                     'c.created_at',
                     'c.updated_at',
                     'cecc.campagne_id',
@@ -198,6 +203,11 @@ class CandidatureService
                     'cecc.category_id',
                 );
 
+            //FILTRE OBLIGATOIRE PAR CLIENT (toujours appliqué)
+            if (!empty($filters['customer_id'])) {
+                $query->where('camp.customer_id', $filters['customer_id']);
+            }
+            
             //Appliquer les filtres
             if (!empty($filters['campagne_id'])) {
                 $query->where('cecc.campagne_id', $filters['campagne_id']);
@@ -219,43 +229,6 @@ class CandidatureService
         }
     }
 
-    // public function searchCandidat(array $filters)
-    // {
-    //     try {
-    //         // $query = DB::table('candidat_etap_category_campagnes as cecc')
-    //         //     ->join('candidats as c', 'c.candidat_id', '=', 'cecc.candidat_id')
-    //         //     ->join('votes as v', function ($join) {
-    //         //         $join->on('v.candidat_id', '=', 'c.candidat_id')
-    //         //             ->on('v.campagne_id', '=', 'cecc.campagne_id');
-    //         //     })
-    //         //     ->select(
-    //         //         'c.*',
-    //         //         'cecc.campagne_id',
-    //         //         'cecc.etape_id',
-    //         //         'cecc.category_id',
-    //         //         DB::raw('COUNT(v.vote_id) as votes_count'),
-    //         //         DB::raw('COALESCE(SUM(v.quantity), 0) as total_quantity')
-    //         //     )
-    //         //     ->groupBy('c.candidat_id', 'cecc.campagne_id');
-
-    //         if (!empty($filters['campagne_id'])) {
-    //             $query->where('cecc.campagne_id', $filters['campagne_id']);
-    //         }
-
-    //         if (!empty($filters['etape_id'])) {
-    //             $query->where('cecc.etape_id', $filters['etape_id']);
-    //         }
-
-    //         if (!empty($filters['category_id'])) {
-    //             $query->where('cecc.category_id', $filters['category_id']);
-    //         }
-
-    //         return $query->get();
-    //     } catch (\Exception $e) {
-    //         \Log::error('Erreur lors de la recherche des candidats : ' . $e->getMessage());
-    //         return collect();
-    //     }
-    // }
 
     /**
      * Génère le numéro séquentiel du candidat formaté (0001 à 1000)

@@ -401,8 +401,8 @@
         }
 
         /* =====================================================
-                                                   CARTE CANDIDAT — design compact
-                                                   ===================================================== */
+                                                                                                           CARTE CANDIDAT — design compact
+                                                                                                           ===================================================== */
         .vt-cand-card {
             background: #fff;
             border: 1px solid var(--vt-border);
@@ -622,8 +622,8 @@
         }
 
         /* ================================================
-                                   MODAL CANDIDAT — Design "Demande de retrait"
-                                   ================================================ */
+                                                                                           MODAL CANDIDAT — Design "Demande de retrait"
+                                                                                           ================================================ */
         .vt-cand-modal .modal-content {
             border-radius: 16px;
             border: none;
@@ -923,6 +923,184 @@
         .vt-cm-btn-submit:hover {
             background: var(--vt-orange-hover);
         }
+
+        /* ---- Icon Picker ---- */
+        .ip-trigger {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 9px 12px;
+            width: 100%;
+            border: 1.5px solid var(--vt-border);
+            border-radius: var(--vt-radius-sm);
+            background: #fff;
+            cursor: pointer;
+            text-align: left;
+            transition: border-color .15s;
+            font-family: inherit;
+        }
+
+        .ip-trigger:hover {
+            border-color: var(--vt-orange);
+        }
+
+        .ip-trigger i {
+            font-size: 16px;
+            color: #94a3b8;
+            flex-shrink: 0;
+        }
+
+        .ip-trigger-label {
+            font-size: 13px;
+            color: #94a3b8;
+            flex: 1;
+        }
+
+        .ip-trigger-selected {
+            font-size: 13px;
+            color: var(--vt-text-main);
+            flex: 1;
+            font-weight: 500;
+        }
+
+        .ip-panel {
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: calc(100% + 4px);
+            background: #fff;
+            border: 1.5px solid var(--vt-border);
+            border-radius: var(--vt-radius-sm);
+            z-index: 9999;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, .10);
+        }
+
+        .ip-search-wrap {
+            padding: 10px 12px;
+            border-bottom: 1px solid var(--vt-border);
+        }
+
+        .ip-search {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 7px 10px;
+            border: 1.5px solid var(--vt-border);
+            border-radius: var(--vt-radius-sm);
+            font-size: 13px;
+            color: var(--vt-text-main);
+            outline: none;
+            font-family: inherit;
+        }
+
+        .ip-search:focus {
+            border-color: var(--vt-orange);
+        }
+
+        .ip-cats {
+            display: flex;
+            gap: 6px;
+            padding: 8px 12px;
+            flex-wrap: wrap;
+            border-bottom: 1px solid var(--vt-border);
+        }
+
+        .ip-cat {
+            font-size: 11.5px;
+            padding: 3px 10px;
+            border-radius: 50px;
+            border: 1.5px solid var(--vt-border);
+            background: #fff;
+            color: var(--vt-text-muted);
+            cursor: pointer;
+            transition: all .15s;
+        }
+
+        .ip-cat:hover {
+            border-color: var(--vt-orange);
+            color: var(--vt-orange);
+        }
+
+        .ip-cat.active {
+            background: var(--vt-orange-light);
+            color: var(--vt-orange);
+            border-color: var(--vt-orange);
+        }
+
+        .ip-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, 42px);
+            gap: 3px;
+            padding: 10px 12px;
+            max-height: 220px;
+            overflow-y: auto;
+        }
+
+        .ip-icon-btn {
+            width: 42px;
+            height: 42px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            border: 1.5px solid transparent;
+            cursor: pointer;
+            background: transparent;
+            color: var(--vt-text-main);
+            transition: all .15s;
+        }
+
+        .ip-icon-btn:hover {
+            background: #f8fafc;
+            border-color: var(--vt-border);
+        }
+
+        .ip-icon-btn.selected {
+            background: var(--vt-orange-light);
+            border-color: var(--vt-orange);
+            color: var(--vt-orange);
+        }
+
+        .ip-icon-btn i {
+            font-size: 19px;
+            pointer-events: none;
+        }
+
+        .ip-footer {
+            padding: 8px 12px;
+            border-top: 1px solid var(--vt-border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .ip-count {
+            font-size: 11.5px;
+            color: var(--vt-text-muted);
+        }
+
+        .ip-confirm {
+            font-size: 12.5px;
+            padding: 5px 14px;
+            border-radius: var(--vt-radius-sm);
+            border: 1.5px solid var(--vt-border);
+            background: #fff;
+            color: var(--vt-text-main);
+            cursor: pointer;
+            transition: all .15s;
+        }
+
+        .ip-confirm:hover {
+            border-color: var(--vt-orange);
+            color: var(--vt-orange);
+        }
+
+        .ip-empty {
+            grid-column: 1/-1;
+            padding: 1.5rem;
+            text-align: center;
+            color: #94a3b8;
+            font-size: 13px;
+        }
     </style>
 @endsection
 
@@ -949,7 +1127,8 @@
                             en Excel</a></li>
                 </ul>
             </div>
-            <a href="javascript:void(0);" class="vt-btn-outline-dark js-btn-create-candidat" style="pointer-events:none; opacity:0.5;">
+            <a href="javascript:void(0);" class="vt-btn-outline-dark js-btn-create-candidat"
+                style="pointer-events:none; opacity:0.5;">
                 <i class="ti ti-download" style="font-size:14px;"></i> Exporter
             </a>
         </div>
@@ -1016,7 +1195,12 @@
                     @forelse ($categories as $cat)
                         <div class="vt-cat-item js-cat-item" data-campagne-id="{{ $cat->campagne_id }}">
                             <div class="vt-cat-avatar">
-                                {{ strtoupper(substr($cat->name, 0, 1)) }}
+                                {{-- {{ strtoupper(substr($cat->name, 0, 1)) }} --}}
+                                @if ($cat->icon)
+                                    <i class="ti {{ $cat->icon }}" style="font-size:18px;"></i>
+                                @else
+                                    {{ strtoupper(substr($cat->name, 0, 1)) }}
+                                @endif
                             </div>
                             <div class="vt-cat-info">
                                 <p class="vt-cat-name">{{ $cat->name }}</p>
@@ -1114,7 +1298,7 @@
             </div>
 
             <div class="modal-body">
-                <form class="ajax-form" action="{{ route('business.save_candidat') }}" method="POST"
+                <form class="ajax-form_old" action="{{ route('business.save_candidat') }}" method="POST"
                     enctype="multipart/form-data" id="form-add-candidat">
                     @csrf
 
@@ -1471,7 +1655,8 @@
                                         @foreach ($campagnes as $item)
                                             @php($campagne = $item['campagne'] ?? null)
                                             @if ($campagne)
-                                                <option value="{{ $campagne->campagne_id }}">{{ $campagne->name }}</option>
+                                                <option value="{{ $campagne->campagne_id }}">{{ $campagne->name }}
+                                                </option>
                                             @endif
                                         @endforeach
                                     </select>
@@ -1522,8 +1707,7 @@
                                 <label class="vt-cm-label">Présentation</label>
                                 <div class="vt-cm-input-wrap top">
                                     <i class="ti ti-pencil vt-cm-icon"></i>
-                                    <textarea class="vt-cm-input" name="description" rows="3"
-                                        placeholder="Parcours, ambitions, points forts..."></textarea>
+                                    <textarea class="vt-cm-input" name="description" rows="3" placeholder="Parcours, ambitions, points forts..."></textarea>
                                 </div>
                             </div>
                         </div>
@@ -1544,7 +1728,7 @@
     </div>
 </div>
 
-{{-- Suppression candidat --}}
+{{-- Archiver candidat --}}
 <div class="modal fade vt-cand-modal" id="delete_contact" tabindex="-1" aria-hidden="true"
     data-bs-backdrop="static" data-bs-keyboard="false">
     <div class="modal-dialog modal-dialog-centered" style="max-width:400px;">
@@ -1569,8 +1753,8 @@
 
                 <div class="modal-body text-center px-4 py-4">
                     <p class="mb-0" style="font-size:14px; color:#64748b;">
-                        Êtes-vous sûr de vouloir supprimer ce candidat ?<br>
-                        <span style="font-size:12.5px; color:#94a3b8;">Cette action est irréversible.</span>
+                        Êtes-vous sûr de vouloir archiver ce candidat ?<br>
+                        {{-- <span style="font-size:12.5px; color:#94a3b8;">Cette action est irréversible.</span> --}}
                     </p>
                 </div>
 
@@ -1579,7 +1763,50 @@
                     <button type="button" class="vt-cm-btn-cancel" data-bs-dismiss="modal">Annuler</button>
                     <button type="submit" class="vt-cm-btn-submit"
                         style="background:#ef4444; box-shadow:0 4px 12px rgba(239,68,68,.25);">
-                        <i class="ti ti-trash" style="font-size:13px;"></i> Oui, supprimer
+                        <i class="ti ti-trash" style="font-size:13px;"></i> Oui, archiver
+                    </button>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>
+
+{{-- Activation candidat --}}
+<div class="modal fade vt-cand-modal" id="activate_contact" tabindex="-1" aria-hidden="true"
+    data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog modal-dialog-centered" style="max-width:400px;">
+        <div class="modal-content">
+
+            {{-- Header --}}
+            <div class="vt-cand-modal-header">
+                <div class="vt-cand-modal-icon" style="background:rgba(34,197,94,.15); color:#22c55e;">
+                    <i class="ti ti-eye"></i>
+                </div>
+                <h5 class="vt-cand-modal-title">Activer le candidat</h5>
+                <button type="button" class="vt-cand-modal-close" data-bs-dismiss="modal" aria-label="Close">
+                    <i class="ti ti-x" style="font-size:12px;"></i>
+                </button>
+            </div>
+
+            {{-- Corps --}}
+            <form id="form_activate_candidat" action="{{ route('business.activate_candidat') }}" method="POST">
+                @csrf
+                @method('PATCH')
+                <input type="hidden" name="candidat_id">
+
+                <div class="modal-body text-center px-4 py-4">
+                    <p class="mb-0" style="font-size:14px; color:#64748b;">
+                        Êtes-vous sûr de vouloir activer ce candidat ?
+                    </p>
+                </div>
+
+                {{-- Footer --}}
+                <div class="vt-cand-modal-footer">
+                    <button type="button" class="vt-cm-btn-cancel" data-bs-dismiss="modal">Annuler</button>
+                    <button type="submit" class="vt-cm-btn-submit"
+                        style="background:#22c55e; box-shadow:0 4px 12px rgba(34,197,94,.25);">
+                        <i class="ti ti-eye" style="font-size:13px;"></i> Oui, activer
                     </button>
                 </div>
             </form>
@@ -1605,7 +1832,8 @@
             </div>
 
             <div class="modal-body">
-                <form class="ajax-form" action="{{ route('business.save_categorie') }}" method="POST" id="form-add-categorie">
+                <form class="ajax-form" action="{{ route('business.save_categorie') }}" method="POST"
+                    id="form-add-categorie">
                     @csrf
 
                     <div class="row g-3">
@@ -1622,7 +1850,8 @@
                         </div>
                         <div class="col-12">
                             <div class="vt-cm-field">
-                                <label class="vt-cm-label">Nom de la catégorie <span class="text-danger">*</span></label>
+                                <label class="vt-cm-label">Nom de la catégorie <span
+                                        class="text-danger">*</span></label>
                                 <div class="vt-cm-input-wrap">
                                     <i class="ti ti-tag vt-cm-icon"></i>
                                     <input type="text" class="vt-cm-input" name="name"
@@ -1635,23 +1864,38 @@
                                 <label class="vt-cm-label">Description</label>
                                 <div class="vt-cm-input-wrap top">
                                     <i class="ti ti-pencil vt-cm-icon"></i>
-                                    <textarea class="vt-cm-input" name="description" rows="3"
-                                        placeholder="Décrivez cette catégorie..."></textarea>
+                                    <textarea class="vt-cm-input" name="description" rows="3" placeholder="Décrivez cette catégorie..."></textarea>
                                 </div>
                             </div>
                         </div>
+                        {{-- Dans votre formulaire --}}
                         <div class="col-12">
                             <div class="vt-cm-field">
                                 <label class="vt-cm-label">Icône</label>
-                                <div class="vt-cm-input-wrap">
-                                    <i class="ti ti-mood-smile vt-cm-icon"></i>
-                                    <select class="vt-cm-select" name="icon">
-                                        <option value="">Sélectionner</option>
-                                        <option value="homme">Homme</option>
-                                        <option value="femme">Femme</option>
-                                        <option value="enfant">Enfant</option>
-                                        <option value="jeune">Jeune</option>
-                                    </select>
+                                <div class="vt-cm-input-wrap" style="position: relative;">
+                                    <input type="hidden" name="icon" id="add_iconInput"
+                                        value="{{ old('icon') }}">
+                                    <button type="button" class="ip-trigger" id="add_triggerBtn"
+                                        onclick="iconPickerToggle('add')">
+                                        <i class="ti ti-mood-smile" id="add_previewIcon"></i>
+                                        <span id="add_triggerLabel" class="ip-trigger-label">Sélectionner une
+                                            icône</span>
+                                        <i class="ti ti-chevron-down" style="font-size:13px; color:#94a3b8;"></i>
+                                    </button>
+                                    <div class="ip-panel" id="add_panel" style="display:none;">
+                                        <div class="ip-search-wrap">
+                                            <input class="ip-search" id="add_searchInput"
+                                                placeholder="Rechercher une icône..."
+                                                oninput="iconPickerFilter('add')">
+                                        </div>
+                                        <div class="ip-cats" id="add_catsBar"></div>
+                                        <div class="ip-grid" id="add_iconGrid"></div>
+                                        <div class="ip-footer">
+                                            <span class="ip-count" id="add_countLabel"></span>
+                                            <button type="button" class="ip-confirm"
+                                                onclick="iconPickerToggle('add')">Fermer</button>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -1688,7 +1932,8 @@
             </div>
 
             <div class="modal-body">
-                <form class="ajax-form" action="{{ route('business.update_categorie') }}" method="POST" id="form-edit-categorie">
+                <form class="ajax-form" action="{{ route('business.update_categorie') }}" method="POST"
+                    id="form-edit-categorie">
                     @csrf
                     <input type="hidden" name="category_id" id="edit_cat_id">
                     <input type="hidden" name="campagne_id" id="edit_cat_campagne_id">
@@ -1696,11 +1941,12 @@
                     <div class="row g-3">
                         <div class="col-12">
                             <div class="vt-cm-field">
-                                <label class="vt-cm-label">Nom de la catégorie <span class="text-danger">*</span></label>
+                                <label class="vt-cm-label">Nom de la catégorie <span
+                                        class="text-danger">*</span></label>
                                 <div class="vt-cm-input-wrap">
                                     <i class="ti ti-tag vt-cm-icon"></i>
-                                    <input type="text" class="vt-cm-input" name="name"
-                                        id="edit_cat_name" placeholder="Ex : Meilleure actrice" required>
+                                    <input type="text" class="vt-cm-input" name="name" id="edit_cat_name"
+                                        placeholder="Ex : Meilleure actrice" required>
                                 </div>
                             </div>
                         </div>
@@ -1709,12 +1955,12 @@
                                 <label class="vt-cm-label">Description <span class="text-danger">*</span></label>
                                 <div class="vt-cm-input-wrap top">
                                     <i class="ti ti-pencil vt-cm-icon"></i>
-                                    <textarea class="vt-cm-input" name="description" id="edit_cat_description"
-                                        rows="3" placeholder="Décrivez cette catégorie..." required></textarea>
+                                    <textarea class="vt-cm-input" name="description" id="edit_cat_description" rows="3"
+                                        placeholder="Décrivez cette catégorie..." required></textarea>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-12">
+                        {{-- <div class="col-12">
                             <div class="vt-cm-field">
                                 <label class="vt-cm-label">Icône</label>
                                 <div class="vt-cm-input-wrap">
@@ -1726,6 +1972,36 @@
                                         <option value="enfant">Enfant</option>
                                         <option value="jeune">Jeune</option>
                                     </select>
+                                </div>
+                            </div>
+                        </div> --}}
+
+                        <div class="col-12">
+                            <div class="vt-cm-field">
+                                <label class="vt-cm-label">Icône</label>
+                                <div class="vt-cm-input-wrap" style="position: relative;">
+                                    <input type="hidden" name="icon" id="edit_iconInput">
+                                    <button type="button" class="ip-trigger" id="edit_triggerBtn"
+                                        onclick="iconPickerToggle('edit')">
+                                        <i class="ti ti-mood-smile" id="edit_previewIcon"></i>
+                                        <span id="edit_triggerLabel" class="ip-trigger-label">Sélectionner une
+                                            icône</span>
+                                        <i class="ti ti-chevron-down" style="font-size:13px; color:#94a3b8;"></i>
+                                    </button>
+                                    <div class="ip-panel" id="edit_panel" style="display:none;">
+                                        <div class="ip-search-wrap">
+                                            <input class="ip-search" id="edit_searchInput"
+                                                placeholder="Rechercher une icône..."
+                                                oninput="iconPickerFilter('edit')">
+                                        </div>
+                                        <div class="ip-cats" id="edit_catsBar"></div>
+                                        <div class="ip-grid" id="edit_iconGrid"></div>
+                                        <div class="ip-footer">
+                                            <span class="ip-count" id="edit_countLabel"></span>
+                                            <button type="button" class="ip-confirm"
+                                                onclick="iconPickerToggle('edit')">Fermer</button>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -1789,20 +2065,171 @@
 {{-- ===== SCRIPTS ===== --}}
 @section('extra-js')
     <script>
-        $(document).ready(function () {
+        /* =====================================================
+                               ICON PICKER — autonome, sans CDN
+                               ===================================================== */
+        const IP_ICONS = {
+            "Interface": ["ti-home", "ti-search", "ti-settings", "ti-bell", "ti-star", "ti-heart", "ti-bookmark",
+                "ti-lock", "ti-lock-open", "ti-eye", "ti-eye-off", "ti-edit", "ti-trash", "ti-copy", "ti-download",
+                "ti-upload", "ti-share", "ti-link", "ti-filter", "ti-sort-ascending", "ti-sort-descending",
+                "ti-refresh", "ti-x", "ti-check", "ti-plus", "ti-minus", "ti-dots", "ti-dots-vertical", "ti-menu-2",
+                "ti-layout-grid", "ti-list", "ti-info-circle", "ti-alert-circle", "ti-circle-check", "ti-circle-x",
+                "ti-help-circle", "ti-zoom-in", "ti-zoom-out", "ti-adjustments"
+            ],
+            "Personnes": ["ti-user", "ti-users", "ti-user-plus", "ti-user-minus", "ti-user-check", "ti-user-x",
+                "ti-mood-smile", "ti-mood-happy", "ti-mood-sad", "ti-mood-neutral", "ti-crown", "ti-medal",
+                "ti-award", "ti-badge", "ti-id-badge", "ti-man", "ti-woman", "ti-baby-carriage"
+            ],
+            "Communication": ["ti-mail", "ti-message", "ti-message-2", "ti-messages", "ti-phone", "ti-phone-call",
+                "ti-send", "ti-inbox", "ti-at", "ti-speakerphone", "ti-bell-ringing", "ti-message-dots"
+            ],
+            "Business": ["ti-briefcase", "ti-chart-bar", "ti-chart-pie", "ti-chart-line", "ti-trending-up",
+                "ti-trending-down", "ti-report", "ti-cash", "ti-credit-card", "ti-receipt", "ti-building",
+                "ti-building-store", "ti-presentation", "ti-clipboard", "ti-file", "ti-file-text", "ti-notes",
+                "ti-calendar", "ti-clock", "ti-calculator"
+            ],
+            "Médias": ["ti-photo", "ti-camera", "ti-video", "ti-music", "ti-microphone", "ti-headphones", "ti-volume",
+                "ti-volume-off", "ti-player-play", "ti-player-pause", "ti-player-stop", "ti-film", "ti-playlist",
+                "ti-movie", "ti-radio"
+            ],
+            "Nature": ["ti-leaf", "ti-plant", "ti-tree", "ti-flower", "ti-sun", "ti-moon", "ti-cloud-rain",
+                "ti-snowflake", "ti-wind", "ti-flame", "ti-droplet", "ti-mountain", "ti-world"
+            ],
+            "Transports": ["ti-car", "ti-bus", "ti-bicycle", "ti-plane", "ti-ship", "ti-rocket", "ti-train", "ti-truck",
+                "ti-motorbike", "ti-walk", "ti-run", "ti-map", "ti-map-pin", "ti-compass", "ti-route"
+            ],
+            "Sport": ["ti-ball-football", "ti-ball-basketball", "ti-ball-tennis", "ti-ball-volleyball", "ti-swimming",
+                "ti-yoga", "ti-dumbbell", "ti-trophy", "ti-medal-2", "ti-target"
+            ],
+            "Technologie": ["ti-device-laptop", "ti-device-mobile", "ti-device-tablet", "ti-device-desktop", "ti-cpu",
+                "ti-wifi", "ti-cloud", "ti-code", "ti-terminal", "ti-database", "ti-server", "ti-api", "ti-robot",
+                "ti-git-branch"
+            ],
+        };
+
+        const IP_ALL_CATS = ["Tout", ...Object.keys(IP_ICONS)];
+        let IP_STATE = {
+            add: {
+                selected: '',
+                activeCat: 'Tout',
+                open: false
+            },
+            edit: {
+                selected: '',
+                activeCat: 'Tout',
+                open: false
+            },
+        };
+
+        function ipAllIcons() {
+            return Object.values(IP_ICONS).flat();
+        }
+
+        function ipGetFiltered(ns) {
+            const state = IP_STATE[ns];
+            const term = document.getElementById(ns + '_searchInput').value.toLowerCase().trim();
+            const base = state.activeCat === 'Tout' ? ipAllIcons() : (IP_ICONS[state.activeCat] || []);
+            return term ? base.filter(ic => ic.replace('ti-', '').includes(term)) : base;
+        }
+
+        function ipRenderCats(ns) {
+            const bar = document.getElementById(ns + '_catsBar');
+            bar.innerHTML = IP_ALL_CATS.map(cat =>
+                `<span class="ip-cat${IP_STATE[ns].activeCat === cat ? ' active' : ''}"
+               onclick="ipSetCat('${ns}','${cat}')">${cat}</span>`
+            ).join('');
+        }
+
+        function ipRenderGrid(ns) {
+            const grid = document.getElementById(ns + '_iconGrid');
+            const icons = ipGetFiltered(ns);
+            const sel = IP_STATE[ns].selected;
+            document.getElementById(ns + '_countLabel').textContent =
+                icons.length + ' icône' + (icons.length > 1 ? 's' : '');
+
+            if (!icons.length) {
+                grid.innerHTML = '<div class="ip-empty">Aucune icône trouvée</div>';
+                return;
+            }
+            grid.innerHTML = icons.map(ic =>
+                `<button type="button" class="ip-icon-btn${sel === ic ? ' selected' : ''}"
+                 onclick="ipSelectIcon('${ns}','${ic}')" title="${ic.replace('ti-','')}">
+             <i class="ti ${ic}"></i>
+         </button>`
+            ).join('');
+        }
+
+        function ipSetCat(ns, cat) {
+            IP_STATE[ns].activeCat = cat;
+            ipRenderCats(ns);
+            ipRenderGrid(ns);
+        }
+
+        function ipSelectIcon(ns, ic) {
+            IP_STATE[ns].selected = ic;
+            document.getElementById(ns + '_iconInput').value = ic;
+
+            const prev = document.getElementById(ns + '_previewIcon');
+            const label = document.getElementById(ns + '_triggerLabel');
+            prev.className = 'ti ' + ic;
+            prev.style.color = 'var(--vt-orange)';
+            label.textContent = ic.replace('ti-', '');
+            label.className = 'ip-trigger-selected';
+
+            ipRenderGrid(ns);
+        }
+
+        function iconPickerToggle(ns) {
+            // Ferme l'autre picker si ouvert
+            const other = ns === 'add' ? 'edit' : 'add';
+            if (IP_STATE[other].open) {
+                IP_STATE[other].open = false;
+                document.getElementById(other + '_panel').style.display = 'none';
+            }
+
+            IP_STATE[ns].open = !IP_STATE[ns].open;
+            const panel = document.getElementById(ns + '_panel');
+            panel.style.display = IP_STATE[ns].open ? 'block' : 'none';
+
+            if (IP_STATE[ns].open) {
+                ipRenderCats(ns);
+                ipRenderGrid(ns);
+                setTimeout(() => document.getElementById(ns + '_searchInput').focus(), 50);
+            }
+        }
+
+        function iconPickerFilter(ns) {
+            ipRenderGrid(ns);
+        }
+
+        // Ferme le picker si clic hors du composant
+        document.addEventListener('click', function(e) {
+            ['add', 'edit'].forEach(ns => {
+                if (!IP_STATE[ns].open) return;
+                const wrap = document.getElementById(ns + '_panel');
+                const btn = document.getElementById(ns + '_triggerBtn');
+                if (wrap && !wrap.contains(e.target) && btn && !btn.contains(e.target)) {
+                    IP_STATE[ns].open = false;
+                    wrap.style.display = 'none';
+                }
+            });
+        });
+
+        $(document).ready(function() {
 
             /* =========================================================
                1. ÉTAT & CONSTANTES
                ========================================================= */
-            let currentPage   = 1;
+            let currentPage = 1;
             let searchTimeout = null;
+            let afficherMontantPourcentage = null;
             const APP_IMAGES_PATH = "{{ env('IMAGES_PATH') }}/";
 
             /* =========================================================
                2. CLONES DOM (tous regroupés ici)
                ========================================================= */
-            const $allEtapesOptions      = $('.js-select-etape option').clone();
-            const $allCategoriesOptions  = $('.js-select-categorie option').clone();
+            const $allEtapesOptions = $('.js-select-etape option').clone();
+            const $allCategoriesOptions = $('.js-select-categorie option').clone();
             const $formCategoriesOptions = $('.js-add-categorie option').clone();
 
             /* =========================================================
@@ -1815,7 +2242,7 @@
              */
             function calculerAge(dateNaissanceStr) {
                 if (!dateNaissanceStr) return '';
-                const today    = new Date();
+                const today = new Date();
                 const naissance = new Date(dateNaissanceStr);
                 let age = today.getFullYear() - naissance.getFullYear();
                 const m = today.getMonth() - naissance.getMonth();
@@ -1842,12 +2269,15 @@
              */
             function updateCreateBtn() {
                 const campagneId = $('.js-select-campagne').val();
-                const etapeId    = $('.js-select-etape').val();
-                const $btn       = $('.js-btn-create-candidat');
+                const etapeId = $('.js-select-etape').val();
+                const $btn = $('.js-btn-create-candidat');
 
                 const actif = !!(campagneId && etapeId);
                 $btn.toggleClass('disabled', !actif)
-                    .css({ 'pointer-events': actif ? '' : 'none', 'opacity': actif ? '' : '0.5' });
+                    .css({
+                        'pointer-events': actif ? '' : 'none',
+                        'opacity': actif ? '' : '0.5'
+                    });
             }
 
             /**
@@ -1855,7 +2285,7 @@
              * selon la campagne choisie.
              */
             function peuplerFiltresCampagne(campagneId) {
-                const $selectEtape     = $('.js-select-etape');
+                const $selectEtape = $('.js-select-etape');
                 const $selectCategorie = $('.js-select-categorie');
 
                 $selectEtape.empty().prop('disabled', true)
@@ -1865,11 +2295,11 @@
 
                 if (!campagneId) return;
 
-                $allEtapesOptions.each(function () {
+                $allEtapesOptions.each(function() {
                     if ($(this).data('campagne-id') == campagneId)
                         $selectEtape.append($(this).clone());
                 });
-                $allCategoriesOptions.each(function () {
+                $allCategoriesOptions.each(function() {
                     if ($(this).data('campagne-id') == campagneId)
                         $selectCategorie.append($(this).clone());
                 });
@@ -1890,7 +2320,7 @@
                 }
 
                 $('.js-cat-section').show();
-                $('.js-cat-item').each(function () {
+                $('.js-cat-item').each(function() {
                     $(this).toggle($(this).data('campagne-id') == campagneId);
                 });
                 $('.js-cat-add-btn').prop('disabled', false).removeClass('disabled');
@@ -1934,11 +2364,43 @@
              * Construit le HTML complet d'une carte candidat.
              * Extrait de renderCandidatCards pour garder cette dernière lisible.
              */
+            function buildVotesHtml(candidat) {
+                const votes = candidat.votes_count || 0;
+                const percentage = candidat.vote_percentage || 0;
+                const label = `vote${votes > 1 ? 's' : ''}`;
+
+                if (afficherMontantPourcentage === 'pourcentage') {
+                    return `
+                        <div class="vt-cand-votes">
+                            <i class="ti ti-chart-pie"></i>
+                            <span>${percentage}%</span>
+                        </div>`;
+
+                } else if (afficherMontantPourcentage === 'clair') {
+                    return `
+                        <div class="vt-cand-votes">
+                            <i class="ti ti-ticket"></i>
+                            <span>${votes}</span>
+                            <span class="label">${label}</span>
+                        </div>`;
+
+                } else {
+                    // Les deux
+                    return `
+                <div class="vt-cand-votes">
+                    <i class="ti ti-ticket"></i>
+                    <span>${votes}</span>
+                    <span class="label">${label}</span>
+                    <span class="vt-cand-votes-separator">/</span>
+                    <i class="ti ti-chart-pie"></i>
+                    <span>${percentage}%</span>
+                </div>`;
+                }
+            }
+
             function buildCardHtml(candidat, orderNum) {
-                const data     = encodeURIComponent(JSON.stringify(candidat));
-                const age      = calculerAge(candidat.date_naissance);
-                const votes    = candidat.votes_count || 0;
-                const numLabel = String(orderNum).padStart(3, '0');
+                const data = encodeURIComponent(JSON.stringify(candidat));
+                const age = calculerAge(candidat.date_naissance);
                 const photoHtml = buildPhotoHtml(candidat);
 
                 return `
@@ -1947,7 +2409,7 @@
 
                         <div class="vt-cand-photo-wrap">
                             ${photoHtml}
-                            <span class="vt-cand-num"># ${numLabel}</span>
+                            <span class="vt-cand-num"># ${candidat.numero_candidat}</span>
                             <div class="vt-cand-menu dropdown">
                                 <button class="vt-cand-menu-btn" data-bs-toggle="dropdown">
                                     <i class="ti ti-dots-vertical"></i>
@@ -1956,9 +2418,15 @@
                                     <a class="dropdown-item js-btn-edit" href="javascript:void(0);" data-candidat="${data}">
                                         <i class="ti ti-edit me-1"></i> Modifier
                                     </a>
-                                    <a class="dropdown-item text-danger js-btn-delete" href="javascript:void(0);" data-id="${candidat.candidat_id}">
-                                        <i class="ti ti-trash me-1"></i> Supprimer
-                                    </a>
+                                    ${candidat.is_active == 1
+                                        ? `<a class="dropdown-item js-btn-delete" href="javascript:void(0);" data-id="${candidat.candidat_id}">
+                                            <i class="ti ti-eye me-1" style="color:#22c55e;"></i> Archiver
+                                        </a>`
+                                        : `<a class="dropdown-item js-btn-activate" href="javascript:void(0);" data-id="${candidat.candidat_id}">
+                                            <i class="ti ti-eye-off me-1" style="color:#ef4444;"></i> Activer
+                                        </a>`
+                                    }
+                                    
                                 </div>
                             </div>
                         </div>
@@ -1972,20 +2440,23 @@
                         </div>
 
                         <div class="vt-cand-footer">
-                            <div class="vt-cand-votes">
-                                <i class="ti ti-ticket"></i>
-                                <span>${votes}</span>
-                                <span class="label">vote${votes > 1 ? 's' : ''}</span>
-                            </div>
+                            <!--Affichage conditionnel des votes -->
+                            ${buildVotesHtml(candidat)}
                             <div class="vt-cand-actions">
                                 <a href="javascript:void(0);" class="vt-cand-action-btn edit js-btn-edit"
                                    data-candidat="${data}" title="Modifier">
                                     <i class="ti ti-pencil"></i>
                                 </a>
-                                <a href="javascript:void(0);" class="vt-cand-action-btn del js-btn-delete"
-                                   data-id="${candidat.candidat_id}" title="Supprimer">
-                                    <i class="ti ti-trash"></i>
-                                </a>
+                                ${candidat.is_active == 1
+                                    ? `<a href="javascript:void(0);" class="vt-cand-action-btn del js-btn-delete"
+                                                    data-id="${candidat.candidat_id}" title="Archiver">
+                                                    <i class="ti ti-eye" style="color:#22c55e;"></i>
+                                                </a>`
+                                    : `<a href="javascript:void(0);" class="vt-cand-action-btn js-btn-activate"
+                                                    data-id="${candidat.candidat_id}" title="Activer">
+                                                    <i class="ti ti-eye-off" style="color:#ef4444;"></i>
+                                                </a>`
+                                }
                             </div>
                         </div>
 
@@ -2003,11 +2474,11 @@
              */
             function chargerCandidats(append = false) {
                 const params = {
-                    campagne_id : $('.js-select-campagne').val(),
-                    etape_id    : $('.js-select-etape').val(),
-                    category_id : $('.js-select-categorie').val(),
-                    search      : $('.js-search-candidat').val(),
-                    page        : currentPage,
+                    campagne_id: $('.js-select-campagne').val(),
+                    etape_id: $('.js-select-etape').val(),
+                    category_id: $('.js-select-categorie').val(),
+                    search: $('.js-search-candidat').val(),
+                    page: currentPage,
                 };
 
                 if (!append) {
@@ -2017,10 +2488,10 @@
                 }
 
                 $.ajax({
-                    url    : '/business/recherche_candidat',
-                    method : 'GET',
-                    data   : params,
-                    success: function (response) {
+                    url: '/business/recherche_candidat',
+                    method: 'GET',
+                    data: params,
+                    success: function(response) {
                         renderCandidatCards(response.data, append);
 
                         if (response.current_page < response.last_page) {
@@ -2058,7 +2529,7 @@
                 }).join('');
 
                 if (append) $('.js-candidat-table-body').append(html);
-                else        $('.js-candidat-table-body').html(html);
+                else $('.js-candidat-table-body').html(html);
             }
 
             /* =========================================================
@@ -2066,8 +2537,8 @@
                ========================================================= */
 
             /* Changement de campagne : cascade complète */
-            $('.js-select-campagne').on('change', function () {
-                const campagneId   = $(this).val();
+            $('.js-select-campagne').on('change', function() {
+                const campagneId = $(this).val();
                 const campagneName = $('.js-select-campagne option:selected').text().trim();
 
                 peuplerFiltresCampagne(campagneId);
@@ -2083,7 +2554,7 @@
             });
 
             /* Changement d'étape : sync modale + rechargement */
-            $(document).on('change', '.js-select-etape', function () {
+            $(document).on('change', '.js-select-etape', function() {
                 const etapeId = $(this).val();
                 $('.js-add-etape-hidden').val(etapeId);
                 $('.js-add-etape').val(etapeId);
@@ -2096,13 +2567,13 @@
             $(document).on('change', '.js-select-categorie', resetEtRecharger);
 
             /* Recherche avec debounce */
-            $(document).on('keyup', '.js-search-candidat', function () {
+            $(document).on('keyup', '.js-search-candidat', function() {
                 clearTimeout(searchTimeout);
                 searchTimeout = setTimeout(resetEtRecharger, 500);
             });
 
             /* Load more */
-            $(document).on('click', '.js-load-more', function () {
+            $(document).on('click', '.js-load-more', function() {
                 currentPage++;
                 chargerCandidats(true);
             });
@@ -2112,7 +2583,7 @@
                ========================================================= */
 
             /* Sélection campagne dans la modale → peuple les catégories */
-            $(document).on('change', '.js-add-campagne', function () {
+            $(document).on('change', '.js-add-campagne', function() {
                 const campagneId = $(this).val();
                 const $selectCat = $('.js-add-categorie');
 
@@ -2121,7 +2592,7 @@
                 $('.js-btn-save-candidat').prop('disabled', false);
 
                 if (campagneId) {
-                    $formCategoriesOptions.each(function () {
+                    $formCategoriesOptions.each(function() {
                         if ($(this).data('campagne-id') == campagneId)
                             $selectCat.append($(this).clone());
                     });
@@ -2134,13 +2605,14 @@
                ========================================================= */
 
             /* Ouvrir modale édition candidat */
-            $(document).on('click', '.js-btn-edit', function () {
-                const data   = JSON.parse(decodeURIComponent($(this).data('candidat')));
+            $(document).on('click', '.js-btn-edit', function() {
+                const data = JSON.parse(decodeURIComponent($(this).data('candidat')));
                 const $modal = $('#modal_edit_candidat');
 
                 /* Champs texte / select */
                 const champs = ['candidat_id', 'name', 'date_naissance', 'telephone',
-                                'email', 'pays', 'ville', 'profession'];
+                    'email', 'pays', 'ville', 'profession'
+                ];
                 champs.forEach(champ => $modal.find(`[name="${champ}"]`).val(data[champ]));
                 $modal.find('[name="old_photo"]').val(data.photo);
                 $modal.find('select[name="sexe"]').val(data.sexe);
@@ -2155,9 +2627,9 @@
                 $modal.find('.js-edit-categorie-hidden').val(data.category_id);
 
                 /* Aperçu photo */
-                const $preview     = $modal.find('.preview-target');
+                const $preview = $modal.find('.preview-target');
                 const $placeholder = $modal.find('.placeholder-target');
-                const $removeBtn   = $modal.find('.remove-btn-target');
+                const $removeBtn = $modal.find('.remove-btn-target');
                 $modal.find('input[name="photo"]').val('');
 
                 if (data.photo) {
@@ -2173,24 +2645,40 @@
                 $modal.modal('show');
             });
 
-            /* Ouvrir modale suppression candidat */
-            $(document).on('click', '.js-btn-delete', function () {
+            /* Ouvrir modale archiver candidat */
+            $(document).on('click', '.js-btn-delete', function() {
                 $('#delete_contact').find('input[name="candidat_id"]').val($(this).data('id'));
                 $('#delete_contact').modal('show');
             });
+            /* Ouvrir modale activer candidat */
+            $(document).on('click', '.js-btn-activate', function() {
+                $('#activate_contact').find('input[name="candidat_id"]').val($(this).data('id'));
+                $('#activate_contact').modal('show');
+            });
 
             /* Pré-remplir modale édition catégorie */
-            $(document).on('click', '.js-btn-edit-cat', function () {
+            $(document).on('click', '.js-btn-edit-cat', function() {
                 const $btn = $(this);
                 $('#edit_cat_id').val($btn.data('id'));
                 $('#edit_cat_campagne_id').val($btn.data('campagne_id'));
                 $('#edit_cat_name').val($btn.data('name'));
                 $('#edit_cat_description').val($btn.data('description'));
-                $('#edit_cat_icon').val($btn.data('icon'));
+                //Pré-remplit le icon picker
+                const savedIcon = $btn.data('icon');
+                if (savedIcon) {
+                    ipSelectIcon('edit', savedIcon);
+                } else {
+                    IP_STATE['edit'].selected = '';
+                    document.getElementById('edit_iconInput').value = '';
+                    document.getElementById('edit_previewIcon').className = 'ti ti-mood-smile';
+                    document.getElementById('edit_previewIcon').style.color = '';
+                    document.getElementById('edit_triggerLabel').textContent = 'Sélectionner une icône';
+                    document.getElementById('edit_triggerLabel').className = 'ip-trigger-label';
+                }
             });
 
             /* Pré-remplir modale suppression catégorie */
-            $(document).on('click', '.js-btn-delete-cat', function () {
+            $(document).on('click', '.js-btn-delete-cat', function() {
                 $('#delete_cat_id').val($(this).data('id'));
             });
 
@@ -2209,47 +2697,95 @@
              */
             function soumettreFormAjax($form, loadingLabel, originalLabel, onSuccess) {
                 const $submitBtn = $form.find('button[type="submit"]');
+
+                // Reset erreurs précédentes
                 $form.find('.is-invalid').removeClass('is-invalid');
                 $form.find('.invalid-feedback').remove();
+
                 $submitBtn.prop('disabled', true).html(loadingLabel);
 
                 $.ajax({
-                    url        : $form.attr('action'),
-                    type       : 'POST',
-                    data       : new FormData($form[0]),
+                    url: $form.attr('action'),
+                    type: 'POST',
+                    data: new FormData($form[0]),
                     processData: false,
                     contentType: false,
-                    success    : function (response) { onSuccess(response); },
-                    error      : function (xhr) {
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                        'Accept': 'application/json'
+                    },
+                    success: function(response) {
+                        onSuccess(response);
+                    },
+                    error: function(xhr) {
                         if (xhr.status === 422) {
                             if (typeof showAjaxAlert === 'function')
-                                showAjaxAlert('danger', 'Veuillez corriger les champs en erreur.');
-                            $.each(xhr.responseJSON.errors, function (fieldName, messages) {
-                                const $input = $form.find(`[name="${fieldName}"]`).first();
-                                if ($input.length) {
+                                showAjaxAlert('danger', 'Veuillez vérifier les champs du formulaire.');
+
+                            $.each(xhr.responseJSON.errors, function(fieldName, messages) {
+                                let $input = $form.find(
+                                    `[name="${fieldName}"], [name="${fieldName}[]"]`
+                                ).first();
+
+                                if ($input.length > 0) {
                                     $input.addClass('is-invalid');
-                                    $input.after(`<div class="invalid-feedback d-block">${messages[0]}</div>`);
+                                    const errorMsg =
+                                        `<div class="invalid-feedback d-block" style="color:#dc3545;font-size:11.5px;margin-top:5px;">${messages[0]}</div>`;
+
+                                    if ($input.closest('.vt-cm-input-wrap').length) {
+                                        $input.closest('.vt-cm-input-wrap').after(errorMsg);
+                                    } else if ($input.closest('.vt-input-wrap').length) {
+                                        $input.closest('.vt-input-wrap').after(errorMsg);
+                                    } else if ($input.closest('.input-group').length) {
+                                        $input.closest('.input-group').after(errorMsg);
+                                    } else if ($input.attr('type') === 'file' && $input.closest(
+                                            '.image-upload-group').length) {
+                                        $input.closest('.image-upload-group').after(errorMsg);
+                                    } else {
+                                        $input.after(errorMsg);
+                                    }
                                 }
                             });
+
+                            $form.find('.is-invalid').first().focus();
+
                         } else {
                             if (typeof showAjaxAlert === 'function')
-                                showAjaxAlert('danger', xhr.responseJSON?.message || 'Erreur.');
+                                showAjaxAlert('danger', xhr.responseJSON?.message ||
+                                    'Une erreur est survenue.');
                         }
                     },
-                    complete   : function () {
+                    complete: function() {
                         $submitBtn.prop('disabled', false).html(originalLabel);
                     },
                 });
             }
 
+            /* Ajout candidat */
+            $('#form-add-candidat').on('submit', function(e) {
+                e.preventDefault();
+                soumettreFormAjax(
+                    $(this),
+                    '<span class="spinner-border spinner-border-sm me-1"></span> Traitement...',
+                    '<i class="ti ti-check" style="font-size:13px;"></i> Confirmer',
+                    function(response) {
+                        $('#modal_add_candidat').modal('hide');
+                        if (response.success && typeof showAjaxAlert === 'function')
+                            showAjaxAlert('success', response.message);
+                        // Recharge uniquement les candidats sans toucher aux filtres
+                        resetEtRecharger();
+                    }
+                );
+            });
+
             /* Édition candidat */
-            $('#form_edit_candidat').on('submit', function (e) {
+            $('#form_edit_candidat').on('submit', function(e) {
                 e.preventDefault();
                 soumettreFormAjax(
                     $(this),
                     'Mise à jour...',
                     $(this).find('button[type="submit"]').html(),
-                    function (response) {
+                    function(response) {
                         $('#modal_edit_candidat').modal('hide');
                         if (response.success && typeof showAjaxAlert === 'function')
                             showAjaxAlert('success', response.message);
@@ -2258,20 +2794,36 @@
                 );
             });
 
-            /* Suppression candidat */
-            $('#form_delete_candidat').on('submit', function (e) {
+            /* Archiver candidat */
+            $('#form_delete_candidat').on('submit', function(e) {
                 e.preventDefault();
                 soumettreFormAjax(
                     $(this),
                     '<span class="spinner-border spinner-border-sm"></span>',
-                    'Oui, supprimer',
-                    function (response) {
+                    'Oui, archiver',
+                    function(response) {
                         $('#delete_contact').modal('hide');
                         if (response.success && typeof showAjaxAlert === 'function')
                             showAjaxAlert('success', response.message);
                         $('.js-select-campagne').trigger('change');
                     }
                 );
+            });
+            /* Activer candidat */
+            $('#form_activate_candidat').on('submit', function(e) {
+                e.preventDefault();
+                soumettreFormAjax(
+                    $(this),
+                    '<span class="spinner-border spinner-border-sm"></span>',
+                    'Oui, activer',
+                    function(response) {
+                        $('#activate_contact').modal('hide');
+                        if (response.success && typeof showAjaxAlert === 'function')
+                            showAjaxAlert('success', response.message);
+                        $('.js-select-campagne').trigger('change');
+                    }
+                );
+
             });
 
         });

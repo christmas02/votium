@@ -293,7 +293,6 @@ class CampagneController extends Controller
     public function saveCategorie(CategoryCampagneRequest $request)
     {
         try {
-
             #Formatage des données
             $dateCategorie = [
                 'category_id' => $this->setting->generateUuid(),
@@ -303,7 +302,6 @@ class CampagneController extends Controller
                 'icon' => $request->icon,
                 'is_active' => true,
             ];
-
             // Sauvegarde des données via le service
             $saved = $this->CampagneService->saveNewCategory($dateCategorie);
 

@@ -555,8 +555,10 @@
                 <select class="vt-ret-select" id="filter-destination">
                     <option value="">Choisir la destination</option>
                     @foreach ($compteRetraits as $compte)
-                        <option value="{{ $compte->withdrawal_account_id }}">{{ strtoupper($compte->account_name) }} -
-                            {{ strtoupper($compte->payment_methode) }}</option>
+                        <option value="{{ $compte->withdrawal_account_id ?? '' }}">
+                            {{ strtoupper($compte->account_name ?? '') }} -
+                            {{ strtoupper($compte->payment_methode ?? '') }}
+                        </option>
                     @endforeach
                 </select>
             </div>
@@ -576,10 +578,10 @@
             </div>
 
             {{-- Soldes --}}
-            <div class="vt-solde-immediate">
+            {{-- <div class="vt-solde-immediate">
                 <div class="label">Solde disponible immédiatement</div>
                 <div class="value">
-                    <span id="solde-immediat">{{ $account->balance, 0, ',', ' ' }}</span>
+                    <span id="solde-immediat">{{ number_format($account->balance ?? 0, 0, ',', ' ') }}</span>
                     <span class="unit">FCFA</span>
                 </div>
             </div>
@@ -587,15 +589,16 @@
             <div class="vt-solde-demande">
                 <div class="label">Solde disponible sur demande</div>
                 <div class="value">
-                    <span id="solde-demande">{{ $account->balance_after, 0, ',', ' ' }}</span>
+                    <span id="solde-demande">{{ number_format($account->balance_after ?? 0, 0, ',', ' ') }}</span>
                     <span class="unit">FCFA</span>
                 </div>
-            </div>
+            </div> --}}
 
             <div class="vt-solde-total">
                 <div class="label">Solde total</div>
                 <div class="value">
-                    <span id="solde-total">{{ number_format($account->balance + $account->balance_after, 0, ',', ' ') }}</span>
+                    <span
+                        id="solde-total">{{ number_format($account->balance ?? 0, 0, ',', ' ') }}</span>
                     <span class="unit">FCFA</span>
                 </div>
             </div>
@@ -652,6 +655,9 @@
                         <tbody id="retraits-tbody">
                             {{-- Données statiques de démo --}}
                             <tr>
+                                <td colspan="6" class="text-center">Aucun retrait trouvé.</td>
+                            </tr>
+                            {{-- <tr>
                                 <td class="cell-ref">RET-001</td>
                                 <td class="cell-dest">Mara</td>
                                 <td class="cell-montant">850 FCFA</td>
@@ -659,25 +665,8 @@
                                 <td class="text-muted" style="font-size:11.5px;">2025-09-11 11:35</td>
                                 <td><span class="vt-status-confirmed"><i class="ti ti-check" style="font-size:10px;"></i>
                                         Confirmé</span></td>
-                            </tr>
-                            <tr>
-                                <td class="cell-ref">RET-002</td>
-                                <td class="cell-dest">MARA MOMO</td>
-                                <td class="cell-montant">307 020 FCFA</td>
-                                <td>04/05/2025</td>
-                                <td class="text-muted" style="font-size:11.5px;">2025-05-04 23:37</td>
-                                <td><span class="vt-status-confirmed"><i class="ti ti-check" style="font-size:10px;"></i>
-                                        Confirmé</span></td>
-                            </tr>
-                            <tr>
-                                <td class="cell-ref">RET-003</td>
-                                <td class="cell-dest">MARA MOMO</td>
-                                <td class="cell-montant">553 350 FCFA</td>
-                                <td>04/05/2025</td>
-                                <td class="text-muted" style="font-size:11.5px;">2025-05-04 17:20</td>
-                                <td><span class="vt-status-confirmed"><i class="ti ti-check" style="font-size:10px;"></i>
-                                        Confirmé</span></td>
-                            </tr>
+                            </tr> --}}
+                            
                         </tbody>
                     </table>
                 </div>
@@ -720,9 +709,10 @@
                             <select class="vt-modal-select" name="destination" required>
                                 <option value="">Choisir la destination</option>
                                 @foreach ($compteRetraits as $compte)
-                                    <option value="{{ $compte->withdrawal_account_id }}">
-                                        {{ strtoupper($compte->account_name) }} -
-                                        {{ strtoupper($compte->payment_methode) }}</option>
+                                    <option value="{{ $compte->withdrawal_account_id ?? '' }}">
+                                        {{ strtoupper($compte->account_name ?? '') }} -
+                                        {{ strtoupper($compte->payment_methode ?? '') }}
+                                    </option>
                                 @endforeach
                             </select>
                         </div>
